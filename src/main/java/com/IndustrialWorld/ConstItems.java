@@ -20,7 +20,7 @@ public final class ConstItems {
                 ChatColor.WHITE + "工业用合成台",
                 ChatColor.GRAY + "工业物品合成时均需使用"
              ));
-    public final static ItemStack IW_WIRE = genIWIS(Material.CRAFTING_TABLE, "IW_WIRE", ChatColor.WHITE + "线缆",
+    public final static ItemStack IW_WIRE = genIWIS(Material.IRON_BARS, "IW_WIRE", ChatColor.WHITE + "线缆",
             Arrays.asList(
                     ChatColor.WHITE + "工业用线缆",
                     ChatColor.GRAY + "用于各机器间传输电力"
