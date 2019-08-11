@@ -11,6 +11,7 @@ import java.util.Arrays;
 public final class ConstItems {
     public final static ItemStack BASIC_MACHINE_BLOCK;
     public final static ItemStack IW_CRAFTING_TABLE;
+    public final static ItemStack IW_WIRE;
 
     static {
         ItemStack tmp1 = new ItemStack(Material.IRON_BLOCK, 1);
@@ -36,5 +37,17 @@ public final class ConstItems {
                                   ));
         tmp2.setItemMeta(meta2);
         IW_CRAFTING_TABLE = tmp2.clone();
+
+        ItemStack tmp3 = new ItemStack(Material.IRON_BARS, 1);
+        tmp3 = NBTUtil.setTagValue(tmp2, "isIWItem", new NBTUtil.NBTValue().set(true));
+        tmp3 = NBTUtil.setTagValue(tmp2, "IWItemId", new NBTUtil.NBTValue().set("IW_WIRE"));
+        ItemMeta meta3 = tmp3.getItemMeta();
+        meta3.setDisplayName(ChatColor.WHITE + "导线");
+        meta3.setLore(Arrays.asList(
+                ChatColor.WHITE + "工业线缆",
+                ChatColor.GRAY + "用来在各机器之间传输电力"
+        ));
+        tmp2.setItemMeta(meta3);
+        IW_WIRE = tmp2.clone();
     }
 }
