@@ -14,11 +14,12 @@ import org.bukkit.event.block.BlockPlaceEvent;
 
 import java.util.AbstractMap;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class BlockManager {
     private static HashMap<String, BlockBase> mapping = new HashMap<>();
-    private static HashMap<Location, Map.Entry<String, BlockData>> blocks = new HashMap<>();
+    private static LinkedHashMap<Location, Map.Entry<String, BlockData>> blocks;
 
     public static void process(BlockEvent event) {
         if (event instanceof BlockPlaceEvent)
@@ -39,7 +40,7 @@ public class BlockManager {
     }
 
     public static void loadBlocksFromConfig(YamlConfiguration config){
-        blocks = (HashMap<Location, Map.Entry<String, BlockData>>) config.get("blocks");
+        blocks = (config.get("blocks") == null ? new LinkedHashMap<>() : ((LinkedHashMap<Location, Map.Entry<String, BlockData>>) config.get("blocks")));
     }
 
     public static void saveBlocksToConfig(YamlConfiguration config){
