@@ -41,12 +41,14 @@ public class EventListener implements Listener {
     @EventHandler
     public void onBlockExplode(BlockExplodeEvent event) {
         for (Block block : event.blockList())
-            if (BlockManager.hasBlock(block) &&
-                BlockManager.getInstanceFromId(BlockManager.getBlockId(block)) instanceof MachineBlock) {
-                BlockManager.removeBlock(block);
-                block.setType(Material.AIR);
-                Item item = (Item) (event.getBlock().getWorld().spawnEntity(event.getBlock().getLocation(), EntityType.DROPPED_ITEM));
-                item.setItemStack(ConstItems.BASIC_MACHINE_BLOCK);
-            }
+            if (BlockManager.hasBlock(block))
+                if (BlockManager.getInstanceFromId(BlockManager.getBlockId(block)) instanceof MachineBlock) {
+                    BlockManager.removeBlock(block);
+                    block.setType(Material.AIR);
+                    Item item = (Item) (event.getBlock().getWorld().spawnEntity(event.getBlock().getLocation(), EntityType.DROPPED_ITEM));
+                    item.setItemStack(ConstItems.BASIC_MACHINE_BLOCK);
+                } else {
+                    BlockManager.process(new BlockBreakEvent(block, null));
+                }
     }
 }
