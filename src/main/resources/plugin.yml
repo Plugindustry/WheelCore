@@ -1,0 +1,7 @@
+name: IndustrialWorld
+version: ${project.version}
+main: com.czm.IndustrialWorld.IndustrialWorld
+api-version: 1.13
+prefix: [IndustrialWorld]
+authors: [czm]
+description: IndustrialWorld
