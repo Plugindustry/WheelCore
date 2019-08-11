@@ -1,9 +1,9 @@
-package com.czm.IndustrialWorld.event;
+package com.IndustrialWorld.event;
 
-import com.czm.IndustrialWorld.ConstItems;
-import com.czm.IndustrialWorld.interfaces.MachineBlock;
-import com.czm.IndustrialWorld.manager.BlockManager;
-import com.czm.IndustrialWorld.utils.NBTUtil;
+import com.IndustrialWorld.interfaces.MachineBlock;
+import com.IndustrialWorld.utils.NBTUtil;
+import com.IndustrialWorld.ConstItems;
+import com.IndustrialWorld.manager.BlockManager;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
@@ -18,7 +18,8 @@ import org.bukkit.event.block.BlockPlaceEvent;
 public class EventListener implements Listener {
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (NBTUtil.getTagValue(event.getItemInHand(), "isIWItem").asBoolean())
+        NBTUtil.NBTValue value = NBTUtil.getTagValue(event.getItemInHand(), "isIWItem");
+        if (value != null && value.asBoolean())
             BlockManager.process(event);
     }
 

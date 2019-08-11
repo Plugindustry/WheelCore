@@ -1,4 +1,4 @@
-package com.czm.IndustrialWorld.interfaces;
+package com.IndustrialWorld.interfaces;
 
 public abstract class MachineBlock extends BlockBase {
 }

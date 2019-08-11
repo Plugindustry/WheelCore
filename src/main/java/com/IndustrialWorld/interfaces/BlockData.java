@@ -1,4 +1,4 @@
-package com.czm.IndustrialWorld.interfaces;
+package com.IndustrialWorld.interfaces;
 
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 

@@ -1,6 +1,6 @@
-package com.czm.IndustrialWorld.utils;
+package com.IndustrialWorld.utils;
 
-import com.czm.IndustrialWorld.IndustrialWorld;
+import com.IndustrialWorld.IndustrialWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 
@@ -36,7 +36,7 @@ public class NBTUtil {
         return result == null ? null : new NBTValue(result);
     }
 
-    public static void setTagValue(ItemStack item, String key, NBTValue value) {
+    public static ItemStack setTagValue(ItemStack item, String key, NBTValue value) {
         try {
             Object nis = CraftItemStack.getMethod("asNMSCopy", ItemStack.class).invoke(null, item);
             Object tag = (((Boolean) NMSItemStack.getMethod("hasTag").invoke(nis)) ?
@@ -44,9 +44,11 @@ public class NBTUtil {
                           NBTTagCompound.newInstance());
             NBTTagCompound.getMethod("set", String.class, Class.forName("net.minecraft.server." + version + ".NBTBase")).invoke(tag, key, value.convert());
             NMSItemStack.getMethod("setTag", NBTTagCompound).invoke(nis, tag);
+            return (ItemStack) CraftItemStack.getMethod("asBukkitCopy", NMSItemStack).invoke(null, nis);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     public static Object newNBTTagCompound() {

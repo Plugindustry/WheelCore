@@ -1,10 +1,12 @@
-package com.czm.IndustrialWorld.manager;
+package com.IndustrialWorld.manager;
 
-import com.czm.IndustrialWorld.event.ProcessInfo;
-import com.czm.IndustrialWorld.interfaces.BlockBase;
-import com.czm.IndustrialWorld.interfaces.BlockData;
-import com.czm.IndustrialWorld.utils.NBTUtil;
+import com.IndustrialWorld.event.ProcessInfo;
+import com.IndustrialWorld.interfaces.BlockBase;
+import com.IndustrialWorld.interfaces.BlockData;
+import com.IndustrialWorld.utils.NBTUtil;
 import com.sun.istack.internal.Nullable;
+import org.apache.commons.lang.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -12,14 +14,11 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-import java.util.AbstractMap;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 public class BlockManager {
     private static HashMap<String, BlockBase> mapping = new HashMap<>();
-    private static LinkedHashMap<Location, Map.Entry<String, BlockData>> blocks;
+    private static LinkedHashMap<Location, Map.Entry<String, BlockData>> blocks = new LinkedHashMap<>();
 
     public static void process(BlockEvent event) {
         if (event instanceof BlockPlaceEvent)
@@ -40,11 +39,18 @@ public class BlockManager {
     }
 
     public static void loadBlocksFromConfig(YamlConfiguration config){
-        blocks = (config.get("blocks") == null ? new LinkedHashMap<>() : ((LinkedHashMap<Location, Map.Entry<String, BlockData>>) config.get("blocks")));
+        for(String str : config.getKeys(false)){
+            List list = config.getList(str);
+            String[] arr = StringUtils.split(str, ";");
+            blocks.put(new Location(Bukkit.getWorld(arr[0]), new Integer(arr[1]), new Integer(arr[2]), new Integer(arr[3])), new AbstractMap.SimpleEntry<String, BlockData>((String) (list.get(0)), (BlockData) (list.get(1))));
+        }
     }
 
     public static void saveBlocksToConfig(YamlConfiguration config){
-        config.set("blocks", blocks);
+        for(Map.Entry<Location, Map.Entry<String, BlockData>> entry : blocks.entrySet()){
+            Location loc = entry.getKey();
+            config.set(loc.getWorld().getName() + ";" + (int) loc.getX() + ";" + (int) loc.getY() + ";" + (int) loc.getZ(), Arrays.asList(entry.getValue().getKey(), entry.getValue().getValue()));
+        }
     }
 
     public static void addBlock(String id, Block block, @Nullable BlockData data) {

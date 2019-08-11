@@ -1,7 +1,7 @@
-package com.czm.IndustrialWorld.interfaces;
+package com.IndustrialWorld.interfaces;
 
-import com.czm.IndustrialWorld.event.ProcessInfo;
-import com.czm.IndustrialWorld.manager.BlockManager;
+import com.IndustrialWorld.event.ProcessInfo;
+import com.IndustrialWorld.manager.BlockManager;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
