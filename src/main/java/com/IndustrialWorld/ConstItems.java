@@ -30,6 +30,16 @@ public final class ConstItems {
                     ChatColor.WHITE + "在工作台上砸砸砸砸",
                     ChatColor.GRAY + "3耐久/次"
             ));
+    public final static ItemStack IRON_PLATE = genIWIS(Material.PAPER, "IRON_PLATE", ChatColor.WHITE + "铁板",
+            Arrays.asList(
+                    ChatColor.WHITE + "铁板",
+                    ChatColor.GRAY + "Fe"
+            ));
+    public final static ItemStack CUTTER = genIWIS(Material.SHEARS, "CUTTER", ChatColor.WHITE + "板材切割剪刀",
+            Arrays.asList(
+                    ChatColor.WHITE + "板材切割剪刀",
+                    ChatColor.GRAY + "把板材切割成线"
+            ));
 
 
     // IW ItemStack generator

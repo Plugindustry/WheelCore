@@ -12,7 +12,7 @@ public class RegisterManager {
         // Example:
         //IWCraftingTable.registerRecipe(new IWCraftingTable.IWRecipe(ConstItems.BASIC_MACHINE_BLOCK).setShape("AAAAAAAAA").set('A', new ItemStack(Material.IRON_INGOT, 2)));
 
-        /* FORGE_HAMMER */
+        /* FORGE_HAMMER */{
         IWCraftingTable.registerRecipe(
                 new IWCraftingTable.IWRecipe(ConstItems.FORGE_HAMMER)
                         .setShape("AACABBAAC")
@@ -43,11 +43,19 @@ public class RegisterManager {
         ); // FORGE_HAMMER [D]
     }
 
+        IWCraftingTable.registerRecipe(
+                new IWCraftingTable.IWRecipe(ConstItems.CUTTER)
+                        .setShape("BCBCBCACA")
+                        .set('A', new ItemStack(Material.IRON_INGOT, 1))
+                        .set('B', ConstItems.IRON_PLATE)
+                        .set('C', new ItemStack(Material.AIR, 1))
+        ); // CUTTER
+    }
+
     public static void registerBlockIS() {
         MainManager.register("BASIC_MACHINE_BLOCK", new BasicMachineBlock());
         MainManager.register("IW_CRAFTING_TABLE", new IWCraftingTable());
 
         //getServer().addRecipe(new ShapedRecipe(new NamespacedKey(this, "BASIC_MACHINE_BLOCK"), ConstItems.BASIC_MACHINE_BLOCK).shape("AAA", "ABA", "AAA").setIngredient('A', Material.IRON_INGOT).setIngredient('B', Material.AIR));
-        //IWCraftingTable.registerRecipe(new IWCraftingTable.IWRecipe(ConstItems.BASIC_MACHINE_BLOCK).setShape("AAAAAAAAA").set('A', new ItemStack(Material.IRON_INGOT, 2)));
     }
 }
