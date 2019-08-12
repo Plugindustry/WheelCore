@@ -25,6 +25,11 @@ public final class ConstItems {
                     ChatColor.WHITE + "工业用线缆",
                     ChatColor.GRAY + "用于各机器间传输电力"
             ));
+    public final static ItemStack FORGE_HAMMER = genIWIS(Material.IRON_SHOVEL, "FORGE_HAMMER", ChatColor.WHITE + "锻造锤",
+            Arrays.asList(
+                    ChatColor.WHITE + "在工作台上砸砸砸砸",
+                    ChatColor.GRAY + "3耐久/次"
+            ));
 
 
     // IW ItemStack generator
