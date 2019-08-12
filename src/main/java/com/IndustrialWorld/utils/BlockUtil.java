@@ -12,7 +12,13 @@ import java.util.*;
 public class BlockUtil {
 
     public List<SearchResult> searchFromWire(Block wireBlock) {
+
+
         return new ArrayList<SearchResult>();
+    }
+
+    public class SearchTree {
+
     }
 
     public class SearchResult {

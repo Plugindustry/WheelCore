@@ -35,7 +35,7 @@ public final class IndustrialWorld extends JavaPlugin {
         MainManager.loadBlocksFromConfig(config);
 
         MainManager.register("BASIC_MACHINE_BLOCK", new BasicMachineBlock());
-        getServer().addRecipe(new ShapedRecipe(new NamespacedKey(this, "BASIC_MACHINE_BLOCK"), ConstItems.BASIC_MACHINE_BLOCK).shape("AAA", "ABA", "AAA").setIngredient('A', Material.IRON_INGOT).setIngredient('B', Material.AIR));
+        //getServer().addRecipe(new ShapedRecipe(new NamespacedKey(this, "BASIC_MACHINE_BLOCK"), ConstItems.BASIC_MACHINE_BLOCK).shape("AAA", "ABA", "AAA").setIngredient('A', Material.IRON_INGOT).setIngredient('B', Material.AIR));
         //IWCraftingTable.registerRecipe(new IWCraftingTable.IWRecipe(ConstItems.BASIC_MACHINE_BLOCK).setShape("AAAAAAAAA").set('A', new ItemStack(Material.IRON_INGOT, 2)));
 
         MainManager.register("IW_CRAFTING_TABLE", new IWCraftingTable());
