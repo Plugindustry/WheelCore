@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class ConstItems {
+
     public final static ItemStack BASIC_MACHINE_BLOCK = genIWIS(Material.IRON_BLOCK, "BASIC_MACHINE_BLOCK", ChatColor.WHITE + "基础机器方块",
             Arrays.asList(
                 ChatColor.WHITE + "最基本的机器外壳",

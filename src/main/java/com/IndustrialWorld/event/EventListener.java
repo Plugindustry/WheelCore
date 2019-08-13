@@ -63,7 +63,6 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onCraftItem(CraftItemEvent event) {
-        System.out.println(1);
         if(IWCraftingTable.isInvTicking(event.getInventory())){
             ItemStack[] is =  IWCraftingTable.getRecipeUsing(event.getInventory()).getMatrix();
             for (int i = 0; i <= 8; ++i){
@@ -72,8 +71,6 @@ public class EventListener implements Listener {
                 i2.setAmount(i2.getAmount() - is[i].getAmount());
                 ItemStack[] buf = event.getInventory().getStorageContents();
                 buf[i + 1] = i2;
-                for(ItemStack iss : buf)
-                    System.out.println(iss);
                 event.getInventory().setStorageContents(buf);
             }
         }
