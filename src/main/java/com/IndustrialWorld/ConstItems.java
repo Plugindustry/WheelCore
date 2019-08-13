@@ -29,12 +29,13 @@ public final class ConstItems {
     public final static ItemStack FORGE_HAMMER = genIWIS(Material.IRON_SHOVEL, "FORGE_HAMMER", ChatColor.WHITE + "锻造锤",
             Arrays.asList(
                     ChatColor.WHITE + "在工作台上砸砸砸砸",
-                    ChatColor.GRAY + "3耐久/次"
+                    ChatColor.GRAY + "3耐久/次",
+                    ChatColor.GRAY + "(当然，你也可以把它当铲子用，不过似乎太浪费了)"
             ));
     public final static ItemStack IRON_PLATE = genIWIS(Material.PAPER, "IRON_PLATE", ChatColor.WHITE + "铁板",
             Arrays.asList(
                     ChatColor.WHITE + "铁板",
-                    ChatColor.GRAY + "Fe"
+                    ChatColor.GRAY + "*看起来很轻(?)"
             ));
     public final static ItemStack CUTTER = genIWIS(Material.SHEARS, "CUTTER", ChatColor.WHITE + "板材切割剪刀",
             Arrays.asList(

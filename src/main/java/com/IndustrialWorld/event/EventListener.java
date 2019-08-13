@@ -20,6 +20,8 @@ import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.meta.Damageable;
 
 import java.util.Arrays;
 import java.util.List;
@@ -63,17 +65,6 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onCraftItem(CraftItemEvent event) {
-        if(IWCraftingTable.isInvTicking(event.getInventory())){
-            ItemStack[] is =  IWCraftingTable.getRecipeUsing(event.getInventory()).getMatrix();
-            for (int i = 0; i <= 8; ++i){
-                ItemStack i2 = event.getInventory().getStorageContents()[i + 1];
-                if(i2 == null) continue;
-                i2.setAmount(i2.getAmount() - is[i].getAmount());
-                ItemStack[] buf = event.getInventory().getStorageContents();
-                buf[i + 1] = i2;
-                event.getInventory().setStorageContents(buf);
-            }
-        }
         for (ItemStack item : event.getInventory().getMatrix()) {
             NBTUtil.NBTValue value = NBTUtil.getTagValue(item, "isIWItem");
             if (value != null && value.asBoolean())
@@ -82,36 +73,58 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
-    public void onInventoryClick(InventoryClickEvent event){
-        if(IWCraftingTable.isInvTicking(event.getClickedInventory()) && event.getSlot() == 0){
-            if(event.getAction() != InventoryAction.PICKUP_ALL) {
+    public void onInventoryClick(InventoryClickEvent event) {
+        if (IWCraftingTable.isInvTicking(event.getClickedInventory()) && event.getSlot() == 0) {
+            if (event.getAction() != InventoryAction.PICKUP_ALL) {
                 event.setCancelled(true);
                 return;
             }
-            if(IWCraftingTable.getRecipeUsing(event.getClickedInventory()) == null)
+            Recipe recipe = IWCraftingTable.getRecipeUsing(event.getClickedInventory());
+            if (recipe == null)
                 return;
-            ItemStack[] is =  IWCraftingTable.getRecipeUsing(event.getClickedInventory()).getMatrix();
-            for (int i = 0; i <= 8; ++i){
-                ItemStack i2 = event.getClickedInventory().getStorageContents()[i + 1];
-                if(i2 == null) continue;
-                i2.setAmount(i2.getAmount() - is[i].getAmount());
-                ItemStack[] buf = event.getClickedInventory().getStorageContents();
-                buf[i + 1] = i2;
-                event.getClickedInventory().setStorageContents(buf);
-                ((Player) event.getClickedInventory().getViewers().get(0)).updateInventory();
+            if (recipe instanceof IWCraftingTable.IWShapedRecipe) {
+                IWCraftingTable.IWShapedRecipe rb = (IWCraftingTable.IWShapedRecipe) recipe;
+                ItemStack[] is = rb.getMatrix();
+                for (int i = 0; i <= 8; ++i) {
+                    ItemStack i2 = event.getClickedInventory().getStorageContents()[i + 1];
+                    if (i2 == null || is[i] == null)
+                        continue;
+                    i2.setAmount(i2.getAmount() - is[i].getAmount());
+                    ItemStack[] buf = event.getClickedInventory().getStorageContents();
+                    buf[i + 1] = i2;
+                    event.getClickedInventory().setStorageContents(buf);
+                }
+            } else if (recipe instanceof IWCraftingTable.IWShapelessRecipe) {
+                Inventory ci = event.getClickedInventory();
+                IWCraftingTable.IWShapelessRecipe rb = (IWCraftingTable.IWShapelessRecipe) recipe;
+                List<ItemStack> i1 = Arrays.asList(ci.getStorageContents()).subList(1, ci.getStorageContents().length);
+                ItemStack[] i2 = rb.getMatrix();
+                for (int i = 0; i <= 8; ++i) {
+                    ItemStack bi = i1.get(i);
+                    if (bi == null || i2[i] == null)
+                        continue;
+                    if (rb.isUseDurability() && i2[i].getType().getMaxDurability() != 0) {
+                        bi.setDurability((short)(bi.getDurability() + rb.getDurabilityCost()));
+                    } else {
+                        bi.setAmount(bi.getAmount() - i2[i].getAmount());
+                    }
+                    ItemStack[] buf = event.getClickedInventory().getStorageContents();
+                    buf[i + 1] = bi;
+                    event.getClickedInventory().setStorageContents(buf);
+                }
             }
         }
-        if(IWCraftingTable.isInvTicking(event.getInventory()))
-            ((Player) event.getClickedInventory().getViewers().get(0)).updateInventory();
+        /*if (IWCraftingTable.isInvTicking(event.getClickedInventory()) && event.getSlot() == 0)
+            ((Player) event.getClickedInventory().getViewers().get(0)).updateInventory();*/
     }
 
     @EventHandler
-    public void onInventoryClose(InventoryCloseEvent event){
-        if(IWCraftingTable.isInvTicking(event.getInventory())){
+    public void onInventoryClose(InventoryCloseEvent event) {
+        if (IWCraftingTable.isInvTicking(event.getInventory())) {
             ItemStack[] buf = event.getInventory().getStorageContents();
             buf[0] = new ItemStack(Material.AIR);
-            for(ItemStack is : buf)
-                if(is != null && is.getType() != Material.AIR)
+            for (ItemStack is : buf)
+                if (is != null && is.getType() != Material.AIR)
                     event.getPlayer().getWorld().dropItem(event.getPlayer().getLocation(), is);
         }
     }

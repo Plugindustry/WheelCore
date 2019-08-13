@@ -7,8 +7,6 @@ import com.IndustrialWorld.interfaces.BlockBase;
 import com.IndustrialWorld.interfaces.BlockData;
 import com.IndustrialWorld.interfaces.ItemBase;
 import com.IndustrialWorld.utils.NBTUtil;
-//import com.sun.istack.internal.Nullable;
-import jdk.internal.jline.internal.Nullable;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -36,8 +34,12 @@ public class MainManager {
                 ((BlockBase) getInstanceFromId(getBlockId(((PlayerInteractEvent) event).getClickedBlock()))).onInteractAsBlock((PlayerInteractEvent) event);
             if (((PlayerInteractEvent) event).hasItem()) {
                 NBTUtil.NBTValue value = NBTUtil.getTagValue(((PlayerInteractEvent) event).getItem(), "isIWItem");
-                if (value != null && value.asBoolean())
-                    ((ItemBase) getInstanceFromId(NBTUtil.getTagValue(((PlayerInteractEvent) event).getItem(), "IWItemId").asString())).onInteractAsItem((PlayerInteractEvent) event);
+                NBTUtil.NBTValue v2 = NBTUtil.getTagValue(((PlayerInteractEvent) event).getItem(), "IWItemId");
+                if(v2 == null)
+                    return;
+                Base instance = getInstanceFromId(v2.asString());
+                if (value != null && value.asBoolean() && instance instanceof ItemBase)
+                    ((ItemBase) instance).onInteractAsItem((PlayerInteractEvent) event);
             }
         } else if (event instanceof TickEvent)
             for (Base base : mapping.values())
@@ -71,7 +73,7 @@ public class MainManager {
         }
     }
 
-    public static void addBlock(String id, Block block, @Nullable BlockData data) {
+    public static void addBlock(String id, Block block, BlockData data) {
         blocks.put(block.getLocation(), new AbstractMap.SimpleEntry<>(id, data));
     }
 
