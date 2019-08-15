@@ -1,5 +1,7 @@
 package com.IndustrialWorld.interfaces;
 
 public abstract class Wire extends BlockBase {
-    // TODO
+    public abstract float getMaxTransmissionEnergy();
+
+    public abstract float getEnergyLoss();
 }

@@ -1,7 +1,5 @@
 package com.IndustrialWorld;
 
-import com.IndustrialWorld.blocks.BasicMachineBlock;
-import com.IndustrialWorld.blocks.IWCraftingTable;
 import com.IndustrialWorld.event.EventListener;
 import com.IndustrialWorld.event.TickEvent;
 import com.IndustrialWorld.manager.MainManager;
@@ -9,7 +7,6 @@ import com.IndustrialWorld.manager.RegisterManager;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -24,7 +21,14 @@ public final class IndustrialWorld extends JavaPlugin {
         // Plugin startup logic
         getServer().getPluginManager().registerEvents(new EventListener(), this);
         if (getDataFolder().isDirectory() || getDataFolder().mkdirs()) ;
-        File file = new File(getDataFolder(), "blocks.yml");
+
+        File file = new File(getDataFolder(), "config.yml");
+        if (!(file.isFile())) {
+            saveDefaultConfig();
+        }
+        config = YamlConfiguration.loadConfiguration(file);
+
+        File file2 = new File(getDataFolder(), "blocks.yml");
         if (!(file.isFile())) {
             try {
                 file.createNewFile();
@@ -32,8 +36,8 @@ public final class IndustrialWorld extends JavaPlugin {
                 e.printStackTrace();
             }
         }
-        config = YamlConfiguration.loadConfiguration(file);
-        MainManager.loadBlocksFromConfig(config);
+        YamlConfiguration block = YamlConfiguration.loadConfiguration(file2);
+        MainManager.loadBlocksFromConfig(block);
 
         RegisterManager.registerIWCRecipes();
         RegisterManager.registerBlockIS();

@@ -2,10 +2,7 @@ package com.IndustrialWorld.manager;
 
 import com.IndustrialWorld.event.ProcessInfo;
 import com.IndustrialWorld.event.TickEvent;
-import com.IndustrialWorld.interfaces.Base;
-import com.IndustrialWorld.interfaces.BlockBase;
-import com.IndustrialWorld.interfaces.BlockData;
-import com.IndustrialWorld.interfaces.ItemBase;
+import com.IndustrialWorld.interfaces.*;
 import com.IndustrialWorld.utils.NBTUtil;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
@@ -15,6 +12,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.*;
@@ -41,9 +40,18 @@ public class MainManager {
                 if (value != null && value.asBoolean() && instance instanceof ItemBase)
                     ((ItemBase) instance).onInteractAsItem((PlayerInteractEvent) event);
             }
-        } else if (event instanceof TickEvent)
+        } else if (event instanceof TickEvent) {
             for (Base base : mapping.values())
                 base.onTick((TickEvent) event);
+        } else if (event instanceof InventoryClickEvent) {
+            for (Base base : mapping.values())
+                if (base instanceof InventoryListener)
+                    ((InventoryListener) base).onInventoryClick((InventoryClickEvent) event);
+        } else if (event instanceof InventoryCloseEvent) {
+            for (Base base : mapping.values())
+                if (base instanceof InventoryListener)
+                    ((InventoryListener) base).onInventoryClose((InventoryCloseEvent) event);
+        }
     }
 
     public static String getIdFromInstance(Base instance) {
