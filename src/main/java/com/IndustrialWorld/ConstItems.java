@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class ConstItems {
+
     public final static ItemStack BASIC_MACHINE_BLOCK = genIWIS(Material.IRON_BLOCK, "BASIC_MACHINE_BLOCK", ChatColor.WHITE + "基础机器方块",
             Arrays.asList(
                 ChatColor.WHITE + "最基本的机器外壳",
@@ -28,7 +29,7 @@ public final class ConstItems {
     public final static ItemStack FORGE_HAMMER = genIWIS(Material.IRON_SHOVEL, "FORGE_HAMMER", ChatColor.WHITE + "锻造锤",
             Arrays.asList(
                     ChatColor.WHITE + "在工作台上砸砸砸砸",
-                    ChatColor.GRAY + "3耐久/次",
+                    ChatColor.GRAY + "3耐久/次(大约使用83次)",
                     ChatColor.GRAY + "(当然，你也可以把它当铲子用，不过似乎太浪费了)"
             ));
     public final static ItemStack IRON_PLATE = genIWIS(Material.PAPER, "IRON_PLATE", ChatColor.WHITE + "铁板",
@@ -38,8 +39,9 @@ public final class ConstItems {
             ));
     public final static ItemStack CUTTER = genIWIS(Material.SHEARS, "CUTTER", ChatColor.WHITE + "板材切割剪刀",
             Arrays.asList(
-                    ChatColor.WHITE + "板材切割剪刀",
-                    ChatColor.GRAY + "把板材切割成线"
+                    ChatColor.WHITE + "把板材切割成线",
+                    ChatColor.GRAY + "4耐久/次(大约使用59次)",
+                    ChatColor.GRAY + "(当然，你也可以把它当剪刀用，不过似乎太浪费了)"
             ));
 
 
