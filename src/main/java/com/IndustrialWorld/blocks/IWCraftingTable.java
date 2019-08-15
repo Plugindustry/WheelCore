@@ -3,21 +3,28 @@ package com.IndustrialWorld.blocks;
 import com.IndustrialWorld.ConstItems;
 import com.IndustrialWorld.event.TickEvent;
 import com.IndustrialWorld.interfaces.BlockBase;
+import com.IndustrialWorld.interfaces.InventoryListener;
+import com.IndustrialWorld.utils.InventoryUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
-import org.bukkit.inventory.meta.Damageable;
-import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
 
-public class IWCraftingTable extends BlockBase {
+public class IWCraftingTable extends BlockBase implements InventoryListener {
     private static LinkedHashMap<Inventory, Recipe> tickingMap = new LinkedHashMap<>();
     private static ArrayList<Recipe> recipes = new ArrayList<>();
 
@@ -116,6 +123,62 @@ public class IWCraftingTable extends BlockBase {
 
     public static Recipe getRecipeUsing(Inventory ci) {
         return tickingMap.get(ci);
+    }
+
+    @Override
+    public void onInventoryClick(InventoryClickEvent event) {
+        if (IWCraftingTable.isInvTicking(event.getClickedInventory()) && event.getSlot() == 0) {
+            if (event.getAction() != InventoryAction.PICKUP_ALL) {
+                event.setCancelled(true);
+                return;
+            }
+            Recipe recipe = IWCraftingTable.getRecipeUsing(event.getClickedInventory());
+            if (recipe == null)
+                return;
+            if (recipe instanceof IWCraftingTable.IWShapedRecipe) {
+                IWCraftingTable.IWShapedRecipe rb = (IWCraftingTable.IWShapedRecipe) recipe;
+                ItemStack[] is = rb.getMatrix();
+                for (int i = 0; i <= 8; ++i) {
+                    ItemStack i2 = event.getClickedInventory().getStorageContents()[i + 1];
+                    if (i2 == null || is[i] == null)
+                        continue;
+                    i2.setAmount(i2.getAmount() - is[i].getAmount());
+                    ItemStack[] buf = event.getClickedInventory().getStorageContents();
+                    buf[i + 1] = i2;
+                    event.getClickedInventory().setStorageContents(buf);
+                }
+            } else if (recipe instanceof IWCraftingTable.IWShapelessRecipe) {
+                Inventory ci = event.getClickedInventory();
+                IWCraftingTable.IWShapelessRecipe rb = (IWCraftingTable.IWShapelessRecipe) recipe;
+                List<ItemStack> i1 = Arrays.asList(ci.getStorageContents()).subList(1, ci.getStorageContents().length);
+                ItemStack[] i2 = rb.getMatrix();
+                for (int i = 0; i <= 8; ++i) {
+                    ItemStack bi = i1.get(i);
+                    if (bi == null || i2[i] == null)
+                        continue;
+                    if (rb.isUseDurability() && i2[i].getType().getMaxDurability() != 0) {
+                        bi.setDurability((short) (bi.getDurability() + rb.getDurabilityCost()));
+                    } else {
+                        bi.setAmount(bi.getAmount() - i2[i].getAmount());
+                    }
+                    ItemStack[] buf = event.getClickedInventory().getStorageContents();
+                    buf[i + 1] = bi;
+                    event.getClickedInventory().setStorageContents(buf);
+                }
+            }
+            InventoryUtil.updateInventoryWithoutCarriedItem((Player) event.getClickedInventory().getViewers().get(0));
+        }
+    }
+
+    @Override
+    public void onInventoryClose(InventoryCloseEvent event) {
+        if (IWCraftingTable.isInvTicking(event.getInventory())) {
+            ItemStack[] buf = event.getInventory().getStorageContents();
+            buf[0] = new ItemStack(Material.AIR);
+            for (ItemStack is : buf)
+                if (is != null && is.getType() != Material.AIR)
+                    event.getPlayer().getWorld().dropItem(event.getPlayer().getLocation(), is);
+        }
     }
 
     public static class IWShapedRecipe implements Recipe {
