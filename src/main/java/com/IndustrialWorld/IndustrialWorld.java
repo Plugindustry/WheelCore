@@ -15,9 +15,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 
 public final class IndustrialWorld extends JavaPlugin {
+    public static YamlConfiguration blocksConfig;
     public static YamlConfiguration config;
+    public static Locale locale;
+    public static String localeString;
 
     @Override
     public void onEnable() {
@@ -32,8 +36,8 @@ public final class IndustrialWorld extends JavaPlugin {
                 e.printStackTrace();
             }
         }
-        config = YamlConfiguration.loadConfiguration(file);
-        MainManager.loadBlocksFromConfig(config);
+        blocksConfig = YamlConfiguration.loadConfiguration(file);
+        MainManager.loadBlocksFromConfig(blocksConfig);
 
         RegisterManager.registerIWCRecipes();
         RegisterManager.registerBlockIS();
@@ -41,6 +45,20 @@ public final class IndustrialWorld extends JavaPlugin {
         getServer().addRecipe(new ShapedRecipe(new NamespacedKey(this, "IW_CRAFTING_TABLE"), ConstItems.IW_CRAFTING_TABLE).shape("AAA", "ABA", "AAA").setIngredient('A', Material.IRON_INGOT).setIngredient('B', Material.CRAFTING_TABLE));
 
         getServer().getScheduler().runTaskTimer(this, () -> getServer().getPluginManager().callEvent(new TickEvent()), 0, 0);
+
+        if (getDataFolder().isDirectory() || getDataFolder().mkdirs()) ;
+        File config_yml = new File(getDataFolder(), "config.yml");
+        if (!(config_yml.isFile())) {
+            try {
+                config_yml.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        config = YamlConfiguration.loadConfiguration(config_yml);
+        locale = new Locale(config.getString("lang").split("_")[0], config.getString("lang").split("_")[1]);
+        localeString = config.getString("lang");
+
     }
 
     @Override
