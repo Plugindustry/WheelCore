@@ -1,0 +1,12 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="IW">
+    <output-path>$PROJECT_DIR$/classes/artifacts/IW</output-path>
+    <root id="archive" name="IW.jar">
+      <element id="module-output" name="czm" />
+      <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/plugin.yml" />
+      <element id="dir-copy" path="$PROJECT_DIR$/src/main/resources" />
+      <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/config.yml" />
+      <element id="file-copy" path="$PROJECT_DIR$/src/main/resources/lang/zh_CN.lang" />
+    </root>
+  </artifact>
+</component>

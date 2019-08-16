@@ -1,5 +1,7 @@
 package com.IndustrialWorld;
 
+import com.IndustrialWorld.i18n.I18n;
+import com.IndustrialWorld.i18n.I18nConst;
 import com.IndustrialWorld.utils.NBTUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -26,7 +28,7 @@ public final class ConstItems {
                     ChatColor.WHITE + "工业用线缆",
                     ChatColor.GRAY + "用于各机器间传输电力"
             ));
-    public final static ItemStack FORGE_HAMMER = genIWIS(Material.IRON_SHOVEL, "FORGE_HAMMER", ChatColor.WHITE + "锻造锤",
+    public final static ItemStack FORGE_HAMMER = genIWIS(Material.IRON_SHOVEL, "FORGE_HAMMER", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER),
             Arrays.asList(
                     ChatColor.WHITE + "在工作台上砸砸砸砸",
                     ChatColor.GRAY + "3耐久/次(大约使用83次)",

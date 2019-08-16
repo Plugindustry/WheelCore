@@ -1,24 +1,24 @@
 package com.IndustrialWorld.i18n;
 
 import com.IndustrialWorld.IndustrialWorld;
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
-import java.util.Locale;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
+import java.lang.Class;
 
 public class I18n {
-    Locale locale = IndustrialWorld.locale;
+    static String localeString = IndustrialWorld.localeString;
+    static String dataFolder = IndustrialWorld.instance.getDataFolderPath();
 
     private static ResourceBundle bundle;
     private static BufferedInputStream inputStream;
 
     static {
-        String proFilePath = JavaPlugin.getPlugin().getDataFolder() + "\\lang\\";
+        String langFilePath = dataFolder + "\\lang\\" + localeString + ".lang";
         try {
-            inputStream = new BufferedInputStream(new FileInputStream(proFilePath));
+            inputStream = new BufferedInputStream(new FileInputStream(langFilePath));
             bundle = new PropertyResourceBundle(inputStream);
             inputStream.close();
         } catch (FileNotFoundException e) {
@@ -26,5 +26,9 @@ public class I18n {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public static String getLocaleString(String key) {
+        return bundle.getString(key);
     }
 }

@@ -1,7 +1,5 @@
 package com.IndustrialWorld;
 
-import com.IndustrialWorld.blocks.BasicMachineBlock;
-import com.IndustrialWorld.blocks.IWCraftingTable;
 import com.IndustrialWorld.event.EventListener;
 import com.IndustrialWorld.event.TickEvent;
 import com.IndustrialWorld.manager.MainManager;
@@ -9,7 +7,6 @@ import com.IndustrialWorld.manager.RegisterManager;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -23,9 +20,14 @@ public final class IndustrialWorld extends JavaPlugin {
     public static Locale locale;
     public static String localeString;
 
+    public static IndustrialWorld instance;
+
     @Override
     public void onEnable() {
         // Plugin startup logic
+        instance = this;
+        System.out.println("233"+getDataFolderPath());
+
         getServer().getPluginManager().registerEvents(new EventListener(), this);
         if (getDataFolder().isDirectory() || getDataFolder().mkdirs()) ;
         File file = new File(getDataFolder(), "blocks.yml");
@@ -59,6 +61,7 @@ public final class IndustrialWorld extends JavaPlugin {
         locale = new Locale(config.getString("lang").split("_")[0], config.getString("lang").split("_")[1]);
         localeString = config.getString("lang");
 
+
     }
 
     @Override
@@ -70,5 +73,9 @@ public final class IndustrialWorld extends JavaPlugin {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public final String getDataFolderPath() {
+        return getDataFolder().getAbsolutePath();
     }
 }
