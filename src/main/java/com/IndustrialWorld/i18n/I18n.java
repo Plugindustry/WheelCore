@@ -9,14 +9,16 @@ import java.util.ResourceBundle;
 import java.lang.Class;
 
 public class I18n {
-    static String localeString = IndustrialWorld.localeString;
-    static String dataFolder = IndustrialWorld.instance.getDataFolderPath();
+    public static String localeString = IndustrialWorld.localeString;
+    public static File dataFolder = IndustrialWorld.instance.getDataFolder();
 
     private static ResourceBundle bundle;
     private static BufferedInputStream inputStream;
+    private static InputStream langFileInput;
+    private static FileOutputStream langFileOutput;
 
     static {
-        String langFilePath = dataFolder + "\\lang\\" + localeString + ".lang";
+        String langFilePath = dataFolder.getAbsolutePath() + "\\lang\\" + localeString + ".lang";
         try {
             inputStream = new BufferedInputStream(new FileInputStream(langFilePath));
             bundle = new PropertyResourceBundle(inputStream);
@@ -25,6 +27,26 @@ public class I18n {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+
+        File langFile = new File(dataFolder.getAbsolutePath() +  "\\lang\\" + localeString + ".lang");
+        if (!(langFile.isFile())) {
+            try {
+                langFile.createNewFile();
+                langFileInput = IndustrialWorld.class.getResourceAsStream("/lang/" + localeString + ".lang");
+                langFileOutput = new FileOutputStream(langFile);
+
+                byte[] b = new byte[1024];
+                int length;
+                while((length = langFileInput.read(b))>0){
+                    langFileOutput.write(b,0,length);
+                }
+
+                langFileInput.close();
+                langFileOutput.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 

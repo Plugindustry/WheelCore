@@ -2,6 +2,7 @@ package com.IndustrialWorld;
 
 import com.IndustrialWorld.event.EventListener;
 import com.IndustrialWorld.event.TickEvent;
+import com.IndustrialWorld.i18n.I18n;
 import com.IndustrialWorld.manager.MainManager;
 import com.IndustrialWorld.manager.RegisterManager;
 import org.bukkit.Material;
@@ -46,8 +47,6 @@ public final class IndustrialWorld extends JavaPlugin {
             saveDefaultConfig();
         }
         config = YamlConfiguration.loadConfiguration(config_yml);
-
-        locale = new Locale(config.getString("lang").split("_")[0], config.getString("lang").split("_")[1]);
         localeString = config.getString("lang");
 
         RegisterManager.registerIWCRecipes();
