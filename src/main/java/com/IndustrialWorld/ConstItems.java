@@ -13,6 +13,24 @@ import java.util.List;
 
 public final class ConstItems {
 
+    public final static ItemStack FIRE_GENERATOR = genIWIS(Material.FURNACE, "FIRE_GENERATOR", ChatColor.WHITE + "火力发电机",
+            Arrays.asList(
+                ChatColor.WHITE + "由热驱动的发电机",
+                ChatColor.GRAY + "可消耗燃料供电",
+                ChatColor.GRAY + "机械效率约为30%"
+             ));
+    public final static ItemStack LIGHT_GENERATOR = genIWIS(Material.DAYLIGHT_DETECTOR, "LIGHT_GENERATOR", ChatColor.WHITE + "太阳能电池板",
+            Arrays.asList(
+                ChatColor.WHITE + "由太阳能驱动的发电机",
+                ChatColor.GREEN + "纯天然绿色无污染,节能环保",
+                ChatColor.GRAY + "可在阳光下缓慢发电"
+             ));
+    /*public final static ItemStack WATER_GENERATOR = genIWIS(Material.FURNACE, "WATER_GENERATOR", ChatColor.WHITE + "水力发电机",
+            Arrays.asList(
+                ChatColor.WHITE + "由水力驱动的发电机",
+                ChatColor.GREEN + "据说三峡用的就是这款牌子的水力发电机",
+                ChatColor.GRAY + "可在阳光下缓慢发电"
+             ));*/
     public final static ItemStack BASIC_MACHINE_BLOCK = genIWIS(Material.IRON_BLOCK, "BASIC_MACHINE_BLOCK", ChatColor.WHITE + "基础机器方块",
             Arrays.asList(
                 ChatColor.WHITE + "最基本的机器外壳",
@@ -22,6 +40,16 @@ public final class ConstItems {
             Arrays.asList(
                 ChatColor.WHITE + "工业用合成台",
                 ChatColor.GRAY + "工业物品合成时均需使用"
+             ));
+    public final static ItemStack IW_FURNACE = genIWIS(Material.FURNACE, "IW_FURNACE", ChatColor.WHITE + "工业熔炼炉",
+            Arrays.asList(
+                ChatColor.WHITE + "工业用熔炼炉",
+                ChatColor.GRAY + "工业矿石加工时均需使用"
+             ));
+    public final static ItemStack IW_TRASH_COAL = genIWIS(Material.CHARCOAL, "IW_TRASH_COAL", ChatColor.WHITE + "粗制燃料",
+            Arrays.asList(
+                ChatColor.WHITE + "粗制的燃料",
+                ChatColor.GRAY + "能提供少量热量"
              ));
     public final static ItemStack IW_WIRE = genIWIS(Material.IRON_BARS, "IW_WIRE", ChatColor.WHITE + "线缆",
             Arrays.asList(
