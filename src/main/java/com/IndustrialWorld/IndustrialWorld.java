@@ -26,20 +26,29 @@ public final class IndustrialWorld extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
         instance = this;
-        System.out.println("233"+getDataFolderPath());
 
         getServer().getPluginManager().registerEvents(new EventListener(), this);
         if (getDataFolder().isDirectory() || getDataFolder().mkdirs()) ;
-        File file = new File(getDataFolder(), "blocks.yml");
-        if (!(file.isFile())) {
+        File block_yml = new File(getDataFolder(), "blocks.yml");
+        if (!(block_yml.isFile())) {
             try {
-                file.createNewFile();
+                block_yml.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        blocksConfig = YamlConfiguration.loadConfiguration(file);
+        blocksConfig = YamlConfiguration.loadConfiguration(block_yml);
         MainManager.loadBlocksFromConfig(blocksConfig);
+
+        if (getDataFolder().isDirectory() || getDataFolder().mkdirs()) ;
+        File config_yml = new File(getDataFolder(), "config.yml");
+        if (!(config_yml.isFile())) {
+            saveDefaultConfig();
+        }
+        config = YamlConfiguration.loadConfiguration(config_yml);
+
+        locale = new Locale(config.getString("lang").split("_")[0], config.getString("lang").split("_")[1]);
+        localeString = config.getString("lang");
 
         RegisterManager.registerIWCRecipes();
         RegisterManager.registerBlockIS();
@@ -47,21 +56,6 @@ public final class IndustrialWorld extends JavaPlugin {
         getServer().addRecipe(new ShapedRecipe(new NamespacedKey(this, "IW_CRAFTING_TABLE"), ConstItems.IW_CRAFTING_TABLE).shape("AAA", "ABA", "AAA").setIngredient('A', Material.IRON_INGOT).setIngredient('B', Material.CRAFTING_TABLE));
 
         getServer().getScheduler().runTaskTimer(this, () -> getServer().getPluginManager().callEvent(new TickEvent()), 0, 0);
-
-        if (getDataFolder().isDirectory() || getDataFolder().mkdirs()) ;
-        File config_yml = new File(getDataFolder(), "config.yml");
-        if (!(config_yml.isFile())) {
-            try {
-                config_yml.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        config = YamlConfiguration.loadConfiguration(config_yml);
-        locale = new Locale(config.getString("lang").split("_")[0], config.getString("lang").split("_")[1]);
-        localeString = config.getString("lang");
-
-
     }
 
     @Override
