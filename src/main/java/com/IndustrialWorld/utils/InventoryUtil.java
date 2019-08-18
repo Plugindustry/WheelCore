@@ -29,8 +29,8 @@ public class InventoryUtil {
     public static void updateInventoryWithoutCarriedItem(Player player) {
         try {
             Object craftPlayer = CraftPlayer.cast(player);
-            Object container = CraftPlayer.getField("activeContainer").get(craftPlayer);
             Object nmsPlayer = CraftPlayer.getMethod("getHandle").invoke(craftPlayer);
+            Object container = NMSPlayer.getField("activeContainer").get(nmsPlayer);
             Object playerConnection = NMSPlayerConnection.cast(NMSPlayer.getField("playerConnection").get(nmsPlayer));
             NMSPlayerConnection.getMethod("sendPacket", NMSPacket).invoke(playerConnection, NMSPacketPlayOutWindowItems.getConstructor(int.class, NMSNonNullList).newInstance(NMSContainer.getField("windowId").get(container), NMSContainer.getMethod("a").invoke(container)));
         } catch (Exception e) {

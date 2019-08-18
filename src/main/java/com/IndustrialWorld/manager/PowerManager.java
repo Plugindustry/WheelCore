@@ -56,11 +56,11 @@ public class PowerManager {
                         (BlockUtil.isMachine(l.getBlock()) && getInputRequest(l) != null))
                         ++d;
                 if (d == 0)
-                    d = 1;
+                    continue;
                 ((OutputRequest) entry.getValue()).power /= d;
                 for (Location l : buf2)
                     if (BlockUtil.isWire(l.getBlock())) {
-                        Map.Entry<LinkedTree<Location>, List<BlockUtil.SearchResult>> result = BlockUtil.searchFromWire(l.getBlock());
+                        Map.Entry<LinkedTree<Location>, List<BlockUtil.SearchResult>> result = BlockUtil.searchFromWire(l.getBlock(), buf);
                         for (BlockUtil.SearchResult r : result.getValue()) {
                             InputRequest resq = getInputRequest(r.machineBlock.getLocation());
                             if (resq == null)

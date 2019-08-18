@@ -98,6 +98,10 @@ public class IWCraftingTable extends BlockBase implements InventoryListener {
                         }
                         continue tag2;
                     }
+                    while (i1.remove(null))
+                        ;
+                    if (!i1.isEmpty())
+                        continue tag2;
                     recipeToSave = new IWShapelessRecipe(recipe.getResult(), ((IWShapelessRecipe) recipe).isUseDurability()).set(tempMatrix.toArray(new ItemStack[0])).setDurabilityCost(((IWShapelessRecipe) recipe).getDurabilityCost());
                 }
                 tickingMap.replace(ci, recipeToSave);
