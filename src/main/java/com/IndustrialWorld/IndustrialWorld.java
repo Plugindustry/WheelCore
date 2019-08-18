@@ -13,13 +13,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Locale;
 
 public final class IndustrialWorld extends JavaPlugin {
     public static YamlConfiguration blocksConfig;
     public static YamlConfiguration config;
-    public static Locale locale;
-    public static String localeString;
 
     public static IndustrialWorld instance;
 
@@ -47,7 +44,7 @@ public final class IndustrialWorld extends JavaPlugin {
             saveDefaultConfig();
         }
         config = YamlConfiguration.loadConfiguration(config_yml);
-        localeString = config.getString("lang");
+        I18n.init(config);
 
         RegisterManager.registerIWCRecipes();
         RegisterManager.registerBlockIS();
@@ -60,10 +57,10 @@ public final class IndustrialWorld extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        MainManager.saveBlocksToConfig(config);
+        MainManager.saveBlocksToConfig(blocksConfig);
         try {
-            config.save(new File(getDataFolder(), "blocks.yml"));
-        } catch (IOException e) {
+            blocksConfig.save(new File(getDataFolder(), "blocks.yml"));
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

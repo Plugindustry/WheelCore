@@ -1,79 +1,57 @@
 package com.IndustrialWorld.i18n;
 
 import com.IndustrialWorld.IndustrialWorld;
-import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
-import java.lang.Class;
+import java.util.logging.Level;
 
 public class I18n {
-    public static String localeString = IndustrialWorld.localeString;
+    public static String localeString;
     public static File dataFolder = IndustrialWorld.instance.getDataFolder();
 
     private static ResourceBundle bundle;
     private static BufferedInputStream inputStream;
 
-    static {
-        String langFilePath = dataFolder.getAbsolutePath() + "\\lang\\" + localeString + ".lang";
-
-        File langDir = new File(dataFolder.getAbsolutePath() +  "\\lang\\");
-        if (!langDir.exists()) langDir.mkdir();
-        File langFile = new File(dataFolder.getAbsolutePath() +  "\\lang\\" + localeString + ".lang");
-        if (!(langFile.isFile())) {
+    public static void init(YamlConfiguration config) {
+        localeString = config.getString("lang");
+        File langDir = new File(dataFolder, "lang");
+        if (langDir.isDirectory() || langDir.mkdir())
+            ;
+        File langFile = new File(langDir, localeString + ".lang");
+        if (!langFile.isFile())
             try {
                 langFile.createNewFile();
                 Properties prop = new Properties();
-                InputStream in = null;
-                FileOutputStream oFile = null;
-                try {
-                    in = new BufferedInputStream(IndustrialWorld.class.getResourceAsStream("/lang/" + localeString + ".lang"));
-                    prop.load(new InputStreamReader(in, StandardCharsets.UTF_8));
-
-                    oFile = new FileOutputStream(langFile, false);
-
-                    prop.store(new OutputStreamWriter(oFile, StandardCharsets.UTF_8),null);
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                } finally {
-                    if (in != null) {
-                        try {
-                            in.close();
-                        } catch (IOException e) {
-                            System.out.println(e.getMessage());
-                        }
-                    }
-                    if (oFile != null) {
-                        try {
-                            oFile.close();
-                        } catch (IOException e) {
-                            System.out.println(e.getMessage());
-                        }
-                    }
-                }
-            } catch (IOException e) {
+                InputStreamReader in = new InputStreamReader(new BufferedInputStream(IndustrialWorld.class.getResourceAsStream(
+                        "/lang/" + localeString + ".lang")), StandardCharsets.UTF_8);
+                OutputStreamWriter oFile = new OutputStreamWriter(new FileOutputStream(langFile), StandardCharsets.UTF_8);
+                prop.load(in);
+                prop.store(oFile, null);
+                in.close();
+                oFile.close();
+            } catch (Exception e) {
                 e.printStackTrace();
+                IndustrialWorld.instance.getLogger().log(Level.SEVERE, "Error while creating lang file");
+                IndustrialWorld.instance.getServer().getPluginManager().disablePlugin(IndustrialWorld.instance);
             }
-        }
-
-        //langFileInput = IndustrialWorld.class.getResourceAsStream("/lang/" + localeString + ".lang");
-        //langFileOutput = new FileOutputStream(langFile);
 
         try {
-            inputStream = new BufferedInputStream(new FileInputStream(langFilePath));
+            inputStream = new BufferedInputStream(new FileInputStream(langFile));
             bundle = new PropertyResourceBundle(inputStream);
             inputStream.close();
-        } catch (FileNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            IndustrialWorld.instance.getLogger().log(Level.SEVERE, "Error while reading lang file");
+            IndustrialWorld.instance.getServer().getPluginManager().disablePlugin(IndustrialWorld.instance);
         }
     }
 
     public static String getLocaleString(String key) {
-        return bundle.getString(key);
+        return new String(bundle.getString(key).getBytes(StandardCharsets.ISO_8859_1), StandardCharsets.UTF_8);
     }
 }

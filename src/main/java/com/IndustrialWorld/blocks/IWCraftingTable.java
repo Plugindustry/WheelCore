@@ -5,6 +5,7 @@ import com.IndustrialWorld.event.TickEvent;
 import com.IndustrialWorld.interfaces.BlockBase;
 import com.IndustrialWorld.interfaces.InventoryListener;
 import com.IndustrialWorld.utils.InventoryUtil;
+import com.IndustrialWorld.utils.NBTUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -64,7 +65,7 @@ public class IWCraftingTable extends BlockBase implements InventoryListener {
                             i1 = new ItemStack(Material.AIR);
                         if (i2 == null)
                             i2 = new ItemStack(Material.AIR);
-                        if (i1.isSimilar(i2) && i1.getAmount() >= i2.getAmount())
+                        if (isEnoughToRecipe(i2, i1))
                             ;
                         else
                             continue tag2;
@@ -84,13 +85,13 @@ public class IWCraftingTable extends BlockBase implements InventoryListener {
                                 if(is.getType().getMaxDurability() != 0) {
                                     ItemStack bufI = is.clone();
                                     bufI.setDurability((short)0);
-                                    if(bufI.equals(ms)) {
+                                    if (isEnoughToRecipe(ms, bufI)) {
                                         tempMatrix.set(i1.indexOf(is), ms);
                                         i1.set(i1.indexOf(is), null);
                                         continue t1;
                                     }
                                 }
-                            }else if (ms.isSimilar(is) && is.getAmount() >= ms.getAmount()) {
+                            } else if (isEnoughToRecipe(ms, is)) {
                                 tempMatrix.set(i1.indexOf(is), ms);
                                 i1.set(i1.indexOf(is), null);
                                 continue t1;
@@ -117,6 +118,17 @@ public class IWCraftingTable extends BlockBase implements InventoryListener {
         }
     }
 
+    public static boolean isEnoughToRecipe(ItemStack itemNeed, ItemStack itemHave) {
+        NBTUtil.NBTValue value = NBTUtil.getTagValue(itemNeed, "isIWItem");
+        NBTUtil.NBTValue value2 = NBTUtil.getTagValue(itemHave, "isIWItem");
+        if (value != null && value.asBoolean())
+            return value2 != null && value2.asBoolean() &&
+                   NBTUtil.getTagValue(itemNeed, "IWItemId").asString().equals(NBTUtil.getTagValue(itemHave, "IWItemId").asString()) &&
+                   itemHave.getAmount() >= itemNeed.getAmount();
+        else
+            return itemNeed.isSimilar(itemHave) && itemHave.getAmount() >= itemNeed.getAmount();
+    }
+
     public static void registerRecipe(Recipe recipe) {
         recipes.add(recipe);
     }
@@ -132,7 +144,10 @@ public class IWCraftingTable extends BlockBase implements InventoryListener {
     @Override
     public void onInventoryClick(InventoryClickEvent event) {
         if (IWCraftingTable.isInvTicking(event.getClickedInventory()) && event.getSlot() == 0) {
-            if (event.getAction() != InventoryAction.PICKUP_ALL) {
+            InventoryUtil.updateInventoryWithoutCarriedItem((Player) event.getClickedInventory().getViewers().get(0));
+            if (!(event.getAction() == InventoryAction.PICKUP_ALL ||
+                  ((event.getAction() == InventoryAction.PLACE_ONE || event.getAction() == InventoryAction.PLACE_ALL) &&
+                   event.getClickedInventory().getStorageContents()[0] != null))) {
                 event.setCancelled(true);
                 return;
             }
