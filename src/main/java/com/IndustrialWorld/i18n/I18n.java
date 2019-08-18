@@ -4,6 +4,8 @@ import com.IndustrialWorld.IndustrialWorld;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Properties;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import java.lang.Class;
@@ -14,11 +16,52 @@ public class I18n {
 
     private static ResourceBundle bundle;
     private static BufferedInputStream inputStream;
-    private static InputStream langFileInput;
-    private static FileOutputStream langFileOutput;
 
     static {
         String langFilePath = dataFolder.getAbsolutePath() + "\\lang\\" + localeString + ".lang";
+
+        File langDir = new File(dataFolder.getAbsolutePath() +  "\\lang\\");
+        if (!langDir.exists()) langDir.mkdir();
+        File langFile = new File(dataFolder.getAbsolutePath() +  "\\lang\\" + localeString + ".lang");
+        if (!(langFile.isFile())) {
+            try {
+                langFile.createNewFile();
+                Properties prop = new Properties();
+                InputStream in = null;
+                FileOutputStream oFile = null;
+                try {
+                    in = new BufferedInputStream(IndustrialWorld.class.getResourceAsStream("/lang/" + localeString + ".lang"));
+                    prop.load(new InputStreamReader(in, StandardCharsets.UTF_8));
+
+                    oFile = new FileOutputStream(langFile, false);
+
+                    prop.store(new OutputStreamWriter(oFile, StandardCharsets.UTF_8),null);
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                } finally {
+                    if (in != null) {
+                        try {
+                            in.close();
+                        } catch (IOException e) {
+                            System.out.println(e.getMessage());
+                        }
+                    }
+                    if (oFile != null) {
+                        try {
+                            oFile.close();
+                        } catch (IOException e) {
+                            System.out.println(e.getMessage());
+                        }
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        //langFileInput = IndustrialWorld.class.getResourceAsStream("/lang/" + localeString + ".lang");
+        //langFileOutput = new FileOutputStream(langFile);
+
         try {
             inputStream = new BufferedInputStream(new FileInputStream(langFilePath));
             bundle = new PropertyResourceBundle(inputStream);
@@ -27,26 +70,6 @@ public class I18n {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        }
-
-        File langFile = new File(dataFolder.getAbsolutePath() +  "\\lang\\" + localeString + ".lang");
-        if (!(langFile.isFile())) {
-            try {
-                langFile.createNewFile();
-                langFileInput = IndustrialWorld.class.getResourceAsStream("/lang/" + localeString + ".lang");
-                langFileOutput = new FileOutputStream(langFile);
-
-                byte[] b = new byte[1024];
-                int length;
-                while((length = langFileInput.read(b))>0){
-                    langFileOutput.write(b,0,length);
-                }
-
-                langFileInput.close();
-                langFileOutput.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 
