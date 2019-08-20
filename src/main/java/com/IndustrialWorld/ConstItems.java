@@ -13,34 +13,35 @@ import java.util.List;
 
 public final class ConstItems {
 
-    public final static ItemStack FIRE_GENERATOR = genIWIS(Material.FURNACE, "FIRE_GENERATOR", ChatColor.WHITE + "火力发电机",
+    public final static ItemStack FORGE_HAMMER = genIWIS(Material.IRON_SHOVEL, "FORGE_HAMMER", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER),
             Arrays.asList(
-                ChatColor.WHITE + "由热驱动的发电机",
-                ChatColor.GRAY + "可消耗燃料供电",
-                ChatColor.GRAY + "机械效率约为30%"
+                    ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER_LORE1),
+                    ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER_LORE2),
+                    ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER_LORE3)
+            ));
+    public final static ItemStack IW_CRAFTING_TABLE = genIWIS(Material.CRAFTING_TABLE, "IW_CRAFTING_TABLE", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.IW_CRAFTING_TABLE),
+            Arrays.asList(
+                ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.IW_CRAFTING_TABLE_LORE1),
+                ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.IW_CRAFTING_TABLE_LORE2)
              ));
-    public final static ItemStack LIGHT_GENERATOR = genIWIS(Material.DAYLIGHT_DETECTOR, "LIGHT_GENERATOR", ChatColor.WHITE + "太阳能电池板",
+    public final static ItemStack IRON_PLATE = genIWIS(Material.PAPER, "IRON_PLATE", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.IRON_PLATE),
             Arrays.asList(
-                ChatColor.WHITE + "由太阳能驱动的发电机",
-                ChatColor.GREEN + "纯天然绿色无污染,节能环保",
-                ChatColor.GRAY + "可在阳光下缓慢发电"
-             ));
-    /*public final static ItemStack WATER_GENERATOR = genIWIS(Material.FURNACE, "WATER_GENERATOR", ChatColor.WHITE + "水力发电机",
+                    ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.IRON_PLATE_LORE1),
+                    ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.IRON_PLATE_LORE2)
+            ));
+    public final static ItemStack CUTTER = genIWIS(Material.SHEARS, "CUTTER", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.CUTTER),
             Arrays.asList(
-                ChatColor.WHITE + "由水力驱动的发电机",
-                ChatColor.GREEN + "据说三峡用的就是这款牌子的水力发电机",
-                ChatColor.GRAY + "可在阳光下缓慢发电"
-             ));*/
-    public final static ItemStack BASIC_MACHINE_BLOCK = genIWIS(Material.IRON_BLOCK, "BASIC_MACHINE_BLOCK", ChatColor.WHITE + "基础机器方块",
+                    ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.CUTTER),
+                    ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.CUTTER_LORE1),
+                    ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.CUTTER_LORE2)
+            ));
+    public final static ItemStack BASIC_MACHINE_BLOCK = genIWIS(Material.IRON_BLOCK, "BASIC_MACHINE_BLOCK", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.BASIC_MACHINE_BLOCK),
             Arrays.asList(
-                ChatColor.WHITE + "最基本的机器外壳",
-                ChatColor.GRAY + "可用于制造基础机器"
-             ));
-    public final static ItemStack IW_CRAFTING_TABLE = genIWIS(Material.CRAFTING_TABLE, "IW_CRAFTING_TABLE", ChatColor.WHITE + "工业合成台",
-            Arrays.asList(
-                ChatColor.WHITE + "工业用合成台",
-                ChatColor.GRAY + "工业物品合成时均需使用"
-             ));
+                    ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.BASIC_MACHINE_BLOCK_LORE1),
+                    ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.BASIC_MACHINE_BLOCK_LORE2)
+            ));
+
+    /*
     public final static ItemStack IW_FURNACE = genIWIS(Material.FURNACE, "IW_FURNACE", ChatColor.WHITE + "工业熔炼炉",
             Arrays.asList(
                 ChatColor.WHITE + "工业用熔炼炉",
@@ -51,29 +52,24 @@ public final class ConstItems {
                 ChatColor.WHITE + "粗制的燃料",
                 ChatColor.GRAY + "能提供少量热量"
              ));
-    public final static ItemStack IW_WIRE = genIWIS(Material.IRON_BARS, "IW_WIRE", ChatColor.WHITE + "线缆",
+    public final static ItemStack FIRE_GENERATOR = genIWIS(Material.FURNACE, "FIRE_GENERATOR", ChatColor.WHITE + "火力发电机",
             Arrays.asList(
-                    ChatColor.WHITE + "工业用线缆",
-                    ChatColor.GRAY + "用于各机器间传输电力"
+                    ChatColor.WHITE + "由热驱动的发电机",
+                    ChatColor.GRAY + "可消耗燃料供电",
+                    ChatColor.GRAY + "机械效率约为30%"
             ));
-    public final static ItemStack FORGE_HAMMER = genIWIS(Material.IRON_SHOVEL, "FORGE_HAMMER", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER),
+    public final static ItemStack LIGHT_GENERATOR = genIWIS(Material.DAYLIGHT_DETECTOR, "LIGHT_GENERATOR", ChatColor.WHITE + "太阳能电池板",
             Arrays.asList(
-                    ChatColor.WHITE + "在工作台上砸砸砸砸",
-                    ChatColor.GRAY + "3耐久/次(大约使用83次)",
-                    ChatColor.GRAY + "(当然，你也可以把它当铲子用，不过似乎太浪费了)"
+                    ChatColor.WHITE + "由太阳能驱动的发电机",
+                    ChatColor.GREEN + "纯天然绿色无污染,节能环保",
+                    ChatColor.GRAY + "可在阳光下缓慢发电"
             ));
-    public final static ItemStack IRON_PLATE = genIWIS(Material.PAPER, "IRON_PLATE", ChatColor.WHITE + "铁板",
+    public final static ItemStack WATER_GENERATOR = genIWIS(Material.FURNACE, "WATER_GENERATOR", ChatColor.WHITE + "水力发电机",
             Arrays.asList(
-                    ChatColor.WHITE + "铁板",
-                    ChatColor.GRAY + "*看起来很轻(?)"
-            ));
-    public final static ItemStack CUTTER = genIWIS(Material.SHEARS, "CUTTER", ChatColor.WHITE + "板材切割剪刀",
-            Arrays.asList(
-                    ChatColor.WHITE + "把板材切割成线",
-                    ChatColor.GRAY + "4耐久/次(大约使用59次)",
-                    ChatColor.GRAY + "(当然，你也可以把它当剪刀用，不过似乎太浪费了)"
-            ));
-
+                ChatColor.WHITE + "由水力驱动的发电机",
+                ChatColor.GREEN + "据说三峡用的就是这款牌子的水力发电机",
+                ChatColor.GRAY + "可在阳光下缓慢发电"
+             ));*/
 
     // IW ItemStack generator
 
