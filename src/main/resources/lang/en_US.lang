@@ -1,21 +1,24 @@
+
+#Translate Official by cph1
+
 item.forge-hammer.name=Hammer
 item.forge-hammer.lore.1=Can pound on the crafting table
 item.forge-hammer.lore.2=Consume 3 durable every time(About 83 times in total)
-item.forge-hammer.lore.3=(Of course,you can use it as a shovel,but doesn't it seem to be huge waste?)
+item.forge-hammer.lore.3=(Of course,you can use it as a shovel,but doesn't it seem to be huge wasteful?)
 
 item.iw-crafting-table.name=Industrial Crafting Table
 item.iw-crafting-table.lore.1=Industrial Crafting Table
 item.iw-crafting-table.lore.2=Use to craft industrial items
 
-item.iron-plate.name=铁板
-item.iron-plate.lore.1=铁板
-item.iron-plate.lore.2=(*看起来很轻?)
+item.iron-plate.name=Iron Sheet
+item.iron-plate.lore.1=Iron Sheet
+item.iron-plate.lore.2=(*Just looks light?)
 
-item.cutter.name=板材切割剪刀
-item.cutter.lore.1=把板材切割成线
-item.cutter.lore.2=4耐久/次(大约使用59次)
-item.cutter.lore.3=(当然，你也可以把它当剪刀用，不过似乎太浪费了)
+item.cutter.name=Sheet Cutting Scissors
+item.cutter.lore.1=Can cut the sheet into wires
+item.cutter.lore.2=Consume 4 durable every time(About 59 times in total)
+item.cutter.lore.3=(Of course,you can use it as scissors,but doesn't it seem to be huge wasteful?)
 
-item.basic-machine-block.name=基础机器方块
-item.basic-machine-block.lore.1=最基本的机器外壳
-item.basic-machine-block.lore.2=可用于制造基础机器
+item.basic-machine-block.name=Basic Machine Block
+item.basic-machine-block.lore.1=The most basic machine casing
+item.basic-machine-block.lore.2=Use to craft basic machines
