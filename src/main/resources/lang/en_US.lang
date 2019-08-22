@@ -4,8 +4,8 @@ item.forge-hammer.lore.2=Consume 3 durable every time(About 83 times in total)
 item.forge-hammer.lore.3=(Of course,you can use it as a shovel,but doesn't it seem to be huge waste?)
 
 item.iw-crafting-table.name=Industrial Crafting Table
-item.iw-crafting-table.lore.1=工业用工作台
-item.iw-crafting-table.lore.2=工业物品合成时均需使用
+item.iw-crafting-table.lore.1=Industrial Crafting Table
+item.iw-crafting-table.lore.2=Use to craft industrial items
 
 item.iron-plate.name=铁板
 item.iron-plate.lore.1=铁板
