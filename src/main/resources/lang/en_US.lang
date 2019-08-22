@@ -1,0 +1,21 @@
+item.forge-hammer.name=Hammer
+item.forge-hammer.lore.1=Can pound on the crafting table
+item.forge-hammer.lore.2=Consume 3 durable every time(About 83 times in total)
+item.forge-hammer.lore.3=(Of course,you can use it as a shovel,but doesn't it seem to be huge waste?)
+
+item.iw-crafting-table.name=Industrial Crafting Table
+item.iw-crafting-table.lore.1=工业用工作台
+item.iw-crafting-table.lore.2=工业物品合成时均需使用
+
+item.iron-plate.name=铁板
+item.iron-plate.lore.1=铁板
+item.iron-plate.lore.2=(*看起来很轻?)
+
+item.cutter.name=板材切割剪刀
+item.cutter.lore.1=把板材切割成线
+item.cutter.lore.2=4耐久/次(大约使用59次)
+item.cutter.lore.3=(当然，你也可以把它当剪刀用，不过似乎太浪费了)
+
+item.basic-machine-block.name=基础机器方块
+item.basic-machine-block.lore.1=最基本的机器外壳
+item.basic-machine-block.lore.2=可用于制造基础机器
