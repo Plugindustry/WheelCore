@@ -40,6 +40,12 @@ public final class ConstItems {
                     ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.BASIC_MACHINE_BLOCK_LORE1),
                     ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.BASIC_MACHINE_BLOCK_LORE2)
             ));
+    public final static ItemStack COPPER_INGOT = genIWIS(Material.BRICK, "COPPER_INGOT", ChatColor.WHITE + I18n.getLocaleString(I18nConst.COPPER_INGOT),
+            Arrays.asList(
+                    ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_INGOT_LORE1),
+                    ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.COPPER_INGOT_LORE2),
+                    ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.COPPER_INGOT_EL)
+            ));
 
     /*
     public final static ItemStack IW_FURNACE = genIWIS(Material.FURNACE, "IW_FURNACE", ChatColor.WHITE + "工业熔炼炉",

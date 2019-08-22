@@ -19,3 +19,8 @@ item.cutter.lore.3=(当然，你也可以把它当剪刀用，不过似乎太浪
 item.basic-machine-block.name=基础机器方块
 item.basic-machine-block.lore.1=最基本的机器外壳
 item.basic-machine-block.lore.2=可用于制造基础机器
+
+item.copper-ingot.name=铜锭
+item.copper-ingot.lore1=铜锭
+item.copper-ingot.lore2=铜,Cu,熔点约1083°C,相对原子质量63.55,能以单质金属状态及黄铜、青铜和其他合金的形态用于工业、工程技术和工艺上
+item.copper-ingot.el=Cu
