@@ -22,6 +22,10 @@ public class I18nConst {
         public static String BASIC_MACHINE_BLOCK = "item.basic-machine-block.name";
         public static String BASIC_MACHINE_BLOCK_LORE1 = "item.basic-machine-block.lore.1";
         public static String BASIC_MACHINE_BLOCK_LORE2 = "item.basic-machine-block.lore.2";
+
+        public static String COPPER_INGOT = "item.basic-machine-block.name";
+        public static String COPPER_INGOT_LORE1 = "item.basic-machine-block.lore.1";
+        public static String COPPER_INGOT_LORE2 = "item.basic-machine-block.lore.2";
     }
 
     public static class Block {
