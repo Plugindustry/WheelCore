@@ -90,18 +90,4 @@ public final class ConstItems {
         return tmp.clone();
     }
 
-    private static ItemStack genIWIS(Material mtrl, String itemId, String displayName, List<String> lore, List<String> eInfo) {
-        ItemStack tmp = new ItemStack(mtrl, 1);
-        tmp = NBTUtil.setTagValue(tmp, "isIWItem", new NBTUtil.NBTValue().set(true));
-        tmp = NBTUtil.setTagValue(tmp, "IWItemId", new NBTUtil.NBTValue().set(itemId));
-        ItemMeta meta = tmp.getItemMeta();
-        meta.setDisplayName(ChatColor.WHITE + displayName);
-        List<String> tmpLore = lore;
-        tmpLore.add("");
-        tmpLore.addAll(eInfo);
-        meta.setLore(lore);
-        tmp.setItemMeta(meta);
-        return tmp.clone();
-    }
-
 }
