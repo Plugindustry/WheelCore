@@ -46,6 +46,12 @@ public final class ConstItems {
                     ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_INGOT_LORE1),
                     ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.COPPER_INGOT_LORE2),
                     ChatColor.GREEN + I18n.getLocaleString(I18nConst.Element.Cu)
+            ))
+    public final static ItemStack COPPER_PLATE = genIWIS(Material.PAPER, "COPPER_PLATE", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_PLATE),
+            Arrays.asList(
+                    ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_PLATE_LORE1),
+                    ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.COPPER_PLATE_LORE2),
+                    ChatColor.GREEN + I18n.getLocaleString(I18nConst.Element.Cu)
             ));
 
     /*

@@ -25,6 +25,9 @@ item.copper-ingot.name=Copper Ingot
 item.copper-ingot.lore1=Copper Ingot
 item.copper-ingot.lore2=(*Looks like bricks, but more valuable than bricks.)
 
+item.copper-plate.name=Copper Sheet
+item.copper-plate.lore1=Copper Sheet
+item.copper-plate.lore2=(*High quality oxidation treated copper sheets,MAYBE)
 
 element.fe=Fe
 element.cu=Cu
