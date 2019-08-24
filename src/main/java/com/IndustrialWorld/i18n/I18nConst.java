@@ -31,4 +31,13 @@ public class I18nConst {
     public static class Block {
         // TODO
     }
+
+    public static class Element {
+        public static String Cu = "element.cu";
+        public static String Fe = "element.fe";
+    }
+
+    public static class Formula {
+        // TODO
+    }
 }

@@ -5,7 +5,6 @@ import com.IndustrialWorld.i18n.I18nConst;
 import com.IndustrialWorld.utils.NBTUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.craftbukkit.libs.jline.internal.Nullable;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -28,7 +27,8 @@ public final class ConstItems {
     public final static ItemStack IRON_PLATE = genIWIS(Material.PAPER, "IRON_PLATE", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.IRON_PLATE),
             Arrays.asList(
                     ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.IRON_PLATE_LORE1),
-                    ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.IRON_PLATE_LORE2)
+                    ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.IRON_PLATE_LORE2),
+                    ChatColor.GREEN + I18n.getLocaleString(I18nConst.Element.Fe)
             ));
     public final static ItemStack CUTTER = genIWIS(Material.SHEARS, "CUTTER", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.CUTTER),
             Arrays.asList(
@@ -44,7 +44,8 @@ public final class ConstItems {
     public final static ItemStack COPPER_INGOT = genIWIS(Material.BRICK, "COPPER_INGOT", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_INGOT),
             Arrays.asList(
                     ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_INGOT_LORE1),
-                    ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.COPPER_INGOT_LORE2)
+                    ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.COPPER_INGOT_LORE2),
+                    ChatColor.GREEN + I18n.getLocaleString(I18nConst.Element.Cu)
             ));
 
     /*

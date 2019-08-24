@@ -24,3 +24,7 @@ item.basic-machine-block.lore.2=可用于制造基础机器
 item.copper-ingot.name=铜锭
 item.copper-ingot.lore1=铜锭
 item.copper-ingot.lore2=[*1.5倍攻击伤害(误)]
+
+
+element.fe=Fe
+element.cu=Cu

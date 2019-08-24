@@ -24,3 +24,7 @@ item.basic-machine-block.lore.2= basic machines
 item.copper-ingot.name=Copper Ingot
 item.copper-ingot.lore1=Copper Ingot
 item.copper-ingot.lore2=(*Looks like bricks, but more valuable than bricks.)
+
+
+element.fe=Fe
+element.cu=Cu
