@@ -25,6 +25,9 @@ item.copper-ingot.name=铜锭
 item.copper-ingot.lore1=铜锭
 item.copper-ingot.lore2=[*1.5倍攻击伤害(误)]
 
+item.copper-plate.name=铜板
+item.copper-plate.lore1=铜板
+item.copper-plate.lore2=[*经过优质氧化处理的铜板(误)]
 
 element.fe=Fe
 element.cu=Cu
