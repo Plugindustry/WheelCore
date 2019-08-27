@@ -58,6 +58,7 @@ public final class ConstItems {
                             ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_WIRE_LORE1),
                             ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.COPPER_WIRE_LORE2),
                             ChatColor.GREEN + I18n.getLocaleString(I18nConst.Element.Cu)
+
                     ));
 
     /*

@@ -26,6 +26,14 @@ public class I18nConst {
         public static String COPPER_INGOT = "item.basic-machine-block.name";
         public static String COPPER_INGOT_LORE1 = "item.basic-machine-block.lore.1";
         public static String COPPER_INGOT_LORE2 = "item.basic-machine-block.lore.2";
+
+        public static String COPPER_PLATE = "item.copper-plate.name";
+        public static String COPPER_PLATE_LORE1 = "item.copper-plate.lore.1";
+        public static String COPPER_PLATE_LORE2 = "item.copper-plate.lore.2";
+
+        public static String COPPER_WIRE = "item.copper-wire.name";
+        public static String COPPER_WIRE_LORE1 = "item.copper-wire.lore.1";
+        public static String COPPER_WIRE_LORE2 = "item.copper-wire.lore.2";
     }
 
     public static class Block {
