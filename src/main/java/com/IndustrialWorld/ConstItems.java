@@ -46,20 +46,19 @@ public final class ConstItems {
                     ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_INGOT_LORE1),
                     ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.COPPER_INGOT_LORE2),
                     ChatColor.GREEN + I18n.getLocaleString(I18nConst.Element.Cu)
-            ))
+            ));
     public final static ItemStack COPPER_PLATE = genIWIS(Material.PAPER, "COPPER_PLATE", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_PLATE),
             Arrays.asList(
                     ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_PLATE_LORE1),
                     ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.COPPER_PLATE_LORE2),
                     ChatColor.GREEN + I18n.getLocaleString(I18nConst.Element.Cu)
             ));
-            public final static ItemStack COPPER_WIRE = genIWIS(Material.IRON_FENCE, "COPPER_WIRE", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_WIRE),
-                    Arrays.asList(
-                            ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_WIRE_LORE1),
-                            ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.COPPER_WIRE_LORE2),
-                            ChatColor.GREEN + I18n.getLocaleString(I18nConst.Element.Cu)
-
-                    ));
+    public final static ItemStack COPPER_WIRE = genIWIS(Material.IRON_BARS, "COPPER_WIRE", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_WIRE),
+            Arrays.asList(
+                    ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_WIRE_LORE1),
+                    ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.COPPER_WIRE_LORE2),
+                    ChatColor.GREEN + I18n.getLocaleString(I18nConst.Element.Cu)
+            ));
 
     /*
     public final static ItemStack IW_FURNACE = genIWIS(Material.FURNACE, "IW_FURNACE", ChatColor.WHITE + "工业熔炼炉",
@@ -98,7 +97,7 @@ public final class ConstItems {
         tmp = NBTUtil.setTagValue(tmp, "isIWItem", new NBTUtil.NBTValue().set(true));
         tmp = NBTUtil.setTagValue(tmp, "IWItemId", new NBTUtil.NBTValue().set(itemId));
         ItemMeta meta = tmp.getItemMeta();
-        meta.setDisplayName(ChatColor.WHITE + displayName);
+        meta.setDisplayName(displayName);
         meta.setLore(lore);
         tmp.setItemMeta(meta);
         return tmp.clone();

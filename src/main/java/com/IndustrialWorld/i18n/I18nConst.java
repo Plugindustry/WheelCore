@@ -48,4 +48,8 @@ public class I18nConst {
     public static class Formula {
         // TODO
     }
+
+    public static class Inventory {
+        public static String IW_CRAFTING_TABLE_TITLE = "inventory.iw-crafting-table.title";
+    }
 }

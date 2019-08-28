@@ -2,6 +2,8 @@ package com.IndustrialWorld.blocks;
 
 import com.IndustrialWorld.ConstItems;
 import com.IndustrialWorld.event.TickEvent;
+import com.IndustrialWorld.i18n.I18n;
+import com.IndustrialWorld.i18n.I18nConst;
 import com.IndustrialWorld.interfaces.BlockBase;
 import com.IndustrialWorld.interfaces.InventoryListener;
 import com.IndustrialWorld.utils.InventoryUtil;
@@ -40,7 +42,7 @@ public class IWCraftingTable extends BlockBase implements InventoryListener {
     public void onInteractAsBlock(PlayerInteractEvent event) {
         if(event.getAction() == Action.RIGHT_CLICK_BLOCK && !event.getPlayer().isSneaking()) {
             event.setCancelled(true);
-            Inventory i = Bukkit.createInventory(null, InventoryType.WORKBENCH, "工业合成台");
+            Inventory i = Bukkit.createInventory(null, InventoryType.WORKBENCH, I18n.getLocaleString(I18nConst.Inventory.IW_CRAFTING_TABLE_TITLE));
             event.getPlayer().openInventory(i);
             tickingMap.put(i, null);
         }

@@ -27,11 +27,13 @@ item.copper-ingot.lore2=(*Looks like bricks, but more valuable than bricks.)
 
 item.copper-plate.name=Copper Sheet
 item.copper-plate.lore1=Copper Sheet
-item.copper-plate.lore2=(*High quality oxidation treated copper sheets,MAYBE)
+item.copper-plate.lore2=(*High quality oxidation treated copper sheets, MAYBE)
 
 item.copper-wire.name=Copper Wire
 item.copper-wire.lore1=Copper Wire
-item-copper-wire.lore2=[*Oxidation treated copper wire,looks bad either]
+item-copper-wire.lore2=[*Oxidation treated copper wire, looks bad either]
 
 element.fe=Fe
 element.cu=Cu
+
+inventory.iw-crafting-table.title=Industrial Crafting Table
