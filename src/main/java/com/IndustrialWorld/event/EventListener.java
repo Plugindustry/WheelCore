@@ -18,6 +18,7 @@ import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.WorldInitEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class EventListener implements Listener {
@@ -85,4 +86,7 @@ public class EventListener implements Listener {
     public void onTick(TickEvent event) {
         MainManager.process(event);
     }
+
+    @EventHandler
+    public void onWorldInit(WorldInitEvent event) { MainManager.process(event); }
 }

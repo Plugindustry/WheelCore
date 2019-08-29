@@ -4,9 +4,11 @@ import com.IndustrialWorld.event.ProcessInfo;
 import com.IndustrialWorld.event.TickEvent;
 import com.IndustrialWorld.interfaces.*;
 import com.IndustrialWorld.utils.NBTUtil;
+import com.IndustrialWorld.world.NormalOrePopulator;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Event;
@@ -15,6 +17,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.WorldInitEvent;
 
 import java.util.*;
 
@@ -51,6 +54,16 @@ public class MainManager {
             for (Base base : mapping.values())
                 if (base instanceof InventoryListener)
                     ((InventoryListener) base).onInventoryClose((InventoryCloseEvent) event);
+        } else if (event instanceof WorldInitEvent) {
+            // TODO: world name comparison
+            if (((WorldInitEvent) event).getWorld().getEnvironment() == World.Environment.NORMAL) {
+                ((WorldInitEvent) event).getWorld().getPopulators().add(new NormalOrePopulator());
+            } else if (((WorldInitEvent) event).getWorld().getEnvironment() == World.Environment.NETHER) {
+                // TODO: Nether Ore Populate
+            } else if (((WorldInitEvent) event).getWorld().getEnvironment() == World.Environment.THE_END) {
+                // TODO: The End Ore Populate
+            }
+
         }
     }
 
