@@ -31,7 +31,7 @@ item.copper-plate.lore.2=[*经过优质氧化处理的铜板(误)]
 
 item.copper-wire.name=铜线
 item.copper-wire.lore.1=铜线
-item-copper-wire.lore.2=[*看起来弱不禁风的氧化铜丝,导电性也不怎么样(其实导电性第二)]
+item.copper-wire.lore.2=[*看起来弱不禁风的氧化铜丝,导电性也不怎么样(其实导电性第二)]
 
 element.fe=Fe
 element.cu=Cu
