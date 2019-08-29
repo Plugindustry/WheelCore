@@ -33,6 +33,10 @@ item.copper-wire.name=Copper Wire
 item.copper-wire.lore.1=Copper Wire
 item.copper-wire.lore.2=[*Oxidation treated copper wire, looks bad either]
 
+item.copper-ore.name=Translation needed
+item.copper-ore.lore.1=Translation needed
+item.copper-ore.lore.2=Translation needed
+
 element.fe=Fe
 element.cu=Cu
 

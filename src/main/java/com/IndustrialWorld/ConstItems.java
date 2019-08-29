@@ -59,6 +59,11 @@ public final class ConstItems {
                     ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.COPPER_WIRE_LORE2),
                     ChatColor.GREEN + I18n.getLocaleString(I18nConst.Element.Cu)
             ));
+    public final static ItemStack COPPER_ORE = genIWIS(Material.IRON_ORE, "COPPER_ORE", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_ORE),
+            Arrays.asList(
+                    ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_ORE_LORE1),
+                    ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.COPPER_ORE_LORE2)
+            ));
 
     /*
     public final static ItemStack IW_FURNACE = genIWIS(Material.FURNACE, "IW_FURNACE", ChatColor.WHITE + "工业熔炼炉",

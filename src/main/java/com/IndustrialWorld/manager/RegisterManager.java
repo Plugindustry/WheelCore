@@ -2,6 +2,7 @@ package com.IndustrialWorld.manager;
 
 import com.IndustrialWorld.ConstItems;
 import com.IndustrialWorld.blocks.BasicMachineBlock;
+import com.IndustrialWorld.blocks.CopperOre;
 import com.IndustrialWorld.blocks.IWCraftingTable;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -31,6 +32,8 @@ public class RegisterManager {
     public static void registerBlockIS() {
         MainManager.register("BASIC_MACHINE_BLOCK", new BasicMachineBlock());
         MainManager.register("IW_CRAFTING_TABLE", new IWCraftingTable());
+
+        MainManager.register("COPPER_ORE", new CopperOre());
 
         //getServer().addRecipe(new ShapedRecipe(new NamespacedKey(this, "BASIC_MACHINE_BLOCK"), ConstItems.BASIC_MACHINE_BLOCK).shape("AAA", "ABA", "AAA").setIngredient('A', Material.IRON_INGOT).setIngredient('B', Material.AIR));
     }

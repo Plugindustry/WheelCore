@@ -34,6 +34,10 @@ public class I18nConst {
         public static String COPPER_WIRE = "item.copper-wire.name";
         public static String COPPER_WIRE_LORE1 = "item.copper-wire.lore.1";
         public static String COPPER_WIRE_LORE2 = "item.copper-wire.lore.2";
+
+        public static String COPPER_ORE = "item.copper-ore.name";
+        public static String COPPER_ORE_LORE1 = "item.copper-ore.lore.1";
+        public static String COPPER_ORE_LORE2 = "item.copper-ore.lore.2";
     }
 
     public static class Block {
