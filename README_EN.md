@@ -1,3 +1,6 @@
+* [简体中文][1]  
+* English
+
 # IndustrialWorld 
 
 IndustrialWorld is a plugin for Bukkit/Spigot Minecraft server, which aims to add Mod-like effects to Minecraft.  
@@ -11,3 +14,6 @@ No server mods needed!
 Industrial Crafting Table & recipes √  
 I18n Support √  
 Ores  
+
+
+[1]: https://github.com/czm23333/IndustrialWorld/
