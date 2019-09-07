@@ -22,13 +22,11 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Recipe;
 
 import java.util.*;
 
 public class IWCraftingTable extends BlockBase implements InventoryListener {
-	private static ArrayList<Recipe> recipes = new ArrayList<>();
-    private List<Inventory> availableInventories = new ArrayList<>();
+	private List<Inventory> availableInventories = new ArrayList<>();
     private Map<Inventory, RecipeBase> lastRecipe = new HashMap<>();
 
 	@Override
@@ -90,11 +88,7 @@ public class IWCraftingTable extends BlockBase implements InventoryListener {
 		}
     }
 
-	public static void registerRecipe(Recipe recipe) {
-        recipes.add(recipe);
-    }
-
-    public boolean isInventoryAvailable(Inventory ci) {
+	public boolean isInventoryAvailable(Inventory ci) {
         return availableInventories.contains(ci);
     }
 
@@ -145,77 +139,4 @@ public class IWCraftingTable extends BlockBase implements InventoryListener {
         }
     }
 
-    public static class IWShapedRecipe implements Recipe {
-        private String shape;
-        private ItemStack[] stacks = new ItemStack[9];
-        private ItemStack result;
-
-        public IWShapedRecipe(ItemStack result) {
-            this.result = result;
-        }
-
-        public IWShapedRecipe setShape(String shape) {
-            if(shape.length() != 9)
-                throw new IllegalArgumentException("Shape length must be 9!");
-            this.shape = shape;
-            return this;
-        }
-
-        public IWShapedRecipe set(char c, ItemStack item) {
-            for (int i = 0; i <= 8; ++i)
-                if (shape.charAt(i) == c)
-                    stacks[i] = item.clone();
-            return this;
-        }
-
-        public ItemStack[] getMatrix() {
-            return stacks;
-        }
-
-        @Override
-        public ItemStack getResult() {
-            return result;
-        }
-    }
-
-    public static class IWShapelessRecipe implements Recipe {
-        private ItemStack[] stacks;
-        private ItemStack result;
-        private boolean useDurability = false;
-        private int durabilityCost = 1;
-
-	    public IWShapelessRecipe(ItemStack result, boolean justDurability) {
-            this.result = result;
-            this.useDurability = justDurability;
-        }
-
-        public IWShapelessRecipe set(ItemStack... item) {
-            if(item.length > 9)
-                throw new IllegalArgumentException("Array too long!");
-            stacks = item;
-            return this;
-        }
-
-        public ItemStack[] getMatrix() {
-            return stacks;
-        }
-
-        @Override
-        public ItemStack getResult() {
-            return result;
-        }
-
-        public int getDurabilityCost() {
-            return durabilityCost;
-        }
-
-        public IWShapelessRecipe setDurabilityCost(int durabilityCost) {
-            this.durabilityCost = durabilityCost;
-            return this;
-        }
-
-        public boolean isUseDurability() {
-            return useDurability;
-        }
-    }
 }
