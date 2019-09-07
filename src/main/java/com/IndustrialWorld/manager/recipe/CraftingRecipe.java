@@ -3,9 +3,10 @@ package com.IndustrialWorld.manager.recipe;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
+import java.util.Map;
 
 public interface CraftingRecipe extends RecipeBase {
-	boolean matches(List<List<ItemStack>> recipe, List<ItemStack> damageResult);
+	boolean matches(List<List<ItemStack>> recipe, Map<Integer, ItemStack> damageResult);
 
-	void addItemCost(ItemStack is, int durability);
+	CraftingRecipe addItemCost(ItemStack is, int durability);
 }

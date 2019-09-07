@@ -12,11 +12,12 @@ public class ShapedRecipeFactory {
 	private Map<Character, ItemStack> patternMapping = new HashMap<>();
 	private Map<ItemStack, Integer> damageMapping = new HashMap<>();
 
-	public void map(char c, ItemStack target) {
+	public ShapedRecipeFactory map(char c, ItemStack target) {
 		this.patternMapping.put(c, target.clone());
+		return this;
 	}
 
-	public void pattern(String ... patterns) {
+	public ShapedRecipeFactory pattern(String ... patterns) {
 		List<String> lastPattern = new LinkedList<>(this.patterns);
 		if (patterns.length > 3) {
 			throw new IllegalArgumentException("long pattern");
@@ -31,10 +32,13 @@ public class ShapedRecipeFactory {
 
 			this.patterns.add(s);
 		}
+
+		return this;
 	}
 
-	public void addDamage(ItemStack itemStack, int damage) {
+	public ShapedRecipeFactory addDamage(ItemStack itemStack, int damage) {
 		this.damageMapping.put(itemStack, damage);
+		return this;
 	}
 
 	public RecipeBase build(ItemStack result) {

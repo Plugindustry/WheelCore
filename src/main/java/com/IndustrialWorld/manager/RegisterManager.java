@@ -4,28 +4,34 @@ import com.IndustrialWorld.ConstItems;
 import com.IndustrialWorld.blocks.BasicMachineBlock;
 import com.IndustrialWorld.blocks.CopperOre;
 import com.IndustrialWorld.blocks.IWCraftingTable;
+import com.IndustrialWorld.manager.recipe.ShapedRecipeFactory;
+import com.IndustrialWorld.manager.recipe.ShapelessRecipe;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.Arrays;
 
 public class RegisterManager {
     public static void registerIWCRecipes() {
         // Example:
-        //IWCraftingTable.registerRecipe(new IWCraftingTable.IWShapedRecipe(ConstItems.BASIC_MACHINE_BLOCK).setShape("AAAAAAAAA").set('A', new ItemStack(Material.IRON_INGOT, 2)));
+        // RecipeRegistry.register(new ShapedRecipeFactory().map('A', new ItemStack(whatever)).pattern("3x3", "Any", "uwa").build(ItemStack you want));
 
         /* FORGE_HAMMER */{
-            IWCraftingTable.registerRecipe(new IWCraftingTable.IWShapedRecipe(ConstItems.FORGE_HAMMER).setShape("AACABBAAC").set('A', new ItemStack(Material.IRON_INGOT, 1)).set('B', new ItemStack(Material.STICK, 1)).set('C', new ItemStack(Material.AIR, 1))); // FORGE_HAMMER [L]
-            IWCraftingTable.registerRecipe(new IWCraftingTable.IWShapedRecipe(ConstItems.FORGE_HAMMER).setShape("CAABBACAA").set('A', new ItemStack(Material.IRON_INGOT, 1)).set('B', new ItemStack(Material.STICK, 1)).set('C', new ItemStack(Material.AIR, 1))); // FORGE_HAMMER [R]
-            IWCraftingTable.registerRecipe(new IWCraftingTable.IWShapedRecipe(ConstItems.FORGE_HAMMER).setShape("AAAABACBC").set('A', new ItemStack(Material.IRON_INGOT, 1)).set('B', new ItemStack(Material.STICK, 1)).set('C', new ItemStack(Material.AIR, 1))); // FORGE_HAMMER [U]
-            IWCraftingTable.registerRecipe(new IWCraftingTable.IWShapedRecipe(ConstItems.FORGE_HAMMER).setShape("CBCABAAAA").set('A', new ItemStack(Material.IRON_INGOT, 1)).set('B', new ItemStack(Material.STICK, 1)).set('C', new ItemStack(Material.AIR, 1))); // FORGE_HAMMER [D]
-            IWCraftingTable.registerRecipe(new IWCraftingTable.IWShapelessRecipe(ConstItems.IRON_PLATE, true).set(ConstItems.FORGE_HAMMER, new ItemStack(Material.IRON_INGOT)).setDurabilityCost(3));
-            IWCraftingTable.registerRecipe(new IWCraftingTable.IWShapelessRecipe(ConstItems.COPPER_PLATE, true).set(ConstItems.FORGE_HAMMER, ConstItems.COPPER_INGOT).setDurabilityCost(3));
+        	ShapedRecipeFactory forgeHammerFactory = new ShapedRecipeFactory().map('A', new ItemStack(Material.IRON_INGOT)).map('B', new ItemStack(Material.STICK));
+        	RecipeRegistry.register(forgeHammerFactory.pattern("AAC", "ABB", "AAC").build(ConstItems.FORGE_HAMMER)); // FORGE_HAMMER [L]
+            RecipeRegistry.register(forgeHammerFactory.pattern("CAA", "BBA", "CAA").build(ConstItems.FORGE_HAMMER)); // FORGE_HAMMER [R]
+		    RecipeRegistry.register(forgeHammerFactory.pattern("AAA", "ABA", "CBC").build(ConstItems.FORGE_HAMMER)); // FORGE_HAMMER [U]
+            RecipeRegistry.register(forgeHammerFactory.pattern("CBC", "ABA", "AAA").build(ConstItems.FORGE_HAMMER)); // FORGE_HAMMER [D]
+
+		    RecipeRegistry.register(new ShapelessRecipe(Arrays.asList(ConstItems.FORGE_HAMMER, new ItemStack(Material.IRON_INGOT)), ConstItems.IRON_PLATE).addItemCost(ConstItems.FORGE_HAMMER, 3));
+            RecipeRegistry.register(new ShapelessRecipe(Arrays.asList(ConstItems.FORGE_HAMMER, ConstItems.COPPER_INGOT), ConstItems.COPPER_PLATE).addItemCost(ConstItems.FORGE_HAMMER, 3));
         }
         /* CUTTER */{
-            IWCraftingTable.registerRecipe(new IWCraftingTable.IWShapedRecipe(ConstItems.CUTTER).setShape("BCBCBCACA").set('A', new ItemStack(Material.IRON_INGOT, 1)).set('B', ConstItems.IRON_PLATE).set('C', new ItemStack(Material.AIR, 1))); // CUTTER
-            IWCraftingTable.registerRecipe(new IWCraftingTable.IWShapelessRecipe(ConstItems.COPPER_WIRE, true).set(ConstItems.CUTTER, ConstItems.COPPER_PLATE).setDurabilityCost(4));
+        	RecipeRegistry.register(new ShapedRecipeFactory().map('A', new ItemStack(Material.IRON_INGOT)).map('B', ConstItems.IRON_PLATE).pattern("BCB", "CBC", "ACA").build(ConstItems.CUTTER));
+            RecipeRegistry.register(new ShapelessRecipe(Arrays.asList(ConstItems.COPPER_PLATE, ConstItems.FORGE_HAMMER), ConstItems.COPPER_WIRE).addItemCost(ConstItems.CUTTER, 4));
         }
 
-        IWCraftingTable.registerRecipe(new IWCraftingTable.IWShapedRecipe(ConstItems.BASIC_MACHINE_BLOCK).setShape("AAAABAAAA").set('A', new ItemStack(Material.IRON_INGOT, 1)).set('B', new ItemStack(Material.AIR, 1))); // BASIC_MACHINE_BLOCK
+        RecipeRegistry.register(new ShapedRecipeFactory().map('0', new ItemStack(Material.IRON_INGOT)).pattern("000", "0w0", "000").build(ConstItems.BASIC_MACHINE_BLOCK)); // BASIC_MACHINE_BLOCK
 
     }
 

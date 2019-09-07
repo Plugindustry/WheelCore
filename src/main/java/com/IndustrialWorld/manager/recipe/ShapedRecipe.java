@@ -29,7 +29,7 @@ public class ShapedRecipe implements CraftingRecipe {
 	}
 
 	@Override
-	public boolean matches(List<List<ItemStack>> matrix, List<ItemStack> damage) {
+	public boolean matches(List<List<ItemStack>> matrix, Map<Integer, ItemStack> damage) {
 		if (matrix.size() != 9) {
 			return false;
 		}
@@ -49,14 +49,18 @@ public class ShapedRecipe implements CraftingRecipe {
 		}
 
 		// check for damage to items.
-		for (List<ItemStack> row : matrix) {
-			for (ItemStack is : row) {
+		for (int i = 0; i < matrix.size(); i++) {
+			List<ItemStack> row = matrix.get(i);
+			for (int j = 0; j < row.size(); j++) {
+				ItemStack is = row.get(j);
+				int finalI = i;
+				int finalJ = j;
 				this.damages.forEach((items, dmg) -> {
 					if (ItemStackUtil.isSimilar(items, is)) {
 						ItemStack newIs = is.clone();
 						newIs.setDurability((short) (newIs.getDurability() - dmg));
 						if (damage != null) {
-							damage.add(newIs);
+							damage.put(finalI * 3 + finalJ, newIs);
 						}
 					}
 				});
@@ -67,8 +71,9 @@ public class ShapedRecipe implements CraftingRecipe {
 	}
 
 	@Override
-	public void addItemCost(ItemStack is, int durability) {
+	public CraftingRecipe addItemCost(ItemStack is, int durability) {
 		this.damages.put(is, durability);
+		return this;
 	}
 
 	@Override

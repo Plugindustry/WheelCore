@@ -7,12 +7,13 @@ import com.IndustrialWorld.i18n.I18nConst;
 import com.IndustrialWorld.interfaces.BlockBase;
 import com.IndustrialWorld.interfaces.InventoryListener;
 import com.IndustrialWorld.manager.RecipeRegistry;
+import com.IndustrialWorld.manager.recipe.CraftingRecipe;
 import com.IndustrialWorld.manager.recipe.RecipeBase;
 import com.IndustrialWorld.utils.InventoryUtil;
-import com.IndustrialWorld.utils.NBTUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.inventory.InventoryAction;
@@ -26,9 +27,9 @@ import org.bukkit.inventory.Recipe;
 import java.util.*;
 
 public class IWCraftingTable extends BlockBase implements InventoryListener {
-    private static LinkedHashMap<Inventory, Recipe> tickingMap = new LinkedHashMap<>();
-    private static ArrayList<Recipe> recipes = new ArrayList<>();
+	private static ArrayList<Recipe> recipes = new ArrayList<>();
     private List<Inventory> availableInventories = new ArrayList<>();
+    private Map<Inventory, RecipeBase> lastRecipe = new HashMap<>();
 
 	@Override
 	public ItemStack getItemStack() {
@@ -58,15 +59,20 @@ public class IWCraftingTable extends BlockBase implements InventoryListener {
 		return true;
 	}
 
+	private List<ItemStack> fetchMatrix(Inventory inventory) {
+		ItemStack[] raw = inventory.getStorageContents();
+		// fetch recipe that matches
+		ItemStack[] rawMatrix = new ItemStack[9];
+		System.arraycopy(raw, 1, rawMatrix, 0, 9);
+		return Arrays.asList(rawMatrix);
+	}
+
 	@Override
     public void onTick(TickEvent event) {
 		// Use getStorageContents & setStorageContents to control the crafting table. The result will be put on the slot 0
 		for (Inventory craftingInv : availableInventories) {
 			ItemStack[] raw = craftingInv.getStorageContents();
-			// fetch recipe that matches
-			ItemStack[] rawMatrix = new ItemStack[9];
-			System.arraycopy(raw, 1, rawMatrix, 0, 9);
-			RecipeBase recipe = RecipeRegistry.matchCraftingRecipe(Arrays.asList(rawMatrix), null);
+			RecipeBase recipe = RecipeRegistry.matchCraftingRecipe(fetchMatrix(craftingInv), null);
 
 			if (recipe == null) {
 				// invalid recipe
@@ -74,6 +80,13 @@ public class IWCraftingTable extends BlockBase implements InventoryListener {
 			}
 			raw[0] = recipe.getResult();
 			craftingInv.setStorageContents(raw);
+
+			if (lastRecipe.get(craftingInv) != recipe) {
+				for (HumanEntity p : craftingInv.getViewers()) {
+					InventoryUtil.updateInventoryWithoutCarriedItem((Player) p);
+				}
+				lastRecipe.put(craftingInv, recipe);
+			}
 		}
     }
 
@@ -81,17 +94,13 @@ public class IWCraftingTable extends BlockBase implements InventoryListener {
         recipes.add(recipe);
     }
 
-    public static boolean isInvTicking(Inventory ci) {
-        return tickingMap.containsKey(ci);
+    public boolean isInventoryAvailable(Inventory ci) {
+        return availableInventories.contains(ci);
     }
 
-    public static Recipe getRecipeUsing(Inventory ci) {
-        return tickingMap.get(ci);
-    }
-
-    @Override
+	@Override
     public void onInventoryClick(InventoryClickEvent event) {
-        if (IWCraftingTable.isInvTicking(event.getClickedInventory()) && event.getSlot() == 0) {
+        if (isInventoryAvailable(event.getClickedInventory()) && event.getSlot() == 0) {
             InventoryUtil.updateInventoryWithoutCarriedItem((Player) event.getClickedInventory().getViewers().get(0));
             if (!(event.getAction() == InventoryAction.PICKUP_ALL ||
                   ((event.getAction() == InventoryAction.PLACE_ONE || event.getAction() == InventoryAction.PLACE_ALL) &&
@@ -99,50 +108,35 @@ public class IWCraftingTable extends BlockBase implements InventoryListener {
                 event.setCancelled(true);
                 return;
             }
-            Recipe recipe = IWCraftingTable.getRecipeUsing(event.getClickedInventory());
-            if (recipe == null)
-                return;
-            if (recipe instanceof IWCraftingTable.IWShapedRecipe) {
-                IWCraftingTable.IWShapedRecipe shapedRecipe = (IWCraftingTable.IWShapedRecipe) recipe;
-                ItemStack[] matrix = shapedRecipe.getMatrix();
 
-                for (int i = 0; i <= 8; ++i) {
-                    ItemStack current = event.getClickedInventory().getStorageContents()[i + 1];
-                    if (current == null || matrix[i] == null)
-                        continue;
-                    current.setAmount(current.getAmount() - matrix[i].getAmount());
-                    ItemStack[] buf = event.getClickedInventory().getStorageContents();
-                    buf[i + 1] = current;
-                    event.getClickedInventory().setStorageContents(buf);
-                }
-            } else if (recipe instanceof IWCraftingTable.IWShapelessRecipe) {
-                Inventory clickedInventory = event.getClickedInventory();
-                IWCraftingTable.IWShapelessRecipe shapelessRecipe = (IWCraftingTable.IWShapelessRecipe) recipe;
-                List<ItemStack> storage = Arrays.asList(clickedInventory.getStorageContents()).subList(1, clickedInventory.getStorageContents().length);
-                ItemStack[] matrix = shapelessRecipe.getMatrix();
+            Inventory craftInv = event.getClickedInventory();
 
-                for (int i = 0; i <= 8; ++i) {
-                    ItemStack current = storage.get(i);
-
-                    if (current == null || matrix[i] == null)
-                        continue;
-                    if (shapelessRecipe.isUseDurability() && matrix[i].getType().getMaxDurability() != 0) {
-                        current.setDurability((short) (current.getDurability() + shapelessRecipe.getDurabilityCost()));
-                    } else {
-                        current.setAmount(current.getAmount() - matrix[i].getAmount());
-                    }
-                    ItemStack[] buf = event.getClickedInventory().getStorageContents();
-                    buf[i + 1] = current;
-                    event.getClickedInventory().setStorageContents(buf);
-                }
+            Map<Integer, ItemStack> damagedItemIndex = new HashMap<>();
+            CraftingRecipe recipe = RecipeRegistry.matchCraftingRecipe(fetchMatrix(event.getClickedInventory()), damagedItemIndex);
+            if (recipe == null) {
+	            return;
             }
+
+            ItemStack[] content = craftInv.getStorageContents();
+            for (int i = 1; i <= 9; i ++) {
+            	if (damagedItemIndex.containsKey(i)) {
+            		content[i] = damagedItemIndex.get(i);
+            		continue;
+	            }
+            	if (content[i] == null) {
+            		continue;
+	            }
+            	content[i].setAmount(content[i].getAmount() - 1);
+            }
+            craftInv.setStorageContents(content);
+
             InventoryUtil.updateInventoryWithoutCarriedItem((Player) event.getClickedInventory().getViewers().get(0));
         }
     }
 
     @Override
     public void onInventoryClose(InventoryCloseEvent event) {
-        if (IWCraftingTable.isInvTicking(event.getInventory())) {
+        if (isInventoryAvailable(event.getInventory())) {
             ItemStack[] buf = event.getInventory().getStorageContents();
             buf[0] = new ItemStack(Material.AIR);
             for (ItemStack is : buf)
@@ -190,11 +184,7 @@ public class IWCraftingTable extends BlockBase implements InventoryListener {
         private boolean useDurability = false;
         private int durabilityCost = 1;
 
-        public IWShapelessRecipe(ItemStack result) {
-            this.result = result;
-        }
-
-        public IWShapelessRecipe(ItemStack result, boolean justDurability) {
+	    public IWShapelessRecipe(ItemStack result, boolean justDurability) {
             this.result = result;
             this.useDurability = justDurability;
         }

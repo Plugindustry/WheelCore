@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class RecipeRegistry {
 	private static List<RecipeBase> recipes = new LinkedList<>();
@@ -15,7 +16,7 @@ public class RecipeRegistry {
 		recipes.add(recipeBase);
 	}
 
-	public static RecipeBase matchCraftingRecipe(List<ItemStack> items, List<ItemStack> damageResult) {
+	public static CraftingRecipe matchCraftingRecipe(List<ItemStack> items, Map<Integer, ItemStack> damageResult) {
 		// tidy up the matrix
 		List<List<ItemStack>> matrix = new LinkedList<>();
 		List<ItemStack> current = null;
@@ -37,18 +38,18 @@ public class RecipeRegistry {
 			}
 
 			if (((CraftingRecipe) recipeBase).matches(matrix, damageResult)) {
-				return recipeBase;
+				return (CraftingRecipe) recipeBase;
 			}
 		}
 
 		return null;
 	}
 
-	public static RecipeBase matchSmeltingRecipe(ItemStack origin, ItemStack fuel) {
+	public static SmeltingRecipe matchSmeltingRecipe(ItemStack origin, ItemStack fuel) {
 		for (RecipeBase recipeBase : recipes) {
 			if (recipeBase instanceof SmeltingRecipe) {
 				if (((SmeltingRecipe) recipeBase).matches(origin, fuel)) {
-					return recipeBase;
+					return (SmeltingRecipe) recipeBase;
 				}
 			}
 		}

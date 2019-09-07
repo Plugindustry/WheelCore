@@ -19,12 +19,13 @@ public class ShapelessRecipe implements CraftingRecipe {
 	}
 
 	@Override
-	public void addItemCost(ItemStack is, int durability) {
+	public CraftingRecipe addItemCost(ItemStack is, int durability) {
 		this.damages.put(is, durability);
+		return this;
 	}
 
 	@Override
-	public boolean matches(List<List<ItemStack>> recipe, List<ItemStack> damage) {
+	public boolean matches(List<List<ItemStack>> recipe, Map<Integer, ItemStack> damage) {
 		List<ItemStack> shapeless = new LinkedList<>();
 		List<ItemStack> checkList = new LinkedList<>(this.recipe);
 		// convert everything to shapeless
@@ -49,14 +50,18 @@ public class ShapelessRecipe implements CraftingRecipe {
 		boolean result = checkList.isEmpty() && shapeless.isEmpty();
 		if (result) {
 			// check for damage to items.
-			for (List<ItemStack> row : recipe) {
-				for (ItemStack is : row) {
+			for (int i = 0; i < recipe.size(); i++) {
+				List<ItemStack> row = recipe.get(i);
+				for (int j = 0; j < row.size(); j++) {
+					ItemStack is = row.get(j);
+					int finalI = i;
+					int finalJ = j;
 					this.damages.forEach((items, dmg) -> {
 						if (ItemStackUtil.isSimilar(items, is)) {
 							ItemStack newIs = is.clone();
 							newIs.setDurability((short) (newIs.getDurability() - dmg));
 							if (damage != null) {
-								damage.add(newIs);
+								damage.put(finalI * 3 + finalJ, newIs);
 							}
 						}
 					});
