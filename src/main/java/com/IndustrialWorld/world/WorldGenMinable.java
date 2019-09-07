@@ -2,7 +2,6 @@ package com.IndustrialWorld.world;
 
 import com.IndustrialWorld.interfaces.OreBase;
 import com.IndustrialWorld.manager.MainManager;
-import jdk.tools.jaotc.Main;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;

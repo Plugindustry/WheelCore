@@ -164,8 +164,8 @@ public class BlockUtil {
         }
     }
 
-    public static boolean isReplaceableOreGen(Block block) {
-        List<Material> replaceableOreGenList = Arrays.asList(Material.STONE, Material.DIRT, Material.ANDESITE, Material.GRAVEL);
-        return replaceableOreGenList.contains(block.getBlockData().getMaterial());
-    }
+	public static boolean isReplaceableOreGen(Block block) {
+		List<Material> replaceableOreGenList = Arrays.asList(Material.STONE, Material.DIRT, Material.ANDESITE, Material.GRAVEL);
+		return replaceableOreGenList.contains(block.getBlockData().getMaterial());
+	}
 }

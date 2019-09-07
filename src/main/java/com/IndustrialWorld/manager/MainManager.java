@@ -1,8 +1,10 @@
 package com.IndustrialWorld.manager;
 
-import com.IndustrialWorld.event.ProcessInfo;
 import com.IndustrialWorld.event.TickEvent;
-import com.IndustrialWorld.interfaces.*;
+import com.IndustrialWorld.interfaces.Base;
+import com.IndustrialWorld.interfaces.BlockBase;
+import com.IndustrialWorld.interfaces.BlockData;
+import com.IndustrialWorld.interfaces.ItemBase;
 import com.IndustrialWorld.utils.NBTUtil;
 import com.IndustrialWorld.world.NormalOrePopulator;
 import org.apache.commons.lang.StringUtils;
@@ -11,13 +13,11 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.world.WorldInitEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
@@ -25,35 +25,42 @@ public class MainManager {
     private static HashMap<String, Base> mapping = new HashMap<>();
     private static LinkedHashMap<Location, Map.Entry<String, BlockData>> blocks = new LinkedHashMap<>();
 
+    // returns if the event needs to be cancelled
+    public static boolean processBlockPlacement(ItemStack item, Block newBlock) {
+    	BlockBase blockBase = (BlockBase) getInstanceFromId(NBTUtil.getTagValue(item, "IWItemId").asString());
+    	return blockBase.onBlockPlace(newBlock);
+    }
+
+    public static boolean processBlockDestroy(ItemStack tool, Block target, boolean canceled) {
+		BlockBase blockBase = (BlockBase) getInstanceFromId(getBlockId(target));
+		return blockBase.onBlockDestroy(target, tool, canceled);
+    }
+
+    public static boolean processBlockInteract(Player player, Block block, ItemStack tool, Action action) {
+    	BlockBase blockBase = (BlockBase) getInstanceFromId(getBlockId(block));
+    	if (blockBase == null) {
+    		return true;
+	    }
+    	return blockBase.onInteract(player, action, tool, block);
+    }
+
+    public static boolean processItemInteract(Player player, Block block, ItemStack tool, Action action) {
+    	ItemBase itemBase = getItemInstance(tool);
+    	if (itemBase == null) {
+    		return true;
+	    }
+
+    	return itemBase.onInteract(player, action, tool, block);
+    }
+
+    public static void update() {
+
+    }
+
     public static void process(Event event) {
-        if (event instanceof BlockPlaceEvent)
-            ((BlockBase) getInstanceFromId(NBTUtil.getTagValue(((BlockPlaceEvent) event).getItemInHand(), "IWItemId").asString())).onPlace((BlockPlaceEvent) event, new ProcessInfo());
-        else if (event instanceof BlockBreakEvent)
-            ((BlockBase) getInstanceFromId(getBlockId(((BlockBreakEvent) event).getBlock()))).onBreak((BlockBreakEvent) event);
-        else if (event instanceof PlayerInteractEvent) {
-            if (((PlayerInteractEvent) event).hasBlock() &&
-                MainManager.hasBlock(((PlayerInteractEvent) event).getClickedBlock()))
-                ((BlockBase) getInstanceFromId(getBlockId(((PlayerInteractEvent) event).getClickedBlock()))).onInteractAsBlock((PlayerInteractEvent) event);
-            if (((PlayerInteractEvent) event).hasItem()) {
-                NBTUtil.NBTValue value = NBTUtil.getTagValue(((PlayerInteractEvent) event).getItem(), "isIWItem");
-                NBTUtil.NBTValue v2 = NBTUtil.getTagValue(((PlayerInteractEvent) event).getItem(), "IWItemId");
-                if(v2 == null)
-                    return;
-                Base instance = getInstanceFromId(v2.asString());
-                if (value != null && value.asBoolean() && instance instanceof ItemBase)
-                    ((ItemBase) instance).onInteractAsItem((PlayerInteractEvent) event);
-            }
-        } else if (event instanceof TickEvent) {
+        if (event instanceof TickEvent) {
             for (Base base : mapping.values())
                 base.onTick((TickEvent) event);
-        } else if (event instanceof InventoryClickEvent) {
-            for (Base base : mapping.values())
-                if (base instanceof InventoryListener)
-                    ((InventoryListener) base).onInventoryClick((InventoryClickEvent) event);
-        } else if (event instanceof InventoryCloseEvent) {
-            for (Base base : mapping.values())
-                if (base instanceof InventoryListener)
-                    ((InventoryListener) base).onInventoryClose((InventoryCloseEvent) event);
         } else if (event instanceof WorldInitEvent) {
             // TODO: world name comparison
             if (((WorldInitEvent) event).getWorld().getEnvironment() == World.Environment.NORMAL) {
@@ -75,6 +82,9 @@ public class MainManager {
     }
 
     public static Base getInstanceFromId(String id) {
+    	if (id == null) {
+    		return null;
+	    }
         return mapping.get(id);
     }
 
@@ -107,7 +117,23 @@ public class MainManager {
     }
 
     public static String getBlockId(Block block) {
+    	if (block == null) {
+    		return null;
+	    }
+
         return blocks.get(block.getLocation()).getKey();
+    }
+
+    private static ItemBase getItemInstance(ItemStack is) {
+	    NBTUtil.NBTValue value = NBTUtil.getTagValue(is, "isIWItem");
+	    NBTUtil.NBTValue v2 = NBTUtil.getTagValue(is, "IWItemId");
+	    if(v2 == null)
+	    	return null;
+	    try {
+		    return (ItemBase) getInstanceFromId(v2.asString());
+	    } catch (ClassCastException e) {
+	    	return null;
+	    }
     }
 
     public static BlockData getBlockData(Block block) {

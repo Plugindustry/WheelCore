@@ -5,9 +5,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 
 public class NBTUtil {
-    public static Class NMSItemStack;
-    public static Class NBTTagCompound;
-    public static Class CraftItemStack;
+    public static Class<?> NMSItemStack;
+    public static Class<?> NBTTagCompound;
+    public static Class<?> CraftItemStack;
     public static String version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
 
     static {
@@ -104,7 +104,7 @@ public class NBTUtil {
             else {
                 String result = "";
                 try {
-                    Class NBTTagString = Class.forName("net.minecraft.server." + version + ".NBTTagString");
+                    Class<?> NBTTagString = Class.forName("net.minecraft.server." + version + ".NBTTagString");
                     result = (String) NBTTagString.getMethod("asString").invoke(NBTTagString.cast(base));
                 } catch (Exception e) {
                     e.printStackTrace();

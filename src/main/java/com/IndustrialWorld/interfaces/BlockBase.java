@@ -1,36 +1,33 @@
 package com.IndustrialWorld.interfaces;
 
-import com.IndustrialWorld.event.ProcessInfo;
 import com.IndustrialWorld.manager.MainManager;
 import org.bukkit.Material;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.block.Block;
+import org.bukkit.inventory.ItemStack;
 
-public abstract class BlockBase extends Base {
-    public void onPlace(BlockPlaceEvent event, ProcessInfo info) {
-        if (!event.isCancelled())
-            MainManager.addBlock(MainManager.getIdFromInstance(this), event.getBlock(), (BlockData) info.data);
+public abstract class BlockBase extends Interactive {
+    public void onBlockUpdate(Block block) {}
+    public boolean onBlockPlace(Block block) {
+    	MainManager.addBlock(MainManager.getIdFromInstance(this), block, null /*currently is null*/);
+    	return true;
     }
 
-    public void onBreak(BlockBreakEvent event) {
-        if (!event.isCancelled())
-            MainManager.removeBlock(event.getBlock());
+	public boolean isOre() {
+		return false;
+	}
+
+    public boolean onBlockDestroy(Block block, ItemStack tool, boolean canceled) {
+    	if (!canceled) {
+    		MainManager.removeBlock(block);
+	    }
+    	// We do not drop IndustralWorld blocks by default
+    	block.getWorld().dropItem(block.getLocation(), getItemStack());
+
+    	return true;
     }
 
-    public void onInteractAsBlock(PlayerInteractEvent event){
+    public abstract ItemStack getItemStack();
 
-    }
-
-    public boolean isOre() {
-        return false;
-    }
-
-    public Material getMaterial() {
-        return Material.AIR;
-    }
-
-    public String getId() {
-        return "";
-    }
+	public abstract String getId();
+	public abstract Material getMaterial();
 }

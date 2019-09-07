@@ -10,60 +10,61 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public final class ConstItems {
-
-    public final static ItemStack FORGE_HAMMER = genIWIS(Material.IRON_SHOVEL, "FORGE_HAMMER", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER),
-            Arrays.asList(
-                    ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER_LORE1),
-                    ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER_LORE2),
-                    ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER_LORE3)
-            ));
-    public final static ItemStack IW_CRAFTING_TABLE = genIWIS(Material.CRAFTING_TABLE, "IW_CRAFTING_TABLE", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.IW_CRAFTING_TABLE),
-            Arrays.asList(
-                    ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.IW_CRAFTING_TABLE_LORE1),
-                    ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.IW_CRAFTING_TABLE_LORE2)
-            ));
-    public final static ItemStack IRON_PLATE = genIWIS(Material.PAPER, "IRON_PLATE", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.IRON_PLATE),
-            Arrays.asList(
-                    ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.IRON_PLATE_LORE1),
-                    ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.IRON_PLATE_LORE2),
-                    ChatColor.GREEN + I18n.getLocaleString(I18nConst.Element.Fe)
-            ));
-    public final static ItemStack CUTTER = genIWIS(Material.SHEARS, "CUTTER", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.CUTTER),
-            Arrays.asList(
-                    ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.CUTTER),
-                    ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.CUTTER_LORE1),
-                    ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.CUTTER_LORE2)
-            ));
-    public final static ItemStack BASIC_MACHINE_BLOCK = genIWIS(Material.IRON_BLOCK, "BASIC_MACHINE_BLOCK", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.BASIC_MACHINE_BLOCK),
-            Arrays.asList(
-                    ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.BASIC_MACHINE_BLOCK_LORE1),
-                    ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.BASIC_MACHINE_BLOCK_LORE2)
-            ));
-    public final static ItemStack COPPER_INGOT = genIWIS(Material.BRICK, "COPPER_INGOT", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_INGOT),
-            Arrays.asList(
-                    ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_INGOT_LORE1),
-                    ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.COPPER_INGOT_LORE2),
-                    ChatColor.GREEN + I18n.getLocaleString(I18nConst.Element.Cu)
-            ));
-    public final static ItemStack COPPER_PLATE = genIWIS(Material.PAPER, "COPPER_PLATE", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_PLATE),
-            Arrays.asList(
-                    ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_PLATE_LORE1),
-                    ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.COPPER_PLATE_LORE2),
-                    ChatColor.GREEN + I18n.getLocaleString(I18nConst.Element.Cu)
-            ));
-    public final static ItemStack COPPER_WIRE = genIWIS(Material.IRON_BARS, "COPPER_WIRE", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_WIRE),
-            Arrays.asList(
-                    ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_WIRE_LORE1),
-                    ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.COPPER_WIRE_LORE2),
-                    ChatColor.GREEN + I18n.getLocaleString(I18nConst.Element.Cu)
-            ));
-    public final static ItemStack COPPER_ORE = genIWIS(Material.IRON_ORE, "COPPER_ORE", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_ORE),
-            Arrays.asList(
-                    ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_ORE_LORE1),
-                    ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.COPPER_ORE_LORE2)
-            ));
+	public final static ItemStack FORGE_HAMMER = genIWIS(Material.IRON_SHOVEL, "FORGE_HAMMER", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER),
+			Arrays.asList(
+					ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER_LORE1),
+					ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER_LORE2),
+					ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER_LORE3)
+			));
+	public final static ItemStack IW_CRAFTING_TABLE = genIWIS(Material.CRAFTING_TABLE, "IW_CRAFTING_TABLE", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.IW_CRAFTING_TABLE),
+			Arrays.asList(
+					ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.IW_CRAFTING_TABLE_LORE1),
+					ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.IW_CRAFTING_TABLE_LORE2)
+			));
+	public final static ItemStack IRON_PLATE = genIWIS(Material.PAPER, "IRON_PLATE", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.IRON_PLATE),
+			Arrays.asList(
+					ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.IRON_PLATE_LORE1),
+					ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.IRON_PLATE_LORE2),
+					ChatColor.GREEN + I18n.getLocaleString(I18nConst.Element.Fe)
+			));
+	public final static ItemStack CUTTER = genIWIS(Material.SHEARS, "CUTTER", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.CUTTER),
+			Arrays.asList(
+					ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.CUTTER),
+					ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.CUTTER_LORE1),
+					ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.CUTTER_LORE2)
+			));
+	public final static ItemStack BASIC_MACHINE_BLOCK = genIWIS(Material.IRON_BLOCK, "BASIC_MACHINE_BLOCK", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.BASIC_MACHINE_BLOCK),
+			Arrays.asList(
+					ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.BASIC_MACHINE_BLOCK_LORE1),
+					ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.BASIC_MACHINE_BLOCK_LORE2)
+			));
+	public final static ItemStack COPPER_INGOT = genIWIS(Material.BRICK, "COPPER_INGOT", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_INGOT),
+			Arrays.asList(
+					ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_INGOT_LORE1),
+					ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.COPPER_INGOT_LORE2),
+					ChatColor.GREEN + I18n.getLocaleString(I18nConst.Element.Cu)
+			));
+	public final static ItemStack COPPER_PLATE = genIWIS(Material.PAPER, "COPPER_PLATE", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_PLATE),
+			Arrays.asList(
+					ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_PLATE_LORE1),
+					ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.COPPER_PLATE_LORE2),
+					ChatColor.GREEN + I18n.getLocaleString(I18nConst.Element.Cu)
+			));
+	public final static ItemStack COPPER_WIRE = genIWIS(Material.IRON_BARS, "COPPER_WIRE", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_WIRE),
+			Arrays.asList(
+					ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_WIRE_LORE1),
+					ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.COPPER_WIRE_LORE2),
+					ChatColor.GREEN + I18n.getLocaleString(I18nConst.Element.Cu)
+			));
+	public final static ItemStack COPPER_ORE = genIWIS(Material.IRON_ORE, "COPPER_ORE", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_ORE),
+			Arrays.asList(
+					ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_ORE_LORE1),
+					ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.COPPER_ORE_LORE2)
+			));
 
     /*
     public final static ItemStack IW_FURNACE = genIWIS(Material.FURNACE, "IW_FURNACE", ChatColor.WHITE + "工业熔炼炉",

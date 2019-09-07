@@ -2,6 +2,7 @@ package com.IndustrialWorld.event;
 
 import com.IndustrialWorld.ConstItems;
 import com.IndustrialWorld.interfaces.MachineBlock;
+import com.IndustrialWorld.manager.InventoryListenerManager;
 import com.IndustrialWorld.manager.MainManager;
 import com.IndustrialWorld.utils.NBTUtil;
 import org.bukkit.Material;
@@ -25,14 +26,22 @@ public class EventListener implements Listener {
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         NBTUtil.NBTValue value = NBTUtil.getTagValue(event.getItemInHand(), "isIWItem");
-        if (value != null && value.asBoolean())
-            MainManager.process(event);
+        if (value != null && value.asBoolean()) {
+	        if (!MainManager.processBlockPlacement(event.getItemInHand(), event.getBlockPlaced())) {
+	        	event.setCancelled(true);
+	        }
+        }
     }
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-        if (MainManager.hasBlock(event.getBlock()))
-            MainManager.process(event);
+        if (MainManager.hasBlock(event.getBlock())) {
+        	// don't drop any item by default.
+        	event.setDropItems(false);
+        	if (!MainManager.processBlockDestroy(event.getPlayer().getItemInHand(), event.getBlock(), event.isCancelled())) {
+        		event.setCancelled(true);
+	        }
+        }
     }
 
     @EventHandler
@@ -69,17 +78,29 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        MainManager.process(event);
+	    InventoryListenerManager.onInventoryClick(event);
     }
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
-        MainManager.process(event);
+        InventoryListenerManager.onInventoryClose(event);
     }
 
     @EventHandler
     public void onPlayerInteract(PlayerInteractEvent event) {
-        MainManager.process(event);
+    	// item interact priority is higher than blocks
+    	if (event.hasItem()) {
+		    if (!MainManager.processItemInteract(event.getPlayer(), event.getClickedBlock(), event.getItem(), event.getAction())) {
+			    event.setCancelled(true);
+			    return;
+		    }
+	    }
+
+	    if (event.hasBlock()) {
+		    if (!MainManager.processBlockInteract(event.getPlayer(), event.getClickedBlock(), event.getItem(), event.getAction())) {
+			    event.setCancelled(true);
+		    }
+	    }
     }
 
     @EventHandler
