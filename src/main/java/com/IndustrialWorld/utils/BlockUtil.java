@@ -5,6 +5,7 @@ import com.IndustrialWorld.interfaces.MachineBlock;
 import com.IndustrialWorld.interfaces.Wire;
 import com.IndustrialWorld.manager.MainManager;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 
 import java.util.*;
@@ -161,5 +162,10 @@ public class BlockUtil {
             this.wires = wires;
             this.divisorOfElectricity = doe;
         }
+    }
+
+    public static boolean isReplaceableOreGen(Block block) {
+        List<Material> replaceableOreGenList = Arrays.asList(Material.STONE, Material.DIRT, Material.ANDESITE, Material.GRAVEL);
+        return replaceableOreGenList.contains(block.getBlockData().getMaterial());
     }
 }

@@ -2,6 +2,7 @@ package com.IndustrialWorld.interfaces;
 
 import com.IndustrialWorld.event.ProcessInfo;
 import com.IndustrialWorld.manager.MainManager;
+import org.bukkit.Material;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
@@ -19,5 +20,17 @@ public abstract class BlockBase extends Base {
 
     public void onInteractAsBlock(PlayerInteractEvent event){
 
+    }
+
+    public boolean isOre() {
+        return false;
+    }
+
+    public Material getMaterial() {
+        return Material.AIR;
+    }
+
+    public String getId() {
+        return "";
     }
 }
