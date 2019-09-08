@@ -5,6 +5,7 @@ import com.IndustrialWorld.event.TickEvent;
 import com.IndustrialWorld.i18n.I18n;
 import com.IndustrialWorld.manager.MainManager;
 import com.IndustrialWorld.manager.RegisterManager;
+import com.IndustrialWorld.utils.DebuggingLogger;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -46,10 +47,12 @@ public final class IndustrialWorld extends JavaPlugin {
         config = YamlConfiguration.loadConfiguration(config_yml);
         I18n.init(config);
 
+        DebuggingLogger.debug("register recipes");
         RegisterManager.registerIWCRecipes();
+        DebuggingLogger.debug("register blocks");
         RegisterManager.registerBlockIS();
-
-        getServer().addRecipe(new ShapedRecipe(new NamespacedKey(this, "IW_CRAFTING_TABLE"), ConstItems.IW_CRAFTING_TABLE).shape("AAA", "ABA", "AAA").setIngredient('A', Material.IRON_INGOT).setIngredient('B', Material.CRAFTING_TABLE));
+	    DebuggingLogger.debug("register crafting table.");
+        getServer().addRecipe(new ShapedRecipe(new NamespacedKey(this, "crafting_table_craft"), ConstItems.IW_CRAFTING_TABLE).shape("AAA", "ABA", "AAA").setIngredient('A', Material.IRON_INGOT).setIngredient('B', Material.CRAFTING_TABLE));
 
         getServer().getScheduler().runTaskTimer(this, () -> getServer().getPluginManager().callEvent(new TickEvent()), 0, 0);
     }

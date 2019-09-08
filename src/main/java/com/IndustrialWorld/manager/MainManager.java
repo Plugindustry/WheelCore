@@ -117,7 +117,7 @@ public class MainManager {
     }
 
     public static String getBlockId(Block block) {
-    	if (block == null) {
+    	if (block == null || blocks.get(block.getLocation()) == null) {
     		return null;
 	    }
 

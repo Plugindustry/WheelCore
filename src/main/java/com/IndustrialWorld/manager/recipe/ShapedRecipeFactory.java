@@ -1,5 +1,6 @@
 package com.IndustrialWorld.manager.recipe;
 
+import com.IndustrialWorld.utils.DebuggingLogger;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
@@ -8,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 public class ShapedRecipeFactory {
-	private List<String> patterns;
+	private List<String> patterns = new LinkedList<>();
 	private Map<Character, ItemStack> patternMapping = new HashMap<>();
 	private Map<ItemStack, Integer> damageMapping = new HashMap<>();
 
@@ -18,7 +19,12 @@ public class ShapedRecipeFactory {
 	}
 
 	public ShapedRecipeFactory pattern(String ... patterns) {
-		List<String> lastPattern = new LinkedList<>(this.patterns);
+		List<String> lastPattern = new LinkedList<>();
+		for (String pattern : patterns) {
+			DebuggingLogger.debug("Adding pattern: " + pattern);
+			lastPattern.add(pattern);
+		}
+
 		if (patterns.length > 3) {
 			throw new IllegalArgumentException("long pattern");
 		}

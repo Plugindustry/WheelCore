@@ -10,8 +10,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.HashMap;
-import java.util.Map;
 
 public final class ConstItems {
 	public final static ItemStack FORGE_HAMMER = genIWIS(Material.IRON_SHOVEL, "FORGE_HAMMER", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER),
