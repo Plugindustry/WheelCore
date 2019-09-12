@@ -1,13 +1,19 @@
+* 简体中文
+* [English][1]
+
 # IndustrialWorld 
+~~大扎好，我系渣渣辉，IndustrialWorld，介四里没有挽过的船新版本，挤需体验三番钟，里造会干我一样，爱象节个插件。~~  
 
-IndustrialWorld is a plugin for Bukkit/Spigot Minecraft server, which aims to add Mod-like effects to Minecraft.  
-Offers more ores, machines, cool weapons and strong armors.  
-A brand new way to play Minecraft!  
-No server mods needed!  
+IndusrialWorld是一个Bukkit/Spigot服务器插件，旨在为Minecraft添加像Mod一样的效果。  
+提供更多的矿物，机器；酷炫的武器和强大的盔甲。  
+一个崭新的玩Minecraft的方法！ 
+不需要任何服务器Mod！ 
 
-## Under Development :D  
+## 开发中... :D  
 
-# Development Progress  
-Industrial Crafting Table & recipes √  
-I18n Support √  
-Ores  
+# 开发进度   
+工业合成台和更多的合成配方 √  
+I18n支持 √  
+更多的矿物 [Dev]
+
+[1]: https://github.com/czm23333/IndustrialWorld/blob/master/README_EN.md
