@@ -61,11 +61,11 @@ public class MainManager {
 
     public static void onWorldInit(WorldInitEvent event) {
 	    // TODO: world name comparison
-	    if (((WorldInitEvent) event).getWorld().getEnvironment() == World.Environment.NORMAL) {
-		    ((WorldInitEvent) event).getWorld().getPopulators().add(new NormalOrePopulator());
-	    } else if (((WorldInitEvent) event).getWorld().getEnvironment() == World.Environment.NETHER) {
+	    if (event.getWorld().getEnvironment() == World.Environment.NORMAL) {
+		    event.getWorld().getPopulators().add(new NormalOrePopulator());
+	    } else if (event.getWorld().getEnvironment() == World.Environment.NETHER) {
 		    // TODO: Nether Ore Populate
-	    } else if (((WorldInitEvent) event).getWorld().getEnvironment() == World.Environment.THE_END) {
+	    } else if (event.getWorld().getEnvironment() == World.Environment.THE_END) {
 		    // TODO: The End Ore Populate
 	    }
     }
