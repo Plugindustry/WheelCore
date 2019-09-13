@@ -53,28 +53,24 @@ public class MainManager {
     	return itemBase.onInteract(player, action, tool, block);
     }
 
-    public static void update() {
-
+    public static void update(TickEvent tick) {
+		for (Base base : mapping.values()) {
+			base.onTick(tick);
+		}
     }
 
-    public static void process(Event event) {
-        if (event instanceof TickEvent) {
-            for (Base base : mapping.values())
-                base.onTick((TickEvent) event);
-        } else if (event instanceof WorldInitEvent) {
-            // TODO: world name comparison
-            if (((WorldInitEvent) event).getWorld().getEnvironment() == World.Environment.NORMAL) {
-                ((WorldInitEvent) event).getWorld().getPopulators().add(new NormalOrePopulator());
-            } else if (((WorldInitEvent) event).getWorld().getEnvironment() == World.Environment.NETHER) {
-                // TODO: Nether Ore Populate
-            } else if (((WorldInitEvent) event).getWorld().getEnvironment() == World.Environment.THE_END) {
-                // TODO: The End Ore Populate
-            }
-
-        }
+    public static void onWorldInit(WorldInitEvent event) {
+	    // TODO: world name comparison
+	    if (((WorldInitEvent) event).getWorld().getEnvironment() == World.Environment.NORMAL) {
+		    ((WorldInitEvent) event).getWorld().getPopulators().add(new NormalOrePopulator());
+	    } else if (((WorldInitEvent) event).getWorld().getEnvironment() == World.Environment.NETHER) {
+		    // TODO: Nether Ore Populate
+	    } else if (((WorldInitEvent) event).getWorld().getEnvironment() == World.Environment.THE_END) {
+		    // TODO: The End Ore Populate
+	    }
     }
 
-    public static String getIdFromInstance(Base instance) {
+	public static String getIdFromInstance(Base instance) {
         for (Map.Entry<String, Base> e : mapping.entrySet())
             if (e.getValue().equals(instance))
                 return e.getKey();

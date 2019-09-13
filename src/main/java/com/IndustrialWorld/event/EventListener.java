@@ -63,7 +63,7 @@ public class EventListener implements Listener {
                     Item item = (Item) (event.getBlock().getWorld().spawnEntity(event.getBlock().getLocation(), EntityType.DROPPED_ITEM));
                     item.setItemStack(ConstItems.BASIC_MACHINE_BLOCK);
                 } else {
-                    MainManager.process(new BlockBreakEvent(block, null));
+                	MainManager.processBlockDestroy(null, block, false);
                 }
     }
 
@@ -105,9 +105,9 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onTick(TickEvent event) {
-        MainManager.process(event);
+        MainManager.update(event);
     }
 
     @EventHandler
-    public void onWorldInit(WorldInitEvent event) { MainManager.process(event); }
+    public void onWorldInit(WorldInitEvent event) { MainManager.onWorldInit(event); }
 }
