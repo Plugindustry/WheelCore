@@ -67,6 +67,11 @@ public final class IndustrialWorld extends JavaPlugin {
             e.printStackTrace();
         }
     }
+    @Override
+    public void onLoad() {
+        DebuggingLogger.debug("register crafting table.");
+        getServer().addRecipe(new ShapedRecipe(new NamespacedKey(this, "crafting_table_craft"), ConstItems.IW_CRAFTING_TABLE).shape("AAA", "ABA", "AAA").setIngredient('A', Material.IRON_INGOT).setIngredient('B', Material.CRAFTING_TABLE));
+    }
 
     public final String getDataFolderPath() {
         return getDataFolder().getAbsolutePath();
