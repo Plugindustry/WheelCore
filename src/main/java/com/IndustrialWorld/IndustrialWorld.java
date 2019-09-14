@@ -54,10 +54,12 @@ public final class IndustrialWorld extends JavaPlugin {
         RegisterManager.registerIWCRecipes();
         DebuggingLogger.debug("register blocks");
         RegisterManager.registerBlockIS();
+	    DebuggingLogger.debug("register crafting table.");
+        getServer().addRecipe(new ShapedRecipe(new NamespacedKey(this, "crafting_table_craft"), ConstItems.IW_CRAFTING_TABLE).shape("AAA", "ABA", "AAA").setIngredient('A', Material.IRON_INGOT).setIngredient('B', Material.CRAFTING_TABLE));
 
         getServer().getScheduler().runTaskTimer(this, () -> getServer().getPluginManager().callEvent(new TickEvent()), 0, 0);
 
-        new IWCraftingTableRegistrationTask(this).runTaskLater(this,100);
+        getServer().getScheduler().runTask(this, new IWCraftingTableRegistrationTask(this));
     }
 
     @Override
