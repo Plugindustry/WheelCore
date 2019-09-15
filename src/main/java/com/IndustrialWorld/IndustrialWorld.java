@@ -5,12 +5,15 @@ import com.IndustrialWorld.event.TickEvent;
 import com.IndustrialWorld.i18n.I18n;
 import com.IndustrialWorld.manager.MainManager;
 import com.IndustrialWorld.manager.RegisterManager;
+import com.IndustrialWorld.task.IWCraftingTableRegistrationTask;
 import com.IndustrialWorld.utils.DebuggingLogger;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,6 +58,8 @@ public final class IndustrialWorld extends JavaPlugin {
         getServer().addRecipe(new ShapedRecipe(new NamespacedKey(this, "crafting_table_craft"), ConstItems.IW_CRAFTING_TABLE).shape("AAA", "ABA", "AAA").setIngredient('A', Material.IRON_INGOT).setIngredient('B', Material.CRAFTING_TABLE));
 
         getServer().getScheduler().runTaskTimer(this, () -> getServer().getPluginManager().callEvent(new TickEvent()), 0, 0);
+
+        getServer().getScheduler().runTask(this, new IWCraftingTableRegistrationTask(this));
     }
 
     @Override

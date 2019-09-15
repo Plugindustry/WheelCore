@@ -15,9 +15,9 @@ public class WorldGenCopperOre extends WorldGenerator {
                 int posX = (int) (lctn.getX() + rand.nextInt(16));
                 int posY = 10 + rand.nextInt(60);
                 int posZ = (int) (lctn.getZ() + rand.nextInt(16));
-                Location blockpos = new Location(world, posX, posY, posZ);
+                Location blockPos = new Location(world, posX, posY, posZ);
                 if (50 > rand.nextInt(100)) {
-                    copperOreGenerator.generate(world, rand, blockpos);
+                    copperOreGenerator.generate(world, rand, blockPos);
                 }
             }
             return true;
