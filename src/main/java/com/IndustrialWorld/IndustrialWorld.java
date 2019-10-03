@@ -3,6 +3,7 @@ package com.IndustrialWorld;
 import com.IndustrialWorld.event.EventListener;
 import com.IndustrialWorld.event.TickEvent;
 import com.IndustrialWorld.i18n.I18n;
+import com.IndustrialWorld.manager.CommandManager;
 import com.IndustrialWorld.manager.MainManager;
 import com.IndustrialWorld.manager.RegisterManager;
 import com.IndustrialWorld.task.IWCraftingTableRegistrationTask;
@@ -12,8 +13,6 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
 import java.io.IOException;
@@ -28,6 +27,8 @@ public final class IndustrialWorld extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
         instance = this;
+
+        this.getCommand("iw").setExecutor(new CommandManager(this));
 
         getServer().getPluginManager().registerEvents(new EventListener(), this);
         if (getDataFolder().isDirectory() || getDataFolder().mkdirs()) ;

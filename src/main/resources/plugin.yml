@@ -6,3 +6,10 @@ prefix: IndustrialWorld
 authors: [czm]
 description: IndustrialWorld
 load: STARTUP
+
+commands:
+  iw:
+    description: IndustrialWorld插件的指令.
+    usage: /<command> [test/...] [...]
+    permission: industrialworld.iw
+    permission-message: 你没有权限<permission>使用本命令.

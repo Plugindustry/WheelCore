@@ -11,9 +11,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class ConstItems {
+	public static Map<String, ItemStack> ConstItems = new HashMap<String, ItemStack>();
+
 	public final static ItemStack FORGE_HAMMER = ItemStackUtil.create(MaterialUtil.IRON_SHOVEL).setId("FORGE_HAMMER").setAmount(1).setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER)).setLore(
 			Arrays.asList(
 					ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER_LORE1),
