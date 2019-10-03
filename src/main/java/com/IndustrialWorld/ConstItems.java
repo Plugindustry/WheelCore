@@ -2,6 +2,7 @@ package com.IndustrialWorld;
 
 import com.IndustrialWorld.i18n.I18n;
 import com.IndustrialWorld.i18n.I18nConst;
+import com.IndustrialWorld.utils.MaterialUtil;
 import com.IndustrialWorld.utils.NBTUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -12,7 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public final class ConstItems {
-	public final static ItemStack FORGE_HAMMER = genIWIS(Material.IRON_SHOVEL, "FORGE_HAMMER", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER),
+	public final static ItemStack FORGE_HAMMER = genIWIS(MaterialUtil.IRON_SHOVEL, "FORGE_HAMMER", ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER),
 			Arrays.asList(
 					ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER_LORE1),
 					ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER_LORE2),
