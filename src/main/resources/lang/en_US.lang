@@ -1,43 +1,43 @@
 # Translations by cph1, timetraveler314
-item.forge-hammer.name=Forge Hammer
-item.forge-hammer.lore.1=Can pound on the crafting table
-item.forge-hammer.lore.2=Consume 3 durable every time(About 83 times in total)
-item.forge-hammer.lore.3=(*You can use it as a shovel,but doesn't it seem to be huge wasteful?)
+item.forge_hammer.name=Forge Hammer
+item.forge_hammer.lore.1=Can pound on the crafting table
+item.forge_hammer.lore.2=Consume 3 durable every time(About 83 times in total)
+item.forge_hammer.lore.3=(*You can use it as a shovel,but doesn't it seem to be huge wasteful?)
 
-item.iw-crafting-table.name=Industrial Crafting Table
-item.iw-crafting-table.lore.1=Industrial Crafting Table
-item.iw-crafting-table.lore.2=Craft industrial items
+item.iw_crafting_table.name=Industrial Crafting Table
+item.iw_crafting_table.lore.1=Industrial Crafting Table
+item.iw_crafting_table.lore.2=Craft industrial items
 
-item.iron-plate.name=Iron Sheet
-item.iron-plate.lore.1=Iron Sheet
-item.iron-plate.lore.2=(*Just looks light?)
+item.iron_plate.name=Iron Sheet
+item.iron_plate.lore.1=Iron Sheet
+item.iron_plate.lore.2=(*Just looks light?)
 
 item.cutter.name=Cutter
 item.cutter.lore.1=Cuts sheets into wires
 item.cutter.lore.2=Consume 4 durable every time(About 59 times in total)
 item.cutter.lore.3=(*You can use it as scissors, but doesn't it seem to be huge wasteful?)
 
-item.basic-machine-block.name=Basic Machine Block
-item.basic-machine-block.lore.1=The most basic machine casing
-item.basic-machine-block.lore.2= basic machines
+item.basic_machine_block.name=Basic Machine Block
+item.basic_machine_block.lore.1=The most basic machine casing
+item.basic_machine_block.lore.2= basic machines
 
-item.copper-ingot.name=Copper Ingot
-item.copper-ingot.lore.1=Copper Ingot
-item.copper-ingot.lore.2=(*Looks like bricks, but more valuable than bricks.)
+item.copper_ingot.name=Copper Ingot
+item.copper_ingot.lore.1=Copper Ingot
+item.copper_ingot.lore.2=(*Looks like bricks, but more valuable than bricks.)
 
-item.copper-plate.name=Copper Sheet
-item.copper-plate.lore.1=Copper Sheet
-item.copper-plate.lore.2=(*High quality oxidation treated copper sheets, MAYBE)
+item.copper_plate.name=Copper Sheet
+item.copper_plate.lore.1=Copper Sheet
+item.copper_plate.lore.2=(*High quality oxidation treated copper sheets, MAYBE)
 
-item.copper-wire.name=Copper Wire
-item.copper-wire.lore.1=Copper Wire
-item.copper-wire.lore.2=[*Oxidation treated copper wire, looks bad either]
+item.copper_wire.name=Copper Wire
+item.copper_wire.lore.1=Copper Wire
+item.copper_wire.lore.2=[*Oxidation treated copper wire, looks bad either]
 
-item.copper-ore.name=Translation needed
-item.copper-ore.lore.1=Translation needed
-item.copper-ore.lore.2=Translation needed
+item.copper_ore.name=Translation needed
+item.copper_ore.lore.1=Translation needed
+item.copper_ore.lore.2=Translation needed
 
 element.fe=Fe
 element.cu=Cu
 
-inventory.iw-crafting-table.title=Industrial Crafting Table
+inventory.iw_crafting_table.title=Industrial Crafting Table

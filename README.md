@@ -2,6 +2,10 @@
 * [English][1]
 
 # IndustrialWorld 
+![GitHub](https://img.shields.io/github/license/czm23333/IndustrialWorld)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/czm23333/IndustrialWorld)
+![GitHub contributors](https://img.shields.io/github/contributors/czm23333/IndustrialWorld)
+
 ~~大扎好，我系渣渣辉，IndustrialWorld，介四里没有挽过的船新版本，挤需体验三番钟，里造会干我一样，爱象节个插件。~~  
 
 IndusrialWorld是一个Bukkit/Spigot服务器插件，旨在为Minecraft添加像Mod一样的效果。  

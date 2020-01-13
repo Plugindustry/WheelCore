@@ -9,8 +9,8 @@ import java.util.List;
 import java.util.Objects;
 
 public class ItemStackUtil {
-    public static ItemStackGenetator create(Material mtrl) {
-        return new ItemStackGenetator(mtrl);
+    public static ItemStackFactory create(Material mtrl) {
+        return new ItemStackFactory(mtrl);
     }
 
     public static boolean isSimilar(ItemStack a, ItemStack b) {
@@ -43,17 +43,17 @@ public class ItemStackUtil {
     }
 
 
-    public static class ItemStackGenetator {
+    public static class ItemStackFactory {
         private Material mtrl = Material.AIR;
         private int amount = 1;
         private String id, displayName = "";
         private List<String> lore = Arrays.asList("");
 
-        public ItemStackGenetator(Material mtrl) { this.mtrl = mtrl; }
-        public ItemStackGenetator setAmount(int amount) { this.amount = amount; return this; }
-        public ItemStackGenetator setId(String id) { this.id = id; return this; }
-        public ItemStackGenetator setLore(List<String> lore) { this.lore = lore; return this; }
-        public ItemStackGenetator setDisplayName(String dpName) { this.displayName = dpName; return this; }
+        public ItemStackFactory(Material mtrl) { this.mtrl = mtrl; }
+        public ItemStackFactory setAmount(int amount) { this.amount = amount; return this; }
+        public ItemStackFactory setId(String id) { this.id = id; return this; }
+        public ItemStackFactory setLore(List<String> lore) { this.lore = lore; return this; }
+        public ItemStackFactory setDisplayName(String dpName) { this.displayName = dpName; return this; }
 
         public ItemStack getItemStack() {
             ItemStack tmp = new ItemStack(mtrl, amount);
