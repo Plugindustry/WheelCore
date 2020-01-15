@@ -20,4 +20,6 @@ IndusrialWorld是一个Bukkit/Spigot服务器插件，旨在为Minecraft添加�
 I18n支持 √  
 更多的矿物 [Dev]
 
+（咳咳，en_US.lang里怎么多出了氢氧氟氯氦氖氩氪氙的物品描述？）
+
 [1]: https://github.com/czm23333/IndustrialWorld/blob/master/README_EN.md
