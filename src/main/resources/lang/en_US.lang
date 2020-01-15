@@ -45,6 +45,22 @@ item.iron_ore.name=Iron Ore
 item.iron_ore.lore.1=Iron Ore
 item.iron_ore.lore.2=(*Pure Iron Ore! Smelt item 50% discount!)
 
+#item.oxygen.name=Oxygen
+#item.oxygen.lore.1=Oxygen
+#item.oxygen.lore.2=(*99% Oxygen)
+#item.hydrogen.name=Hydrogen
+#item.hydrogen.lore.1=Hydrogen
+#item.hydrogen.lore.2=(*You'd better not play with fire in hydrogen...)
+#item.nitrogen.name=Nitrogen
+#item.nitrogen.lore.1=Nitrogen
+#item.nitrogen.lore.2=(*The main component of the air)
+#item.fluorine.name=Fluorine
+#item.fluorine.lore.1=Fluorine
+#item.fluorine.lore.2=(*Wow,it corrosion of the container!)
+#item.chlorine.name=Chlorine
+#item.chlorine.lore.1=Chlorine
+#item.chlorine.lore.2=(*Why can't I smell anything after I smelt this gas?)
+
 element.fe=Fe
 element.cu=Cu
 
