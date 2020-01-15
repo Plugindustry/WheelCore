@@ -61,6 +61,29 @@ item.iron_ore.lore.2=(*Pure Iron Ore! Smelt item 50% discount!)
 #item.chlorine.lore.1=Chlorine
 #item.chlorine.lore.2=(*Why can't I smell anything after I smelt this gas?)
 
+#item.helium.name=Helium
+#item.helium.lore.1=Helium
+#item.helium.lore.2=(*Always be used to cool something)
+#item.neon.name=Neon
+#item.neon.lore.1=Neon
+#item.neon.lore.2=(*Founded by a very little gap)
+#item.argon.name=Argon
+#item.argon.lore.1=Argon
+#item.argon.lore.2=(*Filled the bulb at first.)
+#item.krypton.name=Krypton
+#item.krypton.lore.1=Krypton
+#item.krypton.lore.2=(*It seems nothing is special in this element...)
+#item.xenon.name=Xenon
+#item.xenon.lore.1=Xenon
+#item.xenon.lore.2=(*We'll try to add some xenon compounds some day!)
+#item.radon.name=Radon
+#item.radon.lore.1=Radon
+#item.radon.lore.2=(*It can even cure some kinds of cancers!)
+
+#item.unknown.name=Unknown
+#item.unknown.lore.1=Unknown
+#item.unknown.lore.2=(*Magical unknown things.Who can try to touch it?)
+
 element.fe=Fe
 element.cu=Cu
 
