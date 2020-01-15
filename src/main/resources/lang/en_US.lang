@@ -33,11 +33,23 @@ item.copper_wire.name=Copper Wire
 item.copper_wire.lore.1=Copper Wire
 item.copper_wire.lore.2=[*Oxidation treated copper wire, looks bad either]
 
-item.copper_ore.name=Translation needed
-item.copper_ore.lore.1=Translation needed
-item.copper_ore.lore.2=Translation needed
+item.red_copper_ore.name=Red Copper Ore
+item.red_copper_ore.lore.1=Red Copper Ore
+item.red_copper_ore.lore.2=(*There is some red ore which may be able to smell some copper)
+
+item.malachite.name=Malachite
+item.malachite.lore.1=Malachite
+item.malachite.lore.2=(*Malachite, alkali type copper carbonate)
+
+item.iron_ore.name=Iron Ore
+item.iron_ore.lore.1=Iron Ore
+item.iron_ore.lore.2=(*Pure Iron Ore! Smelt item 50% discount!)
 
 element.fe=Fe
 element.cu=Cu
 
 inventory.iw_crafting_table.title=Industrial Crafting Table
+
+item.iron_ore.formula=Fe₂O₃
+item.red_copper_ore.formula=Cu₂O
+item.malachite.formula=Cu₂(OH)₂CO₃
