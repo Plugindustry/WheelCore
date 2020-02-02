@@ -33,9 +33,9 @@ item.copper_wire.name=铜线
 item.copper_wire.lore.1=铜线
 item.copper_wire.lore.2=[*看起来弱不禁风的氧化铜丝,导电性也不怎么样(其实导电性第二)]
 
-item.red_copper_ore.name=赤铜矿石
-item.red_copper_ore.lore.1=赤铜矿石
-item.red_copper_ore.lore.2=[*看起来像铁矿,不过还真含有铁]
+item.copper_ore.name=铜矿石
+item.copper_ore.lore.1=铜矿石
+item.copper_ore.lore.2=[*看起来像铁矿,不过还真含有铁]
 
 item.malachite.name=孔雀石
 item.malachite.lore.1=孔雀石
