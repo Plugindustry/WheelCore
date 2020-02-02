@@ -38,6 +38,10 @@ public class I18nConst {
         public static String COPPER_ORE = "item.copper_ore.name";
         public static String COPPER_ORE_LORE1 = "item.copper_ore.lore.1";
         public static String COPPER_ORE_LORE2 = "item.copper_ore.lore.2";
+
+        public static String RED_HOT_IRON_INGOT = "item.red_hot_iron_ingot.name";
+        public static String RED_HOT_IRON_INGOT_LORE1 = "item.red_hot_iron_ingot.1";
+        public static String RED_HOT_IRON_INGOT_LORE2 = "item.red_hot_iron_ingot.2";
     }
 
     public static class Block {

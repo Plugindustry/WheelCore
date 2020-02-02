@@ -72,4 +72,8 @@ public final class ConstItems {
 					ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_ORE_LORE1),
 					ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.COPPER_ORE_LORE2)
 			)).getItemStack();
+	public final static ItemStack RED_HOT_IRON_INGOT = ItemStackUtil.create(Material.IRON_ORE).setId("RED_HOT_IRON_INGOT").setAmount(1).setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.RED_HOT_IRON_INGOT)).setLore(
+			Arrays.asList(
+					ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.RED_HOT_IRON_INGOT_LORE1)
+			)).getItemStack();
 }

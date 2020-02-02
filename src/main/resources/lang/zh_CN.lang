@@ -45,6 +45,12 @@ item.iron_ore.name=铁矿石
 item.iron_ore.lore.1=铁矿石
 item.iron_ore.lore.2=(*高纯度铁矿石!熔炼产物五折优惠!)
 
+item.red_hot_iron_ingot.name=红热的铁锭
+item.red_hot_iron_ingot.1=在熔炉中加热至红热的铁锭
+item.red_hot_iron_ingot.2=(*怕什么，史蒂夫的手对这个可不敏感)
+
+
+
 element.fe=Fe
 element.cu=Cu
 

@@ -19,7 +19,7 @@ item.cutter.lore.3=(*You can use it as scissors, but doesn't it seem to be huge 
 
 item.basic_machine_block.name=Basic Machine Block
 item.basic_machine_block.lore.1=The most basic machine casing
-item.basic_machine_block.lore.2= basic machines
+item.basic_machine_block.lore.2=Used to craft basic machines
 
 item.copper_ingot.name=Copper Ingot
 item.copper_ingot.lore.1=Copper Ingot
@@ -34,7 +34,7 @@ item.copper_wire.lore.1=Copper Wire
 item.copper_wire.lore.2=[*Oxidation treated copper wire, looks bad either]
 
 item.copper_ore.name=Copper Ore
-item.copper_ore.lore.1=Copper Ore
+item.copper_ore.lore.1=.Copper Ore
 item.copper_ore.lore.2=(*There is some red ore which may be able to smell some copper)
 
 item.malachite.name=Malachite
@@ -44,6 +44,11 @@ item.malachite.lore.2=(*Malachite, alkali type copper carbonate)
 item.iron_ore.name=Iron Ore
 item.iron_ore.lore.1=Iron Ore
 item.iron_ore.lore.2=(*Pure Iron Ore! Smelt item 50% discount!)
+
+item.red_hot_iron_ingot.name=Red Hot Iron Ingot
+item.red_hot_iron_ingot.1=Heated red in furnace
+
+
 
 #item.oxygen.name=Oxygen
 #item.oxygen.lore.1=Oxygen
