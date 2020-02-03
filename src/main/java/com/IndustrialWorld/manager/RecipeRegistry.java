@@ -19,17 +19,20 @@ public class RecipeRegistry {
 	public static CraftingRecipe matchCraftingRecipe(List<ItemStack> items, Map<Integer, ItemStack> damageResult) {
 		// tidy up the matrix
 		List<List<ItemStack>> matrix = new LinkedList<>();
-		List<ItemStack> current = null;
+		List<ItemStack> current = new LinkedList<>();
 		int i = 0;
 		do {
-			if (i % 3 == 0) {
+			if (i % 3 == 0 && i != 0) {
 				matrix.add(current);
 				current = new LinkedList<>();
 			}
 
+
 			current.add(items.get(i));
 			i++;
 		} while (i < 9);
+
+		matrix.add(current);
 
 		// then match the recipe
 		for (RecipeBase recipeBase : recipes) {

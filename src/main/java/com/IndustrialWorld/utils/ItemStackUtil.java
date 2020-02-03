@@ -44,7 +44,7 @@ public class ItemStackUtil {
 
 
     public static class ItemStackFactory {
-        private Material mtrl = Material.AIR;
+        private Material mtrl;
         private int amount = 1;
         private String id, displayName = "";
         private List<String> lore = Arrays.asList("");

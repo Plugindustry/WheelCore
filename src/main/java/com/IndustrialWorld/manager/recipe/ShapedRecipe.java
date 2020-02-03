@@ -1,13 +1,11 @@
 package com.IndustrialWorld.manager.recipe;
 
+import com.IndustrialWorld.utils.DebuggingLogger;
 import com.IndustrialWorld.utils.ItemStackUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ShapedRecipe implements CraftingRecipe {
 	private List<List<ItemStack>> matrix;
@@ -30,7 +28,8 @@ public class ShapedRecipe implements CraftingRecipe {
 
 	@Override
 	public boolean matches(List<List<ItemStack>> matrix, Map<Integer, ItemStack> damage) {
-		if (matrix.size() != 9) {
+		DebuggingLogger.debug("matrix size: " + matrix.size());
+		if (matrix.size() != 3) {
 			return false;
 		}
 
@@ -49,13 +48,19 @@ public class ShapedRecipe implements CraftingRecipe {
 		}
 
 		// check for damage to items.
+		checkItemDamage(matrix, damage, this.damages);
+
+		return true;
+	}
+
+	static void checkItemDamage(List<List<ItemStack>> matrix, Map<Integer, ItemStack> damage, Map<ItemStack, Integer> damages) {
 		for (int i = 0; i < matrix.size(); i++) {
 			List<ItemStack> row = matrix.get(i);
 			for (int j = 0; j < row.size(); j++) {
 				ItemStack is = row.get(j);
 				int finalI = i;
 				int finalJ = j;
-				this.damages.forEach((items, dmg) -> {
+				damages.forEach((items, dmg) -> {
 					if (ItemStackUtil.isSimilar(items, is)) {
 						ItemStack newIs = is.clone();
 						newIs.setDurability((short) (newIs.getDurability() - dmg));
@@ -66,8 +71,6 @@ public class ShapedRecipe implements CraftingRecipe {
 				});
 			}
 		}
-
-		return true;
 	}
 
 	@Override
@@ -113,7 +116,7 @@ public class ShapedRecipe implements CraftingRecipe {
 		int endAirLength = Integer.MAX_VALUE;
 		for (List<ItemStack> row : matrix) {
 			int airLength = 0;
-			for (int i = 2; i >= 0; i --) {
+			for (int i = row.size() - 1; i >= 0; i --) {
 				ItemStack is = row.get(i);
 
 				if (is == null || is.getType() == Material.AIR) {
@@ -167,7 +170,12 @@ public class ShapedRecipe implements CraftingRecipe {
 
 		// reversed so that we can remove the rows completely
 		for (int i = 2; i >= 0; i --) {
-			List<ItemStack> row = matrix.get(i);
+			List<ItemStack> row;
+			try {
+				row = matrix.get(i);
+			} catch (Exception e) {
+				continue;
+			}
 
 			if (row.isEmpty()) {
 				removeQueue.add(i);
@@ -189,6 +197,8 @@ public class ShapedRecipe implements CraftingRecipe {
 			// We do break if we found a non-empty row, in order to keep everything safe.
 			break;
 		}
+
+		removeQueue.sort(Comparator.<Integer>comparingInt(a -> a).reversed());
 
 		for (Integer i : removeQueue) {
 			matrix.remove(i.intValue());

@@ -50,23 +50,7 @@ public class ShapelessRecipe implements CraftingRecipe {
 		boolean result = checkList.isEmpty() && shapeless.isEmpty();
 		if (result) {
 			// check for damage to items.
-			for (int i = 0; i < recipe.size(); i++) {
-				List<ItemStack> row = recipe.get(i);
-				for (int j = 0; j < row.size(); j++) {
-					ItemStack is = row.get(j);
-					int finalI = i;
-					int finalJ = j;
-					this.damages.forEach((items, dmg) -> {
-						if (ItemStackUtil.isSimilar(items, is)) {
-							ItemStack newIs = is.clone();
-							newIs.setDurability((short) (newIs.getDurability() - dmg));
-							if (damage != null) {
-								damage.put(finalI * 3 + finalJ, newIs);
-							}
-						}
-					});
-				}
-			}
+			ShapedRecipe.checkItemDamage(recipe, damage, this.damages);
 		}
 
 		return result;
