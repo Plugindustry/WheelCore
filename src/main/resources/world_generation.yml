@@ -1,0 +1,8 @@
+# World Generation Settings
+
+ore:
+  copper:
+    maxHeight: 60
+    minHeight: 10
+    numberOfBlocks: 10
+    oreInEachChunk: 20
