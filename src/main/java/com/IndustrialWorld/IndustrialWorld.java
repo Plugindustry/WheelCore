@@ -47,6 +47,7 @@ public final class IndustrialWorld extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+        ConfigManager.shutdown();
     }
 
     public final String getDataFolderPath() {
