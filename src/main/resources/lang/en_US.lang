@@ -1,43 +1,99 @@
 # Translations by cph1, timetraveler314
-item.forge-hammer.name=Forge Hammer
-item.forge-hammer.lore.1=Can pound on the crafting table
-item.forge-hammer.lore.2=Consume 3 durable every time(About 83 times in total)
-item.forge-hammer.lore.3=(*You can use it as a shovel,but doesn't it seem to be huge wasteful?)
+item.forge_hammer.name=Forge Hammer
+item.forge_hammer.lore.1=Can pound on the crafting table
+item.forge_hammer.lore.2=Consume 3 durable every time(About 83 times in total)
+item.forge_hammer.lore.3=(*You can use it as a shovel,but doesn't it seem to be huge wasteful?)
 
-item.iw-crafting-table.name=Industrial Crafting Table
-item.iw-crafting-table.lore.1=Industrial Crafting Table
-item.iw-crafting-table.lore.2=Craft industrial items
+item.iw_crafting_table.name=Industrial Crafting Table
+item.iw_crafting_table.lore.1=Industrial Crafting Table
+item.iw_crafting_table.lore.2=Craft industrial items
 
-item.iron-plate.name=Iron Sheet
-item.iron-plate.lore.1=Iron Sheet
-item.iron-plate.lore.2=(*Just looks light?)
+item.iron_plate.name=Iron Sheet
+item.iron_plate.lore.1=Iron Sheet
+item.iron_plate.lore.2=(*Just looks light?)
 
 item.cutter.name=Cutter
 item.cutter.lore.1=Cuts sheets into wires
 item.cutter.lore.2=Consume 4 durable every time(About 59 times in total)
 item.cutter.lore.3=(*You can use it as scissors, but doesn't it seem to be huge wasteful?)
 
-item.basic-machine-block.name=Basic Machine Block
-item.basic-machine-block.lore.1=The most basic machine casing
-item.basic-machine-block.lore.2= basic machines
+item.basic_machine_block.name=Basic Machine Block
+item.basic_machine_block.lore.1=The most basic machine casing
+item.basic_machine_block.lore.2=Used to craft basic machines
 
-item.copper-ingot.name=Copper Ingot
-item.copper-ingot.lore.1=Copper Ingot
-item.copper-ingot.lore.2=(*Looks like bricks, but more valuable than bricks.)
+item.copper_ingot.name=Copper Ingot
+item.copper_ingot.lore.1=Copper Ingot
+item.copper_ingot.lore.2=(*Looks like bricks, but more valuable than bricks.)
 
-item.copper-plate.name=Copper Sheet
-item.copper-plate.lore.1=Copper Sheet
-item.copper-plate.lore.2=(*High quality oxidation treated copper sheets, MAYBE)
+item.copper_plate.name=Copper Sheet
+item.copper_plate.lore.1=Copper Sheet
+item.copper_plate.lore.2=(*High quality oxidation treated copper sheets, MAYBE)
 
-item.copper-wire.name=Copper Wire
-item.copper-wire.lore.1=Copper Wire
-item.copper-wire.lore.2=[*Oxidation treated copper wire, looks bad either]
+item.copper_wire.name=Copper Wire
+item.copper_wire.lore.1=Copper Wire
+item.copper_wire.lore.2=[*Oxidation treated copper wire, looks bad either]
 
-item.copper-ore.name=Translation needed
-item.copper-ore.lore.1=Translation needed
-item.copper-ore.lore.2=Translation needed
+item.copper_ore.name=Copper Ore
+item.copper_ore.lore.1=.Copper Ore
+item.copper_ore.lore.2=(*There is some red ore which may be able to smell some copper)
+
+item.malachite.name=Malachite
+item.malachite.lore.1=Malachite
+item.malachite.lore.2=(*Malachite, alkali type copper carbonate)
+
+item.iron_ore.name=Iron Ore
+item.iron_ore.lore.1=Iron Ore
+item.iron_ore.lore.2=(*Pure Iron Ore! Smelt item 50% discount!)
+
+item.red_hot_iron_ingot.name=Red Hot Iron Ingot
+item.red_hot_iron_ingot.1=Heated red in furnace
+
+
+
+#item.oxygen.name=Oxygen
+#item.oxygen.lore.1=Oxygen
+#item.oxygen.lore.2=(*99% Oxygen)
+#item.hydrogen.name=Hydrogen
+#item.hydrogen.lore.1=Hydrogen
+#item.hydrogen.lore.2=(*You'd better not play with fire in hydrogen...)
+#item.nitrogen.name=Nitrogen
+#item.nitrogen.lore.1=Nitrogen
+#item.nitrogen.lore.2=(*The main component of the air)
+#item.fluorine.name=Fluorine
+#item.fluorine.lore.1=Fluorine
+#item.fluorine.lore.2=(*Wow,it corrosion of the container!)
+#item.chlorine.name=Chlorine
+#item.chlorine.lore.1=Chlorine
+#item.chlorine.lore.2=(*Why can't I smell anything after I smelt this gas?)
+
+#item.helium.name=Helium
+#item.helium.lore.1=Helium
+#item.helium.lore.2=(*Always be used to cool something)
+#item.neon.name=Neon
+#item.neon.lore.1=Neon
+#item.neon.lore.2=(*Founded by a very little gap)
+#item.argon.name=Argon
+#item.argon.lore.1=Argon
+#item.argon.lore.2=(*Filled the bulb at first.)
+#item.krypton.name=Krypton
+#item.krypton.lore.1=Krypton
+#item.krypton.lore.2=(*It seems nothing is special in this element...)
+#item.xenon.name=Xenon
+#item.xenon.lore.1=Xenon
+#item.xenon.lore.2=(*We'll try to add some xenon compounds some day!)
+#item.radon.name=Radon
+#item.radon.lore.1=Radon
+#item.radon.lore.2=(*It can even cure some kinds of cancers!)
+
+#item.unknown.name=Unknown
+#item.unknown.lore.1=Unknown
+#item.unknown.lore.2=(*Magical unknown things.Who can try to touch it?)
 
 element.fe=Fe
 element.cu=Cu
 
-inventory.iw-crafting-table.title=Industrial Crafting Table
+inventory.iw_crafting_table.title=Industrial Crafting Table
+
+item.iron_ore.formula=Fe₂O₃
+item.red_copper_ore.formula=Cu₂O
+item.malachite.formula=Cu₂(OH)₂CO₃

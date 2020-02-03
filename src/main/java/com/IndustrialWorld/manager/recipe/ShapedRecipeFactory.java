@@ -62,6 +62,7 @@ public class ShapedRecipeFactory {
 		CraftingRecipe craftingRecipe = new ShapedRecipe(recipe, result.clone());
 
 		this.damageMapping.forEach(craftingRecipe::addItemCost);
+		DebuggingLogger.debug(craftingRecipe.toString());
 		return craftingRecipe;
 	}
 }

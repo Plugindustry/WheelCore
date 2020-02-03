@@ -1,43 +1,61 @@
 # Translation by timetraveler314, cph1
-item.forge-hammer.name=锻造锤
-item.forge-hammer.lore.1=在工作台上砸砸砸砸
-item.forge-hammer.lore.2=3耐久/次(大约使用83次)
-item.forge-hammer.lore.3=(当然，你也可以把它当铲子用，不过似乎太浪费了)
+item.forge_hammer.name=锻造锤
+item.forge_hammer.lore.1=在工作台上砸砸砸砸
+item.forge_hammer.lore.2=3耐久/次(大约使用83次)
+item.forge_hammer.lore.3=(当然，你也可以把它当铲子用，不过似乎太浪费了)
 
-item.iw-crafting-table.name=工业工作台
-item.iw-crafting-table.lore.1=工业用工作台
-item.iw-crafting-table.lore.2=工业物品合成时均需使用
+item.iw_crafting_table.name=工业工作台
+item.iw_crafting_table.lore.1=工业用工作台
+item.iw_crafting_table.lore.2=工业物品合成时均需使用
 
-item.iron-plate.name=铁板
-item.iron-plate.lore.1=铁板
-item.iron-plate.lore.2=(*看起来很轻?)
+item.iron_plate.name=铁板
+item.iron_plate.lore.1=铁板
+item.iron_plate.lore.2=(*看起来很轻?)
 
 item.cutter.name=板材切割剪刀
 item.cutter.lore.1=把板材切割成线
 item.cutter.lore.2=4耐久/次(大约使用59次)
 item.cutter.lore.3=(当然，你也可以把它当剪刀用，不过似乎太浪费了)
 
-item.basic-machine-block.name=基础机器方块
-item.basic-machine-block.lore.1=最基本的机器外壳
-item.basic-machine-block.lore.2=可用于制造基础机器
+item.basic_machine_block.name=基础机器方块
+item.basic_machine_block.lore.1=最基本的机器外壳
+item.basic_machine_block.lore.2=可用于制造基础机器
 
-item.copper-ingot.name=铜锭
-item.copper-ingot.lore.1=铜锭
-item.copper-ingot.lore.2=[*1.5倍攻击伤害(误)]
+item.copper_ingot.name=铜锭
+item.copper_ingot.lore.1=铜锭
+item.copper_ingot.lore.2=[*1.5倍攻击伤害(误)]
 
-item.copper-plate.name=铜板
-item.copper-plate.lore.1=铜板
-item.copper-plate.lore.2=[*经过优质氧化处理的铜板(误)]
+item.copper_plate.name=铜板
+item.copper_plate.lore.1=铜板
+item.copper_plate.lore.2=[*经过优质氧化处理的铜板(误)]
 
-item.copper-wire.name=铜线
-item.copper-wire.lore.1=铜线
-item.copper-wire.lore.2=[*看起来弱不禁风的氧化铜丝,导电性也不怎么样(其实导电性第二)]
+item.copper_wire.name=铜线
+item.copper_wire.lore.1=铜线
+item.copper_wire.lore.2=[*看起来弱不禁风的氧化铜丝,导电性也不怎么样(其实导电性第二)]
 
-item.copper-ore.name=铜矿石
-item.copper-ore.lore.1=铜矿石
-item.copper-ore.lore.2=[*看起来像铁矿,不过还真含有铁]
+item.copper_ore.name=铜矿石
+item.copper_ore.lore.1=铜矿石
+item.copper_ore.lore.2=[*看起来像铁矿,不过还真含有铁]
+
+item.malachite.name=孔雀石
+item.malachite.lore.1=孔雀石
+item.malachite.lore.2=(*主要成分:碱式碳酸铜)
+
+item.iron_ore.name=铁矿石
+item.iron_ore.lore.1=铁矿石
+item.iron_ore.lore.2=(*高纯度铁矿石!熔炼产物五折优惠!)
+
+item.red_hot_iron_ingot.name=红热的铁锭
+item.red_hot_iron_ingot.1=在熔炉中加热至红热的铁锭
+item.red_hot_iron_ingot.2=(*怕什么，史蒂夫的手对这个可不敏感)
+
+
 
 element.fe=Fe
 element.cu=Cu
 
-inventory.iw-crafting-table.title=工业工作台
+inventory.iw_crafting_table.title=工业工作台
+
+item.iron_ore.formula=Fe₂O₃
+item.red_copper_ore.formula=Cu₂O
+item.malachite.formula=Cu₂(OH)₂CO₃

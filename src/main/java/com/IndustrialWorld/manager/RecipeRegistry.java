@@ -23,8 +23,8 @@ public class RecipeRegistry {
 		int i = 0;
 		do {
 			if (i % 3 == 0) {
-				current = new LinkedList<>();
 				matrix.add(current);
+				current = new LinkedList<>();
 			}
 
 			current.add(items.get(i));

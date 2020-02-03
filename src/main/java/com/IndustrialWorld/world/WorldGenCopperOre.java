@@ -11,7 +11,7 @@ public class WorldGenCopperOre extends WorldGenerator {
 
         @Override
         public boolean generate(World world, Random rand, Location lctn) {
-            for (int i = 0; i < 10; ++i) {
+            for (int i = 0; i < 10; ++i) { // Number of ore in each chunk
                 int posX = (int) (lctn.getX() + rand.nextInt(16));
                 int posY = 10 + rand.nextInt(60);
                 int posZ = (int) (lctn.getZ() + rand.nextInt(16));

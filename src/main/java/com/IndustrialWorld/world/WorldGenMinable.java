@@ -3,6 +3,7 @@ package com.IndustrialWorld.world;
 import com.IndustrialWorld.interfaces.OreBase;
 import com.IndustrialWorld.manager.MainManager;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
@@ -20,25 +21,36 @@ public class WorldGenMinable extends WorldGenerator {
     }
 
     public boolean generate(World worldIn, Random rand, Location blockLctn) {
-        for (int i = 0; i < 10; ++i) {
             int x = blockLctn.getBlockX();
             int y = blockLctn.getBlockY();
             int z = blockLctn.getBlockZ();
 
-            Block cB = new Location(worldIn, x, y, z).getBlock();
+            Block currentBlock = new Location(worldIn, x, y, z).getBlock();
 
-            cB.setType(this.ore.getMaterial());
-            MainManager.addBlock(this.ore.getId(), cB, null);
+            if (currentBlock.getType().equals(Material.STONE)) {
+                currentBlock.setType(this.ore.getMaterial());
+                MainManager.addBlock(this.ore.getId(), currentBlock, null);
+            } else {
+                return false;
+            }
 
-            switch (rand.nextInt(6)) {
-                case 0: x++; break;
-                case 1: y++; break;
-                case 2: z++; break;
-                case 3: x--; break;
-                case 4: y = Math.max(y - 1, 0); break;
-                default: z--; break;
+            for (int i = 0; i < numberOfBlocks; i++) {  // Number of ore blocks in each ore
+                switch (rand.nextInt(6)) {
+                    case 0: x++; break;
+                    case 1: y++; break;
+                    case 2: z++; break;
+                    case 3: x--; break;
+                    case 4: y = Math.max(y - 1, 5); break;
+                    default: z--; break;
                 }
-        }
+
+                currentBlock = new Location(worldIn, x, y, z).getBlock();
+
+                if (currentBlock.getType().equals(Material.STONE)) {
+                    currentBlock.setType(this.ore.getMaterial());
+                    MainManager.addBlock(this.ore.getId(), currentBlock, null);
+                }
+            }
         return true;
     }
 }
