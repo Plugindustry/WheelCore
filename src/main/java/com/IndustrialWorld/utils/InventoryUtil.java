@@ -3,15 +3,15 @@ package com.IndustrialWorld.utils;
 import org.bukkit.entity.Player;
 
 public class InventoryUtil {
-    private static Class CraftPlayer;
-    private static Class NMSPlayer;
-    private static Class NMSContainer;
-    private static Class NMSPlayerConnection;
-    private static Class NMSPacket;
-    private static Class NMSPacketPlayOutWindowItems;
-    private static Class NMSPacketPlayOutSetSlot;
-    private static Class NMSNonNullList;
-    private static Class NMSSlot;
+    private static Class<?> CraftPlayer;
+    private static Class<?> NMSPlayer;
+    private static Class<?> NMSContainer;
+    private static Class<?> NMSPlayerConnection;
+    private static Class<?> NMSPacket;
+    private static Class<?> NMSPacketPlayOutWindowItems;
+    private static Class<?> NMSPacketPlayOutSetSlot;
+    private static Class<?> NMSNonNullList;
+    private static Class<?> NMSSlot;
 
     static {
         try {
