@@ -17,7 +17,15 @@ public class CommandManager implements CommandExecutor {
         if (command.getName().equalsIgnoreCase("iw")) {
             switch (args[0]) {
                 case "test":
+                    sender.sendMessage("Tested successfully");
                     return true;
+                case "give":                    
+                    sender.sendMessage("To do");
+                    //ConstItems.
+                    return true;
+                default:
+                    sender.sendMessage("Invalid arguments");
+                    break;
             }
             return true;
         }

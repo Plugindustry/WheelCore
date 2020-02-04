@@ -1,6 +1,6 @@
 package com.IndustrialWorld.manager;
 
-import com.IndustrialWorld.IndustrialWorld;;
+import com.IndustrialWorld.IndustrialWorld;
 import com.IndustrialWorld.i18n.I18n;
 import org.bukkit.configuration.file.YamlConfiguration;
 
