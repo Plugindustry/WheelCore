@@ -29,9 +29,13 @@ public class CommandManager implements CommandExecutor {
                                 if(Bukkit.getPlayerExact(args[1])!=null)
                                    Bukkit.getPlayerExact(args[1]).getInventory().addItem(ItemManager.get(args[2]));
                                 else sender.sendMessage("The specified player was not found.");
-                            else if(args[1]=="@s"||args[1]=="@p")
+                            else if(args[1] == "@s" || args[1] == "@p")
                                 if(sender instanceof Player)
                                 ((Player)sender).getInventory().addItem(ItemManager.get(args[2]));
+                            else if(args[1] == "@a")
+                                for (Player p : Bukkit.getServer().getOnlinePlayers()) {
+                                    p.getInventory().addItem(ItemManager.get(args[2]));
+                                }
                             else sender.sendMessage("Unrecognized selector.");
                         else sender.sendMessage("The specified item was not found.This command can only give IndustrialWorld items, for vanilla item, use vanilla /give instead.");
                     else sender.sendMessage("Too many or too few arguments.");
