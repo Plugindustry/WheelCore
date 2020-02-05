@@ -23,6 +23,8 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 
@@ -122,7 +124,17 @@ public class IWCraftingTable extends BlockBase implements InventoryListener {
 				ItemStack[] content = craftInv.getStorageContents();
 				for (int i = 1; i <= 9; i++) {
 					if (damagedItemIndex.containsKey(i - 1)) {
+						ItemMeta im = content[i].getItemMeta();
+						if (im == null) {
+							im = Bukkit.getItemFactory().getItemMeta(content[i].getType());
+							if (im == null) {
+								continue;
+							}
+						}
+						Damageable dmg = (Damageable) im;
+						dmg.setDamage(dmg.getDamage() + 1);
 						content[i] = damagedItemIndex.get(i - 1);
+						content[i].setItemMeta(im);
 						continue;
 					}
 					if (content[i] == null) {
@@ -162,9 +174,13 @@ public class IWCraftingTable extends BlockBase implements InventoryListener {
         if (isInventoryAvailable(event.getInventory())) {
             ItemStack[] buf = event.getInventory().getStorageContents();
             buf[0] = new ItemStack(Material.AIR);
-            for (ItemStack is : buf)
-                if (is != null && is.getType() != Material.AIR)
-                    event.getPlayer().getWorld().dropItem(event.getPlayer().getLocation(), is);
+            for (ItemStack is : buf) {
+	            if (is != null && is.getType() != Material.AIR) {
+		            event.getPlayer().getWorld().dropItem(event.getPlayer().getLocation(), is);
+	            }
+            }
+
+            availableInventories.remove(event.getInventory());
         }
     }
 

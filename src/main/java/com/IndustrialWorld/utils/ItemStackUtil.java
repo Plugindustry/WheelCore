@@ -1,7 +1,9 @@
 package com.IndustrialWorld.utils;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
@@ -16,9 +18,14 @@ public class ItemStackUtil {
     public static boolean isSimilar(ItemStack a, ItemStack b) {
     	if (a == null) {
     		return b == null;
+	    } else if (b == null) {
+    		return false;
 	    }
-
-    	if (!a.isSimilar(b)) {
+	    if (Bukkit.getItemFactory().getItemMeta(a.getType()) instanceof Damageable) {
+	    	if (a.getType() != b.getType()) {
+	    		return false;
+		    }
+	    } else if (!a.isSimilar(b)) {
     		return false;
 	    }
 

@@ -46,17 +46,20 @@ public class PowerManager {
         for (Map.Entry<Location, Request> entry : requestMap.entrySet())
             if (entry.getValue() instanceof OutputRequest) {
                 Location buf = entry.getKey();
-                Location[] buf2 = new Location[]{
+                Location[] buf2 = new Location[] {
                         buf.clone().add(1, 0, 0), buf.clone().add(-1, 0, 0), buf.clone().add(0, 1, 0),
                         buf.clone().add(0, -1, 0), buf.clone().add(0, 0, 1), buf.clone().add(0, 0, -1),
-                        };
+                };
                 int d = 0;
-                for (Location l : buf2)
-                    if (BlockUtil.isWire(l.getBlock()) ||
-                        (BlockUtil.isMachine(l.getBlock()) && getInputRequest(l) != null))
-                        ++d;
-                if (d == 0)
-                    continue;
+                for (Location l : buf2) {
+	                if (BlockUtil.isWire(l.getBlock()) ||
+			                (BlockUtil.isMachine(l.getBlock()) && getInputRequest(l) != null)) {
+		                ++d;
+	                }
+                }
+                if (d == 0) {
+	                continue;
+                }
                 ((OutputRequest) entry.getValue()).power /= d;
                 for (Location l : buf2)
                     if (BlockUtil.isWire(l.getBlock())) {
