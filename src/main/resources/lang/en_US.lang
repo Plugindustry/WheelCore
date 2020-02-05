@@ -47,8 +47,11 @@ item.iron_ore.lore.2=(*Pure Iron Ore! Smelt item 50% discount!)
 
 item.red_hot_iron_ingot.name=Red Hot Iron Ingot
 item.red_hot_iron_ingot.1=Heated red in furnace
+item.red_hot_iron_ingot.2=(*Why will you worry about this with Steve's hands' heat resistance)
 
-
+#item.steel_ingot.name=Steel Ingot
+#item.steel_ingot.1=Steel Ingot
+#item.steel_ingot.2=(*Less carbon,more toughness!）
 
 #item.oxygen.name=Oxygen
 #item.oxygen.lore.1=Oxygen
