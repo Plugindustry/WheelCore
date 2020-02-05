@@ -1,10 +1,8 @@
 package com.IndustrialWorld.blocks;
 
 import com.IndustrialWorld.ConstItems;
-import com.IndustrialWorld.interfaces.BlockBase;
 import com.IndustrialWorld.interfaces.OreBase;
 import org.bukkit.Material;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class CopperOre extends OreBase {

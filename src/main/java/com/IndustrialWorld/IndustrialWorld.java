@@ -2,21 +2,12 @@ package com.IndustrialWorld;
 
 import com.IndustrialWorld.event.EventListener;
 import com.IndustrialWorld.event.TickEvent;
-import com.IndustrialWorld.i18n.I18n;
 import com.IndustrialWorld.manager.CommandManager;
 import com.IndustrialWorld.manager.ConfigManager;
-import com.IndustrialWorld.manager.MainManager;
 import com.IndustrialWorld.manager.RegisterManager;
 import com.IndustrialWorld.task.IWCraftingTableRegistrationTask;
 import com.IndustrialWorld.utils.DebuggingLogger;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import java.io.File;
-import java.io.IOException;
 
 public final class IndustrialWorld extends JavaPlugin {
     public static IndustrialWorld instance;

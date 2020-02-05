@@ -57,7 +57,7 @@ public class ShapedRecipe implements CraftingRecipe {
 				damages.forEach((items, dmg) -> {
 					if (ItemStackUtil.isSimilar(items, is)) {
 						ItemStack newIs = is.clone();
-						newIs.setDurability((short) (newIs.getDurability() - dmg));
+						newIs.setDurability((short) (newIs.getDurability() - dmg)); //TODO: Deprecated,change one day? 
 						if (damage != null) {
 							damage.put(finalI * 3 + finalJ + 1, newIs);
 						}

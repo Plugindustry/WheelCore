@@ -5,7 +5,6 @@ import org.bukkit.inventory.ItemStack;
 import org.junit.jupiter.api.Assertions;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 

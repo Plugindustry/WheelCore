@@ -45,7 +45,7 @@ public class I18nConst {
     }
 
     public static class Block {
-        // TODO
+        // TODO I18NCONST Blocks
     }
 
     public static class Element {
@@ -54,7 +54,7 @@ public class I18nConst {
     }
 
     public static class Formula {
-        // TODO
+        // TODO I18NCONST Formulas
     }
 
     public static class Inventory {

@@ -1,7 +1,5 @@
 package com.IndustrialWorld.manager;
 
-import com.IndustrialWorld.i18n.I18nConst;
-import com.IndustrialWorld.utils.ItemStackUtil;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
