@@ -6,6 +6,7 @@ import com.IndustrialWorld.i18n.I18n;
 import com.IndustrialWorld.i18n.I18nConst;
 import com.IndustrialWorld.interfaces.BlockBase;
 import com.IndustrialWorld.interfaces.InventoryListener;
+import com.IndustrialWorld.manager.InventoryListenerManager;
 import com.IndustrialWorld.manager.RecipeRegistry;
 import com.IndustrialWorld.manager.recipe.CraftingRecipe;
 import com.IndustrialWorld.manager.recipe.RecipeBase;
@@ -28,6 +29,10 @@ import java.util.*;
 public class IWCraftingTable extends BlockBase implements InventoryListener {
 	private List<Inventory> availableInventories = new ArrayList<>();
     private Map<Inventory, RecipeBase> lastRecipe = new HashMap<>();
+
+    public IWCraftingTable() {
+	    InventoryListenerManager.register(this);
+    }
 
 	@Override
 	public ItemStack getItemStack() {
@@ -120,7 +125,11 @@ public class IWCraftingTable extends BlockBase implements InventoryListener {
             	if (content[i] == null) {
             		continue;
 	            }
-            	content[i].setAmount(content[i].getAmount() - 1);
+            	if (content[i].getAmount() > 1) {
+		            content[i].setAmount(content[i].getAmount() - 1);
+	            } else {
+            		content[i] = null;
+	            }
             }
             craftInv.setStorageContents(content);
 

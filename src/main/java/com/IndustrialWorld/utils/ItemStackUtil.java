@@ -14,6 +14,10 @@ public class ItemStackUtil {
     }
 
     public static boolean isSimilar(ItemStack a, ItemStack b) {
+    	if (a == null) {
+    		return b == null;
+	    }
+
     	if (!a.isSimilar(b)) {
     		return false;
 	    }
