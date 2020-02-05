@@ -4,8 +4,13 @@ import com.IndustrialWorld.ConstItems;
 import com.IndustrialWorld.blocks.BasicMachineBlock;
 import com.IndustrialWorld.blocks.CopperOre;
 import com.IndustrialWorld.blocks.IWCraftingTable;
+import com.IndustrialWorld.i18n.I18n;
+import com.IndustrialWorld.i18n.I18nConst;
 import com.IndustrialWorld.manager.recipe.ShapedRecipeFactory;
 import com.IndustrialWorld.manager.recipe.ShapelessRecipe;
+import com.IndustrialWorld.utils.ItemStackUtil;
+import com.IndustrialWorld.utils.MaterialUtil;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -42,5 +47,22 @@ public class RegisterManager {
         MainManager.register("COPPER_ORE", new CopperOre());
 
         //getServer().addRecipe(new ShapedRecipe(new NamespacedKey(this, "BASIC_MACHINE_BLOCK"), ConstItems.BASIC_MACHINE_BLOCK).shape("AAA", "ABA", "AAA").setIngredient('A', Material.IRON_INGOT).setIngredient('B', Material.AIR));
+    }
+
+    public static void registerItem() {
+        // Forge Hammer
+        ItemManager.register("FORGE_HAMMER", ItemStackUtil.create(MaterialUtil.IRON_SHOVEL).setId("FORGE_HAMMER").setAmount(1).setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER)).setLore(
+                Arrays.asList(
+                        ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER_LORE1),
+                        ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER_LORE2),
+                        ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER_LORE3)
+                )).getItemStack());
+
+        // IW Crafting Table
+        ItemManager.register("IW_CRAFTING_TABLE", ItemStackUtil.create(Material.CRAFTING_TABLE).setId("IW_CRAFTING_TABLE").setAmount(1).setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.IW_CRAFTING_TABLE)).setLore(
+                Arrays.asList(
+                        ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.IW_CRAFTING_TABLE_LORE1),
+                        ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.IW_CRAFTING_TABLE_LORE2)
+                )).getItemStack());
     }
 }
