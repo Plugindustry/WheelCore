@@ -22,7 +22,9 @@ public class CommandManager implements CommandExecutor {
                 case "give":                    
                     sender.sendMessage("To do");
                     //ConstItems.
+                    //if the item exists
                     return true;
+                    //else return false
                 default:
                     sender.sendMessage("Invalid arguments");
                     break;
