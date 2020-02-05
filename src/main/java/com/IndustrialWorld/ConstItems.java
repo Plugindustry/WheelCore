@@ -18,28 +18,6 @@ import java.util.Map;
 import java.lang.reflect.Field;
 
 public final class ConstItems {
-	public static Map<String, ItemStack> ConstItems = new HashMap<String, ItemStack>();
-
-	public final ItemStack GetItem(String id){
-		return ConstItems.get(id);
-	}
-
-	public final void AddItem(ItemStack item,String id){
-		ConstItems.put(id, item);
-	}
-
-	//Important:Temporary method to initalize ConstItems,will be deprecated soon
-	//DO NOT USE!ALL MEMBERS ARE STATIC!!WE CAN'T USE REFLECTION!!!
-	public final void init(){
-		/*Class cic = ConstItems.getClass();
-		Field fs[] = cic.getFields();
-		for(Field f : fs){
-			f.setAccessible(true);//暴力反射，解除私有限定
-			AddItem((ItemStack)f.get(this),NBTUtil.getTagValue((ItemStack)f.get(this), "IWItemid").toString());
-		}
-		*/
-	}
-
 	public final static ItemStack FORGE_HAMMER = ItemStackUtil.create(MaterialUtil.IRON_SHOVEL).setId("FORGE_HAMMER").setAmount(1).setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER)).setLore(
 			Arrays.asList(
 					ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER_LORE1),
