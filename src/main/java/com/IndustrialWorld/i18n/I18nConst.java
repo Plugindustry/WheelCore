@@ -18,6 +18,7 @@ public class I18nConst {
         public static String CUTTER = "item.cutter.name";
         public static String CUTTER_LORE1 = "item.cutter.lore.1";
         public static String CUTTER_LORE2 = "item.cutter.lore.2";
+        public static String CUTTER_LORE3 = "item.cutter.lore.3";
 
         public static String BASIC_MACHINE_BLOCK = "item.basic_machine_block.name";
         public static String BASIC_MACHINE_BLOCK_LORE1 = "item.basic_machine_block.lore.1";
