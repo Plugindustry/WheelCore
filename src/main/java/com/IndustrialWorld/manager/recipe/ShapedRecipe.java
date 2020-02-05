@@ -59,7 +59,7 @@ public class ShapedRecipe implements CraftingRecipe {
 						ItemStack newIs = is.clone();
 						newIs.setDurability((short) (newIs.getDurability() - dmg));
 						if (damage != null) {
-							damage.put(finalI * 3 + finalJ, newIs);
+							damage.put(finalI * 3 + finalJ + 1, newIs);
 						}
 					}
 				});
