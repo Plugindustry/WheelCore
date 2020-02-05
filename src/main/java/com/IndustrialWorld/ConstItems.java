@@ -36,8 +36,8 @@ public final class ConstItems {
 		for(Field f : fs){
 			f.setAccessible(true);//暴力反射，解除私有限定
 			AddItem((ItemStack)f.get(this),NBTUtil.getTagValue((ItemStack)f.get(this), "IWItemid").toString());
-		*/
 		}
+		*/
 	}
 
 	public final static ItemStack FORGE_HAMMER = ItemStackUtil.create(MaterialUtil.IRON_SHOVEL).setId("FORGE_HAMMER").setAmount(1).setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER)).setLore(
