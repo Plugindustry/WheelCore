@@ -2,6 +2,7 @@ package com.IndustrialWorld.world;
 
 import com.IndustrialWorld.interfaces.OreBase;
 import com.IndustrialWorld.manager.MainManager;
+import com.IndustrialWorld.utils.DebuggingLogger;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -17,40 +18,56 @@ public class WorldGenMinable extends WorldGenerator {
         if (ore.isOre()) {
             this.ore = ore;
             this.numberOfBlocks = numberOfBlocks;
-        } else throw new IllegalArgumentException();
+        } else
+            throw new IllegalArgumentException();
     }
 
     public boolean generate(World worldIn, Random rand, Location blockLctn) {
-            int x = blockLctn.getBlockX();
-            int y = blockLctn.getBlockY();
-            int z = blockLctn.getBlockZ();
+        int x = blockLctn.getBlockX();
+        int y = blockLctn.getBlockY();
+        int z = blockLctn.getBlockZ();
 
-            Block currentBlock = new Location(worldIn, x, y, z).getBlock();
+        Block currentBlock = new Location(worldIn, x, y, z).getBlock();
+
+        if (currentBlock.getType().equals(Material.STONE)) {
+            currentBlock.setType(this.ore.getMaterial());
+            MainManager.addBlock(this.ore.getId(), currentBlock, null);
+            DebuggingLogger.debug("Gen in " + (currentBlock.getLocation().getWorld() == null ?
+                                               null :
+                                               currentBlock.getLocation().getWorld().getName()));
+        } else {
+            return false;
+        }
+
+        for (int i = 0; i < numberOfBlocks; i++) {  // Number of ore blocks in each ore
+            switch (rand.nextInt(6)) {
+                case 0:
+                    x++;
+                    break;
+                case 1:
+                    y++;
+                    break;
+                case 2:
+                    z++;
+                    break;
+                case 3:
+                    x--;
+                    break;
+                case 4:
+                    y = Math.max(y - 1, 5);
+                    break;
+                default:
+                    z--;
+                    break;
+            }
+
+            currentBlock = new Location(worldIn, x, y, z).getBlock();
 
             if (currentBlock.getType().equals(Material.STONE)) {
                 currentBlock.setType(this.ore.getMaterial());
                 MainManager.addBlock(this.ore.getId(), currentBlock, null);
-            } else {
-                return false;
             }
-
-            for (int i = 0; i < numberOfBlocks; i++) {  // Number of ore blocks in each ore
-                switch (rand.nextInt(6)) {
-                    case 0: x++; break;
-                    case 1: y++; break;
-                    case 2: z++; break;
-                    case 3: x--; break;
-                    case 4: y = Math.max(y - 1, 5); break;
-                    default: z--; break;
-                }
-
-                currentBlock = new Location(worldIn, x, y, z).getBlock();
-
-                if (currentBlock.getType().equals(Material.STONE)) {
-                    currentBlock.setType(this.ore.getMaterial());
-                    MainManager.addBlock(this.ore.getId(), currentBlock, null);
-                }
-            }
+        }
         return true;
     }
 }

@@ -39,8 +39,11 @@ public class ShapelessRecipe implements CraftingRecipe {
 
 		for (Iterator<ItemStack> origin = shapeless.iterator(); origin.hasNext(); /*lol*/) {
 			ItemStack is = origin.next();
+            ItemStack temp = is.clone();
+            if (temp.getType().getMaxDurability() != 0)
+                temp.setDurability((short) 0);
 			for (Iterator<ItemStack> check = checkList.iterator(); check.hasNext(); /*qwq*/) {
-				if (ItemStackUtil.isSimilar(check.next(), is)) {
+                if (ItemStackUtil.isSimilar(check.next(), temp)) {
 					check.remove();
 					origin.remove();
 				}

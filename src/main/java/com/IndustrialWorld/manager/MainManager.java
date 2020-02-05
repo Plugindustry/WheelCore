@@ -5,6 +5,7 @@ import com.IndustrialWorld.interfaces.Base;
 import com.IndustrialWorld.interfaces.BlockBase;
 import com.IndustrialWorld.interfaces.BlockData;
 import com.IndustrialWorld.interfaces.ItemBase;
+import com.IndustrialWorld.utils.DebuggingLogger;
 import com.IndustrialWorld.utils.NBTUtil;
 import com.IndustrialWorld.world.NormalOrePopulator;
 import org.apache.commons.lang.StringUtils;
@@ -14,7 +15,6 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.world.WorldInitEvent;
 import org.bukkit.inventory.ItemStack;
@@ -95,6 +95,9 @@ public class MainManager {
     public static void saveBlocksToConfig(YamlConfiguration config) {
         for (Map.Entry<Location, Map.Entry<String, BlockData>> entry : blocks.entrySet()) {
             Location loc = entry.getKey();
+            DebuggingLogger.debug("Save " + entry.getValue().getKey() + " to " + loc.getWorld());
+            if (loc.getWorld() == null)
+                continue;
             config.set(loc.getWorld().getName() + ";" + (int) loc.getX() + ";" + (int) loc.getY() + ";" +
                        (int) loc.getZ(), Arrays.asList(entry.getValue().getKey(), entry.getValue().getValue()));
         }

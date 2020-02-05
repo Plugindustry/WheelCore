@@ -4,18 +4,13 @@ import com.IndustrialWorld.i18n.I18n;
 import com.IndustrialWorld.i18n.I18nConst;
 import com.IndustrialWorld.utils.ItemStackUtil;
 import com.IndustrialWorld.utils.MaterialUtil;
-import com.IndustrialWorld.utils.NBTUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import java.lang.reflect.Field;
 
 public final class ConstItems {
 	public static Map<String, ItemStack> ConstItems = new HashMap<String, ItemStack>();
@@ -37,7 +32,6 @@ public final class ConstItems {
 			f.setAccessible(true);//暴力反射，解除私有限定
 			AddItem((ItemStack)f.get(this),NBTUtil.getTagValue((ItemStack)f.get(this), "IWItemid").toString());
 		*/
-		}
 	}
 
 	public final static ItemStack FORGE_HAMMER = ItemStackUtil.create(MaterialUtil.IRON_SHOVEL).setId("FORGE_HAMMER").setAmount(1).setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER)).setLore(
@@ -60,9 +54,9 @@ public final class ConstItems {
 			)).getItemStack();
 	public final static ItemStack CUTTER = ItemStackUtil.create(Material.SHEARS).setId("CUTTER").setAmount(1).setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.CUTTER)).setLore(
 			Arrays.asList(
-					ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.CUTTER),
-					ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.CUTTER_LORE1),
-					ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.CUTTER_LORE2)
+					ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.CUTTER_LORE1),
+					ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.CUTTER_LORE2),
+					ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.CUTTER_LORE3)
 			)).getItemStack();
 	public final static ItemStack BASIC_MACHINE_BLOCK = ItemStackUtil.create(Material.IRON_BLOCK).setId("BASIC_MACHINE_BLOCK").setAmount(1).setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.BASIC_MACHINE_BLOCK)).setLore(
 			Arrays.asList(
