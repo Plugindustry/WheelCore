@@ -29,7 +29,7 @@ public class CommandManager implements CommandExecutor {
                                 if(Bukkit.getPlayerExact(args[1])!=null)
                                    Bukkit.getPlayerExact(args[1]).getInventory().addItem(ItemManager.get(args[2]));
                                 else sender.sendMessage("The specified player was not found.");
-                            else if(args[1]=="@s")
+                            else if(args[1]=="@s"||args[1]=="@p")
                                 if(sender instanceof Player)
                                 ((Player)sender).getInventory().addItem(ItemManager.get(args[2]));
                             else sender.sendMessage("Unrecognized selector.");
