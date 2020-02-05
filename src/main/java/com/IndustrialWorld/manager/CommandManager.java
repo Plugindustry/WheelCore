@@ -24,7 +24,7 @@ public class CommandManager implements CommandExecutor {
                     //ConstItems.
                     //if the item exists
                     return true;
-                    //else return false
+                    //else sendMessage; return false
                 default:
                     sender.sendMessage("Invalid arguments");
                     break;
