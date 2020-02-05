@@ -79,6 +79,8 @@ public class IWCraftingTable extends BlockBase implements InventoryListener {
 
 			if (recipe == null) {
 				// invalid recipe
+				raw[0] = null;
+				craftingInv.setStorageContents(raw);
 				continue;
 			}
 			raw[0] = recipe.getResult();
@@ -99,42 +101,60 @@ public class IWCraftingTable extends BlockBase implements InventoryListener {
 
 	@Override
     public void onInventoryClick(InventoryClickEvent event) {
-        if (isInventoryAvailable(event.getClickedInventory()) && event.getSlot() == 0) {
-            InventoryUtil.updateInventoryWithoutCarriedItem((Player) event.getClickedInventory().getViewers().get(0));
-            if (!(event.getAction() == InventoryAction.PICKUP_ALL ||
-                  ((event.getAction() == InventoryAction.PLACE_ONE || event.getAction() == InventoryAction.PLACE_ALL) &&
-                   event.getClickedInventory().getStorageContents()[0] != null))) {
-                event.setCancelled(true);
-                return;
-            }
+		if (isInventoryAvailable(event.getClickedInventory()))
+			if (event.getSlot() == 0) {
+				InventoryUtil.updateInventoryWithoutCarriedItem((Player) event.getClickedInventory().getViewers().get(0));
+				if (!(event.getAction() == InventoryAction.PICKUP_ALL ||
+						((event.getAction() == InventoryAction.PLACE_ONE || event.getAction() == InventoryAction.PLACE_ALL) &&
+								event.getClickedInventory().getStorageContents()[0] != null))) {
+					event.setCancelled(true);
+					return;
+				}
 
-            Inventory craftInv = event.getClickedInventory();
+				Inventory craftInv = event.getClickedInventory();
 
-            Map<Integer, ItemStack> damagedItemIndex = new HashMap<>();
-            CraftingRecipe recipe = RecipeRegistry.matchCraftingRecipe(fetchMatrix(event.getClickedInventory()), damagedItemIndex);
-            if (recipe == null) {
-	            return;
-            }
+				Map<Integer, ItemStack> damagedItemIndex = new HashMap<>();
+				CraftingRecipe recipe = RecipeRegistry.matchCraftingRecipe(fetchMatrix(craftInv), damagedItemIndex);
+				if (recipe == null) {
+					return;
+				}
 
-            ItemStack[] content = craftInv.getStorageContents();
-            for (int i = 1; i <= 9; i ++) {
-            	if (damagedItemIndex.containsKey(i)) {
-            		content[i] = damagedItemIndex.get(i);
-            		continue;
-	            }
-            	if (content[i] == null) {
-            		continue;
-	            }
-            	if (content[i].getAmount() > 1) {
-		            content[i].setAmount(content[i].getAmount() - 1);
-	            } else {
-            		content[i] = null;
-	            }
-            }
-            craftInv.setStorageContents(content);
+				ItemStack[] content = craftInv.getStorageContents();
+				for (int i = 1; i <= 9; i++) {
+					if (damagedItemIndex.containsKey(i - 1)) {
+						content[i] = damagedItemIndex.get(i - 1);
+						continue;
+					}
+					if (content[i] == null) {
+						continue;
+					}
+					if (content[i].getAmount() > 1) {
+						content[i].setAmount(content[i].getAmount() - 1);
+					} else {
+						content[i] = null;
+					}
+				}
+				craftInv.setStorageContents(content);
 
-            InventoryUtil.updateInventoryWithoutCarriedItem((Player) event.getClickedInventory().getViewers().get(0));
-        }
+				InventoryUtil.updateInventoryWithoutCarriedItem((Player) craftInv.getViewers().get(0));
+			} else {
+				Inventory craftInv = event.getClickedInventory();
+
+				CraftingRecipe recipe = RecipeRegistry.matchCraftingRecipe(fetchMatrix(craftInv), null);
+				if (recipe == null) {
+					ItemStack[] content = craftInv.getStorageContents();
+
+					content[0] = null;
+					craftInv.setStorageContents(content);
+				} else {
+					ItemStack[] content = craftInv.getStorageContents();
+
+					content[0] = recipe.getResult();
+					craftInv.setStorageContents(content);
+				}
+
+				InventoryUtil.updateInventoryWithoutCarriedItem((Player) craftInv.getViewers().get(0));
+			}
     }
 
     @Override
