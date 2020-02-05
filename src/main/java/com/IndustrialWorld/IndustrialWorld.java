@@ -30,7 +30,7 @@ public final class IndustrialWorld extends JavaPlugin {
         this.getCommand("iw").setExecutor(new CommandManager(this));
         getServer().getPluginManager().registerEvents(new EventListener(), this);
         ConfigManager.init(this);
-
+        RegisterManager.registerItem();
         // Register recipes, blocks
         DebuggingLogger.debug("register recipes");
         RegisterManager.registerIWCRecipes();
