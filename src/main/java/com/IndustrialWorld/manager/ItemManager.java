@@ -24,4 +24,7 @@ public class ItemManager {
 		}
 		return "";
 	}
+	public static Boolean isItemExists(String id){
+		return itemMap.containsKey(id);
+	}
 }
