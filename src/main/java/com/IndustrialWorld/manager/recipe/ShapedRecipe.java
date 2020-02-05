@@ -34,8 +34,16 @@ public class ShapedRecipe implements CraftingRecipe {
 			List<ItemStack> row = matrix.get(i);
 			for (int j = 0; j < row.size(); j++) {
 				ItemStack is = row.get(j);
+                ItemStack temp;
+                if (is == null)
+                    temp = null;
+                else {
+                    temp = is.clone();
+                    if (temp.getType().getMaxDurability() != 0)
+                        temp.setDurability((short) 0);
+                }
 
-				if (!ItemStackUtil.isSimilar(this.matrix.get(i).get(j), is)) {
+                if (!ItemStackUtil.isSimilar(this.matrix.get(i).get(j), temp)) {
 					return false;
 				}
 			}
@@ -48,18 +56,26 @@ public class ShapedRecipe implements CraftingRecipe {
 	}
 
 	static void checkItemDamage(List<List<ItemStack>> matrix, Map<Integer, ItemStack> damage, Map<ItemStack, Integer> damages) {
-		for (int i = 0; i < matrix.size(); i++) {
+        for (int i = 0; i < matrix.size(); ++i) {
 			List<ItemStack> row = matrix.get(i);
-			for (int j = 0; j < row.size(); j++) {
+            for (int j = 0; j < row.size(); ++j) {
 				ItemStack is = row.get(j);
-				int finalI = i;
-				int finalJ = j;
+                final int finalI = i;
+                final int finalJ = j;
 				damages.forEach((items, dmg) -> {
-					if (ItemStackUtil.isSimilar(items, is)) {
+                    ItemStack temp;
+                    if (is == null)
+                        temp = null;
+                    else {
+                        temp = is.clone();
+                        temp.setDurability((short) 0);
+                    }
+
+                    if (ItemStackUtil.isSimilar(items, temp)) {
 						ItemStack newIs = is.clone();
-						newIs.setDurability((short) (newIs.getDurability() - dmg));
+                        newIs.setDurability((short) (newIs.getDurability() + dmg));
 						if (damage != null) {
-							damage.put(finalI * 3 + finalJ, newIs);
+                            damage.put(finalI * 3 + finalJ + 1, newIs);
 						}
 					}
 				});
