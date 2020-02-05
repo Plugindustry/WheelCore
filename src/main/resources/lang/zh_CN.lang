@@ -49,7 +49,8 @@ item.red_hot_iron_ingot.name=红热的铁锭
 item.red_hot_iron_ingot.1=在熔炉中加热至红热的铁锭
 item.red_hot_iron_ingot.2=(*怕什么，史蒂夫的手对这个可不敏感)
 
-
+#item.steel_ingot.name=钢锭
+#item.steel_ingot.1=(*一身柔韧，宁弯不折)
 
 element.fe=Fe
 element.cu=Cu

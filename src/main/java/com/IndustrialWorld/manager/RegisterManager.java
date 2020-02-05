@@ -4,8 +4,13 @@ import com.IndustrialWorld.ConstItems;
 import com.IndustrialWorld.blocks.BasicMachineBlock;
 import com.IndustrialWorld.blocks.CopperOre;
 import com.IndustrialWorld.blocks.IWCraftingTable;
+import com.IndustrialWorld.i18n.I18n;
+import com.IndustrialWorld.i18n.I18nConst;
 import com.IndustrialWorld.manager.recipe.ShapedRecipeFactory;
 import com.IndustrialWorld.manager.recipe.ShapelessRecipe;
+import com.IndustrialWorld.utils.ItemStackUtil;
+import com.IndustrialWorld.utils.MaterialUtil;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -42,5 +47,63 @@ public class RegisterManager {
         MainManager.register("COPPER_ORE", new CopperOre());
 
         //getServer().addRecipe(new ShapedRecipe(new NamespacedKey(this, "BASIC_MACHINE_BLOCK"), ConstItems.BASIC_MACHINE_BLOCK).shape("AAA", "ABA", "AAA").setIngredient('A', Material.IRON_INGOT).setIngredient('B', Material.AIR));
+    }
+
+    public static void registerItem() {
+        // Forge Hammer
+        ItemManager.register("FORGE_HAMMER", ItemStackUtil.create(MaterialUtil.IRON_SHOVEL).setId("FORGE_HAMMER").setAmount(1).setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER)).setLore(
+                Arrays.asList(
+                        ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER_LORE1),
+                        ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER_LORE2),
+                        ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER_LORE3)
+                )).getItemStack());
+
+        // IW Crafting Table
+        ItemManager.register("IW_CRAFTING_TABLE", ItemStackUtil.create(Material.CRAFTING_TABLE).setId("IW_CRAFTING_TABLE").setAmount(1).setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.IW_CRAFTING_TABLE)).setLore(
+                Arrays.asList(
+                        ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.IW_CRAFTING_TABLE_LORE1),
+                        ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.IW_CRAFTING_TABLE_LORE2)
+                )).getItemStack());
+        ItemManager.register("IRON_PLATE", ItemStackUtil.create(Material.PAPER).setId("IRON_PLATE").setAmount(1).setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.IRON_PLATE)).setLore(
+                Arrays.asList(
+                        ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.IRON_PLATE_LORE1),
+                        ChatColor.GRAY + I18n.getLocaleString(I18nConst.Element.Fe)
+                )).getItemStack());
+        ItemManager.register("CUTTER", ItemStackUtil.create(Material.SHEARS).setId("CUTTER").setAmount(1).setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.CUTTER)).setLore(
+                Arrays.asList(
+                        ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.CUTTER),
+                        ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.CUTTER_LORE1),
+                        ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.CUTTER_LORE2)
+                )).getItemStack());
+        ItemManager.register("BASIC_MACHINE_BLOCK", ItemStackUtil.create(Material.IRON_BLOCK).setId("BASIC_MACHINE_BLOCK").setAmount(1).setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.BASIC_MACHINE_BLOCK)).setLore(
+                Arrays.asList(
+                        ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.BASIC_MACHINE_BLOCK_LORE1),
+                        ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.BASIC_MACHINE_BLOCK_LORE2)
+                   )).getItemStack());
+        ItemManager.register("COPPER_INGOT", ItemStackUtil.create(Material.BRICK).setId("COPPER_INGOT").setAmount(1).setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_INGOT))
+                .setLore(
+                Arrays.asList(
+                        ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_INGOT_LORE1),
+                        ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.COPPER_INGOT_LORE2)
+                )).getItemStack());   
+        ItemManager.register("COPPER_PLATE", ItemStackUtil.create(Material.PAPER).setId("COPPER_PLATE").setAmount(1).setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_PLATE)).setLore(
+                Arrays.asList(
+                        ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_PLATE_LORE1),
+                        ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.COPPER_PLATE_LORE2)
+                )).getItemStack());
+        ItemManager.register("COPPER_WIRE", ItemStackUtil.create(Material.IRON_BARS).setId("COPPER_WIRE").setAmount(1).setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_WIRE)).setLore(
+                Arrays.asList(
+                        ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_WIRE_LORE1),
+                        ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.COPPER_WIRE_LORE2)
+                )).getItemStack());
+        ItemManager.register("COPPER_ORE", ItemStackUtil.create(Material.IRON_ORE).setId("COPPER_ORE").setAmount(1).setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_ORE)).setLore(
+                Arrays.asList(
+                        ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_ORE_LORE1),
+                        ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.COPPER_ORE_LORE2)
+                )).getItemStack());
+        ItemManager.register("RED_HOT_IRON_INGOT", ItemStackUtil.create(Material.BRICK).setId("RED_HOT_IRON_INGOT").setAmount(1).setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.RED_HOT_IRON_INGOT)).setLore(
+                Arrays.asList(
+                        ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.RED_HOT_IRON_INGOT_LORE1)
+                )).getItemStack());                    
     }
 }

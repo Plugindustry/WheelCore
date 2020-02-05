@@ -6,9 +6,7 @@ import com.IndustrialWorld.utils.DebuggingLogger;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ShapedRecipe;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitRunnable;
 
 public class IWCraftingTableRegistrationTask implements Runnable {
     private final JavaPlugin plugin;
