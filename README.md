@@ -1,4 +1,4 @@
-###基于GPL3.0协议
+#基于GPL3.0协议
 
 * 简体中文/zh-CN
 * [English/en-US][1]
