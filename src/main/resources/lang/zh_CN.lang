@@ -46,11 +46,32 @@ item.iron_ore.lore.1=铁矿石
 item.iron_ore.lore.2=(*高纯度铁矿石!熔炼产物五折优惠!)
 
 item.red_hot_iron_ingot.name=红热的铁锭
-item.red_hot_iron_ingot.1=在熔炉中加热至红热的铁锭
-item.red_hot_iron_ingot.2=(*怕什么，史蒂夫的手对这个可不敏感)
+item.red_hot_iron_ingot.lore.1=在熔炉中加热至红热的铁锭
+item.red_hot_iron_ingot.lore.2=(*怕什么，史蒂夫的手对这个可不敏感)
 
-#item.steel_ingot.name=钢锭
-#item.steel_ingot.1=(*一身柔韧，宁弯不折)
+item.steel_ingot.name=钢锭
+item.steel_ingot.lore.1=红热的铁锭冷却形成
+item.steel_ingot.lore.2=(*一身柔韧，宁弯不折)
+
+item.red_hot_steel_ingot.name=红热的钢锭
+item.red_hot_steel_ingot.lore.1=在熔炉中加热至红热的钢锭
+item.red_hot_steel_ingot.lore.2=(*如果你靠近它的时候感到很温暖，可能是因为你身上着火了)
+
+item.quicklime.name=生石灰
+item.quicklime.lore.1=氧化钙
+item.quicklime.lore.2=(*MC里的食品不需要防潮)
+
+item.tin_ingot.name=锡锭
+item.tin_ingot.lore.1=锡锭
+item.tin_ingot.lore.2=(*大名鼎鼎的'五金'之一)
+
+item.zinc_ingot.name=锌锭
+item.zinc_ingot.lore.1=锌锭
+item.zinc_ingot.lore.2=(*实验室制取氢气可用锌粒)
+
+item.lead_ingot.name=铅锭
+item.lead_ingot.lore.1=铅锭
+item.lead_ingot.lore.2=(*铅酸蓄电池必不可少的原料)
 
 element.fe=Fe
 element.cu=Cu

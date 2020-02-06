@@ -103,7 +103,38 @@ public class RegisterManager {
                 )).getItemStack());
         ItemManager.register("RED_HOT_IRON_INGOT", ItemStackUtil.create(Material.BRICK).setId("RED_HOT_IRON_INGOT").setAmount(1).setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.RED_HOT_IRON_INGOT)).setLore(
                 Arrays.asList(
-                        ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.RED_HOT_IRON_INGOT_LORE1)
-                )).getItemStack());                    
+                        ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.RED_HOT_IRON_INGOT_LORE1),
+                        ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.RED_HOT_IRON_INGOT_LORE2)
+                )).getItemStack());       
+        ItemManager.register("STEEL_INGOT", ItemStackUtil.create(Material.IRON_INGOT).setId("STEEL_INGOT").setAmount(1).setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.STEEL_INGOT)).setLore(
+                Arrays.asList(
+                        ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.STEEL_INGOT_LORE1),
+                        ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.STEEL_INGOT_LORE2)
+                )).getItemStack());      
+        ItemManager.register("RED_HOT_STEEL_INGOT", ItemStackUtil.create(Material.BRICK).setId("RED_HOT_STEEL_INGOT").setAmount(1).setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.RED_HOT_STEEL_INGOT)).setLore(
+                Arrays.asList(
+                        ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.RED_HOT_STEEL_INGOT_LORE1),
+                        ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.RED_HOT_STEEL_INGOT_LORE2)
+                )).getItemStack());      
+        ItemManager.register("QUICKLIME", ItemStackUtil.create(Material.BONE_MEAL).setId("QUICKLIME").setAmount(1).setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.QUICKLIME)).setLore(
+                Arrays.asList(
+                        ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.QUICKLIME_LORE1),
+                        ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.QUICKLIME_LORE2)
+                )).getItemStack());   
+        ItemManager.register("TIN_INGOT", ItemStackUtil.create(Material.IRON_INGOT).setId("TIN_INGOT").setAmount(1).setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.TIN_INGOT)).setLore(
+                Arrays.asList(
+                        ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.TIN_INGOT_LORE1),
+                        ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.TIN_INGOT_LORE2)
+                )).getItemStack());   
+        ItemManager.register("ZINC_INGOT", ItemStackUtil.create(Material.IRON_INGOT).setId("ZINC_INGOT").setAmount(1).setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.ZINC_INGOT)).setLore(
+                Arrays.asList(
+                        ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.ZINC_INGOT_LORE1),
+                        ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.ZINC_INGOT_LORE2)
+                )).getItemStack()); 
+        ItemManager.register("LEAD_INGOT", ItemStackUtil.create(Material.IRON_INGOT).setId("LEAD_INGOT").setAmount(1).setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.LEAD_INGOT)).setLore(
+                Arrays.asList(
+                        ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.LEAD_INGOT_LORE1),
+                        ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.LEAD_INGOT_LORE2)
+                )).getItemStack());
     }
 }

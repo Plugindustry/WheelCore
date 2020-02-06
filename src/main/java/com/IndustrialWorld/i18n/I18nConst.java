@@ -41,8 +41,32 @@ public class I18nConst {
         public static String COPPER_ORE_LORE2 = "item.copper_ore.lore.2";
 
         public static String RED_HOT_IRON_INGOT = "item.red_hot_iron_ingot.name";
-        public static String RED_HOT_IRON_INGOT_LORE1 = "item.red_hot_iron_ingot.1";
-        public static String RED_HOT_IRON_INGOT_LORE2 = "item.red_hot_iron_ingot.2";
+        public static String RED_HOT_IRON_INGOT_LORE1 = "item.red_hot_iron_ingot.lore.1";
+        public static String RED_HOT_IRON_INGOT_LORE2 = "item.red_hot_iron_ingot.lore.2";
+        
+        public static String STEEL_INGOT = "item.steel_ingot.name";
+        public static String STEEL_INGOT_LORE1 = "item.steel_ingot.lore.1";
+        public static String STEEL_INGOT_LORE2 = "item.steel_ingot.lore.2";
+        
+        public static String RED_HOT_STEEL_INGOT = "item.red_hot_steel_ingot.name";
+        public static String RED_HOT_STEEL_INGOT_LORE1 = "item.red_hot_steel_ingot.lore.1";
+        public static String RED_HOT_STEEL_INGOT_LORE2 = "item.red_hot_steel_ingot.lore2";
+        
+        public static String QUICKLIME = "item.quicklime.name";
+        public static String QUICKLIME_LORE1 = "item.quicklime.lore.1";
+        public static String QUICKLIME_LORE2 = "item.quicklime.lore.2";
+
+        public static String TIN_INGOT = "item.tin_ingot.name";
+        public static String TIN_INGOT_LORE1 = "item.tin_ingot.lore.1";
+        public static String TIN_INGOT_LORE2 = "item.tin_ingot.lore.2";
+        
+        public static String ZINC_INGOT = "item.zinc_ingot.name";
+        public static String ZINC_INGOT_LORE1 = "item.zinc_ingot.lore.1";
+        public static String ZINC_INGOT_LORE2 = "item.zinc_ingot.lore.2";
+        
+        public static String LEAD_INGOT = "item.lead_ingot.name";
+        public static String LEAD_INGOT_LORE1 = "item.lead_ingot.lore.1";
+        public static String LEAD_INGOT_LORE2 = "item.lead_ingot.lore.2";
     }
 
     public static class Block {

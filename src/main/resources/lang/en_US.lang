@@ -49,9 +49,29 @@ item.red_hot_iron_ingot.name=Red Hot Iron Ingot
 item.red_hot_iron_ingot.1=Heated red in furnace
 item.red_hot_iron_ingot.2=(*Why will you worry about this with Steve's hands' heat resistance)
 
-#item.steel_ingot.name=Steel Ingot
-#item.steel_ingot.1=Steel Ingot
-#item.steel_ingot.2=(*Less carbon,more toughness!）
+item.steel_ingot.name=Steel Ingot
+item.steel_ingot.1=Put the red hot iron ingot in cool water
+item.steel_ingot.2=(*Less carbon,more toughness!)
+
+item.red_hot_steel_ingot.name=Red Hot Steel Ingot
+item.red_hot_steel_ingot.lore.1=Heated red in furnace
+item.red_hot_steel_ingot.lore.2=(*You may be on fire if you feel warm while you get close to it)
+
+item.quicklime.name=Quicklime
+item.quicklime.lore.1=Carbon Oxide
+item.quicklime.lore.2=(*No food in Minecraft can get wet)
+
+item.tin_ingot.name=Tin Ingot
+item.tin_ingot.lore.1=Tin Ingot
+item.tin_ingot.lore.2=(*Don't use in cold environment,or ……)
+
+item.zinc_ingot.name=Zinc Ingot
+item.zinc_ingot.lore.1=Zinc Ingot
+item.zinc_ingot.lore.2=(*To produce hydrogen in a lab)
+
+item.lead_ingot.name=Lead Ingot
+item.lead_ingot.lore.1=Lead Ingot
+item.lead_ingot.lore.2=(*Lead-acid batteries)
 
 #item.oxygen.name=Oxygen
 #item.oxygen.lore.1=Oxygen
