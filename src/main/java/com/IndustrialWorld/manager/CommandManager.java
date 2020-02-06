@@ -39,7 +39,7 @@ public class CommandManager implements CommandExecutor {
                             else sender.sendMessage("Unrecognized selector.");
                         else sender.sendMessage("The specified item was not found.This command can only give IndustrialWorld items, for vanilla item, use vanilla /give instead.");
                     else sender.sendMessage("Too many or too few arguments.");
-                    return false;
+                    break;
                 default:
                     sender.sendMessage("Invalid arguments.");
                     break;
