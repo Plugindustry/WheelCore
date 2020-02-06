@@ -21,6 +21,10 @@ item.basic_machine_block.name=基础机器方块
 item.basic_machine_block.lore.1=最基本的机器外壳
 item.basic_machine_block.lore.2=可用于制造基础机器
 
+item.powder_machine.name=粉碎机
+item.powder_machine.lore.1=粉碎，粉碎，全都粉碎！
+item.powder_machine.lore.2=可用于将矿石制成粉末
+
 item.copper_ingot.name=铜锭
 item.copper_ingot.lore.1=铜锭
 item.copper_ingot.lore.2=[*1.5倍攻击伤害(误)]
@@ -73,8 +77,23 @@ item.lead_ingot.name=铅锭
 item.lead_ingot.lore.1=铅锭
 item.lead_ingot.lore.2=(*铅酸蓄电池必不可少的原料)
 
+item.basic_motor.name=基础马达
+item.basic_motor.lore.1=基础马达
+item.basic_motor.lore.2=(*嗡……嗡……嗡……)
+
+item.basic_motor.name=基础马达
+item.basic_motor.lore.1=基础马达
+item.basic_motor.lore.2=(*嗡……嗡……嗡……)
+
+item.basic_battery.name=基础电池
+item.basic_battery.lore.1=基础电池
+item.basic_battery.lore.2=(*这个小东西里面真的蕴藏着巨大的能量吗?)
+
 element.fe=Fe
 element.cu=Cu
+element.pb=Pb
+element.zn=Zn
+element.sn=Sn
 
 inventory.iw_crafting_table.title=工业工作台
 

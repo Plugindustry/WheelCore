@@ -20,4 +20,7 @@ public final class ConstItems {
 	public final static ItemStack TIN_INGOT = ItemManager.get("TIN_INGOT");
 	public final static ItemStack ZINC_INGOT = ItemManager.get("ZINC_INGOT");
 	public final static ItemStack LEAD_INGOT = ItemManager.get("LEAD_INGOT");
+	public final static ItemStack POWDER_MACHINE = ItemManager.get("POWDER_MACHINE");
+	public final static ItemStack BASIC_MOTOR = ItemManager.get("BASIC_MOTOR");
+	public final static ItemStack BASIC_BATTERY = ItemManager.get("BASIC_BATTERY");
 }

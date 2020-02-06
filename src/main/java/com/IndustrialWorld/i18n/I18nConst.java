@@ -67,6 +67,18 @@ public class I18nConst {
         public static String LEAD_INGOT = "item.lead_ingot.name";
         public static String LEAD_INGOT_LORE1 = "item.lead_ingot.lore.1";
         public static String LEAD_INGOT_LORE2 = "item.lead_ingot.lore.2";
+        
+        public static String POWDER_MACHINE = "item.powder_machine.name";
+        public static String POWDER_MACHINE_LORE1 = "item.powder_machine.lore.1";
+        public static String POWDER_MACHINE_LORE2 = "item.powder_machine.lore.2";
+
+        public static String BASIC_MOTOR = "item.basic_motor.name";
+        public static String BASIC_MOTOR_LORE1 = "item.basic_motor.lore.1";
+        public static String BASIC_MOTOR_LORE2 = "item.basic_motor.lore.2";
+
+        public static String BASIC_BATTERY = "item.basic_battery.name";
+        public static String BASIC_BATTERY_LORE1 = "item.basic_battery.lore.1";
+        public static String BASIC_BATTERY_LORE2 = "item.basic_battery.lore.2";
     }
 
     public static class Block {
@@ -76,6 +88,9 @@ public class I18nConst {
     public static class Element {
         public static String Cu = "element.cu";
         public static String Fe = "element.fe";
+        public static String Pb = "element.pb";
+        public static String Zn = "element.zn";
+        public static String Sn = "element.sn";
     }
 
     public static class Formula {

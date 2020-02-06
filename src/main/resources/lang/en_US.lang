@@ -21,6 +21,10 @@ item.basic_machine_block.name=Basic Machine Block
 item.basic_machine_block.lore.1=The most basic machine casing
 item.basic_machine_block.lore.2=Used to craft basic machines
 
+item.powder_machine.name=Powder Machine
+item.powder_machine.lore.1=Crush,smash,all smash!
+item.powder_machine.lore.2=Used to break something into powder
+
 item.copper_ingot.name=Copper Ingot
 item.copper_ingot.lore.1=Copper Ingot
 item.copper_ingot.lore.2=(*Looks like bricks, but more valuable than bricks.)
@@ -73,6 +77,14 @@ item.lead_ingot.name=Lead Ingot
 item.lead_ingot.lore.1=Lead Ingot
 item.lead_ingot.lore.2=(*Lead-acid batteries)
 
+item.basic_motor.name=Basic Motor
+item.basic_motor.lore.1=Basic Motor
+item.basic_motor.lore.2=(*Buzz……Buzz……Buzz……)
+
+item.basic_battery.name=Basic Battery
+item.basic_battery.lore.1=Basic Battery
+item.basic_battery.lore.2=(*Is there really huge energy in this little thing?)
+
 #item.oxygen.name=Oxygen
 #item.oxygen.lore.1=Oxygen
 #item.oxygen.lore.2=(*99% Oxygen)
@@ -114,6 +126,9 @@ item.lead_ingot.lore.2=(*Lead-acid batteries)
 
 element.fe=Fe
 element.cu=Cu
+element.pb=Pb
+element.zn=Zn
+element.sn=Sn
 
 inventory.iw_crafting_table.title=Industrial Crafting Table
 

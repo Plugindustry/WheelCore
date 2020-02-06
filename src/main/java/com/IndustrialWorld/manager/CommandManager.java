@@ -1,6 +1,7 @@
 package com.IndustrialWorld.manager;
 
 import com.IndustrialWorld.IndustrialWorld;
+import com.IndustrialWorld.utils.DebuggingLogger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -26,12 +27,13 @@ public class CommandManager implements CommandExecutor {
                     if(args.length==2)
                         if(ItemManager.isItemExists(args[2]))
                             if(!args[1].startsWith("@"))
-                                if(Bukkit.getPlayerExact(args[1])!=null)
-                                   Bukkit.getPlayerExact(args[1]).getInventory().addItem(ItemManager.get(args[2]));
-                                else sender.sendMessage("The specified player was not found.");
+                                if(Bukkit.getPlayerExact(args[1])!=null){
+                                    Bukkit.getPlayerExact(args[1]).getInventory().addItem(ItemManager.get(args[2]));
+                                }else sender.sendMessage("The specified player was not found.");
                             else if(args[1] == "@s" || args[1] == "@p")
                                 if(sender instanceof Player)
                                 ((Player)sender).getInventory().addItem(ItemManager.get(args[2]));
+                                else sender.sendMessage("Specified selector isn't a player.If console,use exact player name or @a selector instead.");
                             else if(args[1] == "@a")
                                 for (Player p : Bukkit.getServer().getOnlinePlayers()) {
                                     p.getInventory().addItem(ItemManager.get(args[2]));
