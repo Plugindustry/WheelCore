@@ -14,4 +14,13 @@ public final class ConstItems {
 	public final static ItemStack COPPER_WIRE = ItemManager.get("COPPER_WIRE");
 	public final static ItemStack COPPER_ORE = ItemManager.get("COPPER_ORE");
 	public final static ItemStack RED_HOT_IRON_INGOT = ItemManager.get("RED_HOT_IRON_INGOT");
+	public final static ItemStack STEEL_INGOT = ItemManager.get("STEEL_INGOT");
+	public final static ItemStack RED_HOT_STEEL_INGOT = ItemManager.get("RED_HOT_STEEL_INGOT");
+	public final static ItemStack QUICKLIME = ItemManager.get("QUICKLIME");
+	public final static ItemStack TIN_INGOT = ItemManager.get("TIN_INGOT");
+	public final static ItemStack ZINC_INGOT = ItemManager.get("ZINC_INGOT");
+	public final static ItemStack LEAD_INGOT = ItemManager.get("LEAD_INGOT");
+	public final static ItemStack POWDER_MACHINE = ItemManager.get("POWDER_MACHINE");
+	public final static ItemStack BASIC_MOTOR = ItemManager.get("BASIC_MOTOR");
+	public final static ItemStack BASIC_BATTERY = ItemManager.get("BASIC_BATTERY");
 }

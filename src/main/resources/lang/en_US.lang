@@ -21,6 +21,10 @@ item.basic_machine_block.name=Basic Machine Block
 item.basic_machine_block.lore.1=The most basic machine casing
 item.basic_machine_block.lore.2=Used to craft basic machines
 
+item.powder_machine.name=Powder Machine
+item.powder_machine.lore.1=Crush,smash,all smash!
+item.powder_machine.lore.2=Used to break something into powder
+
 item.copper_ingot.name=Copper Ingot
 item.copper_ingot.lore.1=Copper Ingot
 item.copper_ingot.lore.2=(*Looks like bricks, but more valuable than bricks.)
@@ -49,9 +53,37 @@ item.red_hot_iron_ingot.name=Red Hot Iron Ingot
 item.red_hot_iron_ingot.1=Heated red in furnace
 item.red_hot_iron_ingot.2=(*Why will you worry about this with Steve's hands' heat resistance)
 
-#item.steel_ingot.name=Steel Ingot
-#item.steel_ingot.1=Steel Ingot
-#item.steel_ingot.2=(*Less carbon,more toughness!）
+item.steel_ingot.name=Steel Ingot
+item.steel_ingot.1=Put the red hot iron ingot in cool water
+item.steel_ingot.2=(*Less carbon,more toughness!)
+
+item.red_hot_steel_ingot.name=Red Hot Steel Ingot
+item.red_hot_steel_ingot.lore.1=Heated red in furnace
+item.red_hot_steel_ingot.lore.2=(*You may be on fire if you feel warm while you get close to it)
+
+item.quicklime.name=Quicklime
+item.quicklime.lore.1=Carbon Oxide
+item.quicklime.lore.2=(*No food in Minecraft can get wet)
+
+item.tin_ingot.name=Tin Ingot
+item.tin_ingot.lore.1=Tin Ingot
+item.tin_ingot.lore.2=(*Don't use in cold environment,or ……)
+
+item.zinc_ingot.name=Zinc Ingot
+item.zinc_ingot.lore.1=Zinc Ingot
+item.zinc_ingot.lore.2=(*To produce hydrogen in a lab)
+
+item.lead_ingot.name=Lead Ingot
+item.lead_ingot.lore.1=Lead Ingot
+item.lead_ingot.lore.2=(*Lead-acid batteries)
+
+item.basic_motor.name=Basic Motor
+item.basic_motor.lore.1=Basic Motor
+item.basic_motor.lore.2=(*Buzz……Buzz……Buzz……)
+
+item.basic_battery.name=Basic Battery
+item.basic_battery.lore.1=Basic Battery
+item.basic_battery.lore.2=(*Is there really huge energy in this little thing?)
 
 #item.oxygen.name=Oxygen
 #item.oxygen.lore.1=Oxygen
@@ -94,6 +126,9 @@ item.red_hot_iron_ingot.2=(*Why will you worry about this with Steve's hands' he
 
 element.fe=Fe
 element.cu=Cu
+element.pb=Pb
+element.zn=Zn
+element.sn=Sn
 
 inventory.iw_crafting_table.title=Industrial Crafting Table
 
