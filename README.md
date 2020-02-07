@@ -7,7 +7,7 @@
 # IndustrialWorld 
 
 ![Java CI](https://github.com/czm23333/IndustrialWorld/workflows/Java%20CI/badge.svg?branch=master)
-![Spigot 1.13.2]https://img.shields.io/badge/spigot-1.13.2-blue
+![Spigot 1.13.2](https://img.shields.io/badge/spigot-1.13.2-blue)
 ![GitHub](https://img.shields.io/github/license/czm23333/IndustrialWorld)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/czm23333/IndustrialWorld)
 ![GitHub contributors](https://img.shields.io/github/contributors/czm23333/IndustrialWorld)
