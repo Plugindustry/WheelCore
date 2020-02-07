@@ -68,17 +68,17 @@ public class I18nConst {
         public static String LEAD_INGOT_LORE1 = "item.lead_ingot.lore.1";
         public static String LEAD_INGOT_LORE2 = "item.lead_ingot.lore.2";
         
-        public static String POWDER_MACHINE = "item.powder_machine.name";
-        public static String POWDER_MACHINE_LORE1 = "item.powder_machine.lore.1";
-        public static String POWDER_MACHINE_LORE2 = "item.powder_machine.lore.2";
+        public static String GRINDER = "item.grinder.name";
+        public static String GRINDER_LORE1 = "item.grinder.lore.1";
+        public static String GRINDER_LORE2 = "item.grinder.lore.2";
 
         public static String BASIC_MOTOR = "item.basic_motor.name";
         public static String BASIC_MOTOR_LORE1 = "item.basic_motor.lore.1";
         public static String BASIC_MOTOR_LORE2 = "item.basic_motor.lore.2";
 
-        public static String BASIC_BATTERY = "item.basic_battery.name";
-        public static String BASIC_BATTERY_LORE1 = "item.basic_battery.lore.1";
-        public static String BASIC_BATTERY_LORE2 = "item.basic_battery.lore.2";
+        public static String REDSTONE_BATTERY = "item.redstone_battery.name";
+        public static String REDSTONE_BATTERY_LORE1 = "item.redstone_battery.lore.1";
+        public static String REDSTONE_BATTERY_LORE2 = "item.redstone_battery.lore.2";
     }
 
     public static class Block {

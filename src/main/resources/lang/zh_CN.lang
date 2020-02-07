@@ -21,9 +21,9 @@ item.basic_machine_block.name=基础机器方块
 item.basic_machine_block.lore.1=最基本的机器外壳
 item.basic_machine_block.lore.2=可用于制造基础机器
 
-item.powder_machine.name=粉碎机
-item.powder_machine.lore.1=粉碎，粉碎，全都粉碎！
-item.powder_machine.lore.2=可用于将矿石制成粉末
+item.grinder.name=粉碎机
+item.grinder.lore.1=粉碎，粉碎，全都粉碎！
+item.grinder.lore.2=可用于将矿石制成粉末
 
 item.copper_ingot.name=铜锭
 item.copper_ingot.lore.1=铜锭
@@ -67,11 +67,11 @@ item.quicklime.lore.2=(*MC里的食品不需要防潮)
 
 item.tin_ingot.name=锡锭
 item.tin_ingot.lore.1=锡锭
-item.tin_ingot.lore.2=(*大名鼎鼎的'五金'之一)
+item.tin_ingot.lore.2=(*不要前往寒冷的地方)
 
 item.zinc_ingot.name=锌锭
 item.zinc_ingot.lore.1=锌锭
-item.zinc_ingot.lore.2=(*实验室制取氢气可用锌粒)
+item.zinc_ingot.lore.2=(*说到制取氢气，还是电解水吧)
 
 item.lead_ingot.name=铅锭
 item.lead_ingot.lore.1=铅锭
@@ -81,13 +81,9 @@ item.basic_motor.name=基础马达
 item.basic_motor.lore.1=基础马达
 item.basic_motor.lore.2=(*嗡……嗡……嗡……)
 
-item.basic_motor.name=基础马达
-item.basic_motor.lore.1=基础马达
-item.basic_motor.lore.2=(*嗡……嗡……嗡……)
-
-item.basic_battery.name=基础电池
-item.basic_battery.lore.1=基础电池
-item.basic_battery.lore.2=(*这个小东西里面真的蕴藏着巨大的能量吗?)
+item.redstone_battery.name=红石电池
+item.redstone_battery.lore.1=红石电池
+item.redstone_battery.lore.2=(*红石真的能够提供巨大的能量吗?)
 
 element.fe=Fe
 element.cu=Cu
@@ -100,3 +96,11 @@ inventory.iw_crafting_table.title=工业工作台
 item.iron_ore.formula=Fe₂O₃
 item.red_copper_ore.formula=Cu₂O
 item.malachite.formula=Cu₂(OH)₂CO₃
+
+item.powder_machine.name=Powder Machine
+item.powder_machine.lore.1=Crush,smash,all smash!
+item.powder_machine.lore.2=Used to break something into powder
+item.red_hot_iron_ingot.1=Heated red in furnace
+item.red_hot_iron_ingot.2=(*Why will you worry about this with Steve's hands' heat resistance)
+item.steel_ingot.1=Put the red hot iron ingot in cool water
+item.steel_ingot.2=(*Less carbon,more toughness!)

@@ -21,9 +21,9 @@ item.basic_machine_block.name=Basic Machine Block
 item.basic_machine_block.lore.1=The most basic machine casing
 item.basic_machine_block.lore.2=Used to craft basic machines
 
-item.powder_machine.name=Powder Machine
-item.powder_machine.lore.1=Crush,smash,all smash!
-item.powder_machine.lore.2=Used to break something into powder
+item.grinder.name=Grinder
+item.grinder.lore.1=Crush, smash, all in a dash!
+item.grinder.lore.2=Used to grind something
 
 item.copper_ingot.name=Copper Ingot
 item.copper_ingot.lore.1=Copper Ingot
@@ -62,12 +62,12 @@ item.red_hot_steel_ingot.lore.1=Heated red in furnace
 item.red_hot_steel_ingot.lore.2=(*You may be on fire if you feel warm while you get close to it)
 
 item.quicklime.name=Quicklime
-item.quicklime.lore.1=Carbon Oxide
+item.quicklime.lore.1=Calcium Oxide
 item.quicklime.lore.2=(*No food in Minecraft can get wet)
 
 item.tin_ingot.name=Tin Ingot
 item.tin_ingot.lore.1=Tin Ingot
-item.tin_ingot.lore.2=(*Don't use in cold environment,or ……)
+item.tin_ingot.lore.2=(*Don't use in cold environment, or ……)
 
 item.zinc_ingot.name=Zinc Ingot
 item.zinc_ingot.lore.1=Zinc Ingot
@@ -81,9 +81,9 @@ item.basic_motor.name=Basic Motor
 item.basic_motor.lore.1=Basic Motor
 item.basic_motor.lore.2=(*Buzz……Buzz……Buzz……)
 
-item.basic_battery.name=Basic Battery
-item.basic_battery.lore.1=Basic Battery
-item.basic_battery.lore.2=(*Is there really huge energy in this little thing?)
+item.redstone_battery.name=Redstone Battery
+item.redstone_battery.lore.1=Redstone Battery
+item.redstone_battery.lore.2=(*Is the energy provided by redstone really huge?)
 
 #item.oxygen.name=Oxygen
 #item.oxygen.lore.1=Oxygen

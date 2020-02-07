@@ -131,20 +131,20 @@ public class RegisterManager {
                         ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.ZINC_INGOT_LORE1),
                         ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.ZINC_INGOT_LORE2)
                 )).getItemStack()); 
-        ItemManager.register("POWDER_MACHINE", ItemStackUtil.create(Material.FURNACE).setId("POWDER_MACHINE").setAmount(1).setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.POWDER_MACHINE)).setLore(
+        ItemManager.register("GRINDER", ItemStackUtil.create(Material.IRON_BLOCK).setId("GRINDER").setAmount(1).setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.GRINDER)).setLore(
                 Arrays.asList(
-                        ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.POWDER_MACHINE_LORE1),
-                        ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.POWDER_MACHINE_LORE2)
+                        ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.GRINDER_LORE1),
+                        ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.GRINDER_LORE2)
                 )).getItemStack());
         ItemManager.register("BASIC_MOTOR", ItemStackUtil.create(Material.SKELETON_SKULL).setId("BASIC_MOTOR").setAmount(1).setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.BASIC_MOTOR)).setLore(
                 Arrays.asList(
                         ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.BASIC_MOTOR_LORE1),
                         ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.BASIC_MOTOR_LORE2)
                 )).getItemStack());
-        ItemManager.register("BASIC_BATTERY", ItemStackUtil.create(Material.SKELETON_SKULL).setId("BASIC_BATTERY").setAmount(1).setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.BASIC_BATTERY)).setLore(
+        ItemManager.register("REDSTONE_BATTERY", ItemStackUtil.create(Material.SKELETON_SKULL).setId("REDSTONE_BATTERY").setAmount(1).setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.REDSTONE_BATTERY)).setLore(
                 Arrays.asList(
-                        ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.BASIC_BATTERY_LORE1),
-                        ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.BASIC_BATTERY_LORE2)
+                        ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.REDSTONE_BATTERY_LORE1),
+                        ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.REDSTONE_BATTERY_LORE2)
                 )).getItemStack());
     }
 }
