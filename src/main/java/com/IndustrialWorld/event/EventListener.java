@@ -4,6 +4,9 @@ import com.IndustrialWorld.ConstItems;
 import com.IndustrialWorld.interfaces.MachineBase;
 import com.IndustrialWorld.manager.InventoryListenerManager;
 import com.IndustrialWorld.manager.MainManager;
+import com.IndustrialWorld.manager.RecipeRegistry;
+import com.IndustrialWorld.manager.recipe.RecipeBase;
+import com.IndustrialWorld.manager.recipe.SmeltingRecipe;
 import com.IndustrialWorld.utils.NBTUtil;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -15,11 +18,10 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.inventory.CraftItemEvent;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.WorldInitEvent;
+import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ItemStack;
 
 public class EventListener implements Listener {
@@ -73,6 +75,19 @@ public class EventListener implements Listener {
             NBTUtil.NBTValue value = NBTUtil.getTagValue(item, "isIWItem");
             if (value != null && value.asBoolean())
                 event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onItemSmelt(FurnaceSmeltEvent event) {
+        NBTUtil.NBTValue sourceValue = NBTUtil.getTagValue(event.getSource(), "isIWItem");
+        if (sourceValue != null && sourceValue.asBoolean()) {
+            SmeltingRecipe recipe = RecipeRegistry.matchSmeltingRecipe(event.getSource());
+            if (recipe != null) {
+                event.setResult(recipe.getResult());
+            } else {
+                event.setCancelled(true);
+            }
         }
     }
 

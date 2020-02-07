@@ -48,10 +48,10 @@ public class RecipeRegistry {
 		return null;
 	}
 
-	public static SmeltingRecipe matchSmeltingRecipe(ItemStack origin, ItemStack fuel) {
+	public static SmeltingRecipe matchSmeltingRecipe(ItemStack origin) {
 		for (RecipeBase recipeBase : recipes) {
 			if (recipeBase instanceof SmeltingRecipe) {
-				if (((SmeltingRecipe) recipeBase).matches(origin, fuel)) {
+				if (((SmeltingRecipe) recipeBase).matches(origin)) {
 					return (SmeltingRecipe) recipeBase;
 				}
 			}
