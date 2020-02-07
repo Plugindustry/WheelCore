@@ -1,5 +1,7 @@
 ### 基于GPL3.0协议
 
+![Java CI](https://github.com/czm23333/IndustrialWorld/workflows/Java%20CI/badge.svg?branch=master)
+
 * 简体中文/zh-CN
 * [English/en-US][1]
 
