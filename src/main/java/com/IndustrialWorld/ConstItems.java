@@ -23,4 +23,5 @@ public final class ConstItems {
 	public final static ItemStack GRINDER = ItemManager.get("GRINDER");
 	public final static ItemStack BASIC_MOTOR = ItemManager.get("BASIC_MOTOR");
 	public final static ItemStack REDSTONE_BATTERY = ItemManager.get("REDSTONE_BATTERY");
+	public final static ItemStack BASIC_COIL = ItemManager.get("BASIC_COIL");
 }

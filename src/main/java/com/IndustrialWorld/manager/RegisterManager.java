@@ -30,14 +30,15 @@ public class RegisterManager {
 
 		    RecipeRegistry.register(new ShapelessRecipe(Arrays.asList(ConstItems.FORGE_HAMMER, new ItemStack(Material.IRON_INGOT)), ConstItems.IRON_PLATE).addItemCost(ConstItems.FORGE_HAMMER, 3));
             RecipeRegistry.register(new ShapelessRecipe(Arrays.asList(ConstItems.FORGE_HAMMER, ConstItems.COPPER_INGOT), ConstItems.COPPER_PLATE).addItemCost(ConstItems.FORGE_HAMMER, 3));
+            RecipeRegistry.register(new ShapelessRecipe(Arrays.asList(ConstItems.FORGE_HAMMER, ConstItems.RED_HOT_IRON_INGOT), ConstItems.RED_HOT_STEEL_INGOT).addItemCost(ConstItems.FORGE_HAMMER, 3));
         }
         /* CUTTER */{
         	RecipeRegistry.register(new ShapedRecipeFactory().map('A', new ItemStack(Material.IRON_INGOT)).map('B', ConstItems.IRON_PLATE).pattern("BCB", "CBC", "ACA").build(ConstItems.CUTTER));
-            RecipeRegistry.register(new ShapelessRecipe(Arrays.asList(ConstItems.COPPER_PLATE, ConstItems.FORGE_HAMMER), ConstItems.COPPER_WIRE).addItemCost(ConstItems.CUTTER, 4));
+            RecipeRegistry.register(new ShapelessRecipe(Arrays.asList(ConstItems.COPPER_PLATE), ConstItems.COPPER_WIRE).addItemCost(ConstItems.CUTTER, 4));
         }
 
+        // Basic Machine Block
         RecipeRegistry.register(new ShapedRecipeFactory().map('0', new ItemStack(Material.IRON_INGOT)).pattern("000", "0w0", "000").build(ConstItems.BASIC_MACHINE_BLOCK)); // BASIC_MACHINE_BLOCK
-
     }
 
     public static void registerBlockIS() {

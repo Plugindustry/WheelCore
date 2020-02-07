@@ -1,7 +1,7 @@
 package com.IndustrialWorld.utils;
 
 import com.IndustrialWorld.interfaces.Base;
-import com.IndustrialWorld.interfaces.MachineBlock;
+import com.IndustrialWorld.interfaces.MachineBase;
 import com.IndustrialWorld.interfaces.Wire;
 import com.IndustrialWorld.manager.MainManager;
 import org.bukkit.Location;
@@ -144,7 +144,7 @@ public class BlockUtil {
 
     public static boolean isMachine(Block block) {
         return MainManager.hasBlock(block) &&
-               MainManager.getInstanceFromId(MainManager.getBlockId(block)) instanceof MachineBlock;
+               MainManager.getInstanceFromId(MainManager.getBlockId(block)) instanceof MachineBase;
     }
 
     public static boolean isWire(Block block) {

@@ -85,6 +85,10 @@ item.redstone_battery.name=红石电池
 item.redstone_battery.lore.1=红石电池
 item.redstone_battery.lore.2=(*红石真的能够提供巨大的能量吗?)
 
+item.basic_coil.name=基础线圈
+item.basic_coil.lore.1=由铜丝缠绕铁锭做成
+item.basic_coil.lore.2=(*供基础机器使用。请不要通入过大电流)
+
 element.fe=Fe
 element.cu=Cu
 element.pb=Pb
@@ -96,11 +100,3 @@ inventory.iw_crafting_table.title=工业工作台
 item.iron_ore.formula=Fe₂O₃
 item.red_copper_ore.formula=Cu₂O
 item.malachite.formula=Cu₂(OH)₂CO₃
-
-item.powder_machine.name=Powder Machine
-item.powder_machine.lore.1=Crush,smash,all smash!
-item.powder_machine.lore.2=Used to break something into powder
-item.red_hot_iron_ingot.1=Heated red in furnace
-item.red_hot_iron_ingot.2=(*Why will you worry about this with Steve's hands' heat resistance)
-item.steel_ingot.1=Put the red hot iron ingot in cool water
-item.steel_ingot.2=(*Less carbon,more toughness!)

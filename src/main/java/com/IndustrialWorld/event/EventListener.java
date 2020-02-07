@@ -1,7 +1,7 @@
 package com.IndustrialWorld.event;
 
 import com.IndustrialWorld.ConstItems;
-import com.IndustrialWorld.interfaces.MachineBlock;
+import com.IndustrialWorld.interfaces.MachineBase;
 import com.IndustrialWorld.manager.InventoryListenerManager;
 import com.IndustrialWorld.manager.MainManager;
 import com.IndustrialWorld.utils.NBTUtil;
@@ -57,7 +57,7 @@ public class EventListener implements Listener {
     public void onBlockExplode(BlockExplodeEvent event) {
         for (Block block : event.blockList())
             if (MainManager.hasBlock(block))
-                if (MainManager.getInstanceFromId(MainManager.getBlockId(block)) instanceof MachineBlock) {
+                if (MainManager.getInstanceFromId(MainManager.getBlockId(block)) instanceof MachineBase) {
                     MainManager.removeBlock(block);
                     block.setType(Material.AIR);
                     Item item = (Item) (event.getBlock().getWorld().spawnEntity(event.getBlock().getLocation(), EntityType.DROPPED_ITEM));

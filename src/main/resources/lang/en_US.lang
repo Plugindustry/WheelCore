@@ -29,9 +29,9 @@ item.copper_ingot.name=Copper Ingot
 item.copper_ingot.lore.1=Copper Ingot
 item.copper_ingot.lore.2=(*Looks like bricks, but more valuable than bricks.)
 
-item.copper_plate.name=Copper Sheet
-item.copper_plate.lore.1=Copper Sheet
-item.copper_plate.lore.2=(*High quality oxidation treated copper sheets, MAYBE)
+item.copper_plate.name=Copper Plate
+item.copper_plate.lore.1=Copper Plate
+item.copper_plate.lore.2=(*High quality oxidation treated copper plates, MAYBE)
 
 item.copper_wire.name=Copper Wire
 item.copper_wire.lore.1=Copper Wire
@@ -50,12 +50,12 @@ item.iron_ore.lore.1=Iron Ore
 item.iron_ore.lore.2=(*Pure Iron Ore! Smelt item 50% discount!)
 
 item.red_hot_iron_ingot.name=Red Hot Iron Ingot
-item.red_hot_iron_ingot.1=Heated red in furnace
-item.red_hot_iron_ingot.2=(*Why will you worry about this with Steve's hands' heat resistance)
+item.red_hot_iron_ingot.lore.1=Heated red in furnace
+item.red_hot_iron_ingot.lore.2=(*Why will you worry about this with Steve's hands' heat resistance)
 
 item.steel_ingot.name=Steel Ingot
-item.steel_ingot.1=Put the red hot iron ingot in cool water
-item.steel_ingot.2=(*Less carbon,more toughness!)
+item.steel_ingot.lore.1=Put the red hot iron ingot in cool water
+item.steel_ingot.lore.2=(*Less carbon,more toughness!)
 
 item.red_hot_steel_ingot.name=Red Hot Steel Ingot
 item.red_hot_steel_ingot.lore.1=Heated red in furnace
@@ -84,45 +84,6 @@ item.basic_motor.lore.2=(*Buzz……Buzz……Buzz……)
 item.redstone_battery.name=Redstone Battery
 item.redstone_battery.lore.1=Redstone Battery
 item.redstone_battery.lore.2=(*Is the energy provided by redstone really huge?)
-
-#item.oxygen.name=Oxygen
-#item.oxygen.lore.1=Oxygen
-#item.oxygen.lore.2=(*99% Oxygen)
-#item.hydrogen.name=Hydrogen
-#item.hydrogen.lore.1=Hydrogen
-#item.hydrogen.lore.2=(*You'd better not play with fire in hydrogen...)
-#item.nitrogen.name=Nitrogen
-#item.nitrogen.lore.1=Nitrogen
-#item.nitrogen.lore.2=(*The main component of the air)
-#item.fluorine.name=Fluorine
-#item.fluorine.lore.1=Fluorine
-#item.fluorine.lore.2=(*Wow,it corrosion of the container!)
-#item.chlorine.name=Chlorine
-#item.chlorine.lore.1=Chlorine
-#item.chlorine.lore.2=(*Why can't I smell anything after I smelt this gas?)
-
-#item.helium.name=Helium
-#item.helium.lore.1=Helium
-#item.helium.lore.2=(*Always be used to cool something)
-#item.neon.name=Neon
-#item.neon.lore.1=Neon
-#item.neon.lore.2=(*Founded by a very little gap)
-#item.argon.name=Argon
-#item.argon.lore.1=Argon
-#item.argon.lore.2=(*Filled the bulb at first.)
-#item.krypton.name=Krypton
-#item.krypton.lore.1=Krypton
-#item.krypton.lore.2=(*It seems nothing is special in this element...)
-#item.xenon.name=Xenon
-#item.xenon.lore.1=Xenon
-#item.xenon.lore.2=(*We'll try to add some xenon compounds some day!)
-#item.radon.name=Radon
-#item.radon.lore.1=Radon
-#item.radon.lore.2=(*It can even cure some kinds of cancers!)
-
-#item.unknown.name=Unknown
-#item.unknown.lore.1=Unknown
-#item.unknown.lore.2=(*Magical unknown things.Who can try to touch it?)
 
 element.fe=Fe
 element.cu=Cu
