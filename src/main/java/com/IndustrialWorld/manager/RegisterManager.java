@@ -8,6 +8,7 @@ import com.IndustrialWorld.i18n.I18n;
 import com.IndustrialWorld.i18n.I18nConst;
 import com.IndustrialWorld.manager.recipe.ShapedRecipeFactory;
 import com.IndustrialWorld.manager.recipe.ShapelessRecipe;
+import com.IndustrialWorld.manager.recipe.SmeltingRecipeImpl;
 import com.IndustrialWorld.utils.ItemStackUtil;
 import com.IndustrialWorld.utils.MaterialUtil;
 import org.bukkit.ChatColor;
@@ -39,6 +40,9 @@ public class RegisterManager {
 
         // Basic Machine Block
         RecipeRegistry.register(new ShapedRecipeFactory().map('0', new ItemStack(Material.IRON_INGOT)).pattern("000", "0w0", "000").build(ConstItems.BASIC_MACHINE_BLOCK)); // BASIC_MACHINE_BLOCK
+
+        // Smelting Recipes
+        RecipeRegistry.register(new SmeltingRecipeImpl(new ItemStack(Material.IRON_INGOT), ConstItems.RED_HOT_IRON_INGOT));
     }
 
     public static void registerBlockIS() {

@@ -50,7 +50,7 @@ public class I18nConst {
         
         public static String RED_HOT_STEEL_INGOT = "item.red_hot_steel_ingot.name";
         public static String RED_HOT_STEEL_INGOT_LORE1 = "item.red_hot_steel_ingot.lore.1";
-        public static String RED_HOT_STEEL_INGOT_LORE2 = "item.red_hot_steel_ingot.lore2";
+        public static String RED_HOT_STEEL_INGOT_LORE2 = "item.red_hot_steel_ingot.lore.2";
         
         public static String QUICKLIME = "item.quicklime.name";
         public static String QUICKLIME_LORE1 = "item.quicklime.lore.1";
