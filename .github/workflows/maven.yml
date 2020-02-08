@@ -24,4 +24,4 @@ jobs:
         git-release-bot-email: "cphms@outlook.com"
         
         access-token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
-        maven-args: "--file pom.xml"
+        maven-args: "-B -e -U clean install--file pom.xml"
