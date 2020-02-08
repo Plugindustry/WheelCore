@@ -13,5 +13,15 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
-    - name: Build with Maven
-      run: mvn -B -e -U clean install --file pom.xml
+    #- name: Build with Maven
+    #  run: mvn -B -e -U clean install --file pom.xml
+    - name: Release
+      uses: qcastel/github-actions-maven-release@master
+      with:
+        release-branch-name: "master"
+        
+        git-release-bot-name: "Untitled"
+        git-release-bot-email: "cphms@outlook.com"
+        
+        access-token: ${{ secrets.GITHUB_ACCESS_TOKEN }}
+        maven-args: "--file pom.xml"
