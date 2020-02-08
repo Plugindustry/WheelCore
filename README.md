@@ -6,7 +6,7 @@
 
 # IndustrialWorld 
 
-![Java CI](https://github.com/czm23333/IndustrialWorld/workflows/Java%20CI/badge.svg?branch=master)
+![Build](https://github.com/czm23333/IndustrialWorld/workflows/Build/badge.svg)
 ![Spigot 1.13.2](https://img.shields.io/badge/spigot-1.13.2-blue)
 ![GitHub](https://img.shields.io/github/license/czm23333/IndustrialWorld)
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/czm23333/IndustrialWorld)
@@ -19,7 +19,7 @@ IndusrialWorld是一个Bukkit/Spigot服务器插件，旨在为Minecraft添加�
 一个崭新的玩Minecraft的方法！ 
 不需要任何服务器Mod！ 
 
-需要Spigot 1.13.2服务器以运行。
+需要Spigot 1.13.2(理论支持1.13.2及以上)服务器以运行。
 
 ## 开发中... :D  
 
