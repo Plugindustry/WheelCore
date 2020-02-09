@@ -21,6 +21,8 @@ IndusrialWorld是一个Bukkit/Spigot服务器插件，旨在为Minecraft添加�
 
 需要Spigot 1.13.2(理论支持1.13.2及以上)服务器以运行。
 
+下载:[Github Actions][2] 点击最近一次的成功的Build,即可在Artifacts处下载
+
 ## 开发中... :D  
 
 # 开发进度   
@@ -29,3 +31,4 @@ I18n支持 √
 更多的矿物 [Dev]
 
 [1]: https://github.com/czm23333/IndustrialWorld/blob/master/README_EN.md
+[2]: https://github.com/czm23333/IndustrialWorld/actions/
