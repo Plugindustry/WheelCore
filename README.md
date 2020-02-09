@@ -8,8 +8,6 @@
 
 ![Build](https://github.com/czm23333/IndustrialWorld/workflows/Build/badge.svg)
 ![Spigot 1.13.2](https://img.shields.io/badge/spigot-1.13.2-blue)
-![GitHub](https://img.shields.io/github/license/czm23333/IndustrialWorld)
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/czm23333/IndustrialWorld)
 ![GitHub contributors](https://img.shields.io/github/contributors/czm23333/IndustrialWorld)
 
 ~~大扎好，我系渣渣辉，IndustrialWorld，介四里没有挽过的船新版本，挤需体验三番钟，里造会干我一样，爱象节个插件。~~  
