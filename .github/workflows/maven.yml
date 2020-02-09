@@ -15,7 +15,9 @@ jobs:
         java-version: 1.8
     - name: Build with Maven
       run: mvn -B -e -U clean install --file pom.xml
+    - name: Copy jar
+      run: mkdir target/artifacts/ && cp -f target/czm-1.0-SNAPSHOT.jar target/artifacts/czm-1.0-SNAPSHOT.jar
     - uses: actions/upload-artifact@v1
       with:
         name: czm-1.0-SNAPSHOT.jar
-        path: target/
+        path: target/artifacts/
