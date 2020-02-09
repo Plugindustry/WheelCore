@@ -17,7 +17,7 @@ public class IWCraftingTableRegistrationTask implements Runnable {
 
     @Override
     public void run() {
-        DebuggingLogger.debug("register crafting table.");
+        DebuggingLogger.debug("Register Industrial crafting table.");
         IndustrialWorld.instance.getServer().addRecipe(new ShapedRecipe(new NamespacedKey(IndustrialWorld.instance, "crafting_table_craft"), ConstItems.IW_CRAFTING_TABLE).shape("AAA", "ABA", "AAA").setIngredient('A', Material.IRON_INGOT).setIngredient('B', Material.CRAFTING_TABLE));
     }
 }
