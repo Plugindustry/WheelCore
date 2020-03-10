@@ -1,6 +1,5 @@
 package com.IndustrialWorld.blocks;
 
-import com.IndustrialWorld.interfaces.BlockBase;
 import com.IndustrialWorld.interfaces.MachineBase;
 import com.IndustrialWorld.manager.ItemManager;
 import org.bukkit.Material;

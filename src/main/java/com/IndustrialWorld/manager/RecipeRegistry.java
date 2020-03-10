@@ -1,6 +1,7 @@
 package com.IndustrialWorld.manager;
 
 import com.IndustrialWorld.manager.recipe.CraftingRecipe;
+import com.IndustrialWorld.manager.recipe.GrindRecipe;
 import com.IndustrialWorld.manager.recipe.RecipeBase;
 import com.IndustrialWorld.manager.recipe.SmeltingRecipe;
 import org.bukkit.inventory.ItemStack;
@@ -27,7 +28,6 @@ public class RecipeRegistry {
 				current = new LinkedList<>();
 			}
 
-
 			current.add(items.get(i));
 			i++;
 		} while (i < 9);
@@ -53,6 +53,18 @@ public class RecipeRegistry {
 			if (recipeBase instanceof SmeltingRecipe) {
 				if (((SmeltingRecipe) recipeBase).matches(origin)) {
 					return (SmeltingRecipe) recipeBase;
+				}
+			}
+		}
+
+		return null;
+	}
+
+	public static GrindRecipe matchGrindRecipe(ItemStack origin) {
+		for (RecipeBase recipeBase : recipes) {
+			if (recipeBase instanceof GrindRecipe) {
+				if (((GrindRecipe) recipeBase).matches(origin)) {
+					return (GrindRecipe) recipeBase;
 				}
 			}
 		}

@@ -12,12 +12,9 @@ public class ShapedRecipe implements CraftingRecipe {
 	private ItemStack result;
 	private Map<ItemStack, Integer> damages = new HashMap<>();
 
-	public ShapedRecipe(List<List<ItemStack>> matrix, ItemStack result) {
+	protected ShapedRecipe(List<List<ItemStack>> matrix, ItemStack result) {
 		if (matrix.size() <= 0 || matrix.size() > 3 || matrix.get(0).size() <= 0 || matrix.get(0).size() > 3) {
 			throw new IllegalArgumentException("Incorrect size of recipe");
-		}
-		if (matrix.isEmpty()) {
-			throw new IllegalArgumentException("Null recipe.");
 		}
 		this.matrix = matrix;
 

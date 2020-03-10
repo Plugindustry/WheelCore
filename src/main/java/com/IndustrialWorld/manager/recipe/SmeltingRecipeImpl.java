@@ -13,10 +13,7 @@ public class SmeltingRecipeImpl implements SmeltingRecipe {
 
 	@Override
 	public boolean matches(ItemStack origin) {
-		if (!origin.isSimilar(recipe)) {
-			return false;
-		}
-		return true;
+		return origin.isSimilar(recipe);
 	}
 
 	@Override

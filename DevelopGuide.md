@@ -11,7 +11,8 @@ Download spigot 1.13.2 jar file to build.([My mirror](https://raw.githubusercont
 
 # Step 2
 Clone this repository into your computer.
-``git clone https://github.com/czm23333/IndustrialWorld.git``
+use
+``git clone https://github.com/czm23333/IndustrialWorld.git`` or ``git clone git@github.com:czm23333/IndustrialWorld.git``
 
 # Step 3
 Open in your IDE and edit.
