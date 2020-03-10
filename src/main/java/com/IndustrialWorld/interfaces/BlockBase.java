@@ -20,7 +20,7 @@ public abstract class BlockBase extends Interactive {
     	if (!canceled) {
     		MainManager.removeBlock(block);
 	    }
-    	// We do not drop IndustralWorld blocks by default
+    	// We do not drop IndustrialWorld blocks by default
     	block.getWorld().dropItem(block.getLocation(), getItemStack());
 
     	return true;

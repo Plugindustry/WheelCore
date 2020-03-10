@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class LinkedTree<T> {
-    private Node rootNode;
+    private Node<T> rootNode;
     private LinkedList<Node<T>> nodes = new LinkedList<>();
     private LinkedList<Node<T>> leafNodes = new LinkedList<>();
 
@@ -22,8 +22,7 @@ public class LinkedTree<T> {
         newNode.setParentNode(parentNode);
         nodes.add(newNode);
         leafNodes.add(newNode);
-        if(leafNodes.contains(parentNode))
-            leafNodes.remove(parentNode);
+	    leafNodes.remove(parentNode);
     }
 
     public void removeNode(Node<T> node){

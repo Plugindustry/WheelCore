@@ -56,79 +56,24 @@ public class BlockUtil {
                     }
 
                 Location t1 = temp.clone().add(1, 0, 0);
-                if (!t1.equals(expect)) {
-                    if (isWire(t1.getBlock()) &&
-                        MainManager.getInstanceFromId(MainManager.getBlockId(t1.getBlock())).equals(nodeInstance))
-                        network.addNode(node, new Node<>(t1));
-                    else if (isMachine(t1.getBlock())) {
-                        machines.add(t1.getBlock());
-                        ++machineNumber;
-                        network.addNode(node, new Node<>(t1));
-                        //result.add(new SearchResult(t1.getBlock(), buf.size() + 1, divisor));
-                    }
-                }
+	            machineNumber = checkTargetBlock(expect, network, node, machines, nodeInstance, machineNumber, t1, t1.getBlock());
 
-                Location t2 = temp.clone().add(-1, 0, 0);
-                if (!t2.equals(expect)) {
-                    if (isWire(t2.getBlock()) &&
-                        MainManager.getInstanceFromId(MainManager.getBlockId(t1.getBlock())).equals(nodeInstance))
-                        network.addNode(node, new Node<>(t2));
-                    else if (isMachine(t2.getBlock())) {
-                        machines.add(t2.getBlock());
-                        ++machineNumber;
-                        network.addNode(node, new Node<>(t2));
-                    }
-                }
+	            Location t2 = temp.clone().add(-1, 0, 0);
+	            machineNumber = checkTargetBlock(expect, network, node, machines, nodeInstance, machineNumber, t2, t1.getBlock());
 
-                Location t3 = temp.clone().add(0, 1, 0);
-                if (!t3.equals(expect)) {
-                    if (isWire(t3.getBlock()) &&
-                        MainManager.getInstanceFromId(MainManager.getBlockId(t1.getBlock())).equals(nodeInstance))
-                        network.addNode(node, new Node<>(t3));
-                    else if (isMachine(t3.getBlock())) {
-                        machines.add(t3.getBlock());
-                        ++machineNumber;
-                        network.addNode(node, new Node<>(t3));
-                    }
-                }
+	            Location t3 = temp.clone().add(0, 1, 0);
+	            machineNumber = checkTargetBlock(expect, network, node, machines, nodeInstance, machineNumber, t3, t1.getBlock());
 
-                Location t4 = temp.clone().add(0, -1, 0);
-                if (!t4.equals(expect)) {
-                    if (isWire(t4.getBlock()) &&
-                        MainManager.getInstanceFromId(MainManager.getBlockId(t1.getBlock())).equals(nodeInstance))
-                        network.addNode(node, new Node<>(t4));
-                    else if (isMachine(t4.getBlock())) {
-                        machines.add(t4.getBlock());
-                        ++machineNumber;
-                        network.addNode(node, new Node<>(t4));
-                    }
-                }
+	            Location t4 = temp.clone().add(0, -1, 0);
+	            machineNumber = checkTargetBlock(expect, network, node, machines, nodeInstance, machineNumber, t4, t1.getBlock());
 
-                Location t5 = temp.clone().add(0, 0, 1);
-                if (!t5.equals(expect)) {
-                    if (isWire(t5.getBlock()) &&
-                        MainManager.getInstanceFromId(MainManager.getBlockId(t1.getBlock())).equals(nodeInstance))
-                        network.addNode(node, new Node<>(t5));
-                    else if (isMachine(t5.getBlock())) {
-                        machines.add(t5.getBlock());
-                        ++machineNumber;
-                        network.addNode(node, new Node<>(t5));
-                    }
-                }
+	            Location t5 = temp.clone().add(0, 0, 1);
+	            machineNumber = checkTargetBlock(expect, network, node, machines, nodeInstance, machineNumber, t5, t1.getBlock());
 
-                Location t6 = temp.clone().add(0, 0, -1);
-                if (!t6.equals(expect)) {
-                    if (isWire(t6.getBlock()) &&
-                        MainManager.getInstanceFromId(MainManager.getBlockId(t1.getBlock())).equals(nodeInstance))
-                        network.addNode(node, new Node<>(t6));
-                    else if (isMachine(t6.getBlock())) {
-                        machines.add(t6.getBlock());
-                        ++machineNumber;
-                        network.addNode(node, new Node<>(t6));
-                    }
-                }
+	            Location t6 = temp.clone().add(0, 0, -1);
+	            machineNumber = checkTargetBlock(expect, network, node, machines, nodeInstance, machineNumber, t6, t1.getBlock());
 
-                for (Block machine : machines) {
+	            for (Block machine : machines) {
                     ArrayList<Location> wires = new ArrayList<>();
                     for (Node<Location> n : node.getAllParents())
                         wires.add(n.getValue());
@@ -142,7 +87,22 @@ public class BlockUtil {
         return new AbstractMap.SimpleEntry<>(network, result);
     }
 
-    public static boolean isMachine(Block block) {
+	private static int checkTargetBlock(Location expect, LinkedTree<Location> network, Node<Location> node, ArrayList<Block> machines, Base nodeInstance, int machineNumber, Location t1, Block block) {
+		if (!t1.equals(expect)) {
+		    if (isWire(t1.getBlock()) &&
+		        MainManager.getInstanceFromId(MainManager.getBlockId(block)).equals(nodeInstance))
+		        network.addNode(node, new Node<>(t1));
+		    else if (isMachine(t1.getBlock())) {
+		        machines.add(t1.getBlock());
+		        ++machineNumber;
+		        network.addNode(node, new Node<>(t1));
+		        //result.add(new SearchResult(t1.getBlock(), buf.size() + 1, divisor));
+		    }
+		}
+		return machineNumber;
+	}
+
+	public static boolean isMachine(Block block) {
         return MainManager.hasBlock(block) &&
                MainManager.getInstanceFromId(MainManager.getBlockId(block)) instanceof MachineBase;
     }

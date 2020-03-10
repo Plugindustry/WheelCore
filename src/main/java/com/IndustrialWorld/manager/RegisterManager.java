@@ -3,6 +3,7 @@ package com.IndustrialWorld.manager;
 import com.IndustrialWorld.ConstItems;
 import com.IndustrialWorld.blocks.BasicMachineBlock;
 import com.IndustrialWorld.blocks.CopperOre;
+import com.IndustrialWorld.blocks.Grinder;
 import com.IndustrialWorld.blocks.IWCraftingTable;
 import com.IndustrialWorld.i18n.I18n;
 import com.IndustrialWorld.i18n.I18nConst;
@@ -16,6 +17,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 public class RegisterManager {
     public static void registerIWCRecipes() {
@@ -35,7 +37,7 @@ public class RegisterManager {
         }
         /* CUTTER */{
         	RecipeRegistry.register(new ShapedRecipeFactory().map('A', new ItemStack(Material.IRON_INGOT)).map('B', ConstItems.IRON_PLATE).pattern("BCB", "CBC", "ACA").build(ConstItems.CUTTER));
-            RecipeRegistry.register(new ShapelessRecipe(Arrays.asList(ConstItems.COPPER_PLATE), ConstItems.COPPER_WIRE).addItemCost(ConstItems.CUTTER, 4));
+            RecipeRegistry.register(new ShapelessRecipe(Collections.singletonList(ConstItems.COPPER_PLATE), ConstItems.COPPER_WIRE).addItemCost(ConstItems.CUTTER, 4));
         }
 
         // Basic Machine Block
@@ -48,6 +50,7 @@ public class RegisterManager {
     public static void registerBlockIS() {
         MainManager.register("BASIC_MACHINE_BLOCK", new BasicMachineBlock());
         MainManager.register("IW_CRAFTING_TABLE", new IWCraftingTable());
+        MainManager.register("GRINDER", new Grinder());
 
         MainManager.register("COPPER_ORE", new CopperOre());
 

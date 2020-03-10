@@ -2,7 +2,7 @@ package com.IndustrialWorld;
 
 import com.IndustrialWorld.event.EventListener;
 import com.IndustrialWorld.event.TickEvent;
-import com.IndustrialWorld.manager.CommandManager;
+import com.IndustrialWorld.commands.IndustrialWorldCommand;
 import com.IndustrialWorld.manager.ConfigManager;
 import com.IndustrialWorld.manager.RegisterManager;
 import com.IndustrialWorld.task.IWCraftingTableRegistrationTask;
@@ -49,7 +49,7 @@ public final class IndustrialWorld extends JavaPlugin {
         instance = this;
 
         // Register command, EventListener and load config
-        this.getCommand("iw").setExecutor(new CommandManager(this));
+        this.getCommand("iw").setExecutor(new IndustrialWorldCommand(this));
         getServer().getPluginManager().registerEvents(new EventListener(), this);
         ConfigManager.init(this);
         // Register recipes, blocks
