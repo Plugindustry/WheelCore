@@ -13,3 +13,11 @@ commands:
     usage: /<command> [test/...] [...]
     permission: industrialworld.iw
     permission-message: 你没有权限<permission>使用本命令.
+
+permissions:
+  industrialworld.iw:
+    default: true
+  industrialworld.test:
+    default: op
+  industrialworld.give:
+    default: op
