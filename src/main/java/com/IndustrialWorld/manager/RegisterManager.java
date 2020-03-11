@@ -6,6 +6,9 @@ import com.IndustrialWorld.blocks.CopperOre;
 import com.IndustrialWorld.blocks.IWCraftingTable;
 import com.IndustrialWorld.i18n.I18n;
 import com.IndustrialWorld.i18n.I18nConst;
+import com.IndustrialWorld.item.ItemType;
+import com.IndustrialWorld.item.material.IWMaterial;
+import com.IndustrialWorld.item.material.info.MaterialInfo;
 import com.IndustrialWorld.manager.recipe.ShapedRecipeFactory;
 import com.IndustrialWorld.manager.recipe.ShapelessRecipe;
 import com.IndustrialWorld.manager.recipe.SmeltingRecipeImpl;
@@ -151,5 +154,13 @@ public class RegisterManager {
                         ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.REDSTONE_BATTERY_LORE1),
                         ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.REDSTONE_BATTERY_LORE2)
                 )).getItemStack());
+    }
+
+    public void registerIWMaterial() {
+        IWMaterialManager.register(IWMaterial.COPPER, MaterialInfo.newInstance(IWMaterial.COPPER).setLevel((short) 3));
+    }
+
+    public  void registerIWItemMaterial() {
+        ItemManager.registerItemMaterial(ItemType.INGOT, IWMaterial.COPPER, Material.BRICK); // Copper Ingot -> Brick
     }
 }

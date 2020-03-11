@@ -1,5 +1,11 @@
 package com.IndustrialWorld.utils;
 
+import com.IndustrialWorld.i18n.I18n;
+import com.IndustrialWorld.i18n.I18nConst;
+import com.IndustrialWorld.item.ItemType;
+import com.IndustrialWorld.item.material.IWMaterial;
+import com.IndustrialWorld.manager.ItemManager;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -11,6 +17,19 @@ import java.util.Objects;
 public class ItemStackUtil {
     public static ItemStackFactory create(Material mtrl) {
         return new ItemStackFactory(mtrl);
+    }
+
+    public static ItemStack create(ItemType type, IWMaterial iwMaterial, int amount) {
+        return ItemStackUtil.create(ItemManager.getItemMaterial(type, iwMaterial))
+                        .setId(type.getTypeID() + "_" + iwMaterial.getMaterialID())
+                        .setAmount(amount)
+                        .setDisplayName("")
+                        .setLore(Arrays.asList())
+                        .getItemStack();
+    } // TODO
+
+    public static ItemStack create(ItemType type, IWMaterial iwMaterial) {
+        return create(type, iwMaterial, 1);
     }
 
     public static boolean isSimilar(ItemStack a, ItemStack b) {
