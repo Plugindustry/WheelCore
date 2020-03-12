@@ -9,6 +9,7 @@ import com.IndustrialWorld.manager.IWMaterialManager;
 import com.IndustrialWorld.manager.ItemManager;
 import com.IndustrialWorld.utils.DebuggingLogger;
 import com.IndustrialWorld.utils.ItemStackUtil;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -26,10 +27,10 @@ public class ItemIngot implements ItemTemplate {
         return ItemStackUtil.create(ItemManager.getItemMaterial(ItemType.INGOT, iwMaterial))
                 .setId(ItemType.INGOT.getTypeID() + "_" + iwMaterial.getMaterialID())
                 .setAmount(amount)
-                .setDisplayName(materialLocaleName + I18nConst.ItemType.INGOT)
+                .setDisplayName(ChatColor.WHITE + iwMaterial.getMaterialID() + I18nConst.ItemType.INGOT)
                 .setIWMaterial(iwMaterial)
                 .setItemType(ItemType.INGOT)
-                .setLore(Arrays.asList(I18nConst.ItemType.INGOT_LORE.replace("{MATERIAL}", materialLocaleName).replace("{LEVEL}", String.valueOf(IWMaterialManager.getMaterialInfo(iwMaterial).getLevel())).split("||")))
+                .setLore(Arrays.asList(I18nConst.ItemType.INGOT_LORE.replace("{MATERIAL}", materialLocaleName).replace("{LEVEL}", String.valueOf(IWMaterialManager.getMaterialInfo(iwMaterial).getLevel())).replace('&', '§').replace("&&", "&").split("\\|\\|")))
                 .getItemStack();
     }
 

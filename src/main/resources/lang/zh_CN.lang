@@ -1,7 +1,7 @@
 # Translation by timetraveler314, cph1
 
 itemtype.ingot.name=锭
-itemtype.ingot.lore=&a{MATERIAL}||等级: &a{LEVEL}
+itemtype.ingot.lore=&a{MATERIAL}&r||等级: &a{LEVEL}
 
 material.copper.name=铜
 

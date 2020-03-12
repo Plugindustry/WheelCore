@@ -5,7 +5,7 @@
 # {LEVEL} stands for the
 
 itemtype.ingot.name=Ingot
-itemtype.ingot.lore=&a{MATERIAL}||Level: &a{LEVEL}
+itemtype.ingot.lore=&a{MATERIAL}&r||Level: &a{LEVEL}
 
 material.copper.name=Copper
 
