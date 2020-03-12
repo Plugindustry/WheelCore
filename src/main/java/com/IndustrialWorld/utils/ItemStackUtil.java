@@ -66,15 +66,15 @@ public class ItemStackUtil {
         public ItemStackFactory setId(String id) { this.id = id; return this; }
         public ItemStackFactory setLore(List<String> lore) { this.lore = lore; return this; }
         public ItemStackFactory setDisplayName(String dpName) { this.displayName = dpName; return this; }
-        public ItemStackFactory setItemType(String itemType) { this.itemType = itemType; return this; }
-        public ItemStackFactory setIWMaterial(String iwMaterial) { this.iwMaterial = iwMaterial; return this; }
+        public ItemStackFactory setItemType(ItemType itemType) { this.itemType = itemType; return this; }
+        public ItemStackFactory setIWMaterial(IWMaterial iwMaterial) { this.iwMaterial = iwMaterial; return this; }
 
         public ItemStack getItemStack() {
             ItemStack tmp = new ItemStack(mtrl, amount);
             tmp = NBTUtil.setTagValue(tmp, "isIWItem", new NBTUtil.NBTValue().set(true));
             tmp = NBTUtil.setTagValue(tmp, "IWItemId", new NBTUtil.NBTValue().set(id));
-            tmp = NBTUtil.setTagValue(tmp, "IWMaterial", new NBTUtil.NBTValue().set(iwMaterial));
-            tmp = NBTUtil.setTagValue(tmp, "IWItemType", new NBTUtil.NBTValue().set(itemType));
+            tmp = NBTUtil.setTagValue(tmp, "IWMaterial", new NBTUtil.NBTValue().set(iwMaterial.getMaterialID()));
+            tmp = NBTUtil.setTagValue(tmp, "IWItemType", new NBTUtil.NBTValue().set(itemType.getTypeID()));
             ItemMeta meta = tmp.getItemMeta();
             meta.setDisplayName(displayName);
             meta.setLore(lore);
