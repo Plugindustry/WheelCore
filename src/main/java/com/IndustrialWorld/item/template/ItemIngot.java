@@ -25,7 +25,7 @@ public class ItemIngot implements ItemTemplate {
         String materialLocaleName = I18n.getLocaleString("material." + iwMaterial.getMaterialID().toLowerCase() + ".name");
         return ItemStackUtil.create(ItemManager.getItemMaterial(ItemType.INGOT, iwMaterial))
                 .setAmount(amount)
-                .setDisplayName(I18n.getLocaleString(materialLocaleName + I18nConst.ItemType.INGOT))
+                .setDisplayName(materialLocaleName + I18nConst.ItemType.INGOT)
                 .setIWMaterial(iwMaterial)
                 .setItemType(ItemType.INGOT)
                 .setLore(Arrays.asList(I18nConst.ItemType.INGOT_LORE.replace("{MATERIAL}", materialLocaleName).replace("{LEVEL}", String.valueOf(IWMaterialManager.getMaterialInfo(iwMaterial).getLevel())).split("||")))
