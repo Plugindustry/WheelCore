@@ -29,14 +29,14 @@ public final class IndustrialWorld extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EventListener(), this);
         ConfigManager.init(this);
         // Register recipes, blocks
+        RegisterManager.registerIWItemMaterial();
+        RegisterManager.registerIWMaterial();
         DebuggingLogger.debug("register items");
         RegisterManager.registerItem();
         DebuggingLogger.debug("register recipes");
         RegisterManager.registerIWCRecipes();
         DebuggingLogger.debug("register blocks");
         RegisterManager.registerBlockIS();
-        RegisterManager.registerIWItemMaterial();
-        RegisterManager.registerIWMaterial();
 
         // Register TickEvent
         getServer().getScheduler().runTaskTimer(this, () -> getServer().getPluginManager().callEvent(new TickEvent()), 0, 0);
