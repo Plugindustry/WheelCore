@@ -11,6 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -57,7 +58,7 @@ public class ItemStackUtil {
         private Material mtrl;
         private int amount = 1;
         private String id, displayName = "";
-        private List<String> lore = Arrays.asList("");
+        private List<String> lore = Collections.singletonList("");
         private IWMaterial iwMaterial = IWMaterial.NULL;
         private ItemType itemType = ItemType.NULL;
 
