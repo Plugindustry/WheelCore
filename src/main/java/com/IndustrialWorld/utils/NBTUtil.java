@@ -46,9 +46,8 @@ public class NBTUtil {
             NMSItemStack.getMethod("setTag", NBTTagCompound).invoke(nis, tag);
             return (ItemStack) CraftItemStack.getMethod("asBukkitCopy", NMSItemStack).invoke(null, nis);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new IllegalStateException(e);
         }
-        return null;
     }
 
     public static Object newNBTTagCompound() {

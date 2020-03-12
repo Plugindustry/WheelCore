@@ -19,7 +19,16 @@ public class ItemManager {
 	}
 
 	public static void registerItemMaterial(ItemType type, IWMaterial iwMaterial, Material bukkitMaterial) {
-		itemMaterialMap.put(type, (Map<IWMaterial, Material>) new HashMap<>().put(iwMaterial, bukkitMaterial));
+		Map<IWMaterial, Material> materialMap;
+
+		if (itemMaterialMap.containsKey(type)) {
+			materialMap = itemMaterialMap.get(type);
+			materialMap.put(iwMaterial, bukkitMaterial);
+		} else {
+			materialMap = new HashMap<>();
+			materialMap.put(iwMaterial, bukkitMaterial);
+			itemMaterialMap.put(type, materialMap);
+		}
 	}
 
 	public static ItemStack get(String id) {

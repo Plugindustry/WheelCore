@@ -5,14 +5,13 @@ import com.IndustrialWorld.i18n.I18nConst;
 import com.IndustrialWorld.item.ItemType;
 import com.IndustrialWorld.item.material.IWMaterial;
 import com.IndustrialWorld.manager.ItemManager;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class ItemStackUtil {
     public static ItemStackFactory create(Material mtrl) {
@@ -57,7 +56,7 @@ public class ItemStackUtil {
         private Material mtrl;
         private int amount = 1;
         private String id, displayName = "";
-        private List<String> lore = Arrays.asList("");
+        private List<String> lore = Collections.singletonList("");
         private IWMaterial iwMaterial = IWMaterial.NULL;
         private ItemType itemType = ItemType.NULL;
 
@@ -76,6 +75,12 @@ public class ItemStackUtil {
             tmp = NBTUtil.setTagValue(tmp, "IWMaterial", new NBTUtil.NBTValue().set(iwMaterial.getMaterialID()));
             tmp = NBTUtil.setTagValue(tmp, "IWItemType", new NBTUtil.NBTValue().set(itemType.getTypeID()));
             ItemMeta meta = tmp.getItemMeta();
+            if (meta == null) {
+                meta = Bukkit.getItemFactory().getItemMeta(mtrl);
+                if (meta == null) {
+                    throw new IllegalStateException("¿");
+                }
+            }
             meta.setDisplayName(displayName);
             meta.setLore(lore);
             tmp.setItemMeta(meta);
