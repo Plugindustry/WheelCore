@@ -19,19 +19,6 @@ public class ItemStackUtil {
         return new ItemStackFactory(mtrl);
     }
 
-    public static ItemStack create(ItemType type, IWMaterial iwMaterial, int amount) {
-        return ItemStackUtil.create(ItemManager.getItemMaterial(type, iwMaterial))
-                        .setId(type.getTypeID() + "_" + iwMaterial.getMaterialID())
-                        .setAmount(amount)
-                        .setDisplayName("")
-                        .setLore(Arrays.asList())
-                        .getItemStack();
-    } // TODO
-
-    public static ItemStack create(ItemType type, IWMaterial iwMaterial) {
-        return create(type, iwMaterial, 1);
-    }
-
     public static boolean isSimilar(ItemStack a, ItemStack b) {
     	if (a == null) {
     		return b == null;
@@ -71,17 +58,23 @@ public class ItemStackUtil {
         private int amount = 1;
         private String id, displayName = "";
         private List<String> lore = Arrays.asList("");
+        private IWMaterial iwMaterial = IWMaterial.NULL;
+        private ItemType itemType = ItemType.NULL;
 
         public ItemStackFactory(Material mtrl) { this.mtrl = mtrl; }
         public ItemStackFactory setAmount(int amount) { this.amount = amount; return this; }
         public ItemStackFactory setId(String id) { this.id = id; return this; }
         public ItemStackFactory setLore(List<String> lore) { this.lore = lore; return this; }
         public ItemStackFactory setDisplayName(String dpName) { this.displayName = dpName; return this; }
+        public ItemStackFactory setItemType(String itemType) { this.itemType = itemType; return this; }
+        public ItemStackFactory setIWMaterial(String iwMaterial) { this.iwMaterial = iwMaterial; return this; }
 
         public ItemStack getItemStack() {
             ItemStack tmp = new ItemStack(mtrl, amount);
             tmp = NBTUtil.setTagValue(tmp, "isIWItem", new NBTUtil.NBTValue().set(true));
             tmp = NBTUtil.setTagValue(tmp, "IWItemId", new NBTUtil.NBTValue().set(id));
+            tmp = NBTUtil.setTagValue(tmp, "IWMaterial", new NBTUtil.NBTValue().set(iwMaterial));
+            tmp = NBTUtil.setTagValue(tmp, "IWItemType", new NBTUtil.NBTValue().set(itemType));
             ItemMeta meta = tmp.getItemMeta();
             meta.setDisplayName(displayName);
             meta.setLore(lore);

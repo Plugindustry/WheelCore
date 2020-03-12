@@ -1,6 +1,7 @@
 package com.IndustrialWorld.item;
 
 public enum ItemType {
+    NULL("NULL"),
     INGOT("INGOT"),
     DUST("DUST");
 
@@ -10,7 +11,5 @@ public enum ItemType {
         this.typeID = typeID;
     }
 
-    public String getTypeID() {
-        return typeID;
-    }
+    public String getTypeID() { return typeID; }
 }

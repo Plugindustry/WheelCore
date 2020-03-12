@@ -1,4 +1,14 @@
 # Translations by cph1, timetraveler314
+
+# Lore: || stands for a new line
+# {MATERIAL} stands for the material of the item
+# {LEVEL} stands for the
+
+itemtype.ingot.name=Ingot
+itemtype.ingot.lore=&a{MATERIAL}||Level: &a{LEVEL}
+
+material.copper.name=Copper
+
 item.forge_hammer.name=Forge Hammer
 item.forge_hammer.lore.1=Can pound on the crafting table
 item.forge_hammer.lore.2=Consume 3 durable every time(About 83 times in total)

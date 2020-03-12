@@ -1,4 +1,10 @@
 # Translation by timetraveler314, cph1
+
+itemtype.ingot.name=锭
+itemtype.ingot.lore=&a{MATERIAL}||等级: &a{LEVEL}
+
+material.copper.name=铜
+
 item.forge_hammer.name=锻造锤
 item.forge_hammer.lore.1=在工作台上砸砸砸砸
 item.forge_hammer.lore.2=3耐久/次(大约使用83次)

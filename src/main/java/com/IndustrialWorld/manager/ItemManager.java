@@ -2,6 +2,8 @@ package com.IndustrialWorld.manager;
 
 import com.IndustrialWorld.item.ItemType;
 import com.IndustrialWorld.item.material.IWMaterial;
+import com.IndustrialWorld.item.template.ItemIngot;
+import com.IndustrialWorld.utils.DebuggingLogger;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -25,7 +27,17 @@ public class ItemManager {
 	}
 
 	public static Material getItemMaterial(ItemType type, IWMaterial iwMaterial) {
-		return itemMaterialMap.get(type).get(iwMaterial);
+		if (itemMaterialMap.containsKey(type)) {
+			if (itemMaterialMap.get(type).containsKey(iwMaterial)) {
+				return itemMaterialMap.get(type).get(iwMaterial);
+			} else {
+				DebuggingLogger.debug("No BukkitMaterial for IWMaterial:" + iwMaterial.getMaterialID() + " & ItemType:" + type.getTypeID() + "was found.");
+			}
+		} else {
+			DebuggingLogger.debug("No Itemtype was found. " + type.getTypeID());
+		}
+
+		return Material.AIR;
 	}
 
 	public static String getId(ItemStack itemStack) {

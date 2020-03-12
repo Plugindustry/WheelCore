@@ -1,6 +1,11 @@
 package com.IndustrialWorld.i18n;
 
 public class I18nConst {
+    public static class ItemType {
+        public static String INGOT = I18n.getLocaleString("itemtype.ingot.name");
+        public static String INGOT_LORE = I18n.getLocaleString("itemtype.ingot.lore");
+    }
+
     public static class Item {
         public static String FORGE_HAMMER = "item.forge_hammer.name";
         public static String FORGE_HAMMER_LORE1 = "item.forge_hammer.lore.1";
