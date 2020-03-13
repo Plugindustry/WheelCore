@@ -1,7 +1,6 @@
 package com.IndustrialWorld.manager.recipe;
 
 import com.IndustrialWorld.item.material.IWMaterial;
-import org.bukkit.craftbukkit.libs.jline.internal.Nullable;
 import org.bukkit.inventory.ItemStack;
 
 public interface RecipeBase {
@@ -12,7 +11,7 @@ public interface RecipeBase {
 		private boolean hasIWMaterial;
 		private IWMaterial iwMaterial;
 
-		public MatchInfo(boolean matches, boolean hasIWMaterial, @Nullable IWMaterial iwMaterial) {
+		public MatchInfo(boolean matches, boolean hasIWMaterial, IWMaterial iwMaterial) {
 			this.matches = matches;
 			this.hasIWMaterial = hasIWMaterial;
 			this.iwMaterial = iwMaterial;

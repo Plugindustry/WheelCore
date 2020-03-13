@@ -29,7 +29,7 @@ public class RegisterManager {
         // RecipeRegistry.register(new ShapedRecipeFactory().map('A', new ItemStack(whatever)).pattern("3x3", "Any", "uwa").build(ItemStack you want));
 
         /* FORGE_HAMMER */{
-        	ShapedRecipeFactory forgeHammerFactory = new ShapedRecipeFactory().map('A', new ItemStack(Material.IRON_INGOT)).map('B', new ItemStack(Material.STICK));
+        	ShapedRecipeFactory forgeHammerFactory = new ShapedRecipeFactory().map('A', ItemType.INGOT).map('B', new ItemStack(Material.STICK));
         	RecipeRegistry.register(forgeHammerFactory.pattern("AAC", "ABB", "AAC").build(ConstItems.FORGE_HAMMER)); // FORGE_HAMMER [L]
             RecipeRegistry.register(forgeHammerFactory.pattern("CAA", "BBA", "CAA").build(ConstItems.FORGE_HAMMER)); // FORGE_HAMMER [R]
 		    RecipeRegistry.register(forgeHammerFactory.pattern("AAA", "ABA", "CBC").build(ConstItems.FORGE_HAMMER)); // FORGE_HAMMER [U]
