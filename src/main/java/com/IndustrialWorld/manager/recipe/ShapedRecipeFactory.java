@@ -1,5 +1,6 @@
 package com.IndustrialWorld.manager.recipe;
 
+import com.IndustrialWorld.item.ItemType;
 import com.IndustrialWorld.utils.DebuggingLogger;
 import org.bukkit.inventory.ItemStack;
 
@@ -10,11 +11,16 @@ import java.util.Map;
 
 public class ShapedRecipeFactory {
 	private List<String> patterns = new LinkedList<>();
-	private Map<Character, ItemStack> patternMapping = new HashMap<>();
+	private Map<Character, Object> patternMapping = new HashMap<>();
 	private Map<ItemStack, Integer> damageMapping = new HashMap<>();
 
 	public ShapedRecipeFactory map(char c, ItemStack target) {
 		this.patternMapping.put(c, target.clone());
+		return this;
+	}
+
+	public ShapedRecipeFactory map(char c, ItemType type) {
+		this.patternMapping.put(c, type);
 		return this;
 	}
 
@@ -48,10 +54,10 @@ public class ShapedRecipeFactory {
 	}
 
 	public RecipeBase build(ItemStack result) {
-		List<List<ItemStack>> recipe = new LinkedList<>();
+		List<List<Object>> recipe = new LinkedList<>();
 
 		for (String pattern : patterns) {
-			List<ItemStack> current = new LinkedList<>();
+			List<Object> current = new LinkedList<>();
 			recipe.add(current);
 
 			for (char c : pattern.toCharArray()) {

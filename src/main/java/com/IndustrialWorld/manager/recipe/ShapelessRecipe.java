@@ -1,5 +1,6 @@
 package com.IndustrialWorld.manager.recipe;
 
+import com.IndustrialWorld.item.material.IWMaterial;
 import com.IndustrialWorld.utils.ItemStackUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -25,7 +26,7 @@ public class ShapelessRecipe implements CraftingRecipe {
 	}
 
 	@Override
-	public boolean matches(List<List<ItemStack>> recipe, Map<Integer, ItemStack> damage) {
+	public MatchInfo matches(List<List<ItemStack>> recipe, Map<Integer, ItemStack> damage) {
 		List<ItemStack> shapeless = new LinkedList<>();
 		List<ItemStack> checkList = new LinkedList<>(this.recipe);
 		// convert everything to shapeless
@@ -56,11 +57,11 @@ public class ShapelessRecipe implements CraftingRecipe {
 			ShapedRecipe.checkItemDamage(recipe, damage, this.damages);
 		}
 
-		return result;
+		return new MatchInfo(result, false, null);
 	}
 
 	@Override
-	public ItemStack getResult() {
+	public ItemStack getResult(IWMaterial iwMaterial) {
 		return result.clone();
 	}
 }

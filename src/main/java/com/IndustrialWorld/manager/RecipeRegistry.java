@@ -17,7 +17,7 @@ public class RecipeRegistry {
 		recipes.add(recipeBase);
 	}
 
-	public static CraftingRecipe matchCraftingRecipe(List<ItemStack> items, Map<Integer, ItemStack> damageResult) {
+	public static RecipeBase.RecipeResultInfo matchCraftingRecipe(List<ItemStack> items, Map<Integer, ItemStack> damageResult) {
 		// tidy up the matrix
 		List<List<ItemStack>> matrix = new LinkedList<>();
 		List<ItemStack> current = new LinkedList<>();
@@ -40,8 +40,12 @@ public class RecipeRegistry {
 				continue;
 			}
 
-			if (((CraftingRecipe) recipeBase).matches(matrix, damageResult)) {
-				return (CraftingRecipe) recipeBase;
+			RecipeBase.MatchInfo info = ((CraftingRecipe) recipeBase).matches(matrix, damageResult);
+			if (info.isMatches()) {
+				if (info.isHasIWMaterial()) {
+					return new RecipeBase.RecipeResultInfo((CraftingRecipe) recipeBase, info.getIwMaterial());
+				}
+				return new RecipeBase.RecipeResultInfo((CraftingRecipe) recipeBase, null);
 			}
 		}
 

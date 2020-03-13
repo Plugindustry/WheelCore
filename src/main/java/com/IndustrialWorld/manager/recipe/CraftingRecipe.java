@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface CraftingRecipe extends RecipeBase {
-	boolean matches(List<List<ItemStack>> recipe, Map<Integer, ItemStack> damageResult);
+	ShapedRecipe.MatchInfo matches(List<List<ItemStack>> recipe, Map<Integer, ItemStack> damageResult);
 
 	CraftingRecipe addItemCost(ItemStack is, int durability);
 }

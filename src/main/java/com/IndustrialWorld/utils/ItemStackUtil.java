@@ -51,6 +51,23 @@ public class ItemStackUtil {
     	return false;
     }
 
+    public static ItemType getItemType(ItemStack is) {
+        NBTUtil.NBTValue nbtValue = NBTUtil.getTagValue(is, "IWItemType");
+        if (nbtValue == null) {
+            return ItemType.NULL;
+        } else {
+            return ItemType.valueOf(nbtValue.asString());
+        }
+    }
+
+    public static IWMaterial getItemMaterial(ItemStack is) {
+        NBTUtil.NBTValue nbtValue = NBTUtil.getTagValue(is, "IWMaterial");
+        if (nbtValue == null) {
+            return IWMaterial.NULL;
+        } else {
+            return IWMaterial.valueOf(nbtValue.asString());
+        }
+    }
 
     public static class ItemStackFactory {
         private Material mtrl;

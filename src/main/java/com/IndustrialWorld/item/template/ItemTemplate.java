@@ -5,7 +5,7 @@ import com.IndustrialWorld.item.material.info.MaterialInfo;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-public interface ItemTemplate {
+public class ItemTemplate {
     public static void register(IWMaterial iwMaterial, MaterialInfo materialInfo) { }
 
     public static ItemStack getItemStack(IWMaterial iwMaterial) {

@@ -15,7 +15,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
-public class ItemIngot implements ItemTemplate {
+public class ItemIngot extends ItemTemplate {
     public static List<IWMaterial> materials = new ArrayList<>();
 
     public static void register(IWMaterial iwMaterial) {

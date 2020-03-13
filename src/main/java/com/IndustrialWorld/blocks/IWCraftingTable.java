@@ -23,6 +23,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.Recipe;
 
 import java.util.*;
 
@@ -75,7 +76,8 @@ public class IWCraftingTable extends BlockBase implements InventoryListener {
 		// Use getStorageContents & setStorageContents to control the crafting table. The result will be put on the slot 0
 		for (Inventory craftingInv : availableInventories) {
 			ItemStack[] raw = craftingInv.getStorageContents();
-			RecipeBase recipe = RecipeRegistry.matchCraftingRecipe(fetchMatrix(craftingInv), null);
+			RecipeBase.RecipeResultInfo info = RecipeRegistry.matchCraftingRecipe(fetchMatrix(craftingInv), null);
+			RecipeBase recipe = info.getRecipe();
 
 			if (recipe == null) {
 				// invalid recipe
@@ -83,7 +85,7 @@ public class IWCraftingTable extends BlockBase implements InventoryListener {
 				craftingInv.setStorageContents(raw);
 				continue;
 			}
-			raw[0] = recipe.getResult();
+			raw[0] = recipe.getResult(info.getIwMaterial());
 			craftingInv.setStorageContents(raw);
 
 			if (lastRecipe.get(craftingInv) != recipe) {
@@ -112,7 +114,9 @@ public class IWCraftingTable extends BlockBase implements InventoryListener {
             Inventory craftInv = event.getClickedInventory();
 
             Map<Integer, ItemStack> damagedItemIndex = new HashMap<>();
-            CraftingRecipe recipe = RecipeRegistry.matchCraftingRecipe(fetchMatrix(event.getClickedInventory()), damagedItemIndex);
+			RecipeBase.RecipeResultInfo info = RecipeRegistry.matchCraftingRecipe(fetchMatrix(craftInv), damagedItemIndex);
+			RecipeBase recipe = info.getRecipe();
+
             if (recipe == null) {
 	            return;
             }
