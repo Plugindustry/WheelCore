@@ -1,5 +1,6 @@
 package com.IndustrialWorld.manager.recipe;
 
+import com.IndustrialWorld.item.material.IWMaterial;
 import org.bukkit.inventory.ItemStack;
 
 public class SmeltingRecipeImpl implements SmeltingRecipe {
@@ -17,7 +18,7 @@ public class SmeltingRecipeImpl implements SmeltingRecipe {
 	}
 
 	@Override
-	public ItemStack getResult() {
+	public ItemStack getResult(IWMaterial iwMaterial) {
 		return result;
 	}
 }
