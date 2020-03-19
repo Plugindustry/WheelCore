@@ -1,6 +1,6 @@
 ## Development Guide
 
-### We can use Github Actions to build when commiting. To download, have a look at readme.md.
+### We can use Github Actions to build when commiting. To download, have a look at readme.md
 
 # Tools
 * Java Development Kit 8

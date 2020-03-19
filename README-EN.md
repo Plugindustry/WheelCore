@@ -17,6 +17,5 @@ Industrial Crafting Table & recipes √
 I18n Support √  
 Ores  
 
-
 [1]: https://github.com/czm23333/IndustrialWorld/
 [2]: https://github.com/czm23333/IndustrialWorld/actions/

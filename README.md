@@ -30,5 +30,5 @@ IndusrialWorld是一个Bukkit/Spigot服务器插件，旨在为Minecraft添加�
 I18n支持 √  
 更多的矿物 [Dev]
 
-[1]: https://github.com/czm23333/IndustrialWorld/blob/master/README_EN.md
+[1]: https://github.com/czm23333/IndustrialWorld/blob/master/README-EN.md
 [2]: https://github.com/czm23333/IndustrialWorld/actions/
