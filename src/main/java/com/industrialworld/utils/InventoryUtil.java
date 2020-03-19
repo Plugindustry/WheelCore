@@ -37,8 +37,8 @@ public class InventoryUtil {
             Object nmsPlayer = CraftPlayer.getMethod("getHandle").invoke(craftPlayer);
             Object container = NMSPlayer.getField("activeContainer").get(nmsPlayer);
             Object playerConnection = NMSPlayerConnection.cast(NMSPlayer.getField("playerConnection").get(nmsPlayer));
-            NMSPlayerConnection.getMethod("sendPacket", NMSPacket).invoke(playerConnection, NMSPacketPlayOutWindowItems.getConstructor(int.class, NMSNonNullList).newInstance(NMSContainer.getField("windowId").get(container), NMSContainer.getMethod("a").invoke(container)));
-            NMSPlayerConnection.getMethod("sendPacket", NMSPacket).invoke(playerConnection, NMSPacketPlayOutSetSlot.getConstructor(int.class, int.class, NBTUtil.NMSItemStack).newInstance(NMSContainer.getField("windowId").get(container), 0, NMSSlot.getMethod("getItem").invoke(NMSContainer.getMethod("getSlot", int.class).invoke(container, 0))));
+            NMSPlayerConnection.getMethod("sendPacket", NMSPacket).invoke(playerConnection, NMSPacketPlayOutWindowItems.getConstructor(int.class, NMSNonNullList).newInstance((Integer) NMSContainer.getField("windowId").get(container), NMSContainer.getMethod("a").invoke(container)));
+            NMSPlayerConnection.getMethod("sendPacket", NMSPacket).invoke(playerConnection, NMSPacketPlayOutSetSlot.getConstructor(int.class, int.class, NBTUtil.NMSItemStack).newInstance((Integer) NMSContainer.getField("windowId").get(container), 0, NMSSlot.getMethod("getItem").invoke(NMSContainer.getMethod("getSlot", int.class).invoke(container, 0))));
         } catch (Exception e) {
             e.printStackTrace();
         }

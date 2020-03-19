@@ -75,14 +75,14 @@ public class IWCraftingTable extends BlockBase implements InventoryListener {
         for (Inventory craftingInv : availableInventories) {
             ItemStack[] raw = craftingInv.getStorageContents();
             RecipeBase.RecipeResultInfo info = RecipeRegistry.matchCraftingRecipe(fetchMatrix(craftingInv), null);
-            RecipeBase recipe = info.getRecipe();
-
-            if (recipe == null) {
+            if (info == null) {
                 // invalid recipe
                 raw[0] = null;
                 craftingInv.setStorageContents(raw);
                 continue;
             }
+            RecipeBase recipe = info.getRecipe();
+
             raw[0] = recipe.getResult(info.getIwMaterial());
             craftingInv.setStorageContents(raw);
 
@@ -113,9 +113,7 @@ public class IWCraftingTable extends BlockBase implements InventoryListener {
 
             Map<Integer, ItemStack> damagedItemIndex = new HashMap<>();
             RecipeBase.RecipeResultInfo info = RecipeRegistry.matchCraftingRecipe(fetchMatrix(craftInv), damagedItemIndex);
-            RecipeBase recipe = info.getRecipe();
-
-            if (recipe == null) {
+            if (info == null) {
                 return;
             }
 
