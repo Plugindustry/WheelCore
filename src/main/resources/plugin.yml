@@ -1,6 +1,6 @@
 name: IndustrialWorld
 version: ${project.version}
-main: com.IndustrialWorld.IndustrialWorld
+main: com.industrialworld.IndustrialWorld
 api-version: 1.13
 prefix: IndustrialWorld
 authors: [czm]
