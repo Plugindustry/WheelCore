@@ -427,6 +427,9 @@ public class EntitySelector {
                 break;
             case RANDOM:
                 ListUtil.randomizeList(e);
+                break;
+            default:
+                break;
         }
         return e;
     }

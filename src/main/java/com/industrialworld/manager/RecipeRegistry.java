@@ -54,10 +54,8 @@ public class RecipeRegistry {
 
     public static SmeltingRecipe matchSmeltingRecipe(ItemStack origin) {
         for (RecipeBase recipeBase : recipes) {
-            if (recipeBase instanceof SmeltingRecipe) {
-                if (((SmeltingRecipe) recipeBase).matches(origin)) {
-                    return (SmeltingRecipe) recipeBase;
-                }
+            if (recipeBase instanceof SmeltingRecipe && ((SmeltingRecipe) recipeBase).matches(origin)) {
+                return (SmeltingRecipe) recipeBase;
             }
         }
 
@@ -66,10 +64,8 @@ public class RecipeRegistry {
 
     public static GrindRecipe matchGrindRecipe(ItemStack origin) {
         for (RecipeBase recipeBase : recipes) {
-            if (recipeBase instanceof GrindRecipe) {
-                if (((GrindRecipe) recipeBase).matches(origin)) {
-                    return (GrindRecipe) recipeBase;
-                }
+            if (recipeBase instanceof GrindRecipe && ((GrindRecipe) recipeBase).matches(origin)) {
+                return (GrindRecipe) recipeBase;
             }
         }
 

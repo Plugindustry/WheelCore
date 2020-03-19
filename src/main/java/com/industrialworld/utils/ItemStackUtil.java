@@ -70,7 +70,8 @@ public class ItemStackUtil {
     public static class ItemStackFactory {
         private Material mtrl;
         private int amount = 1;
-        private String id, displayName = "";
+        private String id;
+        private String displayName = "";
         private List<String> lore = Collections.singletonList("");
         private IWMaterial iwMaterial = IWMaterial.NULL;
         private ItemType itemType = ItemType.NULL;

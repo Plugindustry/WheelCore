@@ -124,12 +124,11 @@ public class MainManager {
     }
 
     private static ItemBase getItemInstance(ItemStack is) {
-        NBTUtil.NBTValue value = NBTUtil.getTagValue(is, "isIWItem");
-        NBTUtil.NBTValue v2 = NBTUtil.getTagValue(is, "IWItemId");
-        if (v2 == null)
+        NBTUtil.NBTValue value = NBTUtil.getTagValue(is, "IWItemId");
+        if (value == null)
             return null;
         try {
-            return (ItemBase) getInstanceFromId(v2.asString());
+            return (ItemBase) getInstanceFromId(value.asString());
         } catch (ClassCastException e) {
             return null;
         }

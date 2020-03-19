@@ -2,7 +2,6 @@ package com.industrialworld.blocks;
 
 import com.industrialworld.ConstItems;
 import com.industrialworld.interfaces.OreBase;
-import com.industrialworld.mineral.Mineral;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -20,10 +19,5 @@ public class CopperOre extends OreBase {
     @Override
     public String getId() {
         return "COPPER_ORE";
-    }
-
-    @Override
-    public Mineral getMineral() {
-        return Mineral.COPPER;
     }
 }

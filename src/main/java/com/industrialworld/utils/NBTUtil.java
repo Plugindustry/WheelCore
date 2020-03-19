@@ -55,8 +55,7 @@ public class NBTUtil {
         try {
             return NBTTagCompound.newInstance();
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException("Exception while getting new instance of NBTTagCompound");
+            throw new RuntimeException("Exception while getting new instance of NBTTagCompound", e);
         }
     }
 
@@ -71,7 +70,7 @@ public class NBTUtil {
     }
 
     public static class NBTValue {
-        boolean canEdit;
+        private boolean canEdit;
         private Object base;
 
         public NBTValue() {
