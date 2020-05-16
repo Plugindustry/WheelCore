@@ -1,4 +1,4 @@
-### 基于GPL3.0协议
+### 基于LGPL3.0协议
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/7ed7dc549a7e4212b193716ecced0773)](https://app.codacy.com/manual/czm23333/IndustrialWorld?utm_source=github.com&utm_medium=referral&utm_content=czm23333/IndustrialWorld&utm_campaign=Badge_Grade_Dashboard)
 
