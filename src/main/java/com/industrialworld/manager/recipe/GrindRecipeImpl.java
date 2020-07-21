@@ -1,14 +1,17 @@
 package com.industrialworld.manager.recipe;
 
+import com.industrialworld.item.ItemType;
 import com.industrialworld.item.material.IWMaterial;
+import com.industrialworld.utils.ItemStackUtil;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 public class GrindRecipeImpl implements GrindRecipe {
     private double power;
-    private ItemStack recipe;
-    private ItemStack result;
+    private Object recipe;
+    private Object result;
 
-    public GrindRecipeImpl(double power, ItemStack recipe, ItemStack result) {
+    public GrindRecipeImpl(double power, Object recipe, Object result) {
         this.power = power;
         this.recipe = recipe;
         this.result = result;
@@ -16,7 +19,12 @@ public class GrindRecipeImpl implements GrindRecipe {
 
     @Override
     public boolean matches(ItemStack itemStack) {
-        return recipe.isSimilar(itemStack);
+        if (recipe instanceof ItemStack)
+            return ((ItemStack) recipe).isSimilar(itemStack);
+        else if (recipe instanceof ItemType)
+            return ItemStackUtil.getItemType(itemStack) == recipe;
+        else
+            return false;
     }
 
     @Override
@@ -26,6 +34,11 @@ public class GrindRecipeImpl implements GrindRecipe {
 
     @Override
     public ItemStack getResult(IWMaterial iwMaterial) {
-        return result;
+        if (result instanceof ItemStack)
+            return ((ItemStack) result).clone();
+        else if (recipe instanceof ItemType)
+            return ((ItemType) recipe).getTemplate().getItemStack(iwMaterial);
+        else
+            return new ItemStack(Material.AIR);
     }
 }

@@ -10,10 +10,10 @@ import java.util.*;
 
 public class ShapelessRecipe implements CraftingRecipe {
     private ArrayList<Object> recipe;
-    private ItemStack result;
+    private Object result;
     private Map<ItemStack, Integer> damages = new HashMap<>();
 
-    public ShapelessRecipe(List<Object> items, ItemStack result) {
+    public ShapelessRecipe(List<Object> items, Object result) {
         this.recipe = new ArrayList<>(items);
         // remove the airs
         this.recipe.removeIf(item -> item == null ||
@@ -79,6 +79,11 @@ public class ShapelessRecipe implements CraftingRecipe {
 
     @Override
     public ItemStack getResult(IWMaterial iwMaterial) {
-        return result.clone();
+        if (result instanceof ItemStack)
+            return ((ItemStack) result).clone();
+        else if (result instanceof ItemType)
+            return ((ItemType) result).getTemplate().getItemStack(iwMaterial);
+        else
+            return new ItemStack(Material.AIR);
     }
 }
