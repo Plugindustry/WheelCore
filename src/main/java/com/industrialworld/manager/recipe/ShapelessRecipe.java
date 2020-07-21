@@ -29,7 +29,7 @@ public class ShapelessRecipe implements CraftingRecipe {
 
     @Override
     public MatchInfo matches(List<List<ItemStack>> recipe, Map<Integer, ItemStack> damage) {
-        List<ItemStack> shapeless = new ArrayList<>();
+        List<ItemStack> shapeless = new LinkedList<>();
         List<Object> checkList = new LinkedList<>(this.recipe);
         // convert everything to shapeless
         recipe.forEach(shapeless::addAll);
