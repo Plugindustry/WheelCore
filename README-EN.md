@@ -8,8 +8,6 @@ Offers more ores, machines, cool weapons and strong armors.
 A brand new way to play Minecraft!  
 No server mods needed!  
 
-To download:[Github Actions][2] Click the Build succeeded latest,then you can download by Artifacts
-
 ## Under Development :D  
 
 # Development Progress  
@@ -18,4 +16,3 @@ I18n Support √
 Ores  
 
 [1]: https://github.com/czm23333/IndustrialWorld/
-[2]: https://github.com/czm23333/IndustrialWorld/actions/

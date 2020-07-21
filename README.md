@@ -1,4 +1,4 @@
-### 基于GPL3.0协议
+### 基于LGPL3.0协议
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/7ed7dc549a7e4212b193716ecced0773)](https://app.codacy.com/manual/czm23333/IndustrialWorld?utm_source=github.com&utm_medium=referral&utm_content=czm23333/IndustrialWorld&utm_campaign=Badge_Grade_Dashboard)
 
@@ -20,8 +20,6 @@ IndusrialWorld是一个Bukkit/Spigot服务器插件，旨在为Minecraft添加�
 不需要任何服务器Mod！ 
 
 需要Spigot 1.13.2(理论支持1.13.2及以上)服务器以运行。
-
-下载:[Github Actions][2] 点击最近一次的成功的Build,即可在Artifacts处下载
 
 ## 开发中... :D  
 
