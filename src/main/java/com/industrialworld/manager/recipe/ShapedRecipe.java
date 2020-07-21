@@ -43,6 +43,8 @@ public class ShapedRecipe implements CraftingRecipe {
                     if (ItemStackUtil.isSimilar(items, temp)) {
                         ItemStack newIs = is.clone();
                         newIs.setDurability((short) (newIs.getDurability() + dmg));
+                        if (newIs.getDurability() > newIs.getType().getMaxDurability())
+                            newIs = new ItemStack(Material.AIR);
                         if (damage != null) {
                             damage.put(finalI * 3 + finalJ + 1, newIs);
                         }

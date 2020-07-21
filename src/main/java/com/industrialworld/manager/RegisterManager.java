@@ -35,6 +35,11 @@ public class RegisterManager {
             RecipeRegistry.register(forgeHammerFactory.pattern("CAA", "BBA", "CAA").build(ConstItems.FORGE_HAMMER)); // FORGE_HAMMER [R]
             RecipeRegistry.register(forgeHammerFactory.pattern("AAA", "ABA", "CBC").build(ConstItems.FORGE_HAMMER)); // FORGE_HAMMER [U]
             RecipeRegistry.register(forgeHammerFactory.pattern("CBC", "ABA", "AAA").build(ConstItems.FORGE_HAMMER)); // FORGE_HAMMER [D]
+            forgeHammerFactory.map('A', new ItemStack(Material.IRON_INGOT));
+            RecipeRegistry.register(forgeHammerFactory.pattern("AAC", "ABB", "AAC").build(ConstItems.FORGE_HAMMER)); // FORGE_HAMMER [L]
+            RecipeRegistry.register(forgeHammerFactory.pattern("CAA", "BBA", "CAA").build(ConstItems.FORGE_HAMMER)); // FORGE_HAMMER [R]
+            RecipeRegistry.register(forgeHammerFactory.pattern("AAA", "ABA", "CBC").build(ConstItems.FORGE_HAMMER)); // FORGE_HAMMER [U]
+            RecipeRegistry.register(forgeHammerFactory.pattern("CBC", "ABA", "AAA").build(ConstItems.FORGE_HAMMER)); // FORGE_HAMMER [D]
 
             RecipeRegistry.register(new ShapelessRecipe(Arrays.asList(ConstItems.FORGE_HAMMER, new ItemStack(Material.IRON_INGOT)), ConstItems.IRON_PLATE).addItemCost(ConstItems.FORGE_HAMMER, 3));
             RecipeRegistry.register(new ShapelessRecipe(Arrays.asList(ConstItems.FORGE_HAMMER, ConstItems.COPPER_INGOT), ConstItems.COPPER_PLATE).addItemCost(ConstItems.FORGE_HAMMER, 3));
@@ -89,10 +94,7 @@ public class RegisterManager {
                 ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.BASIC_MACHINE_BLOCK)).setLore(Arrays.asList(
                 ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.BASIC_MACHINE_BLOCK_LORE1),
                 ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.BASIC_MACHINE_BLOCK_LORE2))).getItemStack());
-        ItemManager.register("COPPER_INGOT", ItemStackUtil.create(Material.BRICK).setId("COPPER_INGOT").setAmount(1).setDisplayName(
-                ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_INGOT)).setLore(Arrays.asList(
-                ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_INGOT_LORE1),
-                ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.COPPER_INGOT_LORE2))).getItemStack());
+        ItemManager.register("COPPER_INGOT", ItemIngot.getInstance().getItemStack(IWMaterial.COPPER));
         ItemManager.register("COPPER_PLATE", ItemStackUtil.create(Material.PAPER).setId("COPPER_PLATE").setAmount(1).setDisplayName(
                 ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_PLATE)).setLore(Arrays.asList(
                 ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_PLATE_LORE1),

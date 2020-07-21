@@ -79,7 +79,6 @@ public class IWCraftingTable extends BlockBase implements InventoryListener {
                 // invalid recipe
                 raw[0] = null;
                 craftingInv.setStorageContents(raw);
-                craftingInv.getViewers().forEach(entity -> InventoryUtil.updateInventoryWithoutCarriedItem((Player) entity));
                 continue;
             }
             RecipeBase recipe = info.getRecipe();
@@ -103,7 +102,6 @@ public class IWCraftingTable extends BlockBase implements InventoryListener {
     @Override
     public void onInventoryClick(InventoryClickEvent event) {
         if (isInventoryAvailable(event.getClickedInventory()) && event.getSlot() == 0) {
-            InventoryUtil.updateInventoryWithoutCarriedItem((Player) event.getClickedInventory().getViewers().get(0));
             if (!(event.getAction() == InventoryAction.PICKUP_ALL || event.getAction() == InventoryAction.PLACE_ONE ||
                   event.getAction() == InventoryAction.PLACE_ALL)) {
                 event.setCancelled(true);
@@ -134,8 +132,10 @@ public class IWCraftingTable extends BlockBase implements InventoryListener {
                 }
             }
             craftInv.setStorageContents(content);
+            event.getWhoClicked().getInventory().addItem(content[0]);
 
             InventoryUtil.updateInventoryWithoutCarriedItem((Player) event.getClickedInventory().getViewers().get(0));
+            event.setCancelled(true);
         }
     }
 

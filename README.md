@@ -26,7 +26,6 @@ IndusrialWorld是一个Bukkit/Spigot服务器插件，旨在为Minecraft添加�
 # 开发进度   
 工业合成台和更多的合成配方 √  
 I18n支持 √  
-更多的矿物 [Dev]
+更多的矿物 (Dev)
 
 [1]: https://github.com/czm23333/IndustrialWorld/blob/master/README-EN.md
-[2]: https://github.com/czm23333/IndustrialWorld/actions/

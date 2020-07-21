@@ -29,9 +29,9 @@ public class I18nConst {
         public static String BASIC_MACHINE_BLOCK_LORE1 = "item.basic_machine_block.lore.1";
         public static String BASIC_MACHINE_BLOCK_LORE2 = "item.basic_machine_block.lore.2";
 
-        public static String COPPER_INGOT = "item.basic_machine_block.name";
-        public static String COPPER_INGOT_LORE1 = "item.basic_machine_block.lore.1";
-        public static String COPPER_INGOT_LORE2 = "item.basic_machine_block.lore.2";
+        public static String COPPER_INGOT = "item.copper_ingot.name";
+        public static String COPPER_INGOT_LORE1 = "item.copper_ingot.lore.1";
+        public static String COPPER_INGOT_LORE2 = "item.copper_ingot.lore.2";
 
         public static String COPPER_PLATE = "item.copper_plate.name";
         public static String COPPER_PLATE_LORE1 = "item.copper_plate.lore.1";

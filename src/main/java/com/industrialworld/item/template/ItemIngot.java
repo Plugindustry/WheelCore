@@ -33,8 +33,8 @@ public class ItemIngot extends ItemTemplate {
         String materialLocaleName = I18n.getLocaleString(
                 "material." + iwMaterial.getMaterialID().toLowerCase() + ".name");
         return ItemStackUtil.create(ItemManager.getItemMaterial(ItemType.INGOT, iwMaterial)).setId("INGREDIENT").setItemType(ItemType.INGOT).setIWMaterial(iwMaterial).setAmount(amount).setDisplayName(
-                ChatColor.WHITE + iwMaterial.getMaterialID() +
-                I18nConst.ItemType.INGOT).setIWMaterial(iwMaterial).setItemType(ItemType.INGOT).setLore(Arrays.asList(I18nConst.ItemType.INGOT_LORE.replace("{MATERIAL}", materialLocaleName).replace("{LEVEL}", String.valueOf(IWMaterialManager.getMaterialInfo(iwMaterial).getLevel())).replace('&', '§').replace("&&", "&").split("\\|\\|"))).getItemStack();
+                ChatColor.WHITE + materialLocaleName +
+                I18nConst.ItemType.INGOT).setIWMaterial(iwMaterial).setItemType(ItemType.INGOT).setLore(Arrays.asList(I18nConst.ItemType.INGOT_LORE.replace("{MATERIAL}", materialLocaleName).replace("{LEVEL}", String.valueOf(IWMaterialManager.getMaterialInfo(iwMaterial).getLevel())).replace('&', '\u00a7').replace("&&", "&").split("\\|\\|"))).getItemStack();
     }
 
     public ItemStack getItemStack(IWMaterial iwMaterial) {

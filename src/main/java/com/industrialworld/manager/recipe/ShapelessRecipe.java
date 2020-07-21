@@ -29,20 +29,18 @@ public class ShapelessRecipe implements CraftingRecipe {
 
     @Override
     public MatchInfo matches(List<List<ItemStack>> recipe, Map<Integer, ItemStack> damage) {
-        List<ItemStack> shapeless = new LinkedList<>();
+        List<ItemStack> shapeless = new ArrayList<>();
         List<Object> checkList = new LinkedList<>(this.recipe);
         // convert everything to shapeless
-        for (List<ItemStack> row : recipe) {
-            for (ItemStack is : row) {
-                if (is != null && is.getType() != Material.AIR) {
-                    shapeless.add(is.clone());
-                }
-            }
-        }
+        recipe.forEach(shapeless::addAll);
 
         IWMaterial material = null;
         for (Iterator<ItemStack> origin = shapeless.iterator(); origin.hasNext(); /*lol*/) {
             ItemStack is = origin.next();
+            if (is == null || is.getType() == Material.AIR) {
+                origin.remove();
+                continue;
+            }
             ItemStack temp = is.clone();
             if (temp.getType().getMaxDurability() != 0)
                 temp.setDurability((short) 0);
