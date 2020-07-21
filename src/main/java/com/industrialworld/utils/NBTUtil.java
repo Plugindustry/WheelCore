@@ -4,33 +4,67 @@ import com.industrialworld.IndustrialWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
+
 public class NBTUtil {
-    public static Class<?> NMSItemStack;
-    public static Class<?> NBTTagCompound;
-    public static Class<?> CraftItemStack;
-    public static String version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
+    private static MethodHandle asNMSCopy;
+    private static MethodHandle asBukkitCopy;
+    private static MethodHandle hasTag;
+    private static MethodHandle getTag;
+    private static MethodHandle conNBTTagCompound;
+    private static MethodHandle get;
+    private static MethodHandle set;
+    private static MethodHandle setTag;
+    private static MethodHandle asByte;
+    private static MethodHandle asString;
+    private static MethodHandle conNBTTagByte;
+    private static MethodHandle conNBTTagString;
 
     static {
         try {
-            NMSItemStack = Class.forName("net.minecraft.server." + version + ".ItemStack");
-            NBTTagCompound = Class.forName("net.minecraft.server." + version + ".NBTTagCompound");
-            CraftItemStack = Class.forName("org.bukkit.craftbukkit." + version + ".inventory.CraftItemStack");
+            Class<?> NMSItemStack = Class.forName(
+                    "net.minecraft.server." + IndustrialWorld.serverVersion + ".ItemStack");
+            Class<?> NBTBase = Class.forName("net.minecraft.server." + IndustrialWorld.serverVersion + ".NBTBase");
+            Class<?> NBTTagCompound = Class.forName(
+                    "net.minecraft.server." + IndustrialWorld.serverVersion + ".NBTTagCompound");
+            Class<?> CraftItemStack = Class.forName(
+                    "org.bukkit.craftbukkit." + IndustrialWorld.serverVersion + ".inventory.CraftItemStack");
+            Class<?> NBTTagByte = Class.forName(
+                    "net.minecraft.server." + IndustrialWorld.serverVersion + ".NBTTagByte");
+            Class<?> NBTTagString = Class.forName(
+                    "net.minecraft.server." + IndustrialWorld.serverVersion + ".NBTTagString");
+
+            MethodHandles.Lookup lookup = MethodHandles.lookup();
+            asNMSCopy = lookup.findStatic(CraftItemStack, "asNMSCopy", MethodType.methodType(NMSItemStack, ItemStack.class));
+            asBukkitCopy = lookup.findStatic(CraftItemStack, "asBukkitCopy", MethodType.methodType(ItemStack.class, NMSItemStack));
+            hasTag = lookup.findVirtual(NMSItemStack, "hasTag", MethodType.methodType(boolean.class));
+            getTag = lookup.findVirtual(NMSItemStack, "getTag", MethodType.methodType(NBTTagCompound));
+            conNBTTagCompound = lookup.findConstructor(NBTTagCompound, MethodType.methodType(void.class));
+            get = lookup.findVirtual(NBTTagCompound, "get", MethodType.methodType(NBTBase, String.class));
+            set = lookup.findVirtual(NBTTagCompound, "set", MethodType.methodType(void.class, String.class, NBTBase));
+            setTag = lookup.findVirtual(NMSItemStack, "setTag", MethodType.methodType(void.class, NBTTagCompound));
+            asByte = lookup.findVirtual(NBTTagByte, "asByte", MethodType.methodType(byte.class));
+            asString = lookup.findVirtual(NBTTagString, "asString", MethodType.methodType(String.class));
+            conNBTTagByte = lookup.findConstructor(NBTTagByte, MethodType.methodType(void.class, byte.class));
+            conNBTTagString = lookup.findConstructor(NBTTagString, MethodType.methodType(void.class, String.class));
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("[IndustrialWorld] Plugin shutting down...");
-            Bukkit.getPluginManager().disablePlugin(IndustrialWorld.getPlugin(IndustrialWorld.class));
+            Bukkit.getPluginManager().disablePlugin(IndustrialWorld.instance);
         }
     }
 
     public static NBTValue getTagValue(ItemStack item, String key) {
         Object result = null;
         try {
-            Object nis = CraftItemStack.getMethod("asNMSCopy", ItemStack.class).invoke(null, item);
-            Object tag = (((Boolean) NMSItemStack.getMethod("hasTag").invoke(nis)) ?
-                          (NMSItemStack.getMethod("getTag").invoke(nis)) :
-                          NBTTagCompound.newInstance());
-            result = NBTTagCompound.getMethod("get", String.class).invoke(tag, key);
-        } catch (Exception e) {
+            Object nis = asNMSCopy.invoke(item);
+            Object tag = (((Boolean) hasTag.bindTo(nis).invoke()) ?
+                          (getTag.bindTo(nis).invoke()) :
+                          newNBTTagCompound());
+            result = get.bindTo(tag).invoke(key);
+        } catch (Throwable e) {
             e.printStackTrace();
         }
         return result == null ? null : new NBTValue(result);
@@ -38,32 +72,29 @@ public class NBTUtil {
 
     public static ItemStack setTagValue(ItemStack item, String key, NBTValue value) {
         try {
-            Object nis = CraftItemStack.getMethod("asNMSCopy", ItemStack.class).invoke(null, item);
-            Object tag = (((Boolean) NMSItemStack.getMethod("hasTag").invoke(nis)) ?
-                          (NMSItemStack.getMethod("getTag").invoke(nis)) :
-                          NBTTagCompound.newInstance());
-            NBTTagCompound.getMethod("set", String.class, Class.forName(
-                    "net.minecraft.server." + version + ".NBTBase")).invoke(tag, key, value.convert());
-            NMSItemStack.getMethod("setTag", NBTTagCompound).invoke(nis, tag);
-            return (ItemStack) CraftItemStack.getMethod("asBukkitCopy", NMSItemStack).invoke(null, nis);
-        } catch (Exception e) {
+            Object nis = asNMSCopy.invoke(item);
+            Object tag = setTagValue((((Boolean) hasTag.bindTo(nis).invoke()) ?
+                                      (getTag.bindTo(nis).invoke()) :
+                                      newNBTTagCompound()), key, value);
+            setTag.bindTo(nis).invoke(tag);
+            return (ItemStack) asBukkitCopy.invoke(nis);
+        } catch (Throwable e) {
             throw new IllegalStateException(e);
         }
     }
 
     public static Object newNBTTagCompound() {
         try {
-            return NBTTagCompound.newInstance();
-        } catch (Exception e) {
+            return conNBTTagCompound.invoke();
+        } catch (Throwable e) {
             throw new RuntimeException("Exception while getting new instance of NBTTagCompound", e);
         }
     }
 
     public static Object setTagValue(Object nbttc, String key, NBTValue value) {
         try {
-            Class NBTBase = Class.forName("net.minecraft.server." + version + ".NBTBase");
-            NBTTagCompound.getMethod("set", String.class, NBTBase).invoke(nbttc, key, NBTBase.cast(value.convert()));
-        } catch (Exception e) {
+            set.bindTo(nbttc).invoke(key, value.convert());
+        } catch (Throwable e) {
             e.printStackTrace();
         }
         return nbttc;
@@ -88,9 +119,8 @@ public class NBTUtil {
             else {
                 boolean result = false;
                 try {
-                    Class NBTTagByte = Class.forName("net.minecraft.server." + version + ".NBTTagByte");
-                    result = ((Byte) NBTTagByte.getMethod("asByte").invoke(NBTTagByte.cast(base))) != 0;
-                } catch (Exception e) {
+                    result = ((Byte) asByte.bindTo(base).invoke()) != 0;
+                } catch (Throwable e) {
                     e.printStackTrace();
                 }
                 return result;
@@ -103,9 +133,8 @@ public class NBTUtil {
             else {
                 String result = "";
                 try {
-                    Class<?> NBTTagString = Class.forName("net.minecraft.server." + version + ".NBTTagString");
-                    result = (String) NBTTagString.getMethod("asString").invoke(NBTTagString.cast(base));
-                } catch (Exception e) {
+                    result = (String) asString.bindTo(base).invoke();
+                } catch (Throwable e) {
                     e.printStackTrace();
                 }
                 return result;
@@ -124,19 +153,15 @@ public class NBTUtil {
             if (canEdit) {
                 if (base instanceof Boolean) {
                     try {
-                        return Class.forName("net.minecraft.server." + version +
-                                             ".NBTTagByte").getConstructor(byte.class).newInstance((byte) (((Boolean) base) ?
-                                                                                                           1 :
-                                                                                                           0));
-                    } catch (Exception e) {
+                        return conNBTTagByte.invoke((byte) (((Boolean) base) ? 1 : 0));
+                    } catch (Throwable e) {
                         e.printStackTrace();
                     }
                     return null;
                 } else if (base instanceof String) {
                     try {
-                        return Class.forName("net.minecraft.server." + version +
-                                             ".NBTTagString").getConstructor(String.class).newInstance((String) base);
-                    } catch (Exception e) {
+                        return conNBTTagString.invoke((String) base);
+                    } catch (Throwable e) {
                         e.printStackTrace();
                     }
                     return null;

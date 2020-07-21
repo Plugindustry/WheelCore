@@ -3,9 +3,10 @@ package com.industrialworld.i18n;
 import com.industrialworld.IndustrialWorld;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Properties;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -23,25 +24,12 @@ public class I18n {
         if (langDir.isDirectory() || langDir.mkdir())
             ;
         File langFile = new File(langDir, localeString + ".lang");
-        if (!langFile.isFile())
-            try {
-                langFile.createNewFile();
-                Properties prop = new Properties();
-                InputStreamReader in = new InputStreamReader(new BufferedInputStream(IndustrialWorld.class.getResourceAsStream(
-                        "/lang/" + localeString + ".lang")), StandardCharsets.UTF_8);
-                OutputStreamWriter oFile = new OutputStreamWriter(new FileOutputStream(langFile), StandardCharsets.UTF_8);
-                prop.load(in);
-                prop.store(oFile, null);
-                in.close();
-                oFile.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-                IndustrialWorld.instance.getLogger().log(Level.SEVERE, "Error while creating lang file");
-                IndustrialWorld.instance.getServer().getPluginManager().disablePlugin(IndustrialWorld.instance);
-            }
 
         try {
-            inputStream = new BufferedInputStream(new FileInputStream(langFile));
+            inputStream = new BufferedInputStream(langFile.isFile() ?
+                                                  new FileInputStream(langFile) :
+                                                  IndustrialWorld.class.getResourceAsStream(
+                                                          "/lang/" + localeString + ".lang"));
             bundle = new PropertyResourceBundle(inputStream);
             inputStream.close();
         } catch (Exception e) {

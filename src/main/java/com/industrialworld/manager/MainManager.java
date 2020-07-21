@@ -88,7 +88,7 @@ public class MainManager {
         for (String str : config.getKeys(false)) {
             List list = config.getList(str);
             String[] arr = StringUtils.split(str, ";");
-            blocks.put(new Location(Bukkit.getWorld(arr[0]), new Integer(arr[1]), new Integer(arr[2]), new Integer(arr[3])), new AbstractMap.SimpleEntry<String, BlockData>((String) (list.get(0)), (BlockData) (list.get(1))));
+            blocks.put(new Location(Bukkit.getWorld(arr[0]), new Integer(arr[1]), new Integer(arr[2]), new Integer(arr[3])), new AbstractMap.SimpleEntry<>((String) (list.get(0)), (BlockData) (list.get(1))));
         }
     }
 
@@ -104,6 +104,9 @@ public class MainManager {
     }
 
     public static void addBlock(String id, Block block, BlockData data) {
+        DebuggingLogger.debug("Block in " + (block.getLocation().getWorld() == null ?
+                                             null :
+                                             block.getLocation().getWorld().getName()));
         blocks.put(block.getLocation(), new AbstractMap.SimpleEntry<>(id, data));
     }
 

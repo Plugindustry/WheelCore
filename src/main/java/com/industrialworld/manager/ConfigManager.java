@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class ConfigManager {
-    public static YamlConfiguration blocksConfig;
+    private static YamlConfiguration blocksConfig;
     private static File dataFolder;
     private static YamlConfiguration config;
     private static YamlConfiguration worldGenConfig;

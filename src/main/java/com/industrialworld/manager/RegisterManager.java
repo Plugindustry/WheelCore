@@ -60,7 +60,7 @@ public class RegisterManager {
 
         MainManager.register("COPPER_ORE", new CopperOre());
 
-        //getServer().addRecipe(new ShapedRecipe(new NamespacedKey(this, "BASIC_MACHINE_BLOCK"), ConstItems.BASIC_MACHINE_BLOCK).shape("AAA", "ABA", "AAA").setIngredient('A', Material.IRON_INGOT).setIngredient('B', Material.AIR));
+        //getServer().addRecipe(new ShapedRecipe(new NamespacedKey(this, "BASIC_MACHINE_BLOCK"), ConstItems.BASIC_MACHINE_BK).shapLOCe("AAA", "ABA", "AAA").setIngredient('A', Material.IRON_INGOT).setIngredient('B', Material.AIR));
     }
 
     public static void registerItem() {
@@ -142,7 +142,7 @@ public class RegisterManager {
                 ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.REDSTONE_BATTERY_LORE1),
                 ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.REDSTONE_BATTERY_LORE2))).getItemStack());
 
-        ItemManager.register("INGOT_COPPER", ItemIngot.getItemStack(IWMaterial.COPPER));
+        ItemManager.register("INGOT_COPPER", ItemIngot.getInstance().getItemStack(IWMaterial.COPPER));
     }
 
     public static void registerIWMaterial() {

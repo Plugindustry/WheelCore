@@ -3,6 +3,7 @@ package com.industrialworld.world;
 import com.industrialworld.interfaces.OreBase;
 import com.industrialworld.manager.MainManager;
 import com.industrialworld.utils.DebuggingLogger;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -23,6 +24,8 @@ public class WorldGenMinable extends WorldGenerator {
     }
 
     public boolean generate(World worldIn, Random rand, Location blockLctn) {
+        Chunk chunk = blockLctn.getChunk();
+
         int x = blockLctn.getBlockX();
         int y = blockLctn.getBlockY();
         int z = blockLctn.getBlockZ();
@@ -61,7 +64,10 @@ public class WorldGenMinable extends WorldGenerator {
                     break;
             }
 
-            currentBlock = new Location(worldIn, x, y, z).getBlock();
+            Location newLoc = new Location(worldIn, x, y, z);
+            if (newLoc.getChunk() != chunk)
+                continue;
+            currentBlock = newLoc.getBlock();
 
             if (currentBlock.getType().equals(Material.STONE)) {
                 currentBlock.setType(this.ore.getMaterial());

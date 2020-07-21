@@ -1,14 +1,28 @@
 package com.industrialworld.item.template;
 
 import com.industrialworld.item.material.IWMaterial;
-import com.industrialworld.item.material.info.MaterialInfo;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 public class ItemTemplate {
-    public static void register(IWMaterial iwMaterial, MaterialInfo materialInfo) { }
+    private static ItemTemplate instance = new ItemTemplate();
 
-    public static ItemStack getItemStack(IWMaterial iwMaterial) {
+    protected ItemTemplate() {
+    }
+
+    public static ItemTemplate getInstance() {
+        return instance;
+    }
+
+    public void register(IWMaterial iwMaterial) {
+    }
+
+
+    public ItemStack getItemStack(IWMaterial iwMaterial, int amount) {
+        return new ItemStack(Material.AIR);
+    }
+
+    public ItemStack getItemStack(IWMaterial iwMaterial) {
         return new ItemStack(Material.AIR);
     }
 }

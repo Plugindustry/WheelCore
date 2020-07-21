@@ -112,11 +112,6 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
-    public void onTick(TickEvent event) {
-        MainManager.update(event);
-    }
-
-    @EventHandler
     public void onWorldInit(WorldInitEvent event) {
         MainManager.onWorldInit(event);
     }

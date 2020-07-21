@@ -1,5 +1,6 @@
 package com.industrialworld.manager.recipe;
 
+import com.industrialworld.item.ItemType;
 import com.industrialworld.item.material.IWMaterial;
 import com.industrialworld.utils.ItemStackUtil;
 import org.bukkit.Material;
@@ -8,14 +9,15 @@ import org.bukkit.inventory.ItemStack;
 import java.util.*;
 
 public class ShapelessRecipe implements CraftingRecipe {
-    private List<ItemStack> recipe;
+    private ArrayList<Object> recipe;
     private ItemStack result;
     private Map<ItemStack, Integer> damages = new HashMap<>();
 
-    public ShapelessRecipe(List<ItemStack> items, ItemStack result) {
+    public ShapelessRecipe(List<Object> items, ItemStack result) {
+        this.recipe = new ArrayList<>(items);
         // remove the airs
-        items.removeIf(item -> item == null || item.getType() == Material.AIR);
-        this.recipe = items;
+        this.recipe.removeIf(item -> item == null ||
+                                     (item instanceof ItemStack && ((ItemStack) item).getType() == Material.AIR));
         this.result = result;
     }
 
@@ -28,7 +30,7 @@ public class ShapelessRecipe implements CraftingRecipe {
     @Override
     public MatchInfo matches(List<List<ItemStack>> recipe, Map<Integer, ItemStack> damage) {
         List<ItemStack> shapeless = new LinkedList<>();
-        List<ItemStack> checkList = new LinkedList<>(this.recipe);
+        List<Object> checkList = new LinkedList<>(this.recipe);
         // convert everything to shapeless
         for (List<ItemStack> row : recipe) {
             for (ItemStack is : row) {
@@ -38,13 +40,30 @@ public class ShapelessRecipe implements CraftingRecipe {
             }
         }
 
+        IWMaterial material = null;
         for (Iterator<ItemStack> origin = shapeless.iterator(); origin.hasNext(); /*lol*/) {
             ItemStack is = origin.next();
             ItemStack temp = is.clone();
             if (temp.getType().getMaxDurability() != 0)
                 temp.setDurability((short) 0);
-            for (Iterator<ItemStack> check = checkList.iterator(); check.hasNext(); /*qwq*/) {
-                if (ItemStackUtil.isSimilar(check.next(), temp)) {
+            for (Iterator<Object> check = checkList.iterator(); check.hasNext(); /*qwq*/) {
+                Object objCheck = check.next();
+                if (objCheck instanceof ItemStack) {
+                    if (ItemStackUtil.isSimilar((ItemStack) objCheck, temp)) {
+                        check.remove();
+                        origin.remove();
+                    }
+                } else if (objCheck instanceof ItemType) {
+                    IWMaterial currentMaterial = ItemStackUtil.getItemMaterial(temp);
+                    if (material == null || material.equals(currentMaterial)) {
+                        material = currentMaterial;
+                    } else {
+                        return new MatchInfo(false, false, null);
+                    }
+                    if (!ItemStackUtil.getItemType(temp).equals(objCheck)) {
+                        return new MatchInfo(false, false, null);
+                    }
+
                     check.remove();
                     origin.remove();
                 }
@@ -57,7 +76,7 @@ public class ShapelessRecipe implements CraftingRecipe {
             ShapedRecipe.checkItemDamage(recipe, damage, this.damages);
         }
 
-        return new MatchInfo(result, false, null);
+        return new MatchInfo(result, material != null, material);
     }
 
     @Override

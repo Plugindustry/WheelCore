@@ -6,7 +6,6 @@ import com.industrialworld.utils.ItemStackUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,8 +87,13 @@ public class ShapedRecipe implements CraftingRecipe {
                     if (!ItemStackUtil.getItemType(row.get(j)).equals(this.matrix.get(i).get(j))) {
                         return new MatchInfo(false, false, null);
                     }
+                } else if (this.matrix.get(i).get(j) == null) {
+                    if (row.get(j) != null)
+                        return new MatchInfo(false, false, null);
                 } else {
-                    throw new IllegalArgumentException("The object in matrix is neither ItemStack nor ItemType.");
+                    throw new IllegalArgumentException(
+                            "The object in matrix is neither ItemStack nor ItemType, it is " +
+                            this.matrix.get(i).get(j).getClass().getName());
                 }
             }
         }
@@ -97,10 +101,7 @@ public class ShapedRecipe implements CraftingRecipe {
         // check for damage to items.
         checkItemDamage(matrix, damage, this.damages);
 
-        if (material == null) {
-            return new MatchInfo(true, false, null);
-        }
-        return new MatchInfo(true, true, material);
+        return new MatchInfo(true, material != null, material);
     }
 
     @Override
@@ -114,14 +115,9 @@ public class ShapedRecipe implements CraftingRecipe {
         if (result instanceof ItemStack) {
             return ((ItemStack) result).clone();
         } else if (result instanceof ItemType) {
-            try {
-                return (ItemStack) ((ItemType) result).getTemplateClass().getMethod("getItemStack", IWMaterial.class).invoke(((ItemType) result).getTemplateClass(), iwMaterial);
-            } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-                e.printStackTrace();
-            }
+            return ((ItemType) result).getTemplate().getItemStack(iwMaterial);
         } else {
             return new ItemStack(Material.AIR);
         }
-        return new ItemStack(Material.AIR);
     }
 }

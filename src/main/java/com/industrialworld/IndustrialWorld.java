@@ -1,16 +1,14 @@
 package com.industrialworld;
 
 import com.industrialworld.commands.IndustrialWorldCommand;
-import com.industrialworld.event.EventListener;
-import com.industrialworld.event.TickEvent;
 import com.industrialworld.manager.ConfigManager;
-import com.industrialworld.manager.RegisterManager;
-import com.industrialworld.task.IWCraftingTableRegistrationTask;
-import com.industrialworld.utils.DebuggingLogger;
+import com.industrialworld.task.AfterLoadTask;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class IndustrialWorld extends JavaPlugin {
     public static IndustrialWorld instance;
+    public static String serverVersion = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
 
     @Override
     public void onEnable() {
@@ -24,25 +22,11 @@ public final class IndustrialWorld extends JavaPlugin {
 
         instance = this;
 
-        // Register command, EventListener and load config
+        // Register command, EventListener
         this.getCommand("iw").setExecutor(new IndustrialWorldCommand());
-        getServer().getPluginManager().registerEvents(new EventListener(), this);
-        ConfigManager.init(this);
-        // Register recipes, blocks
-        RegisterManager.registerIWItemMaterial();
-        RegisterManager.registerIWMaterial();
-        DebuggingLogger.debug("register items");
-        RegisterManager.registerItem();
-        DebuggingLogger.debug("register recipes");
-        RegisterManager.registerIWCRecipes();
-        DebuggingLogger.debug("register blocks");
-        RegisterManager.registerBlockIS();
-
-        // Register TickEvent
-        getServer().getScheduler().runTaskTimer(this, () -> getServer().getPluginManager().callEvent(new TickEvent()), 0, 0);
 
         // Register crafting table recipe
-        getServer().getScheduler().runTask(this, new IWCraftingTableRegistrationTask());
+        Bukkit.getScheduler().runTask(this, new AfterLoadTask());
     }
 
     @Override

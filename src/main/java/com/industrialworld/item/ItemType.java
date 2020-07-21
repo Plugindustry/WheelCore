@@ -4,14 +4,14 @@ import com.industrialworld.item.template.ItemIngot;
 import com.industrialworld.item.template.ItemTemplate;
 
 public enum ItemType {
-    NULL("NULL", ItemTemplate.class), INGOT("INGOT", ItemIngot.class), DUST("DUST", ItemTemplate.class);
+    NULL("NULL", ItemTemplate.getInstance()), INGOT("INGOT", ItemIngot.getInstance()), DUST("DUST", ItemTemplate.getInstance());
 
     private final String typeID;
-    private final Class<ItemTemplate> templateClass;
+    private final ItemTemplate template;
 
-    ItemType(String typeID, Class<? extends ItemTemplate> templateClass) {
+    ItemType(String typeID, ItemTemplate template) {
         this.typeID = typeID;
-        this.templateClass = (Class<ItemTemplate>) templateClass;
+        this.template = template;
     }
 
     public String getTypeID() {
@@ -23,7 +23,7 @@ public enum ItemType {
         return typeID;
     }
 
-    public Class<ItemTemplate> getTemplateClass() {
-        return templateClass;
+    public ItemTemplate getTemplate() {
+        return template;
     }
 }
