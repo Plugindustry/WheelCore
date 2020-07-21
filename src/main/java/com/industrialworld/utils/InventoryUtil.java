@@ -40,7 +40,6 @@ public class InventoryUtil {
                     "net.minecraft.server." + IndustrialWorld.serverVersion + ".NonNullList");
             Class<?> NMSItemStack = Class.forName(
                     "net.minecraft.server." + IndustrialWorld.serverVersion + ".ItemStack");
-            ;
 
             MethodHandles.Lookup lookup = MethodHandles.lookup();
             getHandle = lookup.findVirtual(craftPlayer, "getHandle", MethodType.methodType(NMSPlayer));
