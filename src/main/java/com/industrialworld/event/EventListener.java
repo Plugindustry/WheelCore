@@ -2,11 +2,11 @@ package com.industrialworld.event;
 
 import com.industrialworld.ConstItems;
 import com.industrialworld.interfaces.MachineBase;
-import com.industrialworld.item.material.IWMaterial;
 import com.industrialworld.manager.InventoryListenerManager;
 import com.industrialworld.manager.MainManager;
 import com.industrialworld.manager.RecipeRegistry;
 import com.industrialworld.manager.recipe.SmeltingRecipe;
+import com.industrialworld.utils.ItemStackUtil;
 import com.industrialworld.utils.NBTUtil;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -82,7 +82,7 @@ public class EventListener implements Listener {
         if (sourceValue != null && sourceValue.asBoolean()) {
             SmeltingRecipe recipe = RecipeRegistry.matchSmeltingRecipe(event.getSource());
             if (recipe != null) {
-                event.setResult(recipe.getResult(IWMaterial.NULL));
+                event.setResult(recipe.getResult(ItemStackUtil.getItemMaterial(event.getSource())));
             } else {
                 event.setCancelled(true);
             }
