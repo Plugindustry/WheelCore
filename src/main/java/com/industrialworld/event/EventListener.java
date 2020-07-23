@@ -115,5 +115,4 @@ public class EventListener implements Listener {
     public void onWorldInit(WorldInitEvent event) {
         MainManager.onWorldInit(event);
     }
-
 }

@@ -2,7 +2,6 @@ package com.industrialworld.task;
 
 import com.industrialworld.ConstItems;
 import com.industrialworld.IndustrialWorld;
-import com.industrialworld.event.EventListener;
 import com.industrialworld.event.TickEvent;
 import com.industrialworld.manager.ConfigManager;
 import com.industrialworld.manager.MainManager;
@@ -16,6 +15,8 @@ import org.bukkit.inventory.ShapedRecipe;
 public class AfterLoadTask implements Runnable {
     @Override
     public void run() {
+        DebuggingLogger.debug("register blocks");
+        RegisterManager.registerBlockIS();
         ConfigManager.init(IndustrialWorld.instance);
 
         // Register recipes, blocks
@@ -25,11 +26,6 @@ public class AfterLoadTask implements Runnable {
         RegisterManager.registerItem();
         DebuggingLogger.debug("register recipes");
         RegisterManager.registerIWCRecipes();
-        DebuggingLogger.debug("register blocks");
-        RegisterManager.registerBlockIS();
-
-        // Register EventListener
-        Bukkit.getPluginManager().registerEvents(new EventListener(), IndustrialWorld.instance);
 
         // Register TickEvent
         Bukkit.getScheduler().runTaskTimer(IndustrialWorld.instance, () -> MainManager.update(new TickEvent()), 0, 0);

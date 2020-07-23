@@ -1,5 +1,7 @@
 package com.industrialworld.manager;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
 import com.industrialworld.event.TickEvent;
 import com.industrialworld.interfaces.Base;
 import com.industrialworld.interfaces.BlockBase;
@@ -22,8 +24,9 @@ import org.bukkit.inventory.ItemStack;
 import java.util.*;
 
 public class MainManager {
-    private static HashMap<String, Base> mapping = new HashMap<>();
-    private static LinkedHashMap<Location, Map.Entry<String, BlockData>> blocks = new LinkedHashMap<>();
+    private static final BiMap<String, Base> mapping = HashBiMap.create();
+    private static final HashMap<Location, Map.Entry<String, BlockData>> blocks = new HashMap<>();
+    private static final HashMap<Base, Set<Location>> baseBlocks = new HashMap<>();
 
     // returns if the event needs to be cancelled
     public static boolean processBlockPlacement(ItemStack item, Block newBlock) {
@@ -71,24 +74,22 @@ public class MainManager {
     }
 
     public static String getIdFromInstance(Base instance) {
-        for (Map.Entry<String, Base> e : mapping.entrySet())
-            if (e.getValue().equals(instance))
-                return e.getKey();
-        return "";
+        if (instance == null)
+            return "";
+        return mapping.inverse().get(instance);
     }
 
     public static Base getInstanceFromId(String id) {
-        if (id == null) {
+        if (id == null)
             return null;
-        }
         return mapping.get(id);
     }
 
     public static void loadBlocksFromConfig(YamlConfiguration config) {
         for (String str : config.getKeys(false)) {
-            List list = config.getList(str);
+            List<?> list = config.getList(str);
             String[] arr = StringUtils.split(str, ";");
-            blocks.put(new Location(Bukkit.getWorld(arr[0]), new Integer(arr[1]), new Integer(arr[2]), new Integer(arr[3])), new AbstractMap.SimpleEntry<>((String) (list.get(0)), (BlockData) (list.get(1))));
+            addBlock((String) (list.get(0)), new Location(Bukkit.getWorld(arr[0]), new Integer(arr[1]), new Integer(arr[2]), new Integer(arr[3])).getBlock(), (BlockData) (list.get(1)));
         }
     }
 
@@ -107,10 +108,17 @@ public class MainManager {
         DebuggingLogger.debug("Block in " + (block.getLocation().getWorld() == null ?
                                              null :
                                              block.getLocation().getWorld().getName()));
-        blocks.put(block.getLocation(), new AbstractMap.SimpleEntry<>(id, data));
+        Location loc = block.getLocation();
+        blocks.put(loc, new AbstractMap.SimpleEntry<>(id, data));
+        Base instance = getInstanceFromId(id);
+        if (baseBlocks.containsKey(instance))
+            baseBlocks.get(instance).add(loc);
+        else
+            baseBlocks.put(instance, new HashSet<>(Collections.singleton(loc)));
     }
 
     public static void removeBlock(Block block) {
+        baseBlocks.get(getInstanceFromId(getBlockId(block))).remove(block.getLocation());
         blocks.remove(block.getLocation());
     }
 
