@@ -65,7 +65,7 @@ public class WorldGenMinable extends WorldGenerator {
             }
 
             Location newLoc = new Location(worldIn, x, y, z);
-            if (newLoc.getChunk() != chunk)
+            if (newLoc.getBlockX() >> 4 != chunk.getX() || newLoc.getBlockZ() >> 4 != chunk.getZ())
                 continue;
             currentBlock = newLoc.getBlock();
 

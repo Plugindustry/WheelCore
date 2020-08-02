@@ -35,7 +35,9 @@ public class ConfigManager {
             }
         }
         worldGenConfig = YamlConfiguration.loadConfiguration(world_generation_yml);
+    }
 
+    public static void loadBlocks() {
         File block_yml = new File(dataFolder, "blocks.yml");
         if (!(block_yml.isFile())) {
             try {

@@ -15,9 +15,11 @@ import org.bukkit.inventory.ShapedRecipe;
 public class AfterLoadTask implements Runnable {
     @Override
     public void run() {
+        ConfigManager.init(IndustrialWorld.instance);
+
         DebuggingLogger.debug("register blocks");
         RegisterManager.registerBlockIS();
-        ConfigManager.init(IndustrialWorld.instance);
+        ConfigManager.loadBlocks();
 
         // Register recipes, blocks
         RegisterManager.registerIWItemMaterial();
