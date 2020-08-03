@@ -105,9 +105,7 @@ public class MainManager {
     }
 
     public static void addBlock(String id, Block block, BlockData data) {
-        DebuggingLogger.debug("Block in " + (block.getLocation().getWorld() == null ?
-                                             null :
-                                             block.getLocation().getWorld().getName()));
+        DebuggingLogger.debug("Block at " + block.getLocation().toString());
         Location loc = block.getLocation();
         blocks.put(loc, new AbstractMap.SimpleEntry<>(id, data));
         Base instance = getInstanceFromId(id);

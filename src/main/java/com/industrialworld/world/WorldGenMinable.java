@@ -3,14 +3,12 @@ package com.industrialworld.world;
 import com.industrialworld.interfaces.OreBase;
 import com.industrialworld.manager.MainManager;
 import com.industrialworld.utils.DebuggingLogger;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 
 import java.util.Random;
 
-public class WorldGenMinable extends WorldGenerator {
+public class WorldGenMinable {
     private final OreBase ore;
     private final int numberOfBlocks;
 
@@ -22,22 +20,21 @@ public class WorldGenMinable extends WorldGenerator {
             throw new IllegalArgumentException();
     }
 
-    public boolean generate(World worldIn, Random rand, Location blockLctn) {
+    public boolean generate(World worldIn, Random rand, Chunk chunk, Location blockLctn) {
+        ChunkSnapshot snapshot = chunk.getChunkSnapshot();
         int x = blockLctn.getBlockX();
         int y = blockLctn.getBlockY();
         int z = blockLctn.getBlockZ();
 
-        int cX = x >> 4;
-        int cZ = z >> 4;
+        Block currentBlock = chunk.getBlock(x, y, z);
 
-        Block currentBlock = new Location(worldIn, x, y, z).getBlock();
-
-        if (currentBlock.getType().equals(Material.STONE)) {
+        if (snapshot.getBlockType(x, y, z).equals(Material.STONE)) {
             currentBlock.setType(this.ore.getMaterial());
             MainManager.addBlock(this.ore.getId(), currentBlock, null);
             DebuggingLogger.debug("Gen in " + (currentBlock.getLocation().getWorld() == null ?
                                                null :
-                                               currentBlock.getLocation().getWorld().getName()));
+                                               currentBlock.getLocation().getWorld().getName()) + " at " +
+                                  (chunk.getX() << 4) + ", " + (chunk.getZ() << 4));
         } else {
             return false;
         }
@@ -64,12 +61,11 @@ public class WorldGenMinable extends WorldGenerator {
                     break;
             }
 
-            Location newLoc = new Location(worldIn, x, y, z);
-            if (newLoc.getBlockX() >> 4 != cX || newLoc.getBlockZ() >> 4 != cZ)
+            if (x < 0 || z < 0 || x >= 16 || z >= 16)
                 continue;
-            currentBlock = newLoc.getBlock();
+            currentBlock = chunk.getBlock(x, y, z);
 
-            if (currentBlock.getType().equals(Material.STONE)) {
+            if (snapshot.getBlockType(x, y, z).equals(Material.STONE)) {
                 currentBlock.setType(this.ore.getMaterial());
                 MainManager.addBlock(this.ore.getId(), currentBlock, null);
             }
