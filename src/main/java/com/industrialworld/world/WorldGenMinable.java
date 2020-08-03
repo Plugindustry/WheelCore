@@ -3,7 +3,6 @@ package com.industrialworld.world;
 import com.industrialworld.interfaces.OreBase;
 import com.industrialworld.manager.MainManager;
 import com.industrialworld.utils.DebuggingLogger;
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -24,11 +23,12 @@ public class WorldGenMinable extends WorldGenerator {
     }
 
     public boolean generate(World worldIn, Random rand, Location blockLctn) {
-        Chunk chunk = blockLctn.getChunk();
-
         int x = blockLctn.getBlockX();
         int y = blockLctn.getBlockY();
         int z = blockLctn.getBlockZ();
+
+        int cX = x >> 4;
+        int cZ = z >> 4;
 
         Block currentBlock = new Location(worldIn, x, y, z).getBlock();
 
@@ -65,7 +65,7 @@ public class WorldGenMinable extends WorldGenerator {
             }
 
             Location newLoc = new Location(worldIn, x, y, z);
-            if (newLoc.getBlockX() >> 4 != chunk.getX() || newLoc.getBlockZ() >> 4 != chunk.getZ())
+            if (newLoc.getBlockX() >> 4 != cX || newLoc.getBlockZ() >> 4 != cZ)
                 continue;
             currentBlock = newLoc.getBlock();
 
