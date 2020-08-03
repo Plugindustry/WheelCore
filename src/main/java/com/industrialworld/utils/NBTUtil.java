@@ -43,12 +43,24 @@ public class NBTUtil {
             getTag = lookup.findVirtual(NMSItemStack, "getTag", MethodType.methodType(NBTTagCompound));
             conNBTTagCompound = lookup.findConstructor(NBTTagCompound, MethodType.methodType(void.class));
             get = lookup.findVirtual(NBTTagCompound, "get", MethodType.methodType(NBTBase, String.class));
-            set = lookup.findVirtual(NBTTagCompound, "set", MethodType.methodType(void.class, String.class, NBTBase));
+            try {
+                set = lookup.findVirtual(NBTTagCompound, "set", MethodType.methodType(void.class, String.class, NBTBase));
+            } catch (NoSuchMethodException | NoSuchMethodError e) {
+                set = lookup.findVirtual(NBTTagCompound, "set", MethodType.methodType(NBTBase, String.class, NBTBase));
+            }
             setTag = lookup.findVirtual(NMSItemStack, "setTag", MethodType.methodType(void.class, NBTTagCompound));
             asByte = lookup.findVirtual(NBTTagByte, "asByte", MethodType.methodType(byte.class));
             asString = lookup.findVirtual(NBTTagString, "asString", MethodType.methodType(String.class));
-            conNBTTagByte = lookup.findConstructor(NBTTagByte, MethodType.methodType(void.class, byte.class));
-            conNBTTagString = lookup.findConstructor(NBTTagString, MethodType.methodType(void.class, String.class));
+            try {
+                conNBTTagByte = lookup.findConstructor(NBTTagByte, MethodType.methodType(void.class, byte.class));
+            } catch (IllegalAccessException | IllegalAccessError e) {
+                conNBTTagByte = lookup.findStatic(NBTTagByte, "a", MethodType.methodType(NBTTagByte, byte.class));
+            }
+            try {
+                conNBTTagString = lookup.findConstructor(NBTTagString, MethodType.methodType(void.class, String.class));
+            } catch (IllegalAccessException | IllegalAccessError e) {
+                conNBTTagString = lookup.findStatic(NBTTagString, "a", MethodType.methodType(NBTTagString, String.class));
+            }
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("[IndustrialWorld] Plugin shutting down...");
