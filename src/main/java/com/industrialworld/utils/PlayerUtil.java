@@ -37,7 +37,7 @@ public class PlayerUtil {
         } catch (Throwable e) {
             e.printStackTrace();
             System.err.println("[IndustrialWorld] Plugin shutting down...");
-            Bukkit.getPluginManager().disablePlugin(com.industrialworld.IndustrialWorld.getPlugin(com.industrialworld.IndustrialWorld.class));
+            Bukkit.getPluginManager().disablePlugin(IndustrialWorld.instance);
         }
     }
 
