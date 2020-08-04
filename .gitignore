@@ -1,3 +1,8 @@
+# 不要再改了，谁再乱改削谁嗷
 .idea/
-target/classes/
-target/test-classes/
+target/
+.vscode/
+.classpath
+*.iml
+.project
+.settings/
