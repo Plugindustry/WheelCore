@@ -56,7 +56,7 @@ public class RegisterManager {
         RecipeRegistry.register(new ShapedRecipeFactory().map('0', new ItemStack(Material.IRON_INGOT)).pattern("000", "0w0", "000").build(ConstItems.BASIC_MACHINE_BLOCK)); // BASIC_MACHINE_BLOCK
 
         // Recognizer
-        RecipeRegistry.register(new ShapedRecipeFactory().map('0', ConstItems.IRON_PLATE).map('w', new ItemStack(Material.STICK)).pattern("000", "0w0", "000").build(ItemManager.get("RECOGNIZER"))); // BASIC_MACHINE_BLOCK
+        RecipeRegistry.register(new ShapedRecipeFactory().map('0', ConstItems.IRON_PLATE).map('w', new ItemStack(Material.STICK)).pattern("000", "QwQ", "QwQ").build(ItemManager.get("RECOGNIZER")));
 
         // Smelting Recipes
         RecipeRegistry.register(new SmeltingRecipeImpl(new ItemStack(Material.IRON_INGOT), ConstItems.RED_HOT_IRON_INGOT));
@@ -85,7 +85,7 @@ public class RegisterManager {
                 ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.IW_CRAFTING_TABLE)).setLore(Arrays.asList(
                 ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.IW_CRAFTING_TABLE_LORE1),
                 ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.IW_CRAFTING_TABLE_LORE2))).getItemStack());
-        ItemManager.register("RECOGNIZER", ItemStackUtil.create(Material.CRAFTING_TABLE).setId("RECOGNIZER").setAmount(1).setDisplayName(
+        ItemManager.register("RECOGNIZER", ItemStackUtil.create(Material.STICK).setId("RECOGNIZER").setAmount(1).setDisplayName(
                 ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.RECOGNIZER)).setLore(Arrays.asList(
                 ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.RECOGNIZER_LORE1),
                 ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.RECOGNIZER_LORE2))).getItemStack());

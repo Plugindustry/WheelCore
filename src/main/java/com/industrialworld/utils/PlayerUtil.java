@@ -1,30 +1,55 @@
-/*package com.industrialworld.utils;
+package com.industrialworld.utils;
 
-import java.awt.Image;
-
+import com.industrialworld.IndustrialWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.map.MapCanvas;
-import org.bukkit.map.MapCursorCollection;
-import org.bukkit.map.MapFont;
-import org.bukkit.map.MapRenderer;
-import org.bukkit.map.MapView;
-import org.bukkit.map.MinecraftFont;
+
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodHandles;
+import java.lang.invoke.MethodType;
 
 public class PlayerUtil {
-    public static Boolean setDisplayName(String player,String name){
-        if(Bukkit.getPlayerExact(player)!=null){
-            Bukkit.getPlayerExact(player).setDisplayName(name);
-            return true;
+    private static MethodHandle getHandle;
+    private static MethodHandle playerConnection;
+    private static MethodHandle sendPacket;
+    private static MethodHandle conChatComponentText;
+    private static MethodHandle conChatMessageType;
+    private static MethodHandle conPacketPlayOutChat;
+
+    static {
+        try {
+            Class<?> NMSIChatBaseComponent = Class.forName("net.minecraft.server." + IndustrialWorld.serverVersion + ".IChatBaseComponent");
+            Class<?> NMSChatComponentText = Class.forName("net.minecraft.server." + IndustrialWorld.serverVersion + ".ChatComponentText");
+            Class<?> NMSPlayer = Class.forName("net.minecraft.server." + IndustrialWorld.serverVersion + ".EntityPlayer");
+            Class<?> NMSPacketPlayOutChat = Class.forName("net.minecraft.server." + IndustrialWorld.serverVersion + ".PacketPlayOutChat");
+            Class<?> NMSPlayerConnection = Class.forName("net.minecraft.server." + IndustrialWorld.serverVersion + ".PlayerConnection");
+            Class<?> craftPlayer = Class.forName("org.bukkit.craftbukkit." + IndustrialWorld.serverVersion + ".entity.CraftPlayer");
+            Class<?> NMSPacket = Class.forName("net.minecraft.server." + IndustrialWorld.serverVersion + ".Packet");
+            Class<?> NMSChatMessageType = Class.forName("net.minecraft.server." + IndustrialWorld.serverVersion + ".ChatMessageType");
+
+            MethodHandles.Lookup lookup = MethodHandles.lookup();
+            getHandle = lookup.findVirtual(craftPlayer, "getHandle", MethodType.methodType(NMSPlayer));
+            playerConnection = lookup.findGetter(NMSPlayer, "playerConnection", NMSPlayerConnection);
+            sendPacket = lookup.findVirtual(NMSPlayerConnection, "sendPacket", MethodType.methodType(void.class, NMSPacket));
+            conChatComponentText = lookup.findConstructor(NMSChatComponentText, MethodType.methodType(void.class, String.class));
+            conChatMessageType = lookup.findStatic(NMSChatMessageType, "a", MethodType.methodType(NMSChatMessageType, byte.class));
+            conPacketPlayOutChat = lookup.findConstructor(NMSPacketPlayOutChat, MethodType.methodType(void.class, NMSIChatBaseComponent, NMSChatMessageType));
+        } catch (Throwable e) {
+            e.printStackTrace();
+            System.err.println("[IndustrialWorld] Plugin shutting down...");
+            Bukkit.getPluginManager().disablePlugin(com.industrialworld.IndustrialWorld.getPlugin(com.industrialworld.IndustrialWorld.class));
         }
-        return false;
     }
 
-    public static Boolean sendMap(Player player){
-        MapRenderer mapr=new MapRenderer();
-        MapCanvas canvas=new MapCanvas();
-        canvas.drawText(0,0,new MinecraftFont(),"Test Map");
-        player.sendMap(canvas.getMapView());
+    public static void sendActionBar(Player p, String s) {
+        try {
+            Object o = conChatComponentText.invoke(s);
+            Object bar = conPacketPlayOutChat.invoke(o, conChatMessageType.invoke((byte) 2));
+            Object nmsPlayer = getHandle.bindTo(p).invoke();
+            Object connection = playerConnection.bindTo(nmsPlayer).invoke();
+            sendPacket.bindTo(connection).invoke(bar);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
     }
 }
-*/

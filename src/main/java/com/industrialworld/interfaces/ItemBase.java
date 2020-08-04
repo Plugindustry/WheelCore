@@ -1,5 +1,5 @@
 package com.industrialworld.interfaces;
 
-public abstract class ItemBase extends com.industrialworld.interfaces.Interactive {
+public abstract class ItemBase extends Interactive {
 
 }

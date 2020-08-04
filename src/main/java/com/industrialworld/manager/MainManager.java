@@ -7,9 +7,9 @@ import com.industrialworld.interfaces.Base;
 import com.industrialworld.interfaces.BlockBase;
 import com.industrialworld.interfaces.BlockData;
 import com.industrialworld.interfaces.ItemBase;
-import com.industrialworld.utils.ActionBarUtil;
 import com.industrialworld.utils.DebuggingLogger;
 import com.industrialworld.utils.NBTUtil;
+import com.industrialworld.utils.PlayerUtil;
 import com.industrialworld.world.NormalOrePopulator;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
@@ -29,10 +29,10 @@ public class MainManager {
     private static final HashMap<Location, Map.Entry<String, BlockData>> blocks = new HashMap<>();
     private static final HashMap<Base, Set<Location>> baseBlocks = new HashMap<>();
 
-    // returns if the event needs to be cancelled
+    // returns if the event doesn't need to be cancelled
     public static boolean processBlockPlacement(ItemStack item, Block newBlock) {
         BlockBase blockBase = (BlockBase) getInstanceFromId(NBTUtil.getTagValue(item, "IWItemId").asString());
-        return blockBase.onBlockPlace(newBlock);
+        return blockBase != null && blockBase.onBlockPlace(newBlock);
     }
 
     public static boolean processBlockDestroy(ItemStack tool, Block target, boolean canceled) {
@@ -49,11 +49,14 @@ public class MainManager {
     }
 
     public static boolean processItemInteract(Player player, Block block, ItemStack tool, Action action) {
+        if (Objects.equals(Objects.requireNonNull(NBTUtil.getTagValue(tool, "IWItemId")).asString(), "RECOGNIZER")) {
+            PlayerUtil.sendActionBar(player, "TEST PASSED");
+            return false;
+        }
+
         ItemBase itemBase = getItemInstance(tool);
         if (itemBase == null) {
             return true;
-        } else if (getIdFromInstance(getItemInstance(tool)) == "RECOGNIZER") {
-            ActionBarUtil.sendActionBar(player, "TEST PASSED");
         }
 
         return itemBase.onInteract(player, action, tool, block);

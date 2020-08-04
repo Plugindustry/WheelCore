@@ -14,9 +14,9 @@ item.iw_crafting_table.name=工业工作台
 item.iw_crafting_table.lore.1=工业用工作台
 item.iw_crafting_table.lore.2=工业物品合成时均需使用
 
-item.recognizer.name=B方块检测器
-item.recognizer.1=左键以检测方块名称
-item.recognizer.2=右键获取更多信息
+item.recognizer.name=方块检测器
+item.recognizer.lore.1=左键以检测方块名称
+item.recognizer.lore.2=右键获取更多信息
 
 item.iron_plate.name=铁板
 item.iron_plate.lore.1=的确是铁板
