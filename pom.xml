@@ -59,6 +59,10 @@
             <id>spigotmc-repo</id>
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
         </repository>
+        <repository>
+            <id>luckyfish-repo</id>
+            <url>https://raw.githubusercontent.com/Lucky-fish/mvn-repo/master/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -73,6 +77,11 @@
             <artifactId>junit-jupiter</artifactId>
             <version>RELEASE</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>cn.mcres.luckyfish</groupId>
+            <artifactId>PluginCommons</artifactId>
+            <version>1.2-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>
