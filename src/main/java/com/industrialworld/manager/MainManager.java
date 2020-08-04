@@ -7,6 +7,7 @@ import com.industrialworld.interfaces.Base;
 import com.industrialworld.interfaces.BlockBase;
 import com.industrialworld.interfaces.BlockData;
 import com.industrialworld.interfaces.ItemBase;
+import com.industrialworld.utils.ActionBarUtil;
 import com.industrialworld.utils.DebuggingLogger;
 import com.industrialworld.utils.NBTUtil;
 import com.industrialworld.world.NormalOrePopulator;
@@ -51,6 +52,8 @@ public class MainManager {
         ItemBase itemBase = getItemInstance(tool);
         if (itemBase == null) {
             return true;
+        } else if (getIdFromInstance(getItemInstance(tool)) == "RECOGNIZER") {
+            ActionBarUtil.sendActionBar(player, "TEST PASSED");
         }
 
         return itemBase.onInteract(player, action, tool, block);

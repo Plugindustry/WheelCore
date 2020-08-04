@@ -16,6 +16,10 @@ public class I18nConst {
         public static String IW_CRAFTING_TABLE_LORE1 = "item.iw_crafting_table.lore.1";
         public static String IW_CRAFTING_TABLE_LORE2 = "item.iw_crafting_table.lore.2";
 
+        public static String RECOGNIZER = "item.recognizer.name";
+        public static String RECOGNIZER_LORE1 = "item.recognizer.lore.1";
+        public static String RECOGNIZER_LORE2 = "item.recognizer.lore.2";
+
         public static String IRON_PLATE = "item.iron_plate.name";
         public static String IRON_PLATE_LORE1 = "item.iron_plate.lore.1";
         public static String IRON_PLATE_LORE2 = "item.iron_plate.lore.2";

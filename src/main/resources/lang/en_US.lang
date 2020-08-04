@@ -18,8 +18,12 @@ item.iw_crafting_table.name=Industrial Crafting Table
 item.iw_crafting_table.lore.1=Industrial Crafting Table
 item.iw_crafting_table.lore.2=Craft industrial items
 
-item.iron_plate.name=Iron Sheet
-item.iron_plate.lore.1=It do is Iron Sheet
+item.recognizer.name=Block Recognizer
+item.recognizer.1=Left ckick to tell the name of the block
+item.recognizer.2=Right click to show detailed information
+
+item.iron_plate.name=Iron Plate
+item.iron_plate.lore.1=It do is Iron Plate
 item.iron_plate.lore.2=(*Just looks light?)
 
 item.cutter.name=Cutter

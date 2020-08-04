@@ -20,6 +20,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -54,6 +55,9 @@ public class RegisterManager {
         // Basic Machine Block
         RecipeRegistry.register(new ShapedRecipeFactory().map('0', new ItemStack(Material.IRON_INGOT)).pattern("000", "0w0", "000").build(ConstItems.BASIC_MACHINE_BLOCK)); // BASIC_MACHINE_BLOCK
 
+        // Recognizer
+        RecipeRegistry.register(new ShapedRecipeFactory().map('0', ConstItems.IRON_PLATE).map('w', new ItemStack(Material.STICK)).pattern("000", "0w0", "000").build(ItemManager.get("RECOGNIZER"))); // BASIC_MACHINE_BLOCK
+
         // Smelting Recipes
         RecipeRegistry.register(new SmeltingRecipeImpl(new ItemStack(Material.IRON_INGOT), ConstItems.RED_HOT_IRON_INGOT));
     }
@@ -81,6 +85,10 @@ public class RegisterManager {
                 ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.IW_CRAFTING_TABLE)).setLore(Arrays.asList(
                 ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.IW_CRAFTING_TABLE_LORE1),
                 ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.IW_CRAFTING_TABLE_LORE2))).getItemStack());
+        ItemManager.register("RECOGNIZER", ItemStackUtil.create(Material.CRAFTING_TABLE).setId("RECOGNIZER").setAmount(1).setDisplayName(
+                ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.RECOGNIZER)).setLore(Arrays.asList(
+                ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.RECOGNIZER_LORE1),
+                ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.RECOGNIZER_LORE2))).getItemStack());
         ItemManager.register("IRON_PLATE", ItemStackUtil.create(Material.PAPER).setId("IRON_PLATE").setAmount(1).setDisplayName(
                 ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.IRON_PLATE)).setLore(Arrays.asList(
                 ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.IRON_PLATE_LORE1),
@@ -145,6 +153,7 @@ public class RegisterManager {
                 ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.REDSTONE_BATTERY_LORE2))).getItemStack());
 
         ItemManager.register("INGOT_COPPER", ItemIngot.getInstance().getItemStack(IWMaterial.COPPER));
+        
     }
 
     public static void registerIWMaterial() {
