@@ -13,12 +13,15 @@ import com.industrialworld.utils.PlayerUtil;
 import com.industrialworld.world.NormalOrePopulator;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.world.ChunkLoadEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.event.world.WorldInitEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -27,7 +30,8 @@ import java.util.*;
 public class MainManager {
     private static final BiMap<String, Base> mapping = HashBiMap.create();
     private static final HashMap<Location, Map.Entry<String, BlockData>> blocks = new HashMap<>();
-    private static final HashMap<Base, Set<Location>> baseBlocks = new HashMap<>();
+    public static final HashMap<Base, Set<Location>> baseBlocks = new HashMap<>();
+    private static final HashSet<Long> loadedChunks = new HashSet<>();
 
     // returns if the event doesn't need to be cancelled
     public static boolean processBlockPlacement(ItemStack item, Block newBlock) {
@@ -36,12 +40,12 @@ public class MainManager {
     }
 
     public static boolean processBlockDestroy(ItemStack tool, Block target, boolean canceled) {
-        BlockBase blockBase = (BlockBase) getInstanceFromId(getBlockId(target));
+        BlockBase blockBase = (BlockBase) getInstanceFromId(getBlockId(target.getLocation()));
         return blockBase.onBlockDestroy(target, tool, canceled);
     }
 
     public static boolean processBlockInteract(Player player, Block block, ItemStack tool, Action action) {
-        BlockBase blockBase = (BlockBase) getInstanceFromId(getBlockId(block));
+        BlockBase blockBase = (BlockBase) getInstanceFromId(getBlockId(block.getLocation()));
         if (blockBase == null) {
             return true;
         }
@@ -49,7 +53,8 @@ public class MainManager {
     }
 
     public static boolean processItemInteract(Player player, Block block, ItemStack tool, Action action) {
-        if (Objects.equals(Objects.requireNonNull(NBTUtil.getTagValue(tool, "IWItemId")).asString(), "RECOGNIZER")) {
+        if (NBTUtil.getTagValue(tool, "IWItemId") != null &&
+            Objects.equals(NBTUtil.getTagValue(tool, "IWItemId").asString(), "RECOGNIZER")) {
             PlayerUtil.sendActionBar(player, "TEST PASSED");
             return false;
         }
@@ -79,6 +84,16 @@ public class MainManager {
         }
     }
 
+    public static void onChunkLoad(ChunkLoadEvent event) {
+        Chunk chunk = event.getChunk();
+        loadedChunks.add((((long) chunk.getX()) << 32) | chunk.getZ());
+    }
+
+    public static void onChunkUnload(ChunkUnloadEvent event) {
+        Chunk chunk = event.getChunk();
+        loadedChunks.remove((((long) chunk.getX()) << 32) | chunk.getZ());
+    }
+
     public static String getIdFromInstance(Base instance) {
         if (instance == null)
             return "";
@@ -95,7 +110,7 @@ public class MainManager {
         for (String str : config.getKeys(false)) {
             List<?> list = config.getList(str);
             String[] arr = StringUtils.split(str, ";");
-            addBlock((String) (list.get(0)), new Location(Bukkit.getWorld(arr[0]), new Integer(arr[1]), new Integer(arr[2]), new Integer(arr[3])).getBlock(), (BlockData) (list.get(1)));
+            addBlock((String) (list.get(0)), new Location(Bukkit.getWorld(arr[0]), new Integer(arr[1]), new Integer(arr[2]), new Integer(arr[3])), (BlockData) (list.get(1)));
         }
     }
 
@@ -110,32 +125,31 @@ public class MainManager {
         }
     }
 
-    public static void addBlock(String id, Block block, BlockData data) {
-        DebuggingLogger.debug("Block at " + block.getLocation().toString());
-        Location loc = block.getLocation();
-        blocks.put(loc, new AbstractMap.SimpleEntry<>(id, data));
+    public static void addBlock(String id, Location block, BlockData data) {
+        DebuggingLogger.debug("Block at " + block.toString());
+        blocks.put(block, new AbstractMap.SimpleEntry<>(id, data));
         Base instance = getInstanceFromId(id);
         if (baseBlocks.containsKey(instance))
-            baseBlocks.get(instance).add(loc);
+            baseBlocks.get(instance).add(block);
         else
-            baseBlocks.put(instance, new HashSet<>(Collections.singleton(loc)));
+            baseBlocks.put(instance, new HashSet<>(Collections.singleton(block)));
     }
 
-    public static void removeBlock(Block block) {
-        baseBlocks.get(getInstanceFromId(getBlockId(block))).remove(block.getLocation());
-        blocks.remove(block.getLocation());
+    public static void removeBlock(Location block) {
+        baseBlocks.get(getInstanceFromId(getBlockId(block))).remove(block);
+        blocks.remove(block);
     }
 
-    public static boolean hasBlock(Block block) {
-        return blocks.containsKey(block.getLocation());
+    public static boolean hasBlock(Location block) {
+        return blocks.containsKey(block);
     }
 
-    public static String getBlockId(Block block) {
-        if (block == null || blocks.get(block.getLocation()) == null) {
+    public static String getBlockId(Location block) {
+        if (block == null || blocks.get(block) == null) {
             return null;
         }
 
-        return blocks.get(block.getLocation()).getKey();
+        return blocks.get(block).getKey();
     }
 
     private static ItemBase getItemInstance(ItemStack is) {
@@ -149,8 +163,18 @@ public class MainManager {
         }
     }
 
-    public static BlockData getBlockData(Block block) {
-        return blocks.get(block.getLocation()).getValue();
+    public static BlockData getBlockData(Location block) {
+        return blocks.get(block).getValue();
+    }
+
+    public static void setBlockData(Location block, BlockData data) {
+        blocks.get(block).setValue(data);
+    }
+
+    public static boolean isBlockActive(Location block) {
+        int x = block.getBlockX() >> 4;
+        int z = block.getBlockZ() >> 4;
+        return loadedChunks.contains((((long) x) << 32) | z);
     }
 
     public static void register(String id, Base b) {

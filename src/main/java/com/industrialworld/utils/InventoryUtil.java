@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
+import java.lang.reflect.Method;
 
 public class InventoryUtil {
     private static MethodHandle getHandle;
@@ -49,7 +50,11 @@ public class InventoryUtil {
             conPacketPlayOutWindowItems = lookup.findConstructor(NMSPacketPlayOutWindowItems, MethodType.methodType(void.class, int.class, NMSNonNullList));
             conPacketPlayOutSetSlot = lookup.findConstructor(NMSPacketPlayOutSetSlot, MethodType.methodType(void.class, int.class, int.class, NMSItemStack));
             windowId = lookup.findGetter(NMSContainer, "windowId", int.class);
-            a = lookup.findVirtual(NMSContainer, "a", MethodType.methodType(NMSNonNullList));
+            for (Method method : NMSContainer.getMethods())
+                if (method.getParameterCount() == 0 && method.getReturnType() == NMSNonNullList) {
+                    a = lookup.unreflect(method);
+                    break;
+                }
             getSlot = lookup.findVirtual(NMSContainer, "getSlot", MethodType.methodType(NMSSlot, int.class));
             getItem = lookup.findVirtual(NMSSlot, "getItem", MethodType.methodType(NMSItemStack));
         } catch (Exception e) {

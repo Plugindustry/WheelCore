@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 public class ItemIngot extends ItemTemplate {
@@ -27,6 +28,14 @@ public class ItemIngot extends ItemTemplate {
 
     public void register(IWMaterial iwMaterial) {
         materials.add(iwMaterial);
+    }
+
+    public List<ItemStack> getAllItems() {
+        LinkedList<ItemStack> list = new LinkedList<>();
+        materials.forEach((material) -> {
+            list.add(this.getItemStack(material));
+        });
+        return list;
     }
 
     public ItemStack getItemStack(IWMaterial iwMaterial, int amount) {

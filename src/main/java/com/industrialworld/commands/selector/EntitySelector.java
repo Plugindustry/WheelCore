@@ -1,6 +1,5 @@
 package com.industrialworld.commands.selector;
 
-import com.industrialworld.utils.ListUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -426,7 +425,7 @@ public class EntitySelector {
                         baseLoc.distance(en2.getLocation()) - baseLoc.distance(en1.getLocation())));
                 break;
             case RANDOM:
-                ListUtil.randomizeList(e);
+                Collections.shuffle(e);
                 break;
             default:
                 break;

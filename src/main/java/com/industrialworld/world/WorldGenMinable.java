@@ -2,8 +2,11 @@ package com.industrialworld.world;
 
 import com.industrialworld.interfaces.OreBase;
 import com.industrialworld.manager.MainManager;
+import com.industrialworld.utils.BlockUtil;
 import com.industrialworld.utils.DebuggingLogger;
-import org.bukkit.*;
+import org.bukkit.Chunk;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 
 import java.util.Random;
@@ -21,16 +24,15 @@ public class WorldGenMinable {
     }
 
     public boolean generate(World worldIn, Random rand, Chunk chunk, Location blockLctn) {
-        ChunkSnapshot snapshot = chunk.getChunkSnapshot();
         int x = blockLctn.getBlockX();
         int y = blockLctn.getBlockY();
         int z = blockLctn.getBlockZ();
 
         Block currentBlock = chunk.getBlock(x, y, z);
 
-        if (snapshot.getBlockType(x, y, z).equals(Material.STONE)) {
+        if (BlockUtil.isReplaceableOreGen(currentBlock)) {
             currentBlock.setType(this.ore.getMaterial());
-            MainManager.addBlock(this.ore.getId(), currentBlock, null);
+            MainManager.addBlock(this.ore.getId(), currentBlock.getLocation(), null);
             DebuggingLogger.debug("Gen in " + (currentBlock.getLocation().getWorld() == null ?
                                                null :
                                                currentBlock.getLocation().getWorld().getName()) + " at " +
@@ -65,9 +67,9 @@ public class WorldGenMinable {
                 continue;
             currentBlock = chunk.getBlock(x, y, z);
 
-            if (snapshot.getBlockType(x, y, z).equals(Material.STONE)) {
+            if (BlockUtil.isReplaceableOreGen(currentBlock)) {
                 currentBlock.setType(this.ore.getMaterial());
-                MainManager.addBlock(this.ore.getId(), currentBlock, null);
+                MainManager.addBlock(this.ore.getId(), currentBlock.getLocation(), null);
             }
         }
         return true;

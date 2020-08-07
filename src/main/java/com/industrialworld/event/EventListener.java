@@ -23,6 +23,8 @@ import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.world.ChunkLoadEvent;
+import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.event.world.WorldInitEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -37,7 +39,7 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent event) {
-        if (MainManager.hasBlock(event.getBlock())) {
+        if (MainManager.hasBlock(event.getBlock().getLocation())) {
             // don't drop any item by default.
             event.setDropItems(false);
             event.setCancelled(!MainManager.processBlockDestroy(event.getPlayer().getItemInHand(), event.getBlock(), event.isCancelled()));
@@ -47,7 +49,7 @@ public class EventListener implements Listener {
     @EventHandler
     public void onPistonExtend(BlockPistonExtendEvent event) {
         for (Block block : event.getBlocks())
-            if (MainManager.hasBlock(block)) {
+            if (MainManager.hasBlock(block.getLocation())) {
                 event.setCancelled(true);
                 return;
             }
@@ -56,9 +58,9 @@ public class EventListener implements Listener {
     @EventHandler
     public void onBlockExplode(BlockExplodeEvent event) {
         for (Block block : event.blockList())
-            if (MainManager.hasBlock(block))
-                if (MainManager.getInstanceFromId(MainManager.getBlockId(block)) instanceof MachineBase) {
-                    MainManager.removeBlock(block);
+            if (MainManager.hasBlock(block.getLocation()))
+                if (MainManager.getInstanceFromId(MainManager.getBlockId(block.getLocation())) instanceof MachineBase) {
+                    MainManager.removeBlock(block.getLocation());
                     block.setType(Material.AIR);
                     Item item = (Item) (event.getBlock().getWorld().spawnEntity(event.getBlock().getLocation(), EntityType.DROPPED_ITEM));
                     item.setItemStack(ConstItems.BASIC_MACHINE_BLOCK);
@@ -114,5 +116,15 @@ public class EventListener implements Listener {
     @EventHandler
     public void onWorldInit(WorldInitEvent event) {
         MainManager.onWorldInit(event);
+    }
+
+    @EventHandler
+    public void onChunkLoad(ChunkLoadEvent event) {
+        MainManager.onChunkLoad(event);
+    }
+
+    @EventHandler
+    public void onChunkUnLoad(ChunkUnloadEvent event) {
+        MainManager.onChunkUnload(event);
     }
 }

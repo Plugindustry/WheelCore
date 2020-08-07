@@ -17,6 +17,9 @@ public class AfterLoadTask implements Runnable {
     public void run() {
         ConfigManager.init(IndustrialWorld.instance);
 
+        RegisterManager.registerMaterial();
+        ;
+
         DebuggingLogger.debug("register blocks");
         RegisterManager.registerBlockIS();
         ConfigManager.loadBlocks();

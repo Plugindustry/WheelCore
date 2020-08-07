@@ -10,7 +10,7 @@ public abstract class BlockBase extends Interactive {
     }
 
     public boolean onBlockPlace(Block block) {
-        MainManager.addBlock(MainManager.getIdFromInstance(this), block, null /*currently is null*/);
+        MainManager.addBlock(MainManager.getIdFromInstance(this), block.getLocation(), null /*currently is null*/);
         return true;
     }
 
@@ -20,7 +20,7 @@ public abstract class BlockBase extends Interactive {
 
     public boolean onBlockDestroy(Block block, ItemStack tool, boolean canceled) {
         if (!canceled) {
-            MainManager.removeBlock(block);
+            MainManager.removeBlock(block.getLocation());
         }
         // We do not drop IndustrialWorld blocks by default
         block.getWorld().dropItem(block.getLocation(), getItemStack());

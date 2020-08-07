@@ -1,10 +1,16 @@
 package com.industrialworld.manager;
 
+import com.industrialworld.IndustrialWorld;
+import com.industrialworld.item.material.IWMaterial;
 import com.industrialworld.manager.recipe.CraftingRecipe;
 import com.industrialworld.manager.recipe.GrindRecipe;
 import com.industrialworld.manager.recipe.RecipeBase;
 import com.industrialworld.manager.recipe.SmeltingRecipe;
+import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.RecipeChoice;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -12,9 +18,12 @@ import java.util.Map;
 
 public class RecipeRegistry {
     private static List<RecipeBase> recipes = new LinkedList<>();
+    public static NamespacedKey namespace = new NamespacedKey(IndustrialWorld.instance, "IndustrialWorld");
 
     public static void register(RecipeBase recipeBase) {
         recipes.add(recipeBase);
+        if (recipeBase instanceof SmeltingRecipe)
+            Bukkit.addRecipe(new FurnaceRecipe(namespace, recipeBase.getResult(IWMaterial.NULL), new RecipeChoice.ExactChoice(((SmeltingRecipe) recipeBase).getAllMatches()), ((SmeltingRecipe) recipeBase).getExperience(), ((SmeltingRecipe) recipeBase).getCookingTime()));
     }
 
     public static RecipeBase.RecipeResultInfo matchCraftingRecipe(List<ItemStack> items, Map<Integer, ItemStack> damageResult) {

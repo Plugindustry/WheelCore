@@ -1,6 +1,5 @@
 package com.industrialworld.utils;
 
-import com.industrialworld.interfaces.Base;
 import com.industrialworld.interfaces.MachineBase;
 import com.industrialworld.interfaces.Wire;
 import com.industrialworld.manager.MainManager;
@@ -8,12 +7,14 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
-import java.util.*;
-
-import static com.industrialworld.utils.HashTree.Node;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Stream;
 
 public class BlockUtil {
-    public static Map.Entry<HashTree<Location>, List<SearchResult>> searchFromWire(Block wireBlock, Location expect) {
+    private static final List<Material> replaceableOreGenList = Arrays.asList(Material.STONE, Material.DIRT, Material.ANDESITE, Material.GRAVEL);
+
+    /*public static Map.Entry<HashTree<Location>, List<SearchResult>> searchFromWire(Block wireBlock, Location expect) {
         ArrayList<SearchResult> result = new ArrayList<>();
         HashTree<Location> network = new HashTree<>(new Node<>(wireBlock.getLocation()));
         boolean isEnd = false;
@@ -100,24 +101,27 @@ public class BlockUtil {
             }
         }
         return machineNumber;
+    }*/
+
+    public static Stream<Location> findWireAround(Location src) {
+        return Stream.of(src.clone().add(1, 0, 0), src.clone().add(-1, 0, 0), src.clone().add(0, 1, 0), src.clone().add(0, -1, 0), src.clone().add(0, 0, 1), src.clone().add(0, 0, -1)).filter(BlockUtil::isWire);
     }
 
-    public static boolean isMachine(Block block) {
+    public static boolean isMachine(Location block) {
         return MainManager.hasBlock(block) &&
                MainManager.getInstanceFromId(MainManager.getBlockId(block)) instanceof MachineBase;
     }
 
-    public static boolean isWire(Block block) {
+    public static boolean isWire(Location block) {
         return MainManager.hasBlock(block) &&
                MainManager.getInstanceFromId(MainManager.getBlockId(block)) instanceof Wire;
     }
 
     public static boolean isReplaceableOreGen(Block block) {
-        List<Material> replaceableOreGenList = Arrays.asList(Material.STONE, Material.DIRT, Material.ANDESITE, Material.GRAVEL);
-        return replaceableOreGenList.contains(block.getBlockData().getMaterial());
+        return replaceableOreGenList.contains(block.getType());
     }
 
-    public static class SearchResult {
+    /*public static class SearchResult {
         public Block machineBlock;
         public ArrayList<Location> wires;
         public int divisorOfElectricity;
@@ -127,5 +131,5 @@ public class BlockUtil {
             this.wires = wires;
             this.divisorOfElectricity = doe;
         }
-    }
+    }*/
 }

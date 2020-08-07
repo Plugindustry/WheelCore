@@ -11,6 +11,7 @@ import com.industrialworld.item.ItemType;
 import com.industrialworld.item.material.IWMaterial;
 import com.industrialworld.item.material.info.MaterialInfo;
 import com.industrialworld.item.template.ItemIngot;
+import com.industrialworld.item.template.ItemTemplate;
 import com.industrialworld.manager.recipe.ShapedRecipeFactory;
 import com.industrialworld.manager.recipe.ShapelessRecipe;
 import com.industrialworld.manager.recipe.SmeltingRecipeImpl;
@@ -58,7 +59,7 @@ public class RegisterManager {
         RecipeRegistry.register(new ShapedRecipeFactory().map('0', ConstItems.IRON_PLATE).map('w', new ItemStack(Material.STICK)).pattern("000", "QwQ", "QwQ").build(ItemManager.get("RECOGNIZER")));
 
         // Smelting Recipes
-        RecipeRegistry.register(new SmeltingRecipeImpl(new ItemStack(Material.IRON_INGOT), ConstItems.RED_HOT_IRON_INGOT));
+        RecipeRegistry.register(new SmeltingRecipeImpl(new ItemStack(Material.IRON_INGOT), ConstItems.RED_HOT_IRON_INGOT, 5.0F, 400));
     }
 
     public static void registerBlockIS() {
@@ -69,6 +70,11 @@ public class RegisterManager {
         MainManager.register("COPPER_ORE", new CopperOre());
 
         //getServer().addRecipe(new ShapedRecipe(new NamespacedKey(this, "BASIC_MACHINE_BLOCK"), ConstItems.BASIC_MACHINE_BK).shapLOCe("AAA", "ABA", "AAA").setIngredient('A', Material.IRON_INGOT).setIngredient('B', Material.AIR));
+    }
+
+    public static void registerMaterial() {
+        ItemTemplate itemIngot = ItemIngot.getInstance();
+        itemIngot.register(IWMaterial.COPPER);
     }
 
     public static void registerItem() {
