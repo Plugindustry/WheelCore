@@ -34,8 +34,9 @@ public class GiveCommand extends SubCommandBase {
         }
 
         EntitySelector selector = new EntitySelector(commandSender, args[0]);
+        String itemName = args[1].toUpperCase();
 
-        if (!ItemManager.isItemExists(args[1])) {
+        if (!ItemManager.isItemExists(itemName)) {
             commandSender.sendMessage("Uh we didn't found that item.");
             return true;
         }
@@ -45,8 +46,8 @@ public class GiveCommand extends SubCommandBase {
                 continue; // not a player >_> how to give them item.
             }
             Player p = (Player) e;
-            p.getInventory().addItem(ItemManager.get(args[1]));
-            commandSender.sendMessage("Given " + args[1] + " to player " + p.getName());
+            p.getInventory().addItem(ItemManager.get(itemName));
+            commandSender.sendMessage("Given " + itemName + " to player " + p.getName());
         }
 
         return true;
