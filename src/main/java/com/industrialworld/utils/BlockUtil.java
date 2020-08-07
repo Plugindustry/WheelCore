@@ -1,7 +1,7 @@
 package com.industrialworld.utils;
 
-import com.industrialworld.interfaces.MachineBase;
-import com.industrialworld.interfaces.Wire;
+import com.industrialworld.interfaces.block.MachineBase;
+import com.industrialworld.interfaces.block.Wire;
 import com.industrialworld.manager.MainManager;
 import org.bukkit.Location;
 import org.bukkit.Material;

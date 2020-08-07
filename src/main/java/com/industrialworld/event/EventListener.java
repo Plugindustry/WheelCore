@@ -1,7 +1,7 @@
 package com.industrialworld.event;
 
 import com.industrialworld.ConstItems;
-import com.industrialworld.interfaces.MachineBase;
+import com.industrialworld.interfaces.block.MachineBase;
 import com.industrialworld.manager.InventoryListenerManager;
 import com.industrialworld.manager.MainManager;
 import com.industrialworld.manager.RecipeRegistry;

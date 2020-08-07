@@ -1,6 +1,6 @@
 package com.industrialworld.world;
 
-import com.industrialworld.blocks.CopperOre;
+import com.industrialworld.block.CopperOre;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;

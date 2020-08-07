@@ -1,6 +1,6 @@
 package com.industrialworld.world;
 
-import com.industrialworld.interfaces.OreBase;
+import com.industrialworld.interfaces.block.OreBase;
 import com.industrialworld.manager.MainManager;
 import com.industrialworld.utils.BlockUtil;
 import com.industrialworld.utils.DebuggingLogger;

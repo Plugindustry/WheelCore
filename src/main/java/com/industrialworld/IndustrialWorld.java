@@ -1,6 +1,6 @@
 package com.industrialworld;
 
-import com.industrialworld.commands.IndustrialWorldCommand;
+import com.industrialworld.command.IndustrialWorldCommand;
 import com.industrialworld.event.EventListener;
 import com.industrialworld.manager.ConfigManager;
 import com.industrialworld.task.AfterLoadTask;

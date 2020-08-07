@@ -1,13 +1,14 @@
 package com.industrialworld.manager;
 
 import com.industrialworld.ConstItems;
-import com.industrialworld.blocks.BasicMachineBlock;
-import com.industrialworld.blocks.CopperOre;
-import com.industrialworld.blocks.Grinder;
-import com.industrialworld.blocks.IWCraftingTable;
+import com.industrialworld.block.BasicMachineBlock;
+import com.industrialworld.block.CopperOre;
+import com.industrialworld.block.Grinder;
+import com.industrialworld.block.IWCraftingTable;
 import com.industrialworld.i18n.I18n;
 import com.industrialworld.i18n.I18nConst;
 import com.industrialworld.item.ItemType;
+import com.industrialworld.item.Recognizer;
 import com.industrialworld.item.material.IWMaterial;
 import com.industrialworld.item.material.info.MaterialInfo;
 import com.industrialworld.item.template.ItemIngot;
@@ -158,7 +159,8 @@ public class RegisterManager {
                 ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.REDSTONE_BATTERY_LORE2))).getItemStack());
 
         ItemManager.register("INGOT_COPPER", ItemIngot.getInstance().getItemStack(IWMaterial.COPPER));
-        
+
+        MainManager.register("RECOGNIZER", new Recognizer());
     }
 
     public static void registerIWMaterial() {

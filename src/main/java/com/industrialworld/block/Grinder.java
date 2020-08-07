@@ -1,6 +1,6 @@
-package com.industrialworld.blocks;
+package com.industrialworld.block;
 
-import com.industrialworld.interfaces.MachineBase;
+import com.industrialworld.interfaces.block.MachineBase;
 import com.industrialworld.manager.ItemManager;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

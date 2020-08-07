@@ -1,8 +1,8 @@
-package com.industrialworld.commands;
+package com.industrialworld.command;
 
-import com.industrialworld.commands.sub.GiveCommand;
-import com.industrialworld.commands.sub.SubCommandBase;
-import com.industrialworld.commands.sub.TestCommand;
+import com.industrialworld.command.sub.GiveCommand;
+import com.industrialworld.command.sub.SubCommandBase;
+import com.industrialworld.command.sub.TestCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

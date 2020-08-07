@@ -1,4 +1,4 @@
-package com.industrialworld.commands.sub;
+package com.industrialworld.command.sub;
 
 import org.bukkit.command.CommandSender;
 

@@ -1,7 +1,7 @@
-package com.industrialworld.blocks;
+package com.industrialworld.block;
 
 import com.industrialworld.ConstItems;
-import com.industrialworld.interfaces.OreBase;
+import com.industrialworld.interfaces.block.OreBase;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 

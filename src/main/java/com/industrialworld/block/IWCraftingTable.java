@@ -1,11 +1,11 @@
-package com.industrialworld.blocks;
+package com.industrialworld.block;
 
 import com.industrialworld.ConstItems;
 import com.industrialworld.event.TickEvent;
 import com.industrialworld.i18n.I18n;
 import com.industrialworld.i18n.I18nConst;
-import com.industrialworld.interfaces.BlockBase;
 import com.industrialworld.interfaces.InventoryListener;
+import com.industrialworld.interfaces.block.DummyBlock;
 import com.industrialworld.manager.InventoryListenerManager;
 import com.industrialworld.manager.RecipeRegistry;
 import com.industrialworld.manager.recipe.RecipeBase;
@@ -25,7 +25,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
 
-public class IWCraftingTable extends BlockBase implements InventoryListener {
+public class IWCraftingTable extends DummyBlock implements InventoryListener {
     private List<Inventory> availableInventories = new ArrayList<>();
     private Map<Inventory, RecipeBase> lastRecipe = new HashMap<>();
 

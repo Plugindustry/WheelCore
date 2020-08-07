@@ -1,4 +1,4 @@
-package com.industrialworld.interfaces;
+package com.industrialworld.interfaces.block;
 
 import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public abstract class Wire extends BlockBase {
+public abstract class Wire extends DummyBlock {
     public abstract double getMaxTransmissionEnergy();
 
     public abstract double getEnergyLoss();

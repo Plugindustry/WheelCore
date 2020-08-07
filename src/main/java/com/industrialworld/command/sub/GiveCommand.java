@@ -1,6 +1,6 @@
-package com.industrialworld.commands.sub;
+package com.industrialworld.command.sub;
 
-import com.industrialworld.commands.selector.EntitySelector;
+import com.industrialworld.command.selector.EntitySelector;
 import com.industrialworld.manager.ItemManager;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;

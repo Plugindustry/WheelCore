@@ -1,4 +1,4 @@
-package com.industrialworld.commands.selector;
+package com.industrialworld.command.selector;
 
 public class SelectorSyntaxException extends Exception {
     @Override

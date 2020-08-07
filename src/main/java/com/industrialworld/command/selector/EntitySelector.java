@@ -1,4 +1,4 @@
-package com.industrialworld.commands.selector;
+package com.industrialworld.command.selector;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

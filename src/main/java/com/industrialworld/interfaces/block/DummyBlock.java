@@ -1,12 +1,22 @@
-package com.industrialworld.interfaces;
+package com.industrialworld.interfaces.block;
 
+import com.industrialworld.event.TickEvent;
 import com.industrialworld.manager.MainManager;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 
-public abstract class BlockBase extends Interactive {
-    public void onBlockUpdate(Block block) {
+public abstract class DummyBlock implements BlockBase {
+    @Override
+    public void onTick(TickEvent event) {
+
+    }
+
+    @Override
+    public boolean onInteract(Player player, Action action, ItemStack tool, Block block) {
+        return true;
     }
 
     public boolean onBlockPlace(Block block) {

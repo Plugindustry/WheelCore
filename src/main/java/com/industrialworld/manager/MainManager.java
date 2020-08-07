@@ -4,12 +4,11 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.industrialworld.event.TickEvent;
 import com.industrialworld.interfaces.Base;
-import com.industrialworld.interfaces.BlockBase;
-import com.industrialworld.interfaces.BlockData;
-import com.industrialworld.interfaces.ItemBase;
+import com.industrialworld.interfaces.block.BlockBase;
+import com.industrialworld.interfaces.block.BlockData;
+import com.industrialworld.interfaces.item.ItemBase;
 import com.industrialworld.utils.DebuggingLogger;
 import com.industrialworld.utils.NBTUtil;
-import com.industrialworld.utils.PlayerUtil;
 import com.industrialworld.world.NormalOrePopulator;
 import org.apache.commons.lang.StringUtils;
 import org.bukkit.Bukkit;
@@ -53,12 +52,6 @@ public class MainManager {
     }
 
     public static boolean processItemInteract(Player player, Block block, ItemStack tool, Action action) {
-        if (NBTUtil.getTagValue(tool, "IWItemId") != null &&
-            Objects.equals(NBTUtil.getTagValue(tool, "IWItemId").asString(), "RECOGNIZER")) {
-            PlayerUtil.sendActionBar(player, "TEST PASSED");
-            return false;
-        }
-
         ItemBase itemBase = getItemInstance(tool);
         if (itemBase == null) {
             return true;

@@ -1,8 +1,8 @@
-package com.industrialworld.interfaces;
+package com.industrialworld.interfaces.block;
 
 import org.bukkit.Material;
 
-public abstract class OreBase extends BlockBase {
+public abstract class OreBase extends DummyBlock {
 
     public boolean isOre() {
         return true;

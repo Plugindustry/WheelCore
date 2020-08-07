@@ -1,9 +1,9 @@
 package com.industrialworld.manager;
 
 import com.industrialworld.event.TickEvent;
-import com.industrialworld.interfaces.EnergyInputable;
-import com.industrialworld.interfaces.EnergyOutputable;
-import com.industrialworld.interfaces.Wire;
+import com.industrialworld.interfaces.block.Wire;
+import com.industrialworld.interfaces.power.EnergyInputable;
+import com.industrialworld.interfaces.power.EnergyOutputable;
 import com.industrialworld.utils.BlockUtil;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
