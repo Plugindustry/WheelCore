@@ -18,14 +18,21 @@ public class PlayerUtil {
 
     static {
         try {
-            Class<?> NMSIChatBaseComponent = Class.forName("net.minecraft.server." + IndustrialWorld.serverVersion + ".IChatBaseComponent");
-            Class<?> NMSChatComponentText = Class.forName("net.minecraft.server." + IndustrialWorld.serverVersion + ".ChatComponentText");
-            Class<?> NMSPlayer = Class.forName("net.minecraft.server." + IndustrialWorld.serverVersion + ".EntityPlayer");
-            Class<?> NMSPacketPlayOutChat = Class.forName("net.minecraft.server." + IndustrialWorld.serverVersion + ".PacketPlayOutChat");
-            Class<?> NMSPlayerConnection = Class.forName("net.minecraft.server." + IndustrialWorld.serverVersion + ".PlayerConnection");
-            Class<?> craftPlayer = Class.forName("org.bukkit.craftbukkit." + IndustrialWorld.serverVersion + ".entity.CraftPlayer");
+            Class<?> NMSIChatBaseComponent = Class.forName(
+                    "net.minecraft.server." + IndustrialWorld.serverVersion + ".IChatBaseComponent");
+            Class<?> NMSChatComponentText = Class.forName(
+                    "net.minecraft.server." + IndustrialWorld.serverVersion + ".ChatComponentText");
+            Class<?> NMSPlayer = Class.forName(
+                    "net.minecraft.server." + IndustrialWorld.serverVersion + ".EntityPlayer");
+            Class<?> NMSPacketPlayOutChat = Class.forName(
+                    "net.minecraft.server." + IndustrialWorld.serverVersion + ".PacketPlayOutChat");
+            Class<?> NMSPlayerConnection = Class.forName(
+                    "net.minecraft.server." + IndustrialWorld.serverVersion + ".PlayerConnection");
+            Class<?> craftPlayer = Class.forName(
+                    "org.bukkit.craftbukkit." + IndustrialWorld.serverVersion + ".entity.CraftPlayer");
             Class<?> NMSPacket = Class.forName("net.minecraft.server." + IndustrialWorld.serverVersion + ".Packet");
-            Class<?> NMSChatMessageType = Class.forName("net.minecraft.server." + IndustrialWorld.serverVersion + ".ChatMessageType");
+            Class<?> NMSChatMessageType = Class.forName(
+                    "net.minecraft.server." + IndustrialWorld.serverVersion + ".ChatMessageType");
 
             MethodHandles.Lookup lookup = MethodHandles.lookup();
             getHandle = lookup.findVirtual(craftPlayer, "getHandle", MethodType.methodType(NMSPlayer));

@@ -1,14 +1,11 @@
 package com.industrialworld.manager;
 
-import com.industrialworld.event.TickEvent;
 import com.industrialworld.interfaces.block.Wire;
 import com.industrialworld.interfaces.power.EnergyInputable;
 import com.industrialworld.interfaces.power.EnergyOutputable;
 import com.industrialworld.utils.BlockUtil;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -26,8 +23,8 @@ public class PowerManager {
         outputMap.put(block.getLocation(), new OutputRequest(power));
     }
 
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onTick(TickEvent event) {
+    // Not enabled yet
+    public void onTick() {
         /*for (Map.Entry<Location, Request> entry : requestMap.entrySet())
             if (entry.getValue() instanceof OutputRequest) {
                 OutputRequest outReq = ((OutputRequest) entry.getValue());

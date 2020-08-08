@@ -1,7 +1,6 @@
 package com.industrialworld.block;
 
 import com.industrialworld.ConstItems;
-import com.industrialworld.event.TickEvent;
 import com.industrialworld.i18n.I18n;
 import com.industrialworld.i18n.I18nConst;
 import com.industrialworld.interfaces.InventoryListener;
@@ -26,8 +25,8 @@ import org.bukkit.inventory.ItemStack;
 import java.util.*;
 
 public class IWCraftingTable extends DummyBlock implements InventoryListener {
-    private List<Inventory> availableInventories = new ArrayList<>();
-    private Map<Inventory, RecipeBase> lastRecipe = new HashMap<>();
+    private final List<Inventory> availableInventories = new ArrayList<>();
+    private final Map<Inventory, RecipeBase> lastRecipe = new HashMap<>();
 
     public IWCraftingTable() {
         InventoryListenerManager.register(this);
@@ -49,8 +48,8 @@ public class IWCraftingTable extends DummyBlock implements InventoryListener {
     }
 
     @Override
-    public boolean onInteract(Player player, Action action, ItemStack tool, Block block) {
-        if (action == Action.RIGHT_CLICK_BLOCK && !player.isSneaking()) {
+    public boolean onInteract(Player player, Action action, ItemStack tool, Block block, InteractActor actor) {
+        if (actor == InteractActor.BLOCK && action == Action.RIGHT_CLICK_BLOCK && !player.isSneaking()) {
             Inventory i = Bukkit.createInventory(null, InventoryType.WORKBENCH, I18n.getLocaleString(I18nConst.Inventory.IW_CRAFTING_TABLE_TITLE));
             player.openInventory(i);
             availableInventories.add(i);
@@ -70,7 +69,7 @@ public class IWCraftingTable extends DummyBlock implements InventoryListener {
     }
 
     @Override
-    public void onTick(TickEvent event) {
+    public void onTick() {
         // Use getStorageContents & setStorageContents to control the crafting table. The result will be put on the slot 0
         for (Inventory craftingInv : availableInventories) {
             ItemStack[] raw = craftingInv.getStorageContents();
@@ -111,6 +110,7 @@ public class IWCraftingTable extends DummyBlock implements InventoryListener {
             Inventory craftInv = event.getClickedInventory();
 
             Map<Integer, ItemStack> damagedItemIndex = new HashMap<>();
+            assert craftInv != null;
             RecipeBase.RecipeResultInfo info = RecipeRegistry.matchCraftingRecipe(fetchMatrix(craftInv), damagedItemIndex);
             if (info == null) {
                 return;

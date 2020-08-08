@@ -18,12 +18,11 @@ import java.util.Map;
 
 public class RecipeRegistry {
     private static List<RecipeBase> recipes = new LinkedList<>();
-    public static NamespacedKey namespace = new NamespacedKey(IndustrialWorld.instance, "IndustrialWorld");
 
     public static void register(RecipeBase recipeBase) {
         recipes.add(recipeBase);
         if (recipeBase instanceof SmeltingRecipe)
-            Bukkit.addRecipe(new FurnaceRecipe(namespace, recipeBase.getResult(IWMaterial.NULL), new RecipeChoice.ExactChoice(((SmeltingRecipe) recipeBase).getAllMatches()), ((SmeltingRecipe) recipeBase).getExperience(), ((SmeltingRecipe) recipeBase).getCookingTime()));
+            Bukkit.addRecipe(new FurnaceRecipe(new NamespacedKey(IndustrialWorld.instance, "temp_furnace_recipe"), recipeBase.getResult(IWMaterial.NULL), new RecipeChoice.ExactChoice(((SmeltingRecipe) recipeBase).getAllMatches()), ((SmeltingRecipe) recipeBase).getExperience(), ((SmeltingRecipe) recipeBase).getCookingTime()));
     }
 
     public static RecipeBase.RecipeResultInfo matchCraftingRecipe(List<ItemStack> items, Map<Integer, ItemStack> damageResult) {

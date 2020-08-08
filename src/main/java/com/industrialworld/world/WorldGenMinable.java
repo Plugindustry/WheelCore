@@ -1,6 +1,6 @@
 package com.industrialworld.world;
 
-import com.industrialworld.interfaces.block.OreBase;
+import com.industrialworld.interfaces.block.BlockBase;
 import com.industrialworld.manager.MainManager;
 import com.industrialworld.utils.BlockUtil;
 import com.industrialworld.utils.DebuggingLogger;
@@ -12,15 +12,12 @@ import org.bukkit.block.Block;
 import java.util.Random;
 
 public class WorldGenMinable {
-    private final OreBase ore;
+    private final BlockBase ore;
     private final int numberOfBlocks;
 
-    public WorldGenMinable(OreBase ore, int numberOfBlocks) {
-        if (ore.isOre()) {
-            this.ore = ore;
-            this.numberOfBlocks = numberOfBlocks;
-        } else
-            throw new IllegalArgumentException();
+    public WorldGenMinable(BlockBase ore, int numberOfBlocks) {
+        this.ore = ore;
+        this.numberOfBlocks = numberOfBlocks;
     }
 
     public boolean generate(World worldIn, Random rand, Chunk chunk, Location blockLctn) {

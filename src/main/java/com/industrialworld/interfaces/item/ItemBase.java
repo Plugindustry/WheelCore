@@ -1,7 +1,7 @@
 package com.industrialworld.interfaces.item;
 
-import com.industrialworld.interfaces.Interactive;
+import com.industrialworld.interfaces.Base;
 
-public interface ItemBase extends Interactive {
+public interface ItemBase extends Base {
 
 }

@@ -2,10 +2,13 @@ package com.industrialworld.manager;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
-import com.industrialworld.event.TickEvent;
 import com.industrialworld.interfaces.Base;
+import com.industrialworld.interfaces.Interactive;
+import com.industrialworld.interfaces.Tickable;
 import com.industrialworld.interfaces.block.BlockBase;
 import com.industrialworld.interfaces.block.BlockData;
+import com.industrialworld.interfaces.block.Destoryable;
+import com.industrialworld.interfaces.block.Placeable;
 import com.industrialworld.interfaces.item.ItemBase;
 import com.industrialworld.utils.DebuggingLogger;
 import com.industrialworld.utils.NBTUtil;
@@ -27,20 +30,20 @@ import org.bukkit.inventory.ItemStack;
 import java.util.*;
 
 public class MainManager {
+    public static final HashMap<Base, Set<Location>> baseBlocks = new HashMap<>();
     private static final BiMap<String, Base> mapping = HashBiMap.create();
     private static final HashMap<Location, Map.Entry<String, BlockData>> blocks = new HashMap<>();
-    public static final HashMap<Base, Set<Location>> baseBlocks = new HashMap<>();
     private static final HashSet<Long> loadedChunks = new HashSet<>();
 
     // returns if the event doesn't need to be cancelled
     public static boolean processBlockPlacement(ItemStack item, Block newBlock) {
         BlockBase blockBase = (BlockBase) getInstanceFromId(NBTUtil.getTagValue(item, "IWItemId").asString());
-        return blockBase != null && blockBase.onBlockPlace(newBlock);
+        return blockBase instanceof Placeable && ((Placeable) blockBase).onBlockPlace(newBlock);
     }
 
     public static boolean processBlockDestroy(ItemStack tool, Block target, boolean canceled) {
         BlockBase blockBase = (BlockBase) getInstanceFromId(getBlockId(target.getLocation()));
-        return blockBase.onBlockDestroy(target, tool, canceled);
+        return blockBase instanceof Destoryable && ((Destoryable) blockBase).onBlockDestroy(target, tool, canceled);
     }
 
     public static boolean processBlockInteract(Player player, Block block, ItemStack tool, Action action) {
@@ -48,7 +51,8 @@ public class MainManager {
         if (blockBase == null) {
             return true;
         }
-        return blockBase.onInteract(player, action, tool, block);
+        return blockBase instanceof Interactive &&
+               ((Interactive) blockBase).onInteract(player, action, tool, block, Interactive.InteractActor.BLOCK);
     }
 
     public static boolean processItemInteract(Player player, Block block, ItemStack tool, Action action) {
@@ -57,13 +61,14 @@ public class MainManager {
             return true;
         }
 
-        return itemBase.onInteract(player, action, tool, block);
+        return itemBase instanceof Interactive &&
+               ((Interactive) itemBase).onInteract(player, action, tool, block, Interactive.InteractActor.ITEM);
     }
 
-    public static void update(TickEvent tick) {
-        for (Base base : mapping.values()) {
-            base.onTick(tick);
-        }
+    public static void update() {
+        for (Base base : mapping.values())
+            if (base instanceof Tickable)
+                ((Tickable) base).onTick();
     }
 
     public static void onWorldInit(WorldInitEvent event) {

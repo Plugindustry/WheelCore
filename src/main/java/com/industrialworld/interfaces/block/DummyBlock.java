@@ -1,6 +1,7 @@
 package com.industrialworld.interfaces.block;
 
-import com.industrialworld.event.TickEvent;
+import com.industrialworld.interfaces.Interactive;
+import com.industrialworld.interfaces.Tickable;
 import com.industrialworld.manager.MainManager;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -8,24 +9,20 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 
-public abstract class DummyBlock implements BlockBase {
+public abstract class DummyBlock implements BlockBase, Tickable, Placeable, Destoryable, Interactive {
     @Override
-    public void onTick(TickEvent event) {
+    public void onTick() {
 
     }
 
     @Override
-    public boolean onInteract(Player player, Action action, ItemStack tool, Block block) {
+    public boolean onInteract(Player player, Action action, ItemStack tool, Block block, InteractActor actor) {
         return true;
     }
 
     public boolean onBlockPlace(Block block) {
         MainManager.addBlock(MainManager.getIdFromInstance(this), block.getLocation(), null /*currently is null*/);
         return true;
-    }
-
-    public boolean isOre() {
-        return false;
     }
 
     public boolean onBlockDestroy(Block block, ItemStack tool, boolean canceled) {
