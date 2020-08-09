@@ -111,22 +111,13 @@ public class RegisterManager {
     public static void registerMaterial() {
         ItemTemplate itemIngot = ItemIngot.getInstance();
         itemIngot.register(IWMaterial.COPPER);
+        itemIngot.register(IWMaterial.STEEL);
     }
 
     public static void registerItem() {
         // Forge Hammer
         ItemManager.register("FORGE_HAMMER",
-                             ItemStackUtil.create(MaterialUtil.IRON_SHOVEL)
-                                     .setId("FORGE_HAMMER")
-                                     .setAmount(1)
-                                     .setDisplayName(ChatColor.WHITE +
-                                                     I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER))
-                                     .setLore(Arrays.asList(ChatColor.WHITE +
-                                                            I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER_LORE1),
-                                                            ChatColor.GRAY +
-                                                            I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER_LORE2),
-                                                            ChatColor.GRAY +
-                                                            I18n.getLocaleString(I18nConst.Item.FORGE_HAMMER_LORE3)))
+                             I18n.processItem("FORGE_HAMMER", 3, ItemStackUtil.create(MaterialUtil.IRON_SHOVEL))
                                      .getItemStack());
 
         /*// IW Crafting Table
@@ -139,172 +130,53 @@ public class RegisterManager {
                                        ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.IW_CRAFTING_TABLE_LORE2)))
                 .getItemStack());*/
         ItemManager.register("RECOGNIZER",
-                             ItemStackUtil.create(Material.STICK)
-                                     .setId("RECOGNIZER")
-                                     .setAmount(1)
-                                     .setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.RECOGNIZER))
-                                     .setLore(Arrays.asList(ChatColor.WHITE +
-                                                            I18n.getLocaleString(I18nConst.Item.RECOGNIZER_LORE1),
-                                                            ChatColor.GRAY +
-                                                            I18n.getLocaleString(I18nConst.Item.RECOGNIZER_LORE2)))
-                                     .getItemStack());
+                             I18n.processItem("RECOGNIZER", 2, ItemStackUtil.create(Material.STICK)).getItemStack());
         ItemManager.register("IRON_PLATE",
-                             ItemStackUtil.create(Material.PAPER)
-                                     .setId("IRON_PLATE")
-                                     .setAmount(1)
-                                     .setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.IRON_PLATE))
-                                     .setLore(Arrays.asList(ChatColor.WHITE +
-                                                            I18n.getLocaleString(I18nConst.Item.IRON_PLATE_LORE1),
-                                                            ChatColor.GRAY +
-                                                            I18n.getLocaleString(I18nConst.Element.Fe)))
+                             I18n.processItem("IRON_PLATE",
+                                              1,
+                                              ItemStackUtil.create(Material.PAPER),
+                                              Collections.emptyList(),
+                                              Collections.singletonList(ChatColor.GRAY +
+                                                                        I18n.getLocaleString(I18nConst.Element.Fe)))
                                      .getItemStack());
         ItemManager.register("CUTTER",
-                             ItemStackUtil.create(Material.SHEARS)
-                                     .setId("CUTTER")
-                                     .setAmount(1)
-                                     .setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.CUTTER))
-                                     .setLore(Arrays.asList(ChatColor.WHITE +
-                                                            I18n.getLocaleString(I18nConst.Item.CUTTER),
-                                                            ChatColor.GRAY +
-                                                            I18n.getLocaleString(I18nConst.Item.CUTTER_LORE1),
-                                                            ChatColor.GRAY +
-                                                            I18n.getLocaleString(I18nConst.Item.CUTTER_LORE2)))
+                             I18n.processItem("CUTTER", 3, ItemStackUtil.create(Material.SHEARS)).getItemStack());
+        ItemManager.register("BASIC_MACHINE_BLOCK",
+                             I18n.processItem("BASIC_MACHINE_BLOCK", 2, ItemStackUtil.create(Material.IRON_BLOCK))
                                      .getItemStack());
-        ItemManager.register("BASIC_MACHINE_BLOCK", ItemStackUtil.create(Material.IRON_BLOCK)
-                .setId("BASIC_MACHINE_BLOCK")
-                .setAmount(1)
-                .setDisplayName(ChatColor.WHITE +
-                                I18n.getLocaleString(I18nConst.Item.BASIC_MACHINE_BLOCK))
-                .setLore(Arrays.asList(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.BASIC_MACHINE_BLOCK_LORE1),
-                                       ChatColor.GRAY + I18n.getLocaleString(I18nConst.Item.BASIC_MACHINE_BLOCK_LORE2)))
-                .getItemStack());
         ItemManager.register("COPPER_INGOT", ItemIngot.getInstance().getItemStack(IWMaterial.COPPER));
         ItemManager.register("COPPER_PLATE",
-                             ItemStackUtil.create(Material.PAPER)
-                                     .setId("COPPER_PLATE")
-                                     .setAmount(1)
-                                     .setDisplayName(ChatColor.WHITE +
-                                                     I18n.getLocaleString(I18nConst.Item.COPPER_PLATE))
-                                     .setLore(Arrays.asList(ChatColor.WHITE +
-                                                            I18n.getLocaleString(I18nConst.Item.COPPER_PLATE_LORE1),
-                                                            ChatColor.GRAY +
-                                                            I18n.getLocaleString(I18nConst.Item.COPPER_PLATE_LORE2)))
-                                     .getItemStack());
+                             I18n.processItem("COPPER_PLATE", 2, ItemStackUtil.create(Material.PAPER)).getItemStack());
         ItemManager.register("COPPER_WIRE",
-                             ItemStackUtil.create(Material.IRON_BARS)
-                                     .setId("COPPER_WIRE")
-                                     .setAmount(1)
-                                     .setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_WIRE))
-                                     .setLore(Arrays.asList(ChatColor.WHITE +
-                                                            I18n.getLocaleString(I18nConst.Item.COPPER_WIRE_LORE1),
-                                                            ChatColor.GRAY +
-                                                            I18n.getLocaleString(I18nConst.Item.COPPER_WIRE_LORE2)))
+                             I18n.processItem("COPPER_WIRE", 2, ItemStackUtil.create(Material.IRON_BARS))
                                      .getItemStack());
         ItemManager.register("COPPER_ORE",
-                             ItemStackUtil.create(Material.IRON_ORE)
-                                     .setId("COPPER_ORE")
-                                     .setAmount(1)
-                                     .setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.COPPER_ORE))
-                                     .setLore(Arrays.asList(ChatColor.WHITE +
-                                                            I18n.getLocaleString(I18nConst.Item.COPPER_ORE_LORE1),
-                                                            ChatColor.GRAY +
-                                                            I18n.getLocaleString(I18nConst.Item.COPPER_ORE_LORE2)))
-                                     .getItemStack());
+                             I18n.processItem("COPPER_ORE", 2, ItemStackUtil.create(Material.IRON_ORE)).getItemStack());
         ItemManager.register("RED_HOT_IRON_INGOT",
-                             ItemStackUtil.create(Material.BRICK)
-                                     .setId("RED_HOT_IRON_INGOT")
-                                     .setAmount(1)
-                                     .setDisplayName(ChatColor.WHITE +
-                                                     I18n.getLocaleString(I18nConst.Item.RED_HOT_IRON_INGOT))
-                                     .setLore(Arrays.asList(ChatColor.WHITE +
-                                                            I18n.getLocaleString(I18nConst.Item.RED_HOT_IRON_INGOT_LORE1),
-                                                            ChatColor.WHITE +
-                                                            I18n.getLocaleString(I18nConst.Item.RED_HOT_IRON_INGOT_LORE2)))
+                             I18n.processItem("RED_HOT_IRON_INGOT", 2, ItemStackUtil.create(Material.BRICK))
                                      .getItemStack());
-        ItemManager.register("STEEL_INGOT",
-                             ItemStackUtil.create(Material.IRON_INGOT)
-                                     .setId("STEEL_INGOT")
-                                     .setAmount(1)
-                                     .setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.STEEL_INGOT))
-                                     .setLore(Arrays.asList(ChatColor.WHITE +
-                                                            I18n.getLocaleString(I18nConst.Item.STEEL_INGOT_LORE1),
-                                                            ChatColor.WHITE +
-                                                            I18n.getLocaleString(I18nConst.Item.STEEL_INGOT_LORE2)))
-                                     .getItemStack());
+        ItemManager.register("STEEL_INGOT", ItemIngot.getInstance().getItemStack(IWMaterial.STEEL));
         ItemManager.register("RED_HOT_STEEL_INGOT",
-                             ItemStackUtil.create(Material.BRICK)
-                                     .setId("RED_HOT_STEEL_INGOT")
-                                     .setAmount(1)
-                                     .setDisplayName(ChatColor.WHITE +
-                                                     I18n.getLocaleString(I18nConst.Item.RED_HOT_STEEL_INGOT))
-                                     .setLore(Arrays.asList(ChatColor.WHITE +
-                                                            I18n.getLocaleString(I18nConst.Item.RED_HOT_STEEL_INGOT_LORE1),
-                                                            ChatColor.WHITE +
-                                                            I18n.getLocaleString(I18nConst.Item.RED_HOT_STEEL_INGOT_LORE2)))
+                             I18n.processItem("RED_HOT_STEEL_INGOT", 2, ItemStackUtil.create(Material.BRICK))
                                      .getItemStack());
         ItemManager.register("QUICKLIME",
-                             ItemStackUtil.create(Material.BONE_MEAL)
-                                     .setId("QUICKLIME")
-                                     .setAmount(1)
-                                     .setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.QUICKLIME))
-                                     .setLore(Arrays.asList(ChatColor.WHITE +
-                                                            I18n.getLocaleString(I18nConst.Item.QUICKLIME_LORE1),
-                                                            ChatColor.WHITE +
-                                                            I18n.getLocaleString(I18nConst.Item.QUICKLIME_LORE2)))
-                                     .getItemStack());
+                             I18n.processItem("QUICKLIME", 2, ItemStackUtil.create(Material.BONE_MEAL)).getItemStack());
         ItemManager.register("TIN_INGOT",
-                             ItemStackUtil.create(Material.IRON_INGOT)
-                                     .setId("TIN_INGOT")
-                                     .setAmount(1)
-                                     .setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.TIN_INGOT))
-                                     .setLore(Arrays.asList(ChatColor.WHITE +
-                                                            I18n.getLocaleString(I18nConst.Item.TIN_INGOT_LORE1),
-                                                            ChatColor.WHITE +
-                                                            I18n.getLocaleString(I18nConst.Item.TIN_INGOT_LORE2)))
+                             I18n.processItem("TIN_INGOT", 2, ItemStackUtil.create(Material.IRON_INGOT))
                                      .getItemStack());
         ItemManager.register("ZINC_INGOT",
-                             ItemStackUtil.create(Material.IRON_INGOT)
-                                     .setId("ZINC_INGOT")
-                                     .setAmount(1)
-                                     .setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.ZINC_INGOT))
-                                     .setLore(Arrays.asList(ChatColor.WHITE +
-                                                            I18n.getLocaleString(I18nConst.Item.ZINC_INGOT_LORE1),
-                                                            ChatColor.WHITE +
-                                                            I18n.getLocaleString(I18nConst.Item.ZINC_INGOT_LORE2)))
+                             I18n.processItem("ZINC_INGOT", 2, ItemStackUtil.create(Material.IRON_INGOT))
                                      .getItemStack());
         ItemManager.register("GRINDER",
-                             ItemStackUtil.create(Material.IRON_BLOCK)
-                                     .setId("GRINDER")
-                                     .setAmount(1)
-                                     .setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.GRINDER))
-                                     .setLore(Arrays.asList(ChatColor.WHITE +
-                                                            I18n.getLocaleString(I18nConst.Item.GRINDER_LORE1),
-                                                            ChatColor.WHITE +
-                                                            I18n.getLocaleString(I18nConst.Item.GRINDER_LORE2)))
-                                     .getItemStack());
+                             I18n.processItem("GRINDER", 2, ItemStackUtil.create(Material.IRON_BLOCK)).getItemStack());
         ItemManager.register("BASIC_MOTOR",
-                             ItemStackUtil.create(Material.SKELETON_SKULL)
-                                     .setId("BASIC_MOTOR")
-                                     .setAmount(1)
-                                     .setDisplayName(ChatColor.WHITE + I18n.getLocaleString(I18nConst.Item.BASIC_MOTOR))
-                                     .setLore(Arrays.asList(ChatColor.WHITE +
-                                                            I18n.getLocaleString(I18nConst.Item.BASIC_MOTOR_LORE1),
-                                                            ChatColor.WHITE +
-                                                            I18n.getLocaleString(I18nConst.Item.BASIC_MOTOR_LORE2)))
+                             I18n.processItem("BASIC_MOTOR", 2, ItemStackUtil.create(Material.SKELETON_SKULL))
                                      .getItemStack());
         ItemManager.register("REDSTONE_BATTERY",
-                             ItemStackUtil.create(Material.SKELETON_SKULL)
-                                     .setId("REDSTONE_BATTERY")
-                                     .setAmount(1)
-                                     .setDisplayName(ChatColor.WHITE +
-                                                     I18n.getLocaleString(I18nConst.Item.REDSTONE_BATTERY))
-                                     .setLore(Arrays.asList(ChatColor.WHITE +
-                                                            I18n.getLocaleString(I18nConst.Item.REDSTONE_BATTERY_LORE1),
-                                                            ChatColor.WHITE +
-                                                            I18n.getLocaleString(I18nConst.Item.REDSTONE_BATTERY_LORE2)))
+                             I18n.processItem("REDSTONE_BATTERY", 2, ItemStackUtil.create(Material.SKELETON_SKULL))
                                      .getItemStack());
 
-        ItemManager.register("INGOT_COPPER", ItemIngot.getInstance().getItemStack(IWMaterial.COPPER));
+        //ItemManager.register("INGOT_COPPER", ItemIngot.getInstance().getItemStack(IWMaterial.COPPER));
 
         MainManager.register("RECOGNIZER", new Recognizer());
     }
@@ -314,6 +186,12 @@ public class RegisterManager {
     }
 
     public static void registerIWItemMaterial() {
+        ItemManager.registerItemMaterial(ItemType.INGOT,
+                                         IWMaterial.NULL,
+                                         Material.IRON_INGOT); // NULL Ingot -> Iron Ingot (For placeholder)
         ItemManager.registerItemMaterial(ItemType.INGOT, IWMaterial.COPPER, Material.BRICK); // Copper Ingot -> Brick
+        ItemManager.registerItemMaterial(ItemType.INGOT,
+                                         IWMaterial.STEEL,
+                                         Material.IRON_INGOT); // Steel Ingot -> Iron Ingot
     }
 }

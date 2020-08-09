@@ -1,19 +1,61 @@
 package com.industrialworld.utils;
 
 import com.industrialworld.IndustrialWorld;
+import com.industrialworld.i18n.I18n;
+import com.industrialworld.i18n.I18nConst;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
-public class EnchantUtil {
+public class EnchantmentUtil {
     public static CustomEnchantment create(String name) {
         return new CustomEnchantment(name);
+    }
+
+    public static void addToItem(ItemStack item, CustomEnchantment enchantment, int level) {
+        item.addUnsafeEnchantment(enchantment, level);
+        if (item.hasItemMeta()) {
+            ItemMeta meta = item.getItemMeta();
+            assert meta != null;
+            List<String> lore = meta.hasLore() ? meta.getLore() : new LinkedList<>();
+            assert lore != null;
+            lore.add(I18n.getLocaleString(String.format(I18nConst.Enchantment.ENCHANTMENT_NAME,
+                                                        enchantment.getName())) +
+                     I18n.getLocaleString(String.format(I18nConst.Enchantment.ENCHANTMENT_LEVEL, level)));
+            meta.setLore(lore);
+            item.setItemMeta(meta);
+        }
+    }
+
+    public static void removeFromItem(ItemStack item, CustomEnchantment enchantment) {
+        item.removeEnchantment(enchantment);
+        if (item.hasItemMeta()) {
+            ItemMeta meta = item.getItemMeta();
+            assert meta != null;
+            if (meta.hasLore()) {
+                List<String> lore = meta.getLore();
+                assert lore != null;
+                String enchantmentDisplay = I18n.getLocaleString(String.format(I18nConst.Enchantment.ENCHANTMENT_NAME,
+                                                                               enchantment.getName()));
+                Iterator<String> iterator = lore.iterator();
+                while (iterator.hasNext())
+                    if (iterator.next().startsWith(enchantmentDisplay)) {
+                        iterator.remove();
+                        break;
+                    }
+                meta.setLore(lore);
+                item.setItemMeta(meta);
+            }
+        }
     }
 
     public static class CustomEnchantment extends Enchantment {

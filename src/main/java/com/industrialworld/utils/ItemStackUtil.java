@@ -63,7 +63,7 @@ public class ItemStackUtil {
     }
 
     public static class ItemStackFactory {
-        private Material mtrl;
+        private final Material material;
         private int amount = 1;
         private String id;
         private String displayName = "";
@@ -71,8 +71,8 @@ public class ItemStackUtil {
         private IWMaterial iwMaterial = IWMaterial.NULL;
         private ItemType itemType = ItemType.NULL;
 
-        public ItemStackFactory(Material mtrl) {
-            this.mtrl = mtrl;
+        public ItemStackFactory(Material material) {
+            this.material = material;
         }
 
         public ItemStackFactory setAmount(int amount) {
@@ -106,14 +106,14 @@ public class ItemStackUtil {
         }
 
         public ItemStack getItemStack() {
-            ItemStack tmp = new ItemStack(mtrl, amount);
+            ItemStack tmp = new ItemStack(material, amount);
             tmp = NBTUtil.setTagValue(tmp, "isIWItem", new NBTUtil.NBTValue().set(true));
             tmp = NBTUtil.setTagValue(tmp, "IWItemId", new NBTUtil.NBTValue().set(id));
             tmp = NBTUtil.setTagValue(tmp, "IWMaterial", new NBTUtil.NBTValue().set(iwMaterial.getMaterialID()));
             tmp = NBTUtil.setTagValue(tmp, "IWItemType", new NBTUtil.NBTValue().set(itemType.getTypeID()));
             ItemMeta meta = tmp.getItemMeta();
             if (meta == null) {
-                meta = Bukkit.getItemFactory().getItemMeta(mtrl);
+                meta = Bukkit.getItemFactory().getItemMeta(material);
                 if (meta == null) {
                     throw new IllegalStateException("¿");
                 }

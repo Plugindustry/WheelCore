@@ -1,5 +1,6 @@
 package com.industrialworld.event;
 
+import com.google.common.collect.Maps;
 import com.industrialworld.ConstItems;
 import com.industrialworld.IndustrialWorld;
 import com.industrialworld.interfaces.block.MachineBase;
@@ -8,7 +9,7 @@ import com.industrialworld.manager.MainManager;
 import com.industrialworld.manager.RecipeRegistry;
 import com.industrialworld.manager.recipe.RecipeBase;
 import com.industrialworld.manager.recipe.SmeltingRecipe;
-import com.industrialworld.utils.EnchantUtil;
+import com.industrialworld.utils.EnchantmentUtil;
 import com.industrialworld.utils.ItemStackUtil;
 import com.industrialworld.utils.NBTUtil;
 import org.bukkit.Bukkit;
@@ -88,19 +89,30 @@ public class EventListener implements Listener {
         if (srcItem == null || result == null)
             return;
 
-        Map<Enchantment, Integer> customs = srcItem.getEnchantments()
+        Map<Enchantment, Integer> src = srcItem.getEnchantments()
                 .entrySet()
                 .stream()
-                .filter(entry -> entry.getKey() instanceof EnchantUtil.CustomEnchantment)
+                .filter(entry -> entry.getKey() instanceof EnchantmentUtil.CustomEnchantment)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        Map<Enchantment, Integer> customs = src.entrySet()
+                .stream()
                 .filter(entry -> result.getEnchantments()
                         .keySet()
                         .stream()
                         .noneMatch(enchantment -> entry.getKey().conflictsWith(enchantment)))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
         if (customs.isEmpty())
             return;
 
-        result.addEnchantments(customs);
+        result.addEnchantments(src);
+        Maps.difference(src, customs)
+                .entriesOnlyOnLeft()
+                .keySet()
+                .forEach(enchantment -> EnchantmentUtil.removeFromItem(result,
+                                                                       (EnchantmentUtil.CustomEnchantment) enchantment));
+
         event.setResult(result);
     }
 

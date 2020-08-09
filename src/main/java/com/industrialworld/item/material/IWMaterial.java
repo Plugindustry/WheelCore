@@ -1,7 +1,7 @@
 package com.industrialworld.item.material;
 
 public enum IWMaterial {
-    NULL("NULL"), COPPER("COPPER"), IRON("IRON");
+    NULL("NULL"), COPPER("COPPER"), IRON("IRON"), STEEL("STEEL");
 
     private final String materialID;
 
