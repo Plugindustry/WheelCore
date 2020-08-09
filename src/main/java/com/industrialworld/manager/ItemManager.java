@@ -39,9 +39,11 @@ public class ItemManager {
             if (itemMaterialMap.get(type).containsKey(iwMaterial)) {
                 return itemMaterialMap.get(type).get(iwMaterial);
             } else {
-                DebuggingLogger.debug(
-                        "No BukkitMaterial for IWMaterial:" + iwMaterial.getMaterialID() + " & ItemType:" +
-                        type.getTypeID() + "was found.");
+                DebuggingLogger.debug("No BukkitMaterial for IWMaterial:" +
+                                      iwMaterial.getMaterialID() +
+                                      " & ItemType:" +
+                                      type.getTypeID() +
+                                      "was found.");
             }
         } else {
             DebuggingLogger.debug("No Itemtype was found. " + type.getTypeID());

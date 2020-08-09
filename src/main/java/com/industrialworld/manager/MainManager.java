@@ -51,8 +51,11 @@ public class MainManager {
         if (blockBase == null) {
             return true;
         }
-        return blockBase instanceof Interactive &&
-               ((Interactive) blockBase).onInteract(player, action, tool, block, Interactive.InteractActor.BLOCK);
+        return blockBase instanceof Interactive && ((Interactive) blockBase).onInteract(player,
+                                                                                        action,
+                                                                                        tool,
+                                                                                        block,
+                                                                                        Interactive.InteractActor.BLOCK);
     }
 
     public static boolean processItemInteract(Player player, Block block, ItemStack tool, Action action) {
@@ -61,8 +64,11 @@ public class MainManager {
             return true;
         }
 
-        return itemBase instanceof Interactive &&
-               ((Interactive) itemBase).onInteract(player, action, tool, block, Interactive.InteractActor.ITEM);
+        return itemBase instanceof Interactive && ((Interactive) itemBase).onInteract(player,
+                                                                                      action,
+                                                                                      tool,
+                                                                                      block,
+                                                                                      Interactive.InteractActor.ITEM);
     }
 
     public static void update() {
@@ -108,7 +114,12 @@ public class MainManager {
         for (String str : config.getKeys(false)) {
             List<?> list = config.getList(str);
             String[] arr = StringUtils.split(str, ";");
-            addBlock((String) (list.get(0)), new Location(Bukkit.getWorld(arr[0]), new Integer(arr[1]), new Integer(arr[2]), new Integer(arr[3])), (BlockData) (list.get(1)));
+            addBlock((String) (list.get(0)),
+                     new Location(Bukkit.getWorld(arr[0]),
+                                  new Integer(arr[1]),
+                                  new Integer(arr[2]),
+                                  new Integer(arr[3])),
+                     (BlockData) (list.get(1)));
         }
     }
 
@@ -118,7 +129,12 @@ public class MainManager {
             DebuggingLogger.debug("Save " + entry.getValue().getKey() + " to " + loc.getWorld());
             if (loc.getWorld() == null)
                 continue;
-            config.set(loc.getWorld().getName() + ";" + (int) loc.getX() + ";" + (int) loc.getY() + ";" +
+            config.set(loc.getWorld().getName() +
+                       ";" +
+                       (int) loc.getX() +
+                       ";" +
+                       (int) loc.getY() +
+                       ";" +
                        (int) loc.getZ(), Arrays.asList(entry.getValue().getKey(), entry.getValue().getValue()));
         }
     }

@@ -38,8 +38,8 @@ public class ItemStackUtil {
         if (aIs) {
             NBTUtil.NBTValue aId = NBTUtil.getTagValue(a, "IWItemId");
             NBTUtil.NBTValue bId = NBTUtil.getTagValue(b, "IWItemId");
-            return (aId == null && bId == null) ||
-                   (aId != null && bId != null && Objects.equals(aId.asString(), bId.asString()));
+            return (aId == null && bId == null) || (aId != null && bId != null && Objects.equals(aId.asString(),
+                                                                                                 bId.asString()));
         }
         return true;
     }

@@ -12,7 +12,10 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class BlockUtil {
-    private static final List<Material> replaceableOreGenList = Arrays.asList(Material.STONE, Material.DIRT, Material.ANDESITE, Material.GRAVEL);
+    private static final List<Material> replaceableOreGenList = Arrays.asList(Material.STONE,
+                                                                              Material.DIRT,
+                                                                              Material.ANDESITE,
+                                                                              Material.GRAVEL);
 
     /*public static Map.Entry<HashTree<Location>, List<SearchResult>> searchFromWire(Block wireBlock, Location expect) {
         ArrayList<SearchResult> result = new ArrayList<>();
@@ -57,22 +60,28 @@ public class BlockUtil {
                     }
 
                 Location t1 = temp.clone().add(1, 0, 0);
-                machineNumber = checkTargetBlock(expect, network, node, machines, nodeInstance, machineNumber, t1, t1.getBlock());
+                machineNumber = checkTargetBlock(expect, network, node, machines, nodeInstance, machineNumber, t1, t1
+                .getBlock());
 
                 Location t2 = temp.clone().add(-1, 0, 0);
-                machineNumber = checkTargetBlock(expect, network, node, machines, nodeInstance, machineNumber, t2, t1.getBlock());
+                machineNumber = checkTargetBlock(expect, network, node, machines, nodeInstance, machineNumber, t2, t1
+                .getBlock());
 
                 Location t3 = temp.clone().add(0, 1, 0);
-                machineNumber = checkTargetBlock(expect, network, node, machines, nodeInstance, machineNumber, t3, t1.getBlock());
+                machineNumber = checkTargetBlock(expect, network, node, machines, nodeInstance, machineNumber, t3, t1
+                .getBlock());
 
                 Location t4 = temp.clone().add(0, -1, 0);
-                machineNumber = checkTargetBlock(expect, network, node, machines, nodeInstance, machineNumber, t4, t1.getBlock());
+                machineNumber = checkTargetBlock(expect, network, node, machines, nodeInstance, machineNumber, t4, t1
+                .getBlock());
 
                 Location t5 = temp.clone().add(0, 0, 1);
-                machineNumber = checkTargetBlock(expect, network, node, machines, nodeInstance, machineNumber, t5, t1.getBlock());
+                machineNumber = checkTargetBlock(expect, network, node, machines, nodeInstance, machineNumber, t5, t1
+                .getBlock());
 
                 Location t6 = temp.clone().add(0, 0, -1);
-                machineNumber = checkTargetBlock(expect, network, node, machines, nodeInstance, machineNumber, t6, t1.getBlock());
+                machineNumber = checkTargetBlock(expect, network, node, machines, nodeInstance, machineNumber, t6, t1
+                .getBlock());
 
                 for (Block machine : machines) {
                     ArrayList<Location> wires = new ArrayList<>();
@@ -88,7 +97,8 @@ public class BlockUtil {
         return new AbstractMap.SimpleEntry<>(network, result);
     }
 
-    private static int checkTargetBlock(Location expect, HashTree<Location> network, Node<Location> node, ArrayList<Block> machines, Base nodeInstance, int machineNumber, Location t1, Block block) {
+    private static int checkTargetBlock(Location expect, HashTree<Location> network, Node<Location> node,
+    ArrayList<Block> machines, Base nodeInstance, int machineNumber, Location t1, Block block) {
         if (!t1.equals(expect)) {
             if (isWire(t1.getBlock()) &&
                 MainManager.getInstanceFromId(MainManager.getBlockId(block)).equals(nodeInstance))
@@ -104,7 +114,12 @@ public class BlockUtil {
     }*/
 
     public static Stream<Location> findWireAround(Location src) {
-        return Stream.of(src.clone().add(1, 0, 0), src.clone().add(-1, 0, 0), src.clone().add(0, 1, 0), src.clone().add(0, -1, 0), src.clone().add(0, 0, 1), src.clone().add(0, 0, -1)).filter(BlockUtil::isWire);
+        return Stream.of(src.clone().add(1, 0, 0),
+                         src.clone().add(-1, 0, 0),
+                         src.clone().add(0, 1, 0),
+                         src.clone().add(0, -1, 0),
+                         src.clone().add(0, 0, 1),
+                         src.clone().add(0, 0, -1)).filter(BlockUtil::isWire);
     }
 
     public static boolean isMachine(Location block) {

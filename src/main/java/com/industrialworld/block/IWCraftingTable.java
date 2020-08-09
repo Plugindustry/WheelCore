@@ -1,3 +1,4 @@
+/*
 package com.industrialworld.block;
 
 import com.industrialworld.ConstItems;
@@ -68,7 +69,8 @@ public class IWCraftingTable extends DummyBlock implements InventoryListener {
 
     @Override
     public void onTick() {
-        // Use getStorageContents & setStorageContents to control the crafting table. The result will be put on the slot 0
+        // Use getStorageContents & setStorageContents to control the crafting table. The result will be put on the
+        // slot 0
         for (Inventory craftingInv : availableInventories) {
             ItemStack[] raw = craftingInv.getStorageContents();
             RecipeBase.RecipeResultInfo info = RecipeRegistry.matchCraftingRecipe(fetchMatrix(craftingInv), null);
@@ -99,7 +101,8 @@ public class IWCraftingTable extends DummyBlock implements InventoryListener {
     @Override
     public void onInventoryClick(InventoryClickEvent event) {
         if (isInventoryAvailable(event.getClickedInventory()) && event.getSlot() == 0) {
-            if (!(event.getAction() == InventoryAction.PICKUP_ALL || event.getAction() == InventoryAction.PLACE_ONE ||
+            if (!(event.getAction() == InventoryAction.PICKUP_ALL ||
+                  event.getAction() == InventoryAction.PLACE_ONE ||
                   event.getAction() == InventoryAction.PLACE_ALL)) {
                 event.setCancelled(true);
                 return;
@@ -109,7 +112,8 @@ public class IWCraftingTable extends DummyBlock implements InventoryListener {
 
             Map<Integer, ItemStack> damagedItemIndex = new HashMap<>();
             assert craftInv != null;
-            RecipeBase.RecipeResultInfo info = RecipeRegistry.matchCraftingRecipe(fetchMatrix(craftInv), damagedItemIndex);
+            RecipeBase.RecipeResultInfo info = RecipeRegistry.matchCraftingRecipe(fetchMatrix(craftInv),
+                                                                                  damagedItemIndex);
             if (info == null) {
                 return;
             }
@@ -151,3 +155,4 @@ public class IWCraftingTable extends DummyBlock implements InventoryListener {
     }
 
 }
+*/

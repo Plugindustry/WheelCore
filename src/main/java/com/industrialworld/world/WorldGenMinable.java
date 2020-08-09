@@ -30,10 +30,14 @@ public class WorldGenMinable {
         if (BlockUtil.isReplaceableOreGen(currentBlock)) {
             currentBlock.setType(this.ore.getMaterial());
             MainManager.addBlock(this.ore.getId(), currentBlock.getLocation(), null);
-            DebuggingLogger.debug("Gen in " + (currentBlock.getLocation().getWorld() == null ?
-                                               null :
-                                               currentBlock.getLocation().getWorld().getName()) + " at " +
-                                  (chunk.getX() << 4) + ", " + (chunk.getZ() << 4));
+            DebuggingLogger.debug("Gen in " +
+                                  (currentBlock.getLocation().getWorld() == null ?
+                                   null :
+                                   currentBlock.getLocation().getWorld().getName()) +
+                                  " at " +
+                                  (chunk.getX() << 4) +
+                                  ", " +
+                                  (chunk.getZ() << 4));
         } else {
             return false;
         }

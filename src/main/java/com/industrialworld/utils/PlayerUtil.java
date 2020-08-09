@@ -18,29 +18,44 @@ public class PlayerUtil {
 
     static {
         try {
-            Class<?> NMSIChatBaseComponent = Class.forName(
-                    "net.minecraft.server." + IndustrialWorld.serverVersion + ".IChatBaseComponent");
-            Class<?> NMSChatComponentText = Class.forName(
-                    "net.minecraft.server." + IndustrialWorld.serverVersion + ".ChatComponentText");
-            Class<?> NMSPlayer = Class.forName(
-                    "net.minecraft.server." + IndustrialWorld.serverVersion + ".EntityPlayer");
-            Class<?> NMSPacketPlayOutChat = Class.forName(
-                    "net.minecraft.server." + IndustrialWorld.serverVersion + ".PacketPlayOutChat");
-            Class<?> NMSPlayerConnection = Class.forName(
-                    "net.minecraft.server." + IndustrialWorld.serverVersion + ".PlayerConnection");
-            Class<?> craftPlayer = Class.forName(
-                    "org.bukkit.craftbukkit." + IndustrialWorld.serverVersion + ".entity.CraftPlayer");
+            Class<?> NMSIChatBaseComponent = Class.forName("net.minecraft.server." +
+                                                           IndustrialWorld.serverVersion +
+                                                           ".IChatBaseComponent");
+            Class<?> NMSChatComponentText = Class.forName("net.minecraft.server." +
+                                                          IndustrialWorld.serverVersion +
+                                                          ".ChatComponentText");
+            Class<?> NMSPlayer = Class.forName("net.minecraft.server." +
+                                               IndustrialWorld.serverVersion +
+                                               ".EntityPlayer");
+            Class<?> NMSPacketPlayOutChat = Class.forName("net.minecraft.server." +
+                                                          IndustrialWorld.serverVersion +
+                                                          ".PacketPlayOutChat");
+            Class<?> NMSPlayerConnection = Class.forName("net.minecraft.server." +
+                                                         IndustrialWorld.serverVersion +
+                                                         ".PlayerConnection");
+            Class<?> craftPlayer = Class.forName("org.bukkit.craftbukkit." +
+                                                 IndustrialWorld.serverVersion +
+                                                 ".entity.CraftPlayer");
             Class<?> NMSPacket = Class.forName("net.minecraft.server." + IndustrialWorld.serverVersion + ".Packet");
-            Class<?> NMSChatMessageType = Class.forName(
-                    "net.minecraft.server." + IndustrialWorld.serverVersion + ".ChatMessageType");
+            Class<?> NMSChatMessageType = Class.forName("net.minecraft.server." +
+                                                        IndustrialWorld.serverVersion +
+                                                        ".ChatMessageType");
 
             MethodHandles.Lookup lookup = MethodHandles.lookup();
             getHandle = lookup.findVirtual(craftPlayer, "getHandle", MethodType.methodType(NMSPlayer));
             playerConnection = lookup.findGetter(NMSPlayer, "playerConnection", NMSPlayerConnection);
-            sendPacket = lookup.findVirtual(NMSPlayerConnection, "sendPacket", MethodType.methodType(void.class, NMSPacket));
-            conChatComponentText = lookup.findConstructor(NMSChatComponentText, MethodType.methodType(void.class, String.class));
-            conChatMessageType = lookup.findStatic(NMSChatMessageType, "a", MethodType.methodType(NMSChatMessageType, byte.class));
-            conPacketPlayOutChat = lookup.findConstructor(NMSPacketPlayOutChat, MethodType.methodType(void.class, NMSIChatBaseComponent, NMSChatMessageType));
+            sendPacket = lookup.findVirtual(NMSPlayerConnection,
+                                            "sendPacket",
+                                            MethodType.methodType(void.class, NMSPacket));
+            conChatComponentText = lookup.findConstructor(NMSChatComponentText,
+                                                          MethodType.methodType(void.class, String.class));
+            conChatMessageType = lookup.findStatic(NMSChatMessageType,
+                                                   "a",
+                                                   MethodType.methodType(NMSChatMessageType, byte.class));
+            conPacketPlayOutChat = lookup.findConstructor(NMSPacketPlayOutChat,
+                                                          MethodType.methodType(void.class,
+                                                                                NMSIChatBaseComponent,
+                                                                                NMSChatMessageType));
         } catch (Throwable e) {
             e.printStackTrace();
             System.err.println("[IndustrialWorld] Plugin shutting down...");

@@ -4,7 +4,8 @@ import com.industrialworld.item.template.ItemIngot;
 import com.industrialworld.item.template.ItemTemplate;
 
 public enum ItemType {
-    NULL("NULL", ItemTemplate.getInstance()), INGOT("INGOT", ItemIngot.getInstance()), DUST("DUST", ItemTemplate.getInstance());
+    NULL("NULL", ItemTemplate.getInstance()), INGOT("INGOT", ItemIngot.getInstance()), DUST("DUST",
+                                                                                            ItemTemplate.getInstance());
 
     private final String typeID;
     private final ItemTemplate template;

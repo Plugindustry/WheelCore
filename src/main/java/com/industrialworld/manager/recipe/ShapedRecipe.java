@@ -5,10 +5,13 @@ import com.industrialworld.item.material.IWMaterial;
 import com.industrialworld.utils.ItemStackUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.RecipeChoice;
 
+import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class ShapedRecipe implements CraftingRecipe {
     private List<List<Object>> matrix;
@@ -55,7 +58,7 @@ public class ShapedRecipe implements CraftingRecipe {
     }
 
     @Override
-    public MatchInfo matches(List<List<ItemStack>> matrix, Map<Integer, ItemStack> damage) {
+    public MatchInfo matches(List<List<ItemStack>> matrix, @Nullable Map<Integer, ItemStack> damage) {
         if (matrix.size() != 3) {
             return new MatchInfo(false, false, null);
         }
@@ -93,15 +96,16 @@ public class ShapedRecipe implements CraftingRecipe {
                     if (row.get(j) != null)
                         return new MatchInfo(false, false, null);
                 } else {
-                    throw new IllegalArgumentException(
-                            "The object in matrix is neither ItemStack nor ItemType, it is " +
-                            this.matrix.get(i).get(j).getClass().getName());
+                    throw new IllegalArgumentException("The object in matrix is neither ItemStack nor ItemType, it is" +
+                                                       " " +
+                                                       this.matrix.get(i).get(j).getClass().getName());
                 }
             }
         }
 
         // check for damage to items.
-        checkItemDamage(matrix, damage, this.damages);
+        if (damage != null)
+            checkItemDamage(matrix, damage, this.damages);
 
         return new MatchInfo(true, material != null, material);
     }
@@ -110,6 +114,20 @@ public class ShapedRecipe implements CraftingRecipe {
     public CraftingRecipe addItemCost(ItemStack is, int durability) {
         this.damages.put(is, durability);
         return this;
+    }
+
+    public RecipeChoice.MaterialChoice getChoiceAt(int slot) {
+        Object ing = matrix.get(slot / 3).get(slot % 3);
+        if (ing instanceof ItemStack)
+            return new RecipeChoice.MaterialChoice(((ItemStack) ing).getType());
+        else if (ing instanceof ItemType)
+            return new RecipeChoice.MaterialChoice(((ItemType) ing).getTemplate()
+                                                           .getAllItems()
+                                                           .stream()
+                                                           .map(ItemStack::getType)
+                                                           .collect(Collectors.toList()));
+        else
+            return null;
     }
 
     @Override

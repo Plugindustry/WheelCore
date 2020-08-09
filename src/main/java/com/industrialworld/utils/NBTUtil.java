@@ -24,27 +24,38 @@ public class NBTUtil {
 
     static {
         try {
-            Class<?> NMSItemStack = Class.forName(
-                    "net.minecraft.server." + IndustrialWorld.serverVersion + ".ItemStack");
+            Class<?> NMSItemStack = Class.forName("net.minecraft.server." +
+                                                  IndustrialWorld.serverVersion +
+                                                  ".ItemStack");
             Class<?> NBTBase = Class.forName("net.minecraft.server." + IndustrialWorld.serverVersion + ".NBTBase");
-            Class<?> NBTTagCompound = Class.forName(
-                    "net.minecraft.server." + IndustrialWorld.serverVersion + ".NBTTagCompound");
-            Class<?> CraftItemStack = Class.forName(
-                    "org.bukkit.craftbukkit." + IndustrialWorld.serverVersion + ".inventory.CraftItemStack");
-            Class<?> NBTTagByte = Class.forName(
-                    "net.minecraft.server." + IndustrialWorld.serverVersion + ".NBTTagByte");
-            Class<?> NBTTagString = Class.forName(
-                    "net.minecraft.server." + IndustrialWorld.serverVersion + ".NBTTagString");
+            Class<?> NBTTagCompound = Class.forName("net.minecraft.server." +
+                                                    IndustrialWorld.serverVersion +
+                                                    ".NBTTagCompound");
+            Class<?> CraftItemStack = Class.forName("org.bukkit.craftbukkit." +
+                                                    IndustrialWorld.serverVersion +
+                                                    ".inventory.CraftItemStack");
+            Class<?> NBTTagByte = Class.forName("net.minecraft.server." +
+                                                IndustrialWorld.serverVersion +
+                                                ".NBTTagByte");
+            Class<?> NBTTagString = Class.forName("net.minecraft.server." +
+                                                  IndustrialWorld.serverVersion +
+                                                  ".NBTTagString");
 
             MethodHandles.Lookup lookup = MethodHandles.lookup();
-            asNMSCopy = lookup.findStatic(CraftItemStack, "asNMSCopy", MethodType.methodType(NMSItemStack, ItemStack.class));
-            asBukkitCopy = lookup.findStatic(CraftItemStack, "asBukkitCopy", MethodType.methodType(ItemStack.class, NMSItemStack));
+            asNMSCopy = lookup.findStatic(CraftItemStack,
+                                          "asNMSCopy",
+                                          MethodType.methodType(NMSItemStack, ItemStack.class));
+            asBukkitCopy = lookup.findStatic(CraftItemStack,
+                                             "asBukkitCopy",
+                                             MethodType.methodType(ItemStack.class, NMSItemStack));
             hasTag = lookup.findVirtual(NMSItemStack, "hasTag", MethodType.methodType(boolean.class));
             getTag = lookup.findVirtual(NMSItemStack, "getTag", MethodType.methodType(NBTTagCompound));
             conNBTTagCompound = lookup.findConstructor(NBTTagCompound, MethodType.methodType(void.class));
             get = lookup.findVirtual(NBTTagCompound, "get", MethodType.methodType(NBTBase, String.class));
             try {
-                set = lookup.findVirtual(NBTTagCompound, "set", MethodType.methodType(void.class, String.class, NBTBase));
+                set = lookup.findVirtual(NBTTagCompound,
+                                         "set",
+                                         MethodType.methodType(void.class, String.class, NBTBase));
             } catch (NoSuchMethodException | NoSuchMethodError e) {
                 set = lookup.findVirtual(NBTTagCompound, "set", MethodType.methodType(NBTBase, String.class, NBTBase));
             }
@@ -59,7 +70,9 @@ public class NBTUtil {
             try {
                 conNBTTagString = lookup.findConstructor(NBTTagString, MethodType.methodType(void.class, String.class));
             } catch (IllegalAccessException | IllegalAccessError e) {
-                conNBTTagString = lookup.findStatic(NBTTagString, "a", MethodType.methodType(NBTTagString, String.class));
+                conNBTTagString = lookup.findStatic(NBTTagString,
+                                                    "a",
+                                                    MethodType.methodType(NBTTagString, String.class));
             }
         } catch (Exception e) {
             e.printStackTrace();

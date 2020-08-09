@@ -39,11 +39,25 @@ public class ItemIngot extends ItemTemplate {
     }
 
     public ItemStack getItemStack(IWMaterial iwMaterial, int amount) {
-        String materialLocaleName = I18n.getLocaleString(
-                "material." + iwMaterial.getMaterialID().toLowerCase() + ".name");
-        return ItemStackUtil.create(ItemManager.getItemMaterial(ItemType.INGOT, iwMaterial)).setId("INGREDIENT").setItemType(ItemType.INGOT).setIWMaterial(iwMaterial).setAmount(amount).setDisplayName(
-                ChatColor.WHITE + materialLocaleName +
-                I18nConst.ItemType.INGOT).setIWMaterial(iwMaterial).setItemType(ItemType.INGOT).setLore(Arrays.asList(I18nConst.ItemType.INGOT_LORE.replace("{MATERIAL}", materialLocaleName).replace("{LEVEL}", String.valueOf(IWMaterialManager.getMaterialInfo(iwMaterial).getLevel())).replace('&', '\u00a7').replace("&&", "&").split("\\|\\|"))).getItemStack();
+        String materialLocaleName = I18n.getLocaleString("material." +
+                                                         iwMaterial.getMaterialID().toLowerCase() +
+                                                         ".name");
+        return ItemStackUtil.create(ItemManager.getItemMaterial(ItemType.INGOT, iwMaterial))
+                .setId("INGREDIENT")
+                .setItemType(ItemType.INGOT)
+                .setIWMaterial(iwMaterial)
+                .setAmount(amount)
+                .setDisplayName(ChatColor.WHITE + materialLocaleName + I18nConst.ItemType.INGOT)
+                .setIWMaterial(iwMaterial)
+                .setItemType(ItemType.INGOT)
+                .setLore(Arrays.asList(I18nConst.ItemType.INGOT_LORE.replace("{MATERIAL}", materialLocaleName)
+                                               .replace("{LEVEL}",
+                                                        String.valueOf(IWMaterialManager.getMaterialInfo(iwMaterial)
+                                                                               .getLevel()))
+                                               .replace('&', '\u00a7')
+                                               .replace("&&", "&")
+                                               .split("\\|\\|")))
+                .getItemStack();
     }
 
     public ItemStack getItemStack(IWMaterial iwMaterial) {

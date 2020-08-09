@@ -23,32 +23,49 @@ public class InventoryUtil {
 
     static {
         try {
-            Class<?> craftPlayer = Class.forName(
-                    "org.bukkit.craftbukkit." + IndustrialWorld.serverVersion + ".entity.CraftPlayer");
-            Class<?> NMSPlayer = Class.forName(
-                    "net.minecraft.server." + IndustrialWorld.serverVersion + ".EntityPlayer");
-            Class<?> NMSContainer = Class.forName(
-                    "net.minecraft.server." + IndustrialWorld.serverVersion + ".Container");
+            Class<?> craftPlayer = Class.forName("org.bukkit.craftbukkit." +
+                                                 IndustrialWorld.serverVersion +
+                                                 ".entity.CraftPlayer");
+            Class<?> NMSPlayer = Class.forName("net.minecraft.server." +
+                                               IndustrialWorld.serverVersion +
+                                               ".EntityPlayer");
+            Class<?> NMSContainer = Class.forName("net.minecraft.server." +
+                                                  IndustrialWorld.serverVersion +
+                                                  ".Container");
             Class<?> NMSSlot = Class.forName("net.minecraft.server." + IndustrialWorld.serverVersion + ".Slot");
-            Class<?> NMSPlayerConnection = Class.forName(
-                    "net.minecraft.server." + IndustrialWorld.serverVersion + ".PlayerConnection");
+            Class<?> NMSPlayerConnection = Class.forName("net.minecraft.server." +
+                                                         IndustrialWorld.serverVersion +
+                                                         ".PlayerConnection");
             Class<?> NMSPacket = Class.forName("net.minecraft.server." + IndustrialWorld.serverVersion + ".Packet");
-            Class<?> NMSPacketPlayOutWindowItems = Class.forName(
-                    "net.minecraft.server." + IndustrialWorld.serverVersion + ".PacketPlayOutWindowItems");
-            Class<?> NMSPacketPlayOutSetSlot = Class.forName(
-                    "net.minecraft.server." + IndustrialWorld.serverVersion + ".PacketPlayOutSetSlot");
-            Class<?> NMSNonNullList = Class.forName(
-                    "net.minecraft.server." + IndustrialWorld.serverVersion + ".NonNullList");
-            Class<?> NMSItemStack = Class.forName(
-                    "net.minecraft.server." + IndustrialWorld.serverVersion + ".ItemStack");
+            Class<?> NMSPacketPlayOutWindowItems = Class.forName("net.minecraft.server." +
+                                                                 IndustrialWorld.serverVersion +
+                                                                 ".PacketPlayOutWindowItems");
+            Class<?> NMSPacketPlayOutSetSlot = Class.forName("net.minecraft.server." +
+                                                             IndustrialWorld.serverVersion +
+                                                             ".PacketPlayOutSetSlot");
+            Class<?> NMSNonNullList = Class.forName("net.minecraft.server." +
+                                                    IndustrialWorld.serverVersion +
+                                                    ".NonNullList");
+            Class<?> NMSItemStack = Class.forName("net.minecraft.server." +
+                                                  IndustrialWorld.serverVersion +
+                                                  ".ItemStack");
 
             MethodHandles.Lookup lookup = MethodHandles.lookup();
             getHandle = lookup.findVirtual(craftPlayer, "getHandle", MethodType.methodType(NMSPlayer));
             activeContainer = lookup.findGetter(NMSPlayer, "activeContainer", NMSContainer);
             playerConnection = lookup.findGetter(NMSPlayer, "playerConnection", NMSPlayerConnection);
-            sendPacket = lookup.findVirtual(NMSPlayerConnection, "sendPacket", MethodType.methodType(void.class, NMSPacket));
-            conPacketPlayOutWindowItems = lookup.findConstructor(NMSPacketPlayOutWindowItems, MethodType.methodType(void.class, int.class, NMSNonNullList));
-            conPacketPlayOutSetSlot = lookup.findConstructor(NMSPacketPlayOutSetSlot, MethodType.methodType(void.class, int.class, int.class, NMSItemStack));
+            sendPacket = lookup.findVirtual(NMSPlayerConnection,
+                                            "sendPacket",
+                                            MethodType.methodType(void.class, NMSPacket));
+            conPacketPlayOutWindowItems = lookup.findConstructor(NMSPacketPlayOutWindowItems,
+                                                                 MethodType.methodType(void.class,
+                                                                                       int.class,
+                                                                                       NMSNonNullList));
+            conPacketPlayOutSetSlot = lookup.findConstructor(NMSPacketPlayOutSetSlot,
+                                                             MethodType.methodType(void.class,
+                                                                                   int.class,
+                                                                                   int.class,
+                                                                                   NMSItemStack));
             windowId = lookup.findGetter(NMSContainer, "windowId", int.class);
             for (Method method : NMSContainer.getMethods())
                 if (method.getParameterCount() == 0 && method.getReturnType() == NMSNonNullList) {
@@ -75,8 +92,13 @@ public class InventoryUtil {
             Object nmsPlayer = getHandle.bindTo(player).invoke();
             Object container = activeContainer.bindTo(nmsPlayer).invoke();
             Object connection = playerConnection.bindTo(nmsPlayer).invoke();
-            sendPacket.bindTo(connection).invoke(conPacketPlayOutWindowItems.invoke(windowId.bindTo(container).invoke(), a.bindTo(container).invoke()));
-            sendPacket.bindTo(connection).invoke(conPacketPlayOutSetSlot.invoke(windowId.bindTo(container).invoke(), 0, getItem.bindTo(getSlot.bindTo(container).invoke(0)).invoke()));
+            sendPacket.bindTo(connection).invoke(conPacketPlayOutWindowItems.invoke(windowId.bindTo(container).invoke(),
+                                                                                    a.bindTo(container).invoke()));
+            sendPacket.bindTo(connection).invoke(conPacketPlayOutSetSlot.invoke(windowId.bindTo(container).invoke(),
+                                                                                0,
+                                                                                getItem.bindTo(getSlot.bindTo(container)
+                                                                                                       .invoke(0))
+                                                                                        .invoke()));
         } catch (Throwable e) {
             e.printStackTrace();
         }

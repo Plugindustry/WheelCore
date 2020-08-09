@@ -1,15 +1,11 @@
 package com.industrialworld.task;
 
-import com.industrialworld.ConstItems;
 import com.industrialworld.IndustrialWorld;
 import com.industrialworld.manager.ConfigManager;
 import com.industrialworld.manager.MainManager;
 import com.industrialworld.manager.RegisterManager;
 import com.industrialworld.utils.DebuggingLogger;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
-import org.bukkit.inventory.ShapedRecipe;
 
 public class AfterLoadTask implements Runnable {
     @Override
@@ -33,7 +29,10 @@ public class AfterLoadTask implements Runnable {
         // Register tick
         Bukkit.getScheduler().runTaskTimer(IndustrialWorld.instance, MainManager::update, 0, 0);
 
-        DebuggingLogger.debug("Register Industrial crafting table.");
-        Bukkit.addRecipe(new ShapedRecipe(new NamespacedKey(IndustrialWorld.instance, "crafting_table_craft"), ConstItems.IW_CRAFTING_TABLE).shape("AAA", "ABA", "AAA").setIngredient('A', Material.IRON_INGOT).setIngredient('B', Material.CRAFTING_TABLE));
+        /*DebuggingLogger.debug("Register Industrial crafting table.");
+        Bukkit.addRecipe(new ShapedRecipe(new NamespacedKey(IndustrialWorld.instance, "crafting_table_craft"),
+                                          ConstItems.IW_CRAFTING_TABLE).shape("AAA", "ABA", "AAA")
+                                 .setIngredient('A', Material.IRON_INGOT)
+                                 .setIngredient('B', Material.CRAFTING_TABLE));*/
     }
 }

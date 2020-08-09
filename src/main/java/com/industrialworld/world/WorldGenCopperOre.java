@@ -12,8 +12,10 @@ public class WorldGenCopperOre implements WorldGenerator {
 
     public boolean generate(World world, Random rand, Chunk chunk) {
         for (int i = 0, j = rand.nextInt(5) + 5; i <= j; ++i)
-            copperOreGenerator.generate(world, rand, chunk, new Location(world, rand.nextInt(16),
-                                                                         10 + rand.nextInt(60), rand.nextInt(16)));
+            copperOreGenerator.generate(world,
+                                        rand,
+                                        chunk,
+                                        new Location(world, rand.nextInt(16), 10 + rand.nextInt(60), rand.nextInt(16)));
         return true;
     }
 }

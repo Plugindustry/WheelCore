@@ -9,7 +9,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class IndustrialWorld extends JavaPlugin {
     public static IndustrialWorld instance;
-    public static String serverVersion = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
+    public static String serverVersion = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(
+            ",")[3];
 
     @Override
     public void onEnable() {

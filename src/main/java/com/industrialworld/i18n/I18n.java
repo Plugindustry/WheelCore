@@ -28,8 +28,9 @@ public class I18n {
         try {
             inputStream = new BufferedInputStream(langFile.isFile() ?
                                                   new FileInputStream(langFile) :
-                                                  IndustrialWorld.class.getResourceAsStream(
-                                                          "/lang/" + localeString + ".lang"));
+                                                  IndustrialWorld.class.getResourceAsStream("/lang/" +
+                                                                                            localeString +
+                                                                                            ".lang"));
             bundle = new PropertyResourceBundle(inputStream);
             inputStream.close();
         } catch (Exception e) {

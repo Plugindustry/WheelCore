@@ -5,8 +5,11 @@ import com.industrialworld.item.material.IWMaterial;
 import com.industrialworld.utils.ItemStackUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.RecipeChoice;
 
+import javax.annotation.Nullable;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class ShapelessRecipe implements CraftingRecipe {
     private ArrayList<Object> recipe;
@@ -28,7 +31,7 @@ public class ShapelessRecipe implements CraftingRecipe {
     }
 
     @Override
-    public MatchInfo matches(List<List<ItemStack>> recipe, Map<Integer, ItemStack> damage) {
+    public MatchInfo matches(List<List<ItemStack>> recipe, @Nullable Map<Integer, ItemStack> damage) {
         List<ItemStack> shapeless = new LinkedList<>();
         List<Object> checkList = new LinkedList<>(this.recipe);
         // convert everything to shapeless
@@ -69,12 +72,27 @@ public class ShapelessRecipe implements CraftingRecipe {
         }
 
         boolean result = checkList.isEmpty() && shapeless.isEmpty();
-        if (result) {
+        if (result && damage != null) {
             // check for damage to items.
             ShapedRecipe.checkItemDamage(recipe, damage, this.damages);
         }
 
         return new MatchInfo(result, material != null, material);
+    }
+
+    public List<RecipeChoice.MaterialChoice> getChoices() {
+        return recipe.stream().map(obj -> {
+            if (obj instanceof ItemStack)
+                return Collections.singletonList(((ItemStack) obj).getType());
+            else if (obj instanceof ItemType)
+                return ((ItemType) obj).getTemplate()
+                        .getAllItems()
+                        .stream()
+                        .map(ItemStack::getType)
+                        .collect(Collectors.toList());
+            else
+                throw new IllegalArgumentException("Object is not ItemStack or ItemType.");
+        }).map(RecipeChoice.MaterialChoice::new).collect(Collectors.toList());
     }
 
     @Override
