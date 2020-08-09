@@ -107,6 +107,6 @@ public class I18nConst {
     }
 
     public static class Inventory {
-        public static String IW_CRAFTING_TABLE_TITLE = "inventory.iw_crafting_table.title";
+        // TODO I18NCONST Inventories
     }
 }

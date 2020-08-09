@@ -27,7 +27,7 @@ public class EnchantUtil {
         private List<ItemStack> otherItems = Collections.emptyList();
 
         public CustomEnchantment(String name) {
-            super(new NamespacedKey(IndustrialWorld.instance, name));
+            super(new NamespacedKey(IndustrialWorld.instance, "enchantment." + name));
             this.name = name;
         }
 

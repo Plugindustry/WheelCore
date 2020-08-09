@@ -84,12 +84,12 @@ public class MainManager {
 
     public static void onChunkLoad(ChunkLoadEvent event) {
         Chunk chunk = event.getChunk();
-        loadedChunks.add((((long) chunk.getX()) << 32) | chunk.getZ());
+        loadedChunks.add(convert(chunk.getX(), chunk.getZ()));
     }
 
     public static void onChunkUnload(ChunkUnloadEvent event) {
         Chunk chunk = event.getChunk();
-        loadedChunks.remove((((long) chunk.getX()) << 32) | chunk.getZ());
+        loadedChunks.remove(convert(chunk.getX(), chunk.getZ()));
     }
 
     public static String getIdFromInstance(Base instance) {
@@ -170,12 +170,14 @@ public class MainManager {
     }
 
     public static boolean isBlockActive(Location block) {
-        int x = block.getBlockX() >> 4;
-        int z = block.getBlockZ() >> 4;
-        return loadedChunks.contains((((long) x) << 32) | z);
+        return loadedChunks.contains(convert(block.getBlockX() >> 4, block.getBlockZ() >> 4));
     }
 
     public static void register(String id, Base b) {
         mapping.put(id, b);
+    }
+
+    private static long convert(int i1, int i2) {
+        return ((i1 & 0x00000000ffffffffL) << 32) | (i2 & 0x00000000ffffffffL);
     }
 }

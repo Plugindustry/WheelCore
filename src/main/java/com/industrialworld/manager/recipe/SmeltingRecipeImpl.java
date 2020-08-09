@@ -25,7 +25,7 @@ public class SmeltingRecipeImpl implements SmeltingRecipe {
     @Override
     public boolean matches(ItemStack origin) {
         if (recipe instanceof ItemStack)
-            return origin.isSimilar((ItemStack) recipe);
+            return ItemStackUtil.isSimilar((ItemStack) recipe, origin);
         else if (recipe instanceof ItemType)
             return ItemStackUtil.getItemType(origin) == recipe;
         else

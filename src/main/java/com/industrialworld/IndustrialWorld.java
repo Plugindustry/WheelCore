@@ -38,8 +38,4 @@ public final class IndustrialWorld extends JavaPlugin {
         // Plugin shutdown logic
         ConfigManager.shutdown();
     }
-
-    public final String getDataFolderPath() {
-        return getDataFolder().getAbsolutePath();
-    }
 }

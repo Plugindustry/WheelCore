@@ -16,6 +16,11 @@ public class ItemStackUtil {
         return new ItemStackFactory(mtrl);
     }
 
+    public static boolean isIWItem(ItemStack item) {
+        NBTUtil.NBTValue value = NBTUtil.getTagValue(item, "isIWItem");
+        return value != null && value.asBoolean();
+    }
+
     public static boolean isSimilar(ItemStack a, ItemStack b) {
         if (a == null) {
             return b == null;
@@ -26,27 +31,17 @@ public class ItemStackUtil {
         }
 
         // check NBT tag
-        NBTUtil.NBTValue aNbtIsIWI = NBTUtil.getTagValue(a, "isIWItem");
-        NBTUtil.NBTValue bNbtIsIWI = NBTUtil.getTagValue(b, "isIWItem");
-        if (aNbtIsIWI == null) {
-            return bNbtIsIWI == null;
-        }
-        if (bNbtIsIWI == null) {
+        boolean aIs = isIWItem(a);
+        if (aIs != isIWItem(b))
             return false;
-        }
-        if (aNbtIsIWI.asBoolean() == bNbtIsIWI.asBoolean()) {
+
+        if (aIs) {
             NBTUtil.NBTValue aId = NBTUtil.getTagValue(a, "IWItemId");
             NBTUtil.NBTValue bId = NBTUtil.getTagValue(b, "IWItemId");
-
-            if (aId == null) {
-                return bId == null;
-            }
-            if (bId == null) {
-                return false;
-            }
-            return Objects.equals(aId.asString(), bId.asString());
+            return (aId == null && bId == null) ||
+                   (aId != null && bId != null && Objects.equals(aId.asString(), bId.asString()));
         }
-        return false;
+        return true;
     }
 
     public static ItemType getItemType(ItemStack is) {

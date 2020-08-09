@@ -20,7 +20,7 @@ public class GrindRecipeImpl implements GrindRecipe {
     @Override
     public boolean matches(ItemStack itemStack) {
         if (recipe instanceof ItemStack)
-            return ((ItemStack) recipe).isSimilar(itemStack);
+            return ItemStackUtil.isSimilar((ItemStack) recipe, itemStack);
         else if (recipe instanceof ItemType)
             return ItemStackUtil.getItemType(itemStack) == recipe;
         else

@@ -105,8 +105,6 @@ element.pb=Pb
 element.zn=Zn
 element.sn=Sn
 
-inventory.iw_crafting_table.title=Industrial Crafting Table
-
 item.iron_ore.formula=Fe₂O₃
 item.red_copper_ore.formula=Cu₂O
 item.malachite.formula=Cu₂(OH)₂CO₃

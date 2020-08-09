@@ -60,7 +60,7 @@ public class WorldGenMinable {
                     break;
             }
 
-            if (x < 0 || z < 0 || x >= 15 || z >= 15)
+            if (x < 1 || z < 1 || x >= 15 || z >= 15)
                 continue;
             currentBlock = chunk.getBlock(x, y, z);
 

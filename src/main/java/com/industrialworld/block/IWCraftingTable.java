@@ -1,8 +1,6 @@
 package com.industrialworld.block;
 
 import com.industrialworld.ConstItems;
-import com.industrialworld.i18n.I18n;
-import com.industrialworld.i18n.I18nConst;
 import com.industrialworld.interfaces.InventoryListener;
 import com.industrialworld.interfaces.block.DummyBlock;
 import com.industrialworld.manager.InventoryListenerManager;
@@ -50,7 +48,7 @@ public class IWCraftingTable extends DummyBlock implements InventoryListener {
     @Override
     public boolean onInteract(Player player, Action action, ItemStack tool, Block block, InteractActor actor) {
         if (actor == InteractActor.BLOCK && action == Action.RIGHT_CLICK_BLOCK && !player.isSneaking()) {
-            Inventory i = Bukkit.createInventory(null, InventoryType.WORKBENCH, I18n.getLocaleString(I18nConst.Inventory.IW_CRAFTING_TABLE_TITLE));
+            Inventory i = Bukkit.createInventory(null, InventoryType.WORKBENCH);
             player.openInventory(i);
             availableInventories.add(i);
 

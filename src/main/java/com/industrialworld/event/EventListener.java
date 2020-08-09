@@ -18,15 +18,16 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.event.world.WorldInitEvent;
-import org.bukkit.inventory.ItemStack;
+
+import java.util.stream.Stream;
 
 public class EventListener implements Listener {
     @EventHandler
@@ -70,12 +71,9 @@ public class EventListener implements Listener {
     }
 
     @EventHandler
-    public void onCraftItem(CraftItemEvent event) {
-        for (ItemStack item : event.getInventory().getMatrix()) {
-            NBTUtil.NBTValue value = NBTUtil.getTagValue(item, "isIWItem");
-            if (value != null && value.asBoolean())
-                event.setCancelled(true);
-        }
+    public void onPrepareItemCraft(PrepareItemCraftEvent event) {
+        if (Stream.of(event.getInventory().getMatrix()).anyMatch(ItemStackUtil::isIWItem))
+            event.getInventory().setResult(null);
     }
 
     @EventHandler
