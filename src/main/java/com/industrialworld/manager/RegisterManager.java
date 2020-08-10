@@ -37,34 +37,36 @@ public class RegisterManager {
             ShapedRecipeFactory forgeHammerFactory = new ShapedRecipeFactory().map('A', ItemType.INGOT).map('B',
                                                                                                             new ItemStack(
                                                                                                                     Material.STICK));
-            RecipeRegistry.register(forgeHammerFactory.pattern("AAC", "ABB", "AAC")
-                                            .build(ConstItems.FORGE_HAMMER)); // FORGE_HAMMER [L]
-            RecipeRegistry.register(forgeHammerFactory.pattern("CAA", "BBA", "CAA")
-                                            .build(ConstItems.FORGE_HAMMER)); // FORGE_HAMMER [R]
-            RecipeRegistry.register(forgeHammerFactory.pattern("AAA", "ABA", "CBC")
-                                            .build(ConstItems.FORGE_HAMMER)); // FORGE_HAMMER [U]
-            RecipeRegistry.register(forgeHammerFactory.pattern("CBC", "ABA", "AAA")
-                                            .build(ConstItems.FORGE_HAMMER)); // FORGE_HAMMER [D]
+            RecipeRegistry.register(forgeHammerFactory.pattern("AAC", "ABB", "AAC").build(ConstItems.FORGE_HAMMER),
+                                    "forge_hammer_t_l"); // FORGE_HAMMER [L]
+            RecipeRegistry.register(forgeHammerFactory.pattern("CAA", "BBA", "CAA").build(ConstItems.FORGE_HAMMER),
+                                    "forge_hammer_t_r"); // FORGE_HAMMER [R]
+            RecipeRegistry.register(forgeHammerFactory.pattern("AAA", "ABA", "CBC").build(ConstItems.FORGE_HAMMER),
+                                    "forge_hammer_t_u"); // FORGE_HAMMER [U]
+            RecipeRegistry.register(forgeHammerFactory.pattern("CBC", "ABA", "AAA").build(ConstItems.FORGE_HAMMER),
+                                    "forge_hammer_t_d"); // FORGE_HAMMER [D]
             forgeHammerFactory.map('A', new ItemStack(Material.IRON_INGOT));
-            RecipeRegistry.register(forgeHammerFactory.pattern("AAC", "ABB", "AAC")
-                                            .build(ConstItems.FORGE_HAMMER)); // FORGE_HAMMER [L]
-            RecipeRegistry.register(forgeHammerFactory.pattern("CAA", "BBA", "CAA")
-                                            .build(ConstItems.FORGE_HAMMER)); // FORGE_HAMMER [R]
-            RecipeRegistry.register(forgeHammerFactory.pattern("AAA", "ABA", "CBC")
-                                            .build(ConstItems.FORGE_HAMMER)); // FORGE_HAMMER [U]
-            RecipeRegistry.register(forgeHammerFactory.pattern("CBC", "ABA", "AAA")
-                                            .build(ConstItems.FORGE_HAMMER)); // FORGE_HAMMER [D]
+            RecipeRegistry.register(forgeHammerFactory.pattern("AAC", "ABB", "AAC").build(ConstItems.FORGE_HAMMER),
+                                    "forge_hammer_i_l"); // FORGE_HAMMER [L]
+            RecipeRegistry.register(forgeHammerFactory.pattern("CAA", "BBA", "CAA").build(ConstItems.FORGE_HAMMER),
+                                    "forge_hammer_i_r"); // FORGE_HAMMER [R]
+            RecipeRegistry.register(forgeHammerFactory.pattern("AAA", "ABA", "CBC").build(ConstItems.FORGE_HAMMER),
+                                    "forge_hammer_i_u"); // FORGE_HAMMER [U]
+            RecipeRegistry.register(forgeHammerFactory.pattern("CBC", "ABA", "AAA").build(ConstItems.FORGE_HAMMER),
+                                    "forge_hammer_i_d"); // FORGE_HAMMER [D]
 
             RecipeRegistry.register(new ShapelessRecipe(Arrays.asList(ConstItems.FORGE_HAMMER,
                                                                       new ItemStack(Material.IRON_INGOT)),
-                                                        ConstItems.IRON_PLATE).addItemCost(ConstItems.FORGE_HAMMER, 3));
+                                                        ConstItems.IRON_PLATE).addItemCost(ConstItems.FORGE_HAMMER, 3),
+                                    "iron_plate");
             RecipeRegistry.register(new ShapelessRecipe(Arrays.asList(ConstItems.FORGE_HAMMER, ConstItems.COPPER_INGOT),
                                                         ConstItems.COPPER_PLATE).addItemCost(ConstItems.FORGE_HAMMER,
-                                                                                             3));
+                                                                                             3), "copper_plate");
             RecipeRegistry.register(new ShapelessRecipe(Arrays.asList(ConstItems.FORGE_HAMMER,
                                                                       ConstItems.RED_HOT_IRON_INGOT),
                                                         ConstItems.RED_HOT_STEEL_INGOT).addItemCost(ConstItems.FORGE_HAMMER,
-                                                                                                    3));
+                                                                                                    3),
+                                    "red_hot_steel_ingot");
         }
         /* CUTTER */
         {
@@ -72,28 +74,30 @@ public class RegisterManager {
                                             .map('B',
                                                  ConstItems.IRON_PLATE)
                                             .pattern("BCB", "CBC", "ACA")
-                                            .build(ConstItems.CUTTER));
+                                            .build(ConstItems.CUTTER), "cutter");
             RecipeRegistry.register(new ShapelessRecipe(Collections.singletonList(ConstItems.COPPER_PLATE),
-                                                        ConstItems.COPPER_WIRE).addItemCost(ConstItems.CUTTER, 4));
+                                                        ConstItems.COPPER_WIRE).addItemCost(ConstItems.CUTTER, 4),
+                                    "copper_wire");
         }
 
         // Basic Machine Block
         RecipeRegistry.register(new ShapedRecipeFactory().map('0', new ItemStack(Material.IRON_INGOT))
                                         .pattern("000", "0w0", "000")
-                                        .build(ConstItems.BASIC_MACHINE_BLOCK)); // BASIC_MACHINE_BLOCK
+                                        .build(ConstItems.BASIC_MACHINE_BLOCK),
+                                "basic_machine_block"); // BASIC_MACHINE_BLOCK
 
         // Recognizer
         RecipeRegistry.register(new ShapedRecipeFactory().map('0', ConstItems.IRON_PLATE)
                                         .map('w',
                                              new ItemStack(Material.STICK))
                                         .pattern("000", "QwQ", "QwQ")
-                                        .build(ItemManager.get("RECOGNIZER")));
+                                        .build(ItemManager.get("RECOGNIZER")), "recognizer");
 
         // Smelting Recipes
         RecipeRegistry.register(new SmeltingRecipeImpl(new ItemStack(Material.IRON_INGOT),
                                                        ConstItems.RED_HOT_IRON_INGOT,
                                                        5.0F,
-                                                       400));
+                                                       400), "red_hot_iron_ingot");
     }
 
     public static void registerBlockIS() {
@@ -183,6 +187,7 @@ public class RegisterManager {
 
     public static void registerIWMaterial() {
         IWMaterialManager.register(IWMaterial.COPPER, MaterialInfo.newInstance(IWMaterial.COPPER).setLevel((short) 3));
+        IWMaterialManager.register(IWMaterial.STEEL, MaterialInfo.newInstance(IWMaterial.STEEL).setLevel((short) 5));
     }
 
     public static void registerIWItemMaterial() {

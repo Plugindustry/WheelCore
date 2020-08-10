@@ -12,9 +12,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class ShapelessRecipe implements CraftingRecipe {
-    private ArrayList<Object> recipe;
-    private Object result;
-    private Map<ItemStack, Integer> damages = new HashMap<>();
+    private final ArrayList<Object> recipe;
+    private final Object result;
+    private final Map<ItemStack, Integer> damages = new HashMap<>();
 
     public ShapelessRecipe(List<Object> items, Object result) {
         this.recipe = new ArrayList<>(items);

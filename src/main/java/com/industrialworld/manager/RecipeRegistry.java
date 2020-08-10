@@ -3,7 +3,6 @@ package com.industrialworld.manager;
 import com.industrialworld.IndustrialWorld;
 import com.industrialworld.item.material.IWMaterial;
 import com.industrialworld.manager.recipe.*;
-import org.apache.commons.lang.RandomStringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.FurnaceRecipe;
@@ -17,14 +16,12 @@ public class RecipeRegistry {
     private static final List<RecipeBase> recipes = new LinkedList<>();
     private static final Set<NamespacedKey> placeholders = new HashSet<>();
 
-    public static void register(RecipeBase recipeBase, boolean needPlaceholder) {
+    public static void register(RecipeBase recipeBase, String id, boolean needPlaceholder) {
         recipes.add(recipeBase);
         if (needPlaceholder)
             if (recipeBase instanceof SmeltingRecipe) {
                 SmeltingRecipe smelting = (SmeltingRecipe) recipeBase;
-                Bukkit.addRecipe(new FurnaceRecipe(new NamespacedKey(IndustrialWorld.instance,
-                                                                     "furnace_recipe_" +
-                                                                     RandomStringUtils.randomAlphanumeric(16)),
+                Bukkit.addRecipe(new FurnaceRecipe(new NamespacedKey(IndustrialWorld.instance, "furnace_recipe_" + id),
                                                    recipeBase.getResult(IWMaterial.NULL),
                                                    new RecipeChoice.ExactChoice(smelting.getAllMatches()),
                                                    smelting.getExperience(),
@@ -33,9 +30,7 @@ public class RecipeRegistry {
                 ShapedRecipe shaped = (ShapedRecipe) recipeBase;
                 org.bukkit.inventory.ShapedRecipe recipe = new org.bukkit.inventory.ShapedRecipe(new NamespacedKey(
                         IndustrialWorld.instance,
-                        "shaped_recipe_" + RandomStringUtils.randomAlphanumeric(16)),
-                                                                                                 recipeBase.getResult(
-                                                                                                         IWMaterial.NULL))
+                        "shaped_recipe_" + id), recipeBase.getResult(IWMaterial.NULL))
                         .shape("abc", "def", "ghi");
                 setShapedIfExist(recipe, shaped, 'a', 0);
                 setShapedIfExist(recipe, shaped, 'b', 1);
@@ -52,17 +47,15 @@ public class RecipeRegistry {
                 ShapelessRecipe shapeless = (ShapelessRecipe) recipeBase;
                 org.bukkit.inventory.ShapelessRecipe recipe = new org.bukkit.inventory.ShapelessRecipe(new NamespacedKey(
                         IndustrialWorld.instance,
-                        "shapeless_recipe_" + RandomStringUtils.randomAlphanumeric(16)),
-                                                                                                       recipeBase.getResult(
-                                                                                                               IWMaterial.NULL));
+                        "shapeless_recipe_" + id), recipeBase.getResult(IWMaterial.NULL));
                 shapeless.getChoices().forEach(recipe::addIngredient);
                 placeholders.add(recipe.getKey());
                 Bukkit.addRecipe(recipe);
             }
     }
 
-    public static void register(RecipeBase recipeBase) {
-        register(recipeBase, true);
+    public static void register(RecipeBase recipeBase, String id) {
+        register(recipeBase, id, true);
     }
 
     private static void setShapedIfExist(org.bukkit.inventory.ShapedRecipe recipe, ShapedRecipe shaped, char key, int slot) {

@@ -14,9 +14,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ShapedRecipe implements CraftingRecipe {
-    private List<List<Object>> matrix;
-    private Object result;
-    private Map<ItemStack, Integer> damages = new HashMap<>();
+    private final List<List<Object>> matrix;
+    private final Object result;
+    private final Map<ItemStack, Integer> damages = new HashMap<>();
 
     protected ShapedRecipe(List<List<Object>> matrix, Object result) {
         if (matrix.size() <= 0 || matrix.size() > 3 || matrix.get(0).size() <= 0 || matrix.get(0).size() > 3) {

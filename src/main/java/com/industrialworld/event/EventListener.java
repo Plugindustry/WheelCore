@@ -1,6 +1,5 @@
 package com.industrialworld.event;
 
-import com.google.common.collect.Maps;
 import com.industrialworld.ConstItems;
 import com.industrialworld.IndustrialWorld;
 import com.industrialworld.interfaces.block.MachineBase;
@@ -95,23 +94,21 @@ public class EventListener implements Listener {
                 .filter(entry -> entry.getKey() instanceof EnchantmentUtil.CustomEnchantment)
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-        Map<Enchantment, Integer> customs = src.entrySet()
+        Map<Enchantment, Integer> confilcts = src.entrySet()
                 .stream()
                 .filter(entry -> result.getEnchantments()
                         .keySet()
                         .stream()
-                        .noneMatch(enchantment -> entry.getKey().conflictsWith(enchantment)))
+                        .anyMatch(enchantment -> entry.getKey().conflictsWith(enchantment)))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-        if (customs.isEmpty())
+        if (confilcts.size() == src.size())
             return;
 
-        result.addEnchantments(src);
-        Maps.difference(src, customs)
-                .entriesOnlyOnLeft()
-                .keySet()
-                .forEach(enchantment -> EnchantmentUtil.removeFromItem(result,
-                                                                       (EnchantmentUtil.CustomEnchantment) enchantment));
+        result.addUnsafeEnchantments(src);
+        confilcts.forEach((enchantment, level) -> EnchantmentUtil.removeFromItem(result,
+                                                                                 (EnchantmentUtil.CustomEnchantment) enchantment,
+                                                                                 level));
 
         event.setResult(result);
     }

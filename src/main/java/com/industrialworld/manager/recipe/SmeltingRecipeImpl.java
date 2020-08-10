@@ -10,10 +10,10 @@ import java.util.Collections;
 import java.util.List;
 
 public class SmeltingRecipeImpl implements SmeltingRecipe {
-    private Object recipe;
-    private Object result;
-    private float experience;
-    private int cookingTime;
+    private final Object recipe;
+    private final Object result;
+    private final float experience;
+    private final int cookingTime;
 
     public SmeltingRecipeImpl(ItemStack recipe, ItemStack result, float experience, int cookingTime) {
         this.recipe = recipe;
