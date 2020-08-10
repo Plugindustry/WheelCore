@@ -5,7 +5,7 @@ REDAME in different languages:
 # IndustrialWorld 
 
 ![GitHub contributors](https://img.shields.io/github/contributors/czm23333/IndustrialWorld)
-![Codacy Badge](https://api.codacy.com/project/badge/Grade/7ed7dc549a7e4212b193716ecced0773)](https://app.codacy.com/manual/czm23333/IndustrialWorld?utm_source=github.com&utm_medium=referral&utm_content=czm23333/IndustrialWorld&utm_campaign=Badge_Grade_Dashboard)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/7ed7dc549a7e4212b193716ecced0773)](https://app.codacy.com/manual/czm23333/IndustrialWorld?utm_source=github.com&utm_medium=referral&utm_content=czm23333/IndustrialWorld&utm_campaign=Badge_Grade_Dashboard)
 ![license](https://img.shields.io/github/license/czm23333/IndustrialWorld)
 ![Build](https://github.com/czm23333/IndustrialWorld/workflows/Build/badge.svg)
 ![GitHub issues](https://img.shields.io/github/issues/czm23333/IndustrialWorld)
