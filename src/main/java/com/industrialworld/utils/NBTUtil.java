@@ -19,8 +19,10 @@ public class NBTUtil {
     private static MethodHandle setTag;
     private static MethodHandle asByte;
     private static MethodHandle asString;
+    private static MethodHandle asInt;
     private static MethodHandle conNBTTagByte;
     private static MethodHandle conNBTTagString;
+    private static MethodHandle conNBTTagInt;
 
     static {
         try {
@@ -40,6 +42,7 @@ public class NBTUtil {
             Class<?> NBTTagString = Class.forName("net.minecraft.server." +
                                                   IndustrialWorld.serverVersion +
                                                   ".NBTTagString");
+            Class<?> NBTTagInt = Class.forName("net.minecraft.server." + IndustrialWorld.serverVersion + ".NBTTagInt");
 
             MethodHandles.Lookup lookup = MethodHandles.lookup();
             asNMSCopy = lookup.findStatic(CraftItemStack,
@@ -62,6 +65,7 @@ public class NBTUtil {
             setTag = lookup.findVirtual(NMSItemStack, "setTag", MethodType.methodType(void.class, NBTTagCompound));
             asByte = lookup.findVirtual(NBTTagByte, "asByte", MethodType.methodType(byte.class));
             asString = lookup.findVirtual(NBTTagString, "asString", MethodType.methodType(String.class));
+            asInt = lookup.findVirtual(NBTTagInt, "asInt", MethodType.methodType(int.class));
             try {
                 conNBTTagByte = lookup.findConstructor(NBTTagByte, MethodType.methodType(void.class, byte.class));
             } catch (IllegalAccessException | IllegalAccessError e) {
@@ -73,6 +77,11 @@ public class NBTUtil {
                 conNBTTagString = lookup.findStatic(NBTTagString,
                                                     "a",
                                                     MethodType.methodType(NBTTagString, String.class));
+            }
+            try {
+                conNBTTagInt = lookup.findConstructor(NBTTagInt, MethodType.methodType(void.class, int.class));
+            } catch (IllegalAccessException | IllegalAccessError e) {
+                conNBTTagInt = lookup.findStatic(NBTTagInt, "a", MethodType.methodType(NBTTagInt, int.class));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -166,6 +175,20 @@ public class NBTUtil {
             }
         }
 
+        public int asInt() {
+            if (canEdit)
+                return (Integer) base;
+            else {
+                int result = 0;
+                try {
+                    result = (int) asInt.bindTo(base).invoke();
+                } catch (Throwable e) {
+                    e.printStackTrace();
+                }
+                return result;
+            }
+        }
+
         public NBTValue set(Object obj) {
             if (canEdit)
                 base = obj;
@@ -186,6 +209,13 @@ public class NBTUtil {
                 } else if (base instanceof String) {
                     try {
                         return conNBTTagString.invoke((String) base);
+                    } catch (Throwable e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                } else if (base instanceof Integer) {
+                    try {
+                        return conNBTTagInt.invoke((Integer) base);
                     } catch (Throwable e) {
                         e.printStackTrace();
                     }
