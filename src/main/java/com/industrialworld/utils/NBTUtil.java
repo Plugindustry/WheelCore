@@ -101,7 +101,17 @@ public class NBTUtil {
         } catch (Throwable e) {
             e.printStackTrace();
         }
-        return result == null ? null : new NBTValue(result);
+        return result == null ? null : NBTValue.is(result);
+    }
+
+    public static NBTValue getTagValue(Object nbttc, String key) {
+        Object result = null;
+        try {
+            result = get.bindTo(nbttc).invoke(key);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+        return result == null ? null : NBTValue.is(result);
     }
 
     public static ItemStack setTagValue(ItemStack item, String key, NBTValue value) {
@@ -135,16 +145,24 @@ public class NBTUtil {
     }
 
     public static class NBTValue {
-        private boolean canEdit;
+        private final boolean canEdit;
         private Object base;
 
-        public NBTValue() {
+        private NBTValue() {
             canEdit = true;
         }
 
         private NBTValue(Object base) {
             canEdit = false;
             this.base = base;
+        }
+
+        public static NBTValue of(Object base) {
+            return new NBTValue().set(base);
+        }
+
+        public static NBTValue is(Object base) {
+            return new NBTValue(base);
         }
 
         public boolean asBoolean() {

@@ -107,10 +107,10 @@ public class ItemStackUtil {
 
         public ItemStack getItemStack() {
             ItemStack tmp = new ItemStack(material, amount);
-            tmp = NBTUtil.setTagValue(tmp, "isIWItem", new NBTUtil.NBTValue().set(true));
-            tmp = NBTUtil.setTagValue(tmp, "IWItemId", new NBTUtil.NBTValue().set(id));
-            tmp = NBTUtil.setTagValue(tmp, "IWMaterial", new NBTUtil.NBTValue().set(iwMaterial.getMaterialID()));
-            tmp = NBTUtil.setTagValue(tmp, "IWItemType", new NBTUtil.NBTValue().set(itemType.getTypeID()));
+            tmp = NBTUtil.setTagValue(tmp, "isIWItem", NBTUtil.NBTValue.of(true));
+            tmp = NBTUtil.setTagValue(tmp, "IWItemId", NBTUtil.NBTValue.of(id));
+            tmp = NBTUtil.setTagValue(tmp, "IWMaterial", NBTUtil.NBTValue.of(iwMaterial.getMaterialID()));
+            tmp = NBTUtil.setTagValue(tmp, "IWItemType", NBTUtil.NBTValue.of(itemType.getTypeID()));
             ItemMeta meta = tmp.getItemMeta();
             if (meta == null) {
                 meta = Bukkit.getItemFactory().getItemMeta(material);
