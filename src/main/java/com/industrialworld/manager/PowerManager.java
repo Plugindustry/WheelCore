@@ -94,9 +94,13 @@ public class PowerManager {
                         MainManager.setBlockData(location, data);
                     }
 
-                    if (((Wire) MainManager.getInstanceFromId(MainManager.getBlockId(location))).getMaxTransmissionEnergy() >=
-                        data.packets.stream().reduce(0.0D, (a, b) -> a + b.amount, (a, b) -> null) + value.getPower())
-                        data.packets.add(new Wire.PowerPacket(key, value.getPower()));
+                    double current = data.stat;
+                    double max = ((Wire) MainManager.getInstanceFromId(MainManager.getBlockId(location))).getMaxTransmissionEnergy();
+                    if (current < max) {
+                        double finalPower = max < current + value.getPower() ? max - current : value.getPower();
+                        data.packets.add(new Wire.PowerPacket(key, finalPower));
+                        data.stat += finalPower;
+                    }
                 }));
 
         // Input and spread
@@ -107,7 +111,9 @@ public class PowerManager {
                 .flatMap(Collection::stream)
                 .filter(MainManager::isBlockActive)
                 .forEach(location -> {
-                    double energyLoss = ((Wire) MainManager.getInstanceFromId(MainManager.getBlockId(location))).getEnergyLoss();
+                    Wire instanceOri = ((Wire) MainManager.getInstanceFromId(MainManager.getBlockId(location)));
+                    double energyLoss = instanceOri.getEnergyLoss();
+                    double maxTrans = instanceOri.getMaxTransmissionEnergy();
                     Wire.WireData data = (Wire.WireData) MainManager.getBlockData(location);
                     if (data == null) {
                         data = new Wire.WireData();
@@ -125,8 +131,6 @@ public class PowerManager {
                             .filter(MainManager::isBlockActive)
                             .collect(Collectors.toCollection(HashSet::new));
 
-                    List<Location> list = BlockUtil.findWireAround(location).filter(MainManager::isBlockActive).collect(
-                            Collectors.toList());
                     Iterator<Wire.PowerPacket> iterator = data.packets.iterator();
                     while (iterator.hasNext()) {
                         Wire.PowerPacket packet = iterator.next();
@@ -135,7 +139,8 @@ public class PowerManager {
                             if (!inputs.isEmpty()) {
                                 Location availableInput = inputs.stream()
                                         .filter(loc -> !loc.equals(packet.from))
-                                        .findFirst()
+                                        .parallel()
+                                        .findAny()
                                         .orElse(null);
                                 if (availableInput != null) {
                                     InputRequest inputRequest = inputMap.get(availableInput);
@@ -158,36 +163,54 @@ public class PowerManager {
                                     else
                                         inputRequest.result += packetClone.amount;
 
+                                    if (packetClone.amount < packet.amount - energyLoss) {
+                                        packetClone.amount = packet.amount - energyLoss - packetClone.amount;
+                                        if (maxTrans >= data.statNext + packetClone.amount) {
+                                            data.nextPackets.add(packetClone);
+                                            data.statNext += packetClone.amount;
+                                        }
+                                    }
                                     iterator.remove();
+                                    data.stat -= packet.amount;
                                     continue;
                                 }
                             }
 
                             // Spread
-                            Optional<Location> optional = list.stream().filter(loc -> !loc.equals(packet.from)).filter(
-                                    loc -> {
+                            Optional<Location> optional = BlockUtil.findWireAround(location)
+                                    .filter(MainManager::isBlockActive)
+                                    .filter(loc -> !loc.equals(packet.from))
+                                    .filter(loc -> {
                                         Wire.WireData data1 = (Wire.WireData) MainManager.getBlockData(loc);
                                         Wire instance = (Wire) MainManager.getInstanceFromId(MainManager.getBlockId(loc));
                                         if (data1 == null) {
                                             data1 = new Wire.WireData();
                                             MainManager.setBlockData(loc, data1);
-                                            return instance.getMaxTransmissionEnergy() >= packet.amount;
+                                            return true;
                                         }
 
-                                        return instance.getMaxTransmissionEnergy() >= data1.nextPackets.stream().reduce(
-                                                0.0D,
-                                                (a, b) -> a + b.amount,
-                                                (a, b) -> null) + packet.amount;
-                                    }).parallel().findAny();
+                                        return instance.getMaxTransmissionEnergy() > data1.statNext;
+                                    })
+                                    .parallel()
+                                    .findAny();
 
                             if (optional.isPresent()) {
-                                packet.amount -= energyLoss;
-                                packet.from = location;
-                                ((Wire.WireData) MainManager.getBlockData(optional.get())).nextPackets.add(packet);
-                            } else
-                                data.nextPackets.add(packet);
+                                Wire.PowerPacket packetClone = packet.clone();
+                                packetClone.amount -= energyLoss;
+                                packetClone.from = location;
+                                Wire.WireData data2 = ((Wire.WireData) MainManager.getBlockData(optional.get()));
+                                double current = data2.stat;
+                                double max = ((Wire) MainManager.getInstanceFromId(MainManager.getBlockId(optional.get())))
+                                        .getMaxTransmissionEnergy();
+                                packetClone.amount = max < current + packetClone.amount ?
+                                                     max - current :
+                                                     packetClone.amount;
+                                data2.nextPackets.add(packetClone);
+                                data2.statNext += packetClone.amount;
+                            }
                         }
                         iterator.remove();
+                        data.stat -= packet.amount;
                     }
                 });
 
@@ -201,8 +224,11 @@ public class PowerManager {
                 .forEach(data -> {
                     Wire.WireData temp = (Wire.WireData) data;
                     List<Wire.PowerPacket> packets = temp.packets;
+                    double stat = temp.stat;
                     temp.packets = temp.nextPackets;
                     temp.nextPackets = packets;
+                    temp.stat = temp.statNext;
+                    temp.statNext = stat;
                 });
     }
 
