@@ -16,7 +16,7 @@ public class Recognizer implements ItemBase, Interactive {
             builder.append(block.getType().name());
             if (MainManager.hasBlock(block.getLocation())) {
                 builder.append(' ');
-                builder.append(MainManager.getBlockId(block.getLocation()));
+                builder.append(MainManager.getIdFromInstance(MainManager.getBlockInstance(block.getLocation())));
                 builder.append(' ');
                 builder.append(MainManager.getBlockData(block.getLocation()));
             }

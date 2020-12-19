@@ -21,7 +21,7 @@ public abstract class DummyBlock implements BlockBase, Tickable, Placeable, Dest
     }
 
     public boolean onBlockPlace(Block block) {
-        MainManager.addBlock(MainManager.getIdFromInstance(this), block.getLocation(), null /*currently is null*/);
+        MainManager.addBlock(block.getLocation(), this, null /*currently is null*/);
         return true;
     }
 

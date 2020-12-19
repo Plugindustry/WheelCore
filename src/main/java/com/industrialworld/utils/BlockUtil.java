@@ -123,13 +123,11 @@ public class BlockUtil {
     }
 
     public static boolean isMachine(Location block) {
-        return MainManager.hasBlock(block) &&
-               MainManager.getInstanceFromId(MainManager.getBlockId(block)) instanceof MachineBase;
+        return MainManager.hasBlock(block) && MainManager.getBlockInstance(block) instanceof MachineBase;
     }
 
     public static boolean isWire(Location block) {
-        return MainManager.hasBlock(block) &&
-               MainManager.getInstanceFromId(MainManager.getBlockId(block)) instanceof Wire;
+        return MainManager.hasBlock(block) && MainManager.getBlockInstance(block) instanceof Wire;
     }
 
     public static boolean isReplaceableOreGen(Block block) {

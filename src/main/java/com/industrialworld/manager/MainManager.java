@@ -10,16 +10,14 @@ import com.industrialworld.interfaces.block.BlockData;
 import com.industrialworld.interfaces.block.Destoryable;
 import com.industrialworld.interfaces.block.Placeable;
 import com.industrialworld.interfaces.item.ItemBase;
+import com.industrialworld.manager.data.DataProvider;
 import com.industrialworld.utils.DebuggingLogger;
 import com.industrialworld.utils.NBTUtil;
 import com.industrialworld.world.NormalOrePopulator;
-import org.apache.commons.lang.StringUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.world.ChunkLoadEvent;
@@ -27,27 +25,32 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.event.world.WorldInitEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Objects;
+import java.util.Set;
 
 public class MainManager {
     public static final HashMap<Base, Set<Location>> baseBlocks = new HashMap<>();
     private static final BiMap<String, Base> mapping = HashBiMap.create();
-    private static final HashMap<Location, Map.Entry<String, BlockData>> blocks = new HashMap<>();
-    private static final HashSet<Long> loadedChunks = new HashSet<>();
+    public static DataProvider dataProvider;
+    //private static final HashMap<Location, Map.Entry<String, BlockData>> blocks = new HashMap<>();
+    //private static final HashSet<Long> loadedChunks = new HashSet<>();
 
     // returns if the event doesn't need to be cancelled
     public static boolean processBlockPlacement(ItemStack item, Block newBlock) {
-        BlockBase blockBase = (BlockBase) getInstanceFromId(NBTUtil.getTagValue(item, "IWItemId").asString());
+        BlockBase blockBase = (BlockBase) getInstanceFromId(Objects.requireNonNull(NBTUtil.getTagValue(item,
+                                                                                                       "IWItemId"))
+                                                                    .asString());
         return blockBase instanceof Placeable && ((Placeable) blockBase).onBlockPlace(newBlock);
     }
 
     public static boolean processBlockDestroy(ItemStack tool, Block target, boolean canceled) {
-        BlockBase blockBase = (BlockBase) getInstanceFromId(getBlockId(target.getLocation()));
+        BlockBase blockBase = (BlockBase) getBlockInstance(target.getLocation());
         return blockBase instanceof Destoryable && ((Destoryable) blockBase).onBlockDestroy(target, tool, canceled);
     }
 
     public static boolean processBlockInteract(Player player, Block block, ItemStack tool, Action action) {
-        BlockBase blockBase = (BlockBase) getInstanceFromId(getBlockId(block.getLocation()));
+        BlockBase blockBase = (BlockBase) getBlockInstance(block.getLocation());
         if (blockBase == null) {
             return true;
         }
@@ -90,12 +93,14 @@ public class MainManager {
 
     public static void onChunkLoad(ChunkLoadEvent event) {
         Chunk chunk = event.getChunk();
-        loadedChunks.add(convert(chunk.getX(), chunk.getZ()));
+        //loadedChunks.add(convert(chunk.getX(), chunk.getZ()));
+        dataProvider.loadChunk(chunk);
     }
 
     public static void onChunkUnload(ChunkUnloadEvent event) {
         Chunk chunk = event.getChunk();
-        loadedChunks.remove(convert(chunk.getX(), chunk.getZ()));
+        //loadedChunks.remove(convert(chunk.getX(), chunk.getZ()));
+        dataProvider.unloadChunk(chunk);
     }
 
     public static String getIdFromInstance(Base instance) {
@@ -110,8 +115,8 @@ public class MainManager {
         return mapping.get(id);
     }
 
-    public static void loadBlocksFromConfig(YamlConfiguration config) {
-        for (String str : config.getKeys(false)) {
+    public static void loadBlocks() {
+        /*for (String str : config.getKeys(false)) {
             List<?> list = config.getList(str);
             String[] arr = StringUtils.split(str, ";");
             addBlock((String) (list.get(0)),
@@ -120,11 +125,12 @@ public class MainManager {
                                   new Integer(arr[2]),
                                   new Integer(arr[3])),
                      (BlockData) (list.get(1)));
-        }
+        }*/
+        dataProvider = DataProvider.defaultProvider(mapping);
     }
 
-    public static void saveBlocksToConfig(YamlConfiguration config) {
-        for (Map.Entry<Location, Map.Entry<String, BlockData>> entry : blocks.entrySet()) {
+    public static void saveBlocks() {
+        /*for (Map.Entry<Location, Map.Entry<String, BlockData>> entry : blocks.entrySet()) {
             Location loc = entry.getKey();
             DebuggingLogger.debug("Save " + entry.getValue().getKey() + " to " + loc.getWorld());
             if (loc.getWorld() == null)
@@ -136,34 +142,39 @@ public class MainManager {
                        (int) loc.getY() +
                        ";" +
                        (int) loc.getZ(), Arrays.asList(entry.getValue().getKey(), entry.getValue().getValue()));
-        }
+        }*/
+        dataProvider.saveAll();
     }
 
-    public static void addBlock(String id, Location block, BlockData data) {
+    public static void addBlock(Location block, Base instance, BlockData data) {
         DebuggingLogger.debug("Block at " + block.toString());
-        blocks.put(block, new AbstractMap.SimpleEntry<>(id, data));
+        /*blocks.put(block, new AbstractMap.SimpleEntry<>(id, data));
         Base instance = getInstanceFromId(id);
         if (baseBlocks.containsKey(instance))
             baseBlocks.get(instance).add(block);
         else
-            baseBlocks.put(instance, new HashSet<>(Collections.singleton(block)));
+            baseBlocks.put(instance, new HashSet<>(Collections.singleton(block)));*/
+        dataProvider.addBlock(block, instance, data);
     }
 
     public static void removeBlock(Location block) {
-        baseBlocks.get(getInstanceFromId(getBlockId(block))).remove(block);
-        blocks.remove(block);
+        //baseBlocks.get(getInstanceFromId(getBlockId(block))).remove(block);
+        //blocks.remove(block);
+        dataProvider.removeBlock(block);
     }
 
     public static boolean hasBlock(Location block) {
-        return blocks.containsKey(block);
+        //return blocks.containsKey(block);
+        return dataProvider.hasBlock(block);
     }
 
-    public static String getBlockId(Location block) {
-        if (block == null || blocks.get(block) == null) {
+    public static Base getBlockInstance(Location block) {
+        /*if (block == null || blocks.get(block) == null) {
             return null;
         }
 
-        return blocks.get(block).getKey();
+        return blocks.get(block).getKey();*/
+        return dataProvider.instanceAt(block);
     }
 
     private static ItemBase getItemInstance(ItemStack is) {
@@ -178,22 +189,16 @@ public class MainManager {
     }
 
     public static BlockData getBlockData(Location block) {
-        return blocks.get(block).getValue();
+        //return blocks.get(block).getValue();
+        return dataProvider.dataAt(block);
     }
 
     public static void setBlockData(Location block, BlockData data) {
-        blocks.get(block).setValue(data);
-    }
-
-    public static boolean isBlockActive(Location block) {
-        return loadedChunks.contains(convert(block.getBlockX() >> 4, block.getBlockZ() >> 4));
+        //blocks.get(block).setValue(data);
+        dataProvider.setDataAt(block, data);
     }
 
     public static void register(String id, Base b) {
         mapping.put(id, b);
-    }
-
-    private static long convert(int i1, int i2) {
-        return ((i1 & 0x00000000ffffffffL) << 32) | (i2 & 0x00000000ffffffffL);
     }
 }

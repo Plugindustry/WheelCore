@@ -34,6 +34,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -51,7 +52,7 @@ public class EventListener implements Listener {
         if (MainManager.hasBlock(event.getBlock().getLocation())) {
             // don't drop any item by default.
             event.setDropItems(false);
-            event.setCancelled(!MainManager.processBlockDestroy(event.getPlayer().getItemInHand(),
+            event.setCancelled(!MainManager.processBlockDestroy(event.getPlayer().getInventory().getItemInMainHand(),
                                                                 event.getBlock(),
                                                                 event.isCancelled()));
         }
@@ -70,7 +71,7 @@ public class EventListener implements Listener {
     public void onBlockExplode(BlockExplodeEvent event) {
         for (Block block : event.blockList())
             if (MainManager.hasBlock(block.getLocation()))
-                if (MainManager.getInstanceFromId(MainManager.getBlockId(block.getLocation())) instanceof MachineBase) {
+                if (MainManager.getBlockInstance(block.getLocation()) instanceof MachineBase) {
                     MainManager.removeBlock(block.getLocation());
                     block.setType(Material.AIR);
                     Item item = (Item) (event.getBlock().getWorld().spawnEntity(event.getBlock().getLocation(),
@@ -94,7 +95,7 @@ public class EventListener implements Listener {
                 .filter(entry -> entry.getKey() instanceof EnchantmentUtil.CustomEnchantment)
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-        Map<Enchantment, Integer> confilcts = src.entrySet()
+        Map<Enchantment, Integer> conflicts = src.entrySet()
                 .stream()
                 .filter(entry -> result.getEnchantments()
                         .keySet()
@@ -102,11 +103,11 @@ public class EventListener implements Listener {
                         .anyMatch(enchantment -> entry.getKey().conflictsWith(enchantment)))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
-        if (confilcts.size() == src.size())
+        if (conflicts.size() == src.size())
             return;
 
         result.addUnsafeEnchantments(src);
-        confilcts.forEach((enchantment, level) -> EnchantmentUtil.removeFromItem(result,
+        conflicts.forEach((enchantment, level) -> EnchantmentUtil.removeFromItem(result,
                                                                                  (EnchantmentUtil.CustomEnchantment) enchantment,
                                                                                  level));
 
@@ -171,7 +172,7 @@ public class EventListener implements Listener {
                                                                 event.getAction())) {
             event.setCancelled(true);
         } else if (event.hasBlock() && !MainManager.processBlockInteract(event.getPlayer(),
-                                                                         event.getClickedBlock(),
+                                                                         Objects.requireNonNull(event.getClickedBlock()),
                                                                          event.getItem(),
                                                                          event.getAction())) {
             event.setCancelled(true);

@@ -38,7 +38,7 @@ public class ConfigManager {
     }
 
     public static void loadBlocks() {
-        File block_yml = new File(dataFolder, "blocks.yml");
+        /*File block_yml = new File(dataFolder, "blocks.yml");
         if (!(block_yml.isFile())) {
             try {
                 block_yml.createNewFile();
@@ -46,17 +46,17 @@ public class ConfigManager {
                 e.printStackTrace();
             }
         }
-        blocksConfig = YamlConfiguration.loadConfiguration(block_yml);
-        MainManager.loadBlocksFromConfig(blocksConfig);
+        blocksConfig = YamlConfiguration.loadConfiguration(block_yml);*/
+        MainManager.loadBlocks();
     }
 
     public static void shutdown() {
-        MainManager.saveBlocksToConfig(blocksConfig);
-        try {
+        MainManager.saveBlocks();
+        /*try {
             blocksConfig.save(new File(dataFolder, "blocks.yml"));
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
     }
 
     public static YamlConfiguration getConfig() {

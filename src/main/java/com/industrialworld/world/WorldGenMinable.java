@@ -29,7 +29,7 @@ public class WorldGenMinable {
 
         if (BlockUtil.isReplaceableOreGen(currentBlock)) {
             currentBlock.setType(this.ore.getMaterial());
-            MainManager.addBlock(this.ore.getId(), currentBlock.getLocation(), null);
+            MainManager.addBlock(currentBlock.getLocation(), this.ore, null);
             DebuggingLogger.debug("Gen in " +
                                   (currentBlock.getLocation().getWorld() == null ?
                                    null :
@@ -70,7 +70,7 @@ public class WorldGenMinable {
 
             if (BlockUtil.isReplaceableOreGen(currentBlock)) {
                 currentBlock.setType(this.ore.getMaterial());
-                MainManager.addBlock(this.ore.getId(), currentBlock.getLocation(), null);
+                MainManager.addBlock(currentBlock.getLocation(), this.ore, null);
             }
         }
         return true;
