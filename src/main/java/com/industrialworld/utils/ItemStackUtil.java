@@ -36,31 +36,29 @@ public class ItemStackUtil {
     }
 
     public static boolean isSimilar(ItemStack a, ItemStack b, boolean ignoreDurability) {
-        if (ignoreDurability) {
-            ItemStack temp = a.clone();
-            temp.setDurability((short) 0);
-            a = temp;
-            temp = b.clone();
-            temp.setDurability((short) 0);
-            b = temp;
-        }
-
         if (a == null) {
             return b == null;
         }
 
-        if (!a.isSimilar(b)) {
+        ItemStack ta = a.clone();
+        ItemStack tb = b.clone();
+        if (ignoreDurability) {
+            ta.setDurability((short) 0);
+            tb.setDurability((short) 0);
+        }
+
+        if (!ta.isSimilar(tb)) {
             return false;
         }
 
         // check NBT tag
-        boolean aIs = isIWItem(a);
-        if (aIs != isIWItem(b))
+        boolean aIs = isIWItem(ta);
+        if (aIs != isIWItem(tb))
             return false;
 
         if (aIs) {
-            NBTUtil.NBTValue aId = NBTUtil.getTagValue(a, "IWItemId");
-            NBTUtil.NBTValue bId = NBTUtil.getTagValue(b, "IWItemId");
+            NBTUtil.NBTValue aId = NBTUtil.getTagValue(ta, "IWItemId");
+            NBTUtil.NBTValue bId = NBTUtil.getTagValue(tb, "IWItemId");
             return (aId == null && bId == null) || (aId != null && bId != null && Objects.equals(aId.asString(),
                                                                                                  bId.asString()));
         }

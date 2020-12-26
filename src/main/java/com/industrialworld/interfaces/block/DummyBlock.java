@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack;
 public abstract class DummyBlock implements BlockBase, Tickable, Placeable, Destoryable, Interactive {
     @Override
     public void onTick() {
-
+        // Do nothing.
     }
 
     @Override

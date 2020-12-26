@@ -145,7 +145,9 @@ public class ChunkBasedProvider implements DataProvider {
 
     private static class BlockDescription {
         String worldName;
-        int x, y, z;
+        int x;
+        int y;
+        int z;
         String id;
         BlockData data;
 
