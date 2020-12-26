@@ -1,6 +1,7 @@
 package com.industrialworld.manager.recipe;
 
-import com.industrialworld.item.ItemType;
+import com.industrialworld.manager.recipe.choice.ItemStackChoice;
+import com.industrialworld.manager.recipe.choice.RecipeChoice;
 import com.industrialworld.utils.DebuggingLogger;
 import org.bukkit.inventory.ItemStack;
 
@@ -11,16 +12,15 @@ import java.util.Map;
 
 public class ShapedRecipeFactory {
     private List<String> patterns = new LinkedList<>();
-    private Map<Character, Object> patternMapping = new HashMap<>();
-    private Map<ItemStack, Integer> damageMapping = new HashMap<>();
+    private final Map<Character, RecipeChoice> patternMapping = new HashMap<>();
+    private final Map<RecipeChoice, Integer> damageMapping = new HashMap<>();
 
     public ShapedRecipeFactory map(char c, ItemStack target) {
-        this.patternMapping.put(c, target.clone());
-        return this;
+        return map(c, new ItemStackChoice(target));
     }
 
-    public ShapedRecipeFactory map(char c, ItemType type) {
-        this.patternMapping.put(c, type);
+    public ShapedRecipeFactory map(char c, RecipeChoice target) {
+        this.patternMapping.put(c, target);
         return this;
     }
 
@@ -49,15 +49,19 @@ public class ShapedRecipeFactory {
     }
 
     public ShapedRecipeFactory addDamage(ItemStack itemStack, int damage) {
-        this.damageMapping.put(itemStack, damage);
+        return addDamage(new ItemStackChoice(itemStack), damage);
+    }
+
+    public ShapedRecipeFactory addDamage(RecipeChoice choice, int damage) {
+        this.damageMapping.put(choice, damage);
         return this;
     }
 
     public RecipeBase build(ItemStack result) {
-        List<List<Object>> recipe = new LinkedList<>();
+        List<List<RecipeChoice>> recipe = new LinkedList<>();
 
         for (String pattern : patterns) {
-            List<Object> current = new LinkedList<>();
+            List<RecipeChoice> current = new LinkedList<>();
             recipe.add(current);
 
             for (char c : pattern.toCharArray()) {

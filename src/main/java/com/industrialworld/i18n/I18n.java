@@ -11,9 +11,6 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 public class I18n {
     public static String localeString;
@@ -40,16 +37,16 @@ public class I18n {
         }
     }
 
-    public static ItemStackUtil.ItemStackFactory processItem(String id, int numOfLore, ItemStackUtil.ItemStackFactory factory) {
-        return processItemLore(id, numOfLore, processItemName(id, factory.setId(id)));
+    public static ItemStackUtil.ItemStackFactory processItem(String id, ItemStackUtil.ItemStackFactory factory) {
+        return processItemLore(id, processItemName(id, factory.setId(id)));
     }
 
-    public static ItemStackUtil.ItemStackFactory processItem(String id, int numOfLore, ItemStackUtil.ItemStackFactory factory, List<String> prefix) {
-        return processItemLore(id, numOfLore, processItemName(id, factory.setId(id)), prefix);
+    public static ItemStackUtil.ItemStackFactory processItem(String id, ItemStackUtil.ItemStackFactory factory, List<String> prefix) {
+        return processItemLore(id, processItemName(id, factory.setId(id)), prefix);
     }
 
-    public static ItemStackUtil.ItemStackFactory processItem(String id, int numOfLore, ItemStackUtil.ItemStackFactory factory, List<String> prefix, List<String> suffix) {
-        return processItemLore(id, numOfLore, processItemName(id, factory.setId(id)), prefix, suffix);
+    public static ItemStackUtil.ItemStackFactory processItem(String id, ItemStackUtil.ItemStackFactory factory, List<String> prefix, List<String> suffix) {
+        return processItemLore(id, processItemName(id, factory.setId(id)), prefix, suffix);
     }
 
     public static ItemStackUtil.ItemStackFactory processItemName(String id, ItemStackUtil.ItemStackFactory factory) {
@@ -58,26 +55,29 @@ public class I18n {
         return factory;
     }
 
-    public static ItemStackUtil.ItemStackFactory processItemLore(String id, int numOfLore, ItemStackUtil.ItemStackFactory factory) {
-        return processItemLore(id, numOfLore, factory, Collections.emptyList(), Collections.emptyList());
+    public static ItemStackUtil.ItemStackFactory processItemLore(String id, ItemStackUtil.ItemStackFactory factory) {
+        return processItemLore(id, factory, Collections.emptyList(), Collections.emptyList());
     }
 
-    public static ItemStackUtil.ItemStackFactory processItemLore(String id, int numOfLore, ItemStackUtil.ItemStackFactory factory, List<String> prefix) {
-        return processItemLore(id, numOfLore, factory, prefix, Collections.emptyList());
+    public static ItemStackUtil.ItemStackFactory processItemLore(String id, ItemStackUtil.ItemStackFactory factory, List<String> prefix) {
+        return processItemLore(id, factory, prefix, Collections.emptyList());
     }
 
-    public static ItemStackUtil.ItemStackFactory processItemLore(String id, int numOfLore, ItemStackUtil.ItemStackFactory factory, List<String> prefix, List<String> suffix) {
+    public static ItemStackUtil.ItemStackFactory processItemLore(String id, ItemStackUtil.ItemStackFactory factory, List<String> prefix, List<String> suffix) {
         String lowerId = id.toLowerCase(Locale.ENGLISH);
-        factory.setLore(Stream.of(prefix.stream(),
-                                  IntStream.rangeClosed(1, numOfLore)
-                                          .mapToObj(i -> getLocaleString(String.format(I18nConst.Item.ITEM_LORE,
-                                                                                       lowerId,
-                                                                                       i))),
-                                  suffix.stream()).flatMap(temp -> temp).collect(Collectors.toList()));
+        LinkedList<String> tempList = new LinkedList<>();
+        tempList.addAll(prefix);
+        tempList.addAll(getLocaleStringList(String.format(I18nConst.Item.ITEM_LORE, lowerId)));
+        tempList.addAll(suffix);
+        factory.setLore(tempList);
         return factory;
     }
 
     public static String getLocaleString(String key) {
         return bundle.containsKey(key) ? bundle.getString(key) : key;
+    }
+
+    public static List<String> getLocaleStringList(String key) {
+        return bundle.containsKey(key) ? Arrays.asList(bundle.getStringArray(key)) : Collections.singletonList(key);
     }
 }

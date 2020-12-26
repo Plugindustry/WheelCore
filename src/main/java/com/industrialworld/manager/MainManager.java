@@ -12,7 +12,7 @@ import com.industrialworld.interfaces.block.Placeable;
 import com.industrialworld.interfaces.item.ItemBase;
 import com.industrialworld.manager.data.DataProvider;
 import com.industrialworld.utils.DebuggingLogger;
-import com.industrialworld.utils.NBTUtil;
+import com.industrialworld.utils.ItemStackUtil;
 import com.industrialworld.world.NormalOrePopulator;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -26,7 +26,6 @@ import org.bukkit.event.world.WorldInitEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.Set;
 
 public class MainManager {
@@ -38,9 +37,7 @@ public class MainManager {
 
     // returns if the event doesn't need to be cancelled
     public static boolean processBlockPlacement(ItemStack item, Block newBlock) {
-        BlockBase blockBase = (BlockBase) getInstanceFromId(Objects.requireNonNull(NBTUtil.getTagValue(item,
-                                                                                                       "IWItemId"))
-                                                                    .asString());
+        BlockBase blockBase = (BlockBase) getInstanceFromId(ItemStackUtil.getIWItemId(item));
         return blockBase instanceof Placeable && ((Placeable) blockBase).onBlockPlace(newBlock);
     }
 
@@ -178,14 +175,9 @@ public class MainManager {
     }
 
     private static ItemBase getItemInstance(ItemStack is) {
-        NBTUtil.NBTValue value = NBTUtil.getTagValue(is, "IWItemId");
-        if (value == null)
+        if (!ItemStackUtil.isIWItem(is))
             return null;
-        try {
-            return (ItemBase) getInstanceFromId(value.asString());
-        } catch (ClassCastException e) {
-            return null;
-        }
+        return (ItemBase) getInstanceFromId(ItemStackUtil.getIWItemId(is));
     }
 
     public static BlockData getBlockData(Location block) {

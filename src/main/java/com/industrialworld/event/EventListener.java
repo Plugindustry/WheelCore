@@ -3,14 +3,12 @@ package com.industrialworld.event;
 import com.industrialworld.ConstItems;
 import com.industrialworld.IndustrialWorld;
 import com.industrialworld.interfaces.block.MachineBase;
-import com.industrialworld.manager.InventoryListenerManager;
 import com.industrialworld.manager.MainManager;
 import com.industrialworld.manager.RecipeRegistry;
 import com.industrialworld.manager.recipe.RecipeBase;
 import com.industrialworld.manager.recipe.SmeltingRecipe;
 import com.industrialworld.utils.EnchantmentUtil;
 import com.industrialworld.utils.ItemStackUtil;
-import com.industrialworld.utils.NBTUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -23,7 +21,10 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.inventory.*;
+import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.FurnaceSmeltEvent;
+import org.bukkit.event.inventory.PrepareAnvilEvent;
+import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
@@ -41,8 +42,7 @@ import java.util.stream.Stream;
 public class EventListener implements Listener {
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
-        NBTUtil.NBTValue value = NBTUtil.getTagValue(event.getItemInHand(), "isIWItem");
-        if (value != null && value.asBoolean()) {
+        if (ItemStackUtil.isIWItem(event.getItemInHand())) {
             event.setCancelled(!MainManager.processBlockPlacement(event.getItemInHand(), event.getBlockPlaced()));
         }
     }
@@ -119,11 +119,8 @@ public class EventListener implements Listener {
         CraftingInventory craftingInv = event.getInventory();
         if (Stream.of(craftingInv.getMatrix()).anyMatch(ItemStackUtil::isIWItem) ||
             RecipeRegistry.isPlaceholder(event.getRecipe())) {
-            RecipeBase.RecipeResultInfo resultInfo = RecipeRegistry.matchCraftingRecipe(Arrays.asList(craftingInv.getMatrix()),
-                                                                                        null);
-            craftingInv.setResult(resultInfo == null ?
-                                  null :
-                                  resultInfo.getRecipe().getResult(resultInfo.getIwMaterial()));
+            RecipeBase result = RecipeRegistry.matchCraftingRecipe(Arrays.asList(craftingInv.getMatrix()), null);
+            craftingInv.setResult(result == null ? null : result.getResult());
         }
     }
 
@@ -142,25 +139,14 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onItemSmelt(FurnaceSmeltEvent event) {
-        NBTUtil.NBTValue sourceValue = NBTUtil.getTagValue(event.getSource(), "isIWItem");
-        if (sourceValue != null && sourceValue.asBoolean()) {
+        if (ItemStackUtil.isIWItem(event.getSource())) {
             SmeltingRecipe recipe = RecipeRegistry.matchSmeltingRecipe(event.getSource());
             if (recipe != null) {
-                event.setResult(recipe.getResult(ItemStackUtil.getItemMaterial(event.getSource())));
+                event.setResult(recipe.getResult());
             } else {
                 event.setCancelled(true);
             }
         }
-    }
-
-    @EventHandler
-    public void onInventoryClick(InventoryClickEvent event) {
-        InventoryListenerManager.onInventoryClick(event);
-    }
-
-    @EventHandler
-    public void onInventoryClose(InventoryCloseEvent event) {
-        InventoryListenerManager.onInventoryClose(event);
     }
 
     @EventHandler

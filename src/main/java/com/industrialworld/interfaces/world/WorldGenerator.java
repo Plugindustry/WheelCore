@@ -1,4 +1,4 @@
-package com.industrialworld.world;
+package com.industrialworld.interfaces.world;
 
 import org.bukkit.Chunk;
 import org.bukkit.World;

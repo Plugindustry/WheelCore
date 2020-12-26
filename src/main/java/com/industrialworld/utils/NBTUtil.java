@@ -7,6 +7,10 @@ import org.bukkit.inventory.ItemStack;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class NBTUtil {
     private static MethodHandle asNMSCopy;
@@ -23,6 +27,10 @@ public class NBTUtil {
     private static MethodHandle conNBTTagByte;
     private static MethodHandle conNBTTagString;
     private static MethodHandle conNBTTagInt;
+    private static MethodHandle size;
+    private static MethodHandle getAt;
+    private static MethodHandle add;
+    private static MethodHandle conNBTTagList;
 
     static {
         try {
@@ -43,6 +51,9 @@ public class NBTUtil {
                                                   IndustrialWorld.serverVersion +
                                                   ".NBTTagString");
             Class<?> NBTTagInt = Class.forName("net.minecraft.server." + IndustrialWorld.serverVersion + ".NBTTagInt");
+            Class<?> NBTTagList = Class.forName("net.minecraft.server." +
+                                                IndustrialWorld.serverVersion +
+                                                ".NBTTagList");
 
             MethodHandles.Lookup lookup = MethodHandles.lookup();
             asNMSCopy = lookup.findStatic(CraftItemStack,
@@ -83,6 +94,10 @@ public class NBTUtil {
             } catch (IllegalAccessException | IllegalAccessError e) {
                 conNBTTagInt = lookup.findStatic(NBTTagInt, "a", MethodType.methodType(NBTTagInt, int.class));
             }
+            size = lookup.findVirtual(NBTTagList, "size", MethodType.methodType(int.class));
+            getAt = lookup.findVirtual(NBTTagList, "get", MethodType.methodType(NBTBase, int.class));
+            add = lookup.findVirtual(NBTTagList, "add", MethodType.methodType(void.class, int.class, NBTBase));
+            conNBTTagList = lookup.findConstructor(NBTTagList, MethodType.methodType(void.class));
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println("[IndustrialWorld] Plugin shutting down...");
@@ -207,6 +222,27 @@ public class NBTUtil {
             }
         }
 
+        @SuppressWarnings("unchecked")
+        public List<NBTValue> asList() {
+            if (canEdit)
+                return (List<NBTValue>) base;
+            else {
+                try {
+                    return IntStream.range(0, (int) size.bindTo(base).invoke()).mapToObj(i -> {
+                        try {
+                            return NBTValue.is(getAt.bindTo(base).invoke(i));
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
+                        return null;
+                    }).collect(Collectors.toList());
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
+            }
+            return Collections.emptyList();
+        }
+
         public NBTValue set(Object obj) {
             if (canEdit)
                 base = obj;
@@ -215,6 +251,7 @@ public class NBTUtil {
             return this;
         }
 
+        @SuppressWarnings("unchecked")
         protected Object convert() {
             if (canEdit) {
                 if (base instanceof Boolean) {
@@ -236,6 +273,23 @@ public class NBTUtil {
                         return conNBTTagInt.invoke((Integer) base);
                     } catch (Throwable e) {
                         e.printStackTrace();
+                    }
+                    return null;
+                } else if (base instanceof List) {
+                    if (!((List<Object>) base).stream().allMatch(obj -> obj instanceof NBTValue))
+                        throw new IllegalStateException("Unknown value type!");
+                    try {
+                        Object tagList = conNBTTagList.invoke();
+                        ((List<NBTValue>) base).stream().map(NBTValue::convert).forEach(obj -> {
+                            try {
+                                add.bindTo(tagList).invoke(size.bindTo(tagList).invoke(), obj);
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
+                        });
+                        return tagList;
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
                     }
                     return null;
                 } else

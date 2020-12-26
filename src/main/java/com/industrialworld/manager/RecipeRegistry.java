@@ -1,7 +1,6 @@
 package com.industrialworld.manager;
 
 import com.industrialworld.IndustrialWorld;
-import com.industrialworld.item.material.IWMaterial;
 import com.industrialworld.manager.recipe.*;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -22,7 +21,7 @@ public class RecipeRegistry {
             if (recipeBase instanceof SmeltingRecipe) {
                 SmeltingRecipe smelting = (SmeltingRecipe) recipeBase;
                 Bukkit.addRecipe(new FurnaceRecipe(new NamespacedKey(IndustrialWorld.instance, "furnace_recipe_" + id),
-                                                   recipeBase.getResult(IWMaterial.NULL),
+                                                   recipeBase.getResult(),
                                                    new RecipeChoice.ExactChoice(smelting.getAllMatches()),
                                                    smelting.getExperience(),
                                                    smelting.getCookingTime()));
@@ -30,7 +29,7 @@ public class RecipeRegistry {
                 ShapedRecipe shaped = (ShapedRecipe) recipeBase;
                 org.bukkit.inventory.ShapedRecipe recipe = new org.bukkit.inventory.ShapedRecipe(new NamespacedKey(
                         IndustrialWorld.instance,
-                        "shaped_recipe_" + id), recipeBase.getResult(IWMaterial.NULL))
+                        "shaped_recipe_" + id), recipeBase.getResult())
                         .shape("abc", "def", "ghi");
                 setShapedIfExist(recipe, shaped, 'a', 0);
                 setShapedIfExist(recipe, shaped, 'b', 1);
@@ -47,7 +46,7 @@ public class RecipeRegistry {
                 ShapelessRecipe shapeless = (ShapelessRecipe) recipeBase;
                 org.bukkit.inventory.ShapelessRecipe recipe = new org.bukkit.inventory.ShapelessRecipe(new NamespacedKey(
                         IndustrialWorld.instance,
-                        "shapeless_recipe_" + id), recipeBase.getResult(IWMaterial.NULL));
+                        "shapeless_recipe_" + id), recipeBase.getResult());
                 shapeless.getChoices().forEach(recipe::addIngredient);
                 placeholders.add(recipe.getKey());
                 Bukkit.addRecipe(recipe);
@@ -73,7 +72,7 @@ public class RecipeRegistry {
             return false;
     }
 
-    public static RecipeBase.RecipeResultInfo matchCraftingRecipe(List<ItemStack> items, Map<Integer, ItemStack> damageResult) {
+    public static CraftingRecipe matchCraftingRecipe(List<ItemStack> items, Map<Integer, ItemStack> damageResult) {
         // tidy up the matrix
         List<List<ItemStack>> matrix = new LinkedList<>();
         List<ItemStack> current = new LinkedList<>();
@@ -92,16 +91,8 @@ public class RecipeRegistry {
 
         // then match the recipe
         for (RecipeBase recipeBase : recipes) {
-            if (!(recipeBase instanceof CraftingRecipe)) {
-                continue;
-            }
-
-            RecipeBase.MatchInfo info = ((CraftingRecipe) recipeBase).matches(matrix, damageResult);
-            if (info.isMatches()) {
-                if (info.isHasIWMaterial()) {
-                    return new RecipeBase.RecipeResultInfo((CraftingRecipe) recipeBase, info.getIwMaterial());
-                }
-                return new RecipeBase.RecipeResultInfo((CraftingRecipe) recipeBase, IWMaterial.NULL);
+            if (recipeBase instanceof CraftingRecipe && ((CraftingRecipe) recipeBase).matches(matrix, damageResult)) {
+                return (CraftingRecipe) recipeBase;
             }
         }
 
@@ -114,7 +105,6 @@ public class RecipeRegistry {
                 return (SmeltingRecipe) recipeBase;
             }
         }
-
         return null;
     }
 
@@ -124,7 +114,6 @@ public class RecipeRegistry {
                 return (GrindRecipe) recipeBase;
             }
         }
-
         return null;
     }
 }

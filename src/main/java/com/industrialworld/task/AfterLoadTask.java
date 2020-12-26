@@ -1,9 +1,9 @@
 package com.industrialworld.task;
 
+import com.industrialworld.ConstItems;
 import com.industrialworld.IndustrialWorld;
 import com.industrialworld.manager.ConfigManager;
 import com.industrialworld.manager.MainManager;
-import com.industrialworld.manager.RegisterManager;
 import com.industrialworld.utils.DebuggingLogger;
 import org.bukkit.Bukkit;
 
@@ -12,19 +12,17 @@ public class AfterLoadTask implements Runnable {
     public void run() {
         ConfigManager.init(IndustrialWorld.instance);
 
-        RegisterManager.registerMaterial();
 
         DebuggingLogger.debug("register blocks");
-        RegisterManager.registerBlockIS();
+        RegisterTask.registerBlock();
         ConfigManager.loadBlocks();
 
         // Register recipes, blocks
-        RegisterManager.registerIWItemMaterial();
-        RegisterManager.registerIWMaterial();
         DebuggingLogger.debug("register items");
-        RegisterManager.registerItem();
+        RegisterTask.registerItem();
+        ConstItems.initConst();
         DebuggingLogger.debug("register recipes");
-        RegisterManager.registerIWCRecipes();
+        RegisterTask.registerRecipes();
 
         // Register tick
         Bukkit.getScheduler().runTaskTimer(IndustrialWorld.instance, MainManager::update, 0, 0);

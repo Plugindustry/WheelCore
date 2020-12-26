@@ -1,15 +1,15 @@
 package com.industrialworld.utils;
 
-import com.industrialworld.item.ItemType;
-import com.industrialworld.item.material.IWMaterial;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class ItemStackUtil {
     public static ItemStackFactory create(Material mtrl) {
@@ -17,11 +17,34 @@ public class ItemStackUtil {
     }
 
     public static boolean isIWItem(ItemStack item) {
-        NBTUtil.NBTValue value = NBTUtil.getTagValue(item, "isIWItem");
-        return value != null && value.asBoolean();
+        return NBTUtil.getTagValue(item, "IWItemId") != null;
+    }
+
+    public static String getIWItemId(ItemStack item) {
+        return isIWItem(item) ? Objects.requireNonNull(NBTUtil.getTagValue(item, "IWItemId")).asString() : "";
+    }
+
+    public static List<String> getOreDictionary(ItemStack item) {
+        NBTUtil.NBTValue value = NBTUtil.getTagValue(item, "OreDictionary");
+        return value == null ?
+               Collections.emptyList() :
+               value.asList().stream().map(NBTUtil.NBTValue::asString).collect(Collectors.toList());
     }
 
     public static boolean isSimilar(ItemStack a, ItemStack b) {
+        return isSimilar(a, b, false);
+    }
+
+    public static boolean isSimilar(ItemStack a, ItemStack b, boolean ignoreDurability) {
+        if (ignoreDurability) {
+            ItemStack temp = a.clone();
+            temp.setDurability((short) 0);
+            a = temp;
+            temp = b.clone();
+            temp.setDurability((short) 0);
+            b = temp;
+        }
+
         if (a == null) {
             return b == null;
         }
@@ -44,32 +67,13 @@ public class ItemStackUtil {
         return true;
     }
 
-    public static ItemType getItemType(ItemStack is) {
-        NBTUtil.NBTValue nbtValue = NBTUtil.getTagValue(is, "IWItemType");
-        if (nbtValue == null) {
-            return ItemType.NULL;
-        } else {
-            return ItemType.valueOf(nbtValue.asString());
-        }
-    }
-
-    public static IWMaterial getItemMaterial(ItemStack is) {
-        NBTUtil.NBTValue nbtValue = NBTUtil.getTagValue(is, "IWMaterial");
-        if (nbtValue == null) {
-            return IWMaterial.NULL;
-        } else {
-            return IWMaterial.valueOf(nbtValue.asString());
-        }
-    }
-
     public static class ItemStackFactory {
         private final Material material;
         private int amount = 1;
         private String id;
         private String displayName = "";
         private List<String> lore = Collections.singletonList("");
-        private IWMaterial iwMaterial = IWMaterial.NULL;
-        private ItemType itemType = ItemType.NULL;
+        private List<NBTUtil.NBTValue> oreDictionary = null;
 
         public ItemStackFactory(Material material) {
             this.material = material;
@@ -95,22 +99,19 @@ public class ItemStackUtil {
             return this;
         }
 
-        public ItemStackFactory setItemType(ItemType itemType) {
-            this.itemType = itemType;
-            return this;
+        public ItemStackFactory setOreDictionary(String... dictionary) {
+            return setOreDictionary(Arrays.asList(dictionary));
         }
 
-        public ItemStackFactory setIWMaterial(IWMaterial iwMaterial) {
-            this.iwMaterial = iwMaterial;
+        public ItemStackFactory setOreDictionary(List<String> dictionary) {
+            oreDictionary = dictionary.stream().map(NBTUtil.NBTValue::of).sorted().collect(Collectors.toList());
             return this;
         }
 
         public ItemStack getItemStack() {
             ItemStack tmp = new ItemStack(material, amount);
-            tmp = NBTUtil.setTagValue(tmp, "isIWItem", NBTUtil.NBTValue.of(true));
             tmp = NBTUtil.setTagValue(tmp, "IWItemId", NBTUtil.NBTValue.of(id));
-            tmp = NBTUtil.setTagValue(tmp, "IWMaterial", NBTUtil.NBTValue.of(iwMaterial.getMaterialID()));
-            tmp = NBTUtil.setTagValue(tmp, "IWItemType", NBTUtil.NBTValue.of(itemType.getTypeID()));
+            tmp = NBTUtil.setTagValue(tmp, "OreDictionary", NBTUtil.NBTValue.of(oreDictionary));
             ItemMeta meta = tmp.getItemMeta();
             if (meta == null) {
                 meta = Bukkit.getItemFactory().getItemMeta(material);

@@ -8,7 +8,7 @@ public class I18nConst {
 
     public static class Item {
         public static final String ITEM_NAME = "item.%s.name";
-        public static final String ITEM_LORE = "item.%s.lore.%d";
+        public static final String ITEM_LORE = "item.%s.lore";
     }
 
     public static class Block {

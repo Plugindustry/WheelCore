@@ -4,6 +4,7 @@ import com.industrialworld.command.IndustrialWorldCommand;
 import com.industrialworld.event.EventListener;
 import com.industrialworld.manager.ConfigManager;
 import com.industrialworld.task.AfterLoadTask;
+import com.industrialworld.task.RegisterTask;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -25,6 +26,8 @@ public final class IndustrialWorld extends JavaPlugin {
 
         // Register command, EventListener
         this.getCommand("iw").setExecutor(new IndustrialWorldCommand());
+
+        RegisterTask.registerGenerator();
 
         // Register EventListener
         Bukkit.getPluginManager().registerEvents(new EventListener(), IndustrialWorld.instance);

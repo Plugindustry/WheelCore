@@ -20,10 +20,10 @@ public class WorldGenMinable {
         this.numberOfBlocks = numberOfBlocks;
     }
 
-    public boolean generate(World worldIn, Random rand, Chunk chunk, Location blockLctn) {
-        int x = blockLctn.getBlockX();
-        int y = blockLctn.getBlockY();
-        int z = blockLctn.getBlockZ();
+    public boolean generate(World worldIn, Random rand, Chunk chunk, Location blockLoc) {
+        int x = blockLoc.getBlockX();
+        int y = blockLoc.getBlockY();
+        int z = blockLoc.getBlockZ();
 
         Block currentBlock = chunk.getBlock(x, y, z);
 

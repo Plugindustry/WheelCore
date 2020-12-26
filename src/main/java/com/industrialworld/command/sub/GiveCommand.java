@@ -1,7 +1,7 @@
 package com.industrialworld.command.sub;
 
 import com.industrialworld.command.selector.EntitySelector;
-import com.industrialworld.manager.ItemManager;
+import com.industrialworld.manager.ItemMapping;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -36,7 +36,7 @@ public class GiveCommand extends SubCommandBase {
         EntitySelector selector = new EntitySelector(commandSender, args[0]);
         String itemName = args[1].toUpperCase();
 
-        if (!ItemManager.isItemExists(itemName)) {
+        if (!ItemMapping.isItemExists(itemName)) {
             commandSender.sendMessage("Uh we didn't found that item.");
             return true;
         }
@@ -46,7 +46,7 @@ public class GiveCommand extends SubCommandBase {
                 continue; // not a player >_> how to give them item.
             }
             Player p = (Player) e;
-            p.getInventory().addItem(ItemManager.get(itemName));
+            p.getInventory().addItem(ItemMapping.get(itemName));
             commandSender.sendMessage("Given " + itemName + " to player " + p.getName());
         }
 

@@ -1,17 +1,14 @@
 package com.industrialworld.manager.recipe;
 
-import com.industrialworld.item.ItemType;
-import com.industrialworld.item.material.IWMaterial;
 import com.industrialworld.utils.ItemStackUtil;
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Collections;
 import java.util.List;
 
 public class SmeltingRecipeImpl implements SmeltingRecipe {
-    private final Object recipe;
-    private final Object result;
+    private final ItemStack recipe;
+    private final ItemStack result;
     private final float experience;
     private final int cookingTime;
 
@@ -24,22 +21,12 @@ public class SmeltingRecipeImpl implements SmeltingRecipe {
 
     @Override
     public boolean matches(ItemStack origin) {
-        if (recipe instanceof ItemStack)
-            return ItemStackUtil.isSimilar((ItemStack) recipe, origin);
-        else if (recipe instanceof ItemType)
-            return ItemStackUtil.getItemType(origin) == recipe;
-        else
-            return false;
+        return ItemStackUtil.isSimilar(recipe, origin);
     }
 
     @Override
-    public ItemStack getResult(IWMaterial iwMaterial) {
-        if (result instanceof ItemStack)
-            return ((ItemStack) result).clone();
-        else if (recipe instanceof ItemType)
-            return ((ItemType) recipe).getTemplate().getItemStack(iwMaterial);
-        else
-            return new ItemStack(Material.AIR);
+    public ItemStack getResult() {
+        return result.clone();
     }
 
     @Override
@@ -54,11 +41,6 @@ public class SmeltingRecipeImpl implements SmeltingRecipe {
 
     @Override
     public List<ItemStack> getAllMatches() {
-        if (recipe instanceof ItemStack)
-            return Collections.singletonList((ItemStack) recipe);
-        else if (recipe instanceof ItemType)
-            return ((ItemType) recipe).getTemplate().getAllItems();
-        else
-            return Collections.emptyList();
+        return Collections.singletonList(recipe);
     }
 }
