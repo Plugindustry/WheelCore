@@ -12,11 +12,6 @@ public class Grinder extends MachineBase {
     }
 
     @Override
-    public String getId() {
-        return "GRINDER";
-    }
-
-    @Override
     public Material getMaterial() {
         return ItemMapping.get("GRINDER").getType();
     }

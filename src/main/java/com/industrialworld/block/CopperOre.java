@@ -16,8 +16,4 @@ public class CopperOre extends DummyBlock {
         return ConstItems.COPPER_ORE.getType();
     }
 
-    @Override
-    public String getId() {
-        return "COPPER_ORE";
-    }
 }

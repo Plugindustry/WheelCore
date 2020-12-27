@@ -7,7 +7,7 @@ import com.industrialworld.interfaces.Interactive;
 import com.industrialworld.interfaces.Tickable;
 import com.industrialworld.interfaces.block.BlockBase;
 import com.industrialworld.interfaces.block.BlockData;
-import com.industrialworld.interfaces.block.Destoryable;
+import com.industrialworld.interfaces.block.Destroyable;
 import com.industrialworld.interfaces.block.Placeable;
 import com.industrialworld.interfaces.item.ItemBase;
 import com.industrialworld.manager.data.DataProvider;
@@ -38,12 +38,12 @@ public class MainManager {
     // returns if the event doesn't need to be cancelled
     public static boolean processBlockPlacement(ItemStack item, Block newBlock) {
         BlockBase blockBase = (BlockBase) getInstanceFromId(ItemStackUtil.getIWItemId(item));
-        return blockBase instanceof Placeable && ((Placeable) blockBase).onBlockPlace(newBlock);
+        return blockBase instanceof Placeable && ((Placeable) blockBase).onBlockPlace(item, newBlock);
     }
 
-    public static boolean processBlockDestroy(ItemStack tool, Block target, boolean canceled) {
+    public static boolean processBlockDestroy(ItemStack tool, Block target, Destroyable.DestroyMethod method) {
         BlockBase blockBase = (BlockBase) getBlockInstance(target.getLocation());
-        return blockBase instanceof Destoryable && ((Destoryable) blockBase).onBlockDestroy(target, tool, canceled);
+        return blockBase instanceof Destroyable && ((Destroyable) blockBase).onBlockDestroy(target, tool, method);
     }
 
     public static boolean processBlockInteract(Player player, Block block, ItemStack tool, Action action) {

@@ -7,7 +7,5 @@ import org.bukkit.inventory.ItemStack;
 public interface BlockBase extends Base {
     ItemStack getItemStack();
 
-    String getId();
-
     Material getMaterial();
 }

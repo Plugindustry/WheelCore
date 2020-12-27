@@ -1,8 +1,7 @@
 package com.industrialworld.event;
 
-import com.industrialworld.ConstItems;
 import com.industrialworld.IndustrialWorld;
-import com.industrialworld.interfaces.block.MachineBase;
+import com.industrialworld.interfaces.block.Destroyable;
 import com.industrialworld.manager.MainManager;
 import com.industrialworld.manager.RecipeRegistry;
 import com.industrialworld.manager.recipe.RecipeBase;
@@ -13,9 +12,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
@@ -32,33 +30,30 @@ import org.bukkit.event.world.WorldInitEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class EventListener implements Listener {
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
         if (ItemStackUtil.isIWItem(event.getItemInHand())) {
             event.setCancelled(!MainManager.processBlockPlacement(event.getItemInHand(), event.getBlockPlaced()));
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
         if (MainManager.hasBlock(event.getBlock().getLocation())) {
             // don't drop any item by default.
             event.setDropItems(false);
             event.setCancelled(!MainManager.processBlockDestroy(event.getPlayer().getInventory().getItemInMainHand(),
                                                                 event.getBlock(),
-                                                                event.isCancelled()));
+                                                                Destroyable.DestroyMethod.PLAYER_DESTROY));
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPistonExtend(BlockPistonExtendEvent event) {
         for (Block block : event.getBlocks())
             if (MainManager.hasBlock(block.getLocation())) {
@@ -67,19 +62,16 @@ public class EventListener implements Listener {
             }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockExplode(BlockExplodeEvent event) {
-        for (Block block : event.blockList())
-            if (MainManager.hasBlock(block.getLocation()))
-                if (MainManager.getBlockInstance(block.getLocation()) instanceof MachineBase) {
-                    MainManager.removeBlock(block.getLocation());
+        for (Iterator<Block> iterator = event.blockList().iterator(); iterator.hasNext(); ) {
+            Block block = iterator.next();
+            if (MainManager.hasBlock(block.getLocation())) {
+                iterator.remove();
+                if (MainManager.processBlockDestroy(null, block, Destroyable.DestroyMethod.EXPLOSION))
                     block.setType(Material.AIR);
-                    Item item = (Item) (event.getBlock().getWorld().spawnEntity(event.getBlock().getLocation(),
-                                                                                EntityType.DROPPED_ITEM));
-                    item.setItemStack(ConstItems.BASIC_MACHINE_BLOCK);
-                } else {
-                    MainManager.processBlockDestroy(null, block, false);
-                }
+            }
+        }
     }
 
     @EventHandler
@@ -124,7 +116,7 @@ public class EventListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onCraftItem(CraftItemEvent event) {
         CraftingInventory craftingInv = event.getInventory();
         HashMap<Integer, ItemStack> map = new HashMap<>();
@@ -137,7 +129,7 @@ public class EventListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onItemSmelt(FurnaceSmeltEvent event) {
         if (ItemStackUtil.isIWItem(event.getSource())) {
             SmeltingRecipe recipe = RecipeRegistry.matchSmeltingRecipe(event.getSource());
@@ -149,7 +141,7 @@ public class EventListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent event) {
         // item interact priority is higher than blocks
         if (event.hasItem() && !MainManager.processItemInteract(event.getPlayer(),

@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 
-public abstract class DummyBlock implements BlockBase, Tickable, Placeable, Destoryable, Interactive {
+public abstract class DummyBlock implements BlockBase, Tickable, Placeable, Destroyable, Interactive {
     @Override
     public void onTick() {
         // Do nothing.
@@ -20,15 +20,13 @@ public abstract class DummyBlock implements BlockBase, Tickable, Placeable, Dest
         return true;
     }
 
-    public boolean onBlockPlace(Block block) {
+    public boolean onBlockPlace(ItemStack item, Block block) {
         MainManager.addBlock(block.getLocation(), this, null /*currently is null*/);
         return true;
     }
 
-    public boolean onBlockDestroy(Block block, ItemStack tool, boolean canceled) {
-        if (!canceled) {
-            MainManager.removeBlock(block.getLocation());
-        }
+    public boolean onBlockDestroy(Block block, ItemStack tool, DestroyMethod method) {
+        MainManager.removeBlock(block.getLocation());
         // We do not drop IndustrialWorld blocks by default
         block.getWorld().dropItem(block.getLocation(), getItemStack());
 
@@ -36,8 +34,6 @@ public abstract class DummyBlock implements BlockBase, Tickable, Placeable, Dest
     }
 
     public abstract ItemStack getItemStack();
-
-    public abstract String getId();
 
     public abstract Material getMaterial();
 }

@@ -12,11 +12,6 @@ public class BasicMachineBlock extends DummyBlock {
     }
 
     @Override
-    public String getId() {
-        return "MachineBlock";
-    }
-
-    @Override
     public Material getMaterial() {
         return ConstItems.BASIC_MACHINE_BLOCK.getType();
     }
