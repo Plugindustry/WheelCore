@@ -24,11 +24,13 @@ IndusrialWorld是一个Bukkit/Spigot服务器插件，旨在为Minecraft服务�
 ## 开发中... :D 目前工作在Spigot 1.15.1版本，请使用Spigot 1.15.1以获得最佳的支持
 
 # 开发进度 (轮子构建期)
-* 矿物添加以及世界生成 (Dev)
-* 合成以及通配合成 (Dev)
-* 电力系统 (Dev)
-* 附魔 (Dev)
-* IW物品类型及材料 (Dev)
+* InvGui (Dev)
+* 多方块系统 (Dev)
+* 矿物添加以及世界生成 √
+* 合成以及通配合成 √
+* 电力系统 √
+* 附魔 √
+* IW物品类型及材料 √
 * I18n支持 √
 
 [1]: https://github.com/czm23333/IndustrialWorld/blob/master/README-EN.md
