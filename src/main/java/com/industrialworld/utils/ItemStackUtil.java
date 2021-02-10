@@ -68,7 +68,7 @@ public class ItemStackUtil {
     public static class ItemStackFactory {
         private final Material material;
         private int amount = 1;
-        private String id;
+        private String id = null;
         private String displayName = "";
         private List<String> lore = Collections.singletonList("");
         private List<NBTUtil.NBTValue> oreDictionary = null;
@@ -108,8 +108,10 @@ public class ItemStackUtil {
 
         public ItemStack getItemStack() {
             ItemStack tmp = new ItemStack(material, amount);
-            tmp = NBTUtil.setTagValue(tmp, "IWItemId", NBTUtil.NBTValue.of(id));
-            tmp = NBTUtil.setTagValue(tmp, "OreDictionary", NBTUtil.NBTValue.of(oreDictionary));
+            if (id != null) {
+                tmp = NBTUtil.setTagValue(tmp, "IWItemId", NBTUtil.NBTValue.of(id));
+                tmp = NBTUtil.setTagValue(tmp, "OreDictionary", NBTUtil.NBTValue.of(oreDictionary));
+            }
             ItemMeta meta = tmp.getItemMeta();
             if (meta == null) {
                 meta = Bukkit.getItemFactory().getItemMeta(material);

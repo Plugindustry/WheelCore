@@ -1,5 +1,5 @@
 package com.industrialworld.inventory.widget;
 
 public enum WidgetType {
-    BUTTON;
+    BUTTON, FIXED_ITEM
 }

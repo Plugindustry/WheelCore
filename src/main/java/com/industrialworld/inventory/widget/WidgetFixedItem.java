@@ -1,29 +1,22 @@
 package com.industrialworld.inventory.widget;
 
 import com.industrialworld.interfaces.block.windowwidget.WidgetBase;
-import com.industrialworld.interfaces.block.windowwidget.WidgetClickable;
 import com.industrialworld.inventory.Position;
 import com.industrialworld.inventory.SlotSize;
-import org.bukkit.event.inventory.ClickType;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.graalvm.compiler.lir.stackslotalloc.LSStackSlotAllocator;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
-public class WidgetButton implements WidgetClickable {
+public class WidgetFixedItem implements WidgetBase {
     private final SlotSize size = new SlotSize(1, 1);
     String id;
     ItemStack slotItemStack;
-    Function onClickFunc;
     private boolean init = false;
 
-    public WidgetButton(String id, ItemStack slotItemStack, Function onClickFunc) {
+    public WidgetFixedItem(String id, ItemStack slotItemStack) {
         this.id = id;
         this.slotItemStack = slotItemStack;
-        this.onClickFunc = onClickFunc;
     }
 
     @Override
@@ -38,7 +31,7 @@ public class WidgetButton implements WidgetClickable {
 
     @Override
     public WidgetType getWidgetType() {
-        return WidgetType.BUTTON;
+        return WidgetType.FIXED_ITEM;
     }
 
     @Override
@@ -51,12 +44,5 @@ public class WidgetButton implements WidgetClickable {
             retMap.put(new Position(1, 1), slotItemStack);
             return retMap;
         }
-    }
-
-    @Override
-    public boolean processClick(Position pos, InventoryClickEvent event) {
-        // TODO process click
-        // return true for cancelling the event, false for doing nothing
-        return true;
     }
 }
