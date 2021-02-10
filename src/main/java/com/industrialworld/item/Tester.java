@@ -28,6 +28,7 @@ public class Tester implements ItemBase, Interactive {
     public boolean onInteract(Player player, Action action, ItemStack tool, Block block, InteractActor actor) {
         if (actor == InteractActor.ITEM && block != null && action == Action.RIGHT_CLICK_BLOCK) {
             player.openInventory(windowInteractor.getInventory());
+            ((WidgetProgressBar) window.getWidgetMap().get("process_1").getValue()).setProgress(0.6);
         }
 
         return false;

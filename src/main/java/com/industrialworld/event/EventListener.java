@@ -2,7 +2,6 @@ package com.industrialworld.event;
 
 import com.industrialworld.IndustrialWorld;
 import com.industrialworld.interfaces.block.Destroyable;
-import com.industrialworld.inventory.InventoryInteractor;
 import com.industrialworld.inventory.WindowInteractor;
 import com.industrialworld.manager.MainManager;
 import com.industrialworld.manager.RecipeRegistry;
@@ -29,7 +28,6 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.event.world.WorldInitEvent;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;

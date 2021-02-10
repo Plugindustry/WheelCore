@@ -1,13 +1,10 @@
 package com.industrialworld.inventory.widget;
 
-import com.industrialworld.interfaces.block.windowwidget.WidgetBase;
 import com.industrialworld.interfaces.block.windowwidget.WidgetClickable;
 import com.industrialworld.inventory.Position;
 import com.industrialworld.inventory.SlotSize;
-import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.graalvm.compiler.lir.stackslotalloc.LSStackSlotAllocator;
 
 import java.util.HashMap;
 import java.util.Map;
