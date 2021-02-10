@@ -13,17 +13,17 @@ REDAME in different languages:
 
 ~~大扎好，我系渣渣辉，IndustrialWorld，介四里没有挽过的船新版本，挤需体验三番钟，里造会干我一样，爱象节个插件。~~  
 
-IndusrialWorld是一个Bukkit/Spigot服务器插件，旨在为Minecraft服务器添加像Mod一样的效果。  
+IndustrialWorld是一个Bukkit/Spigot服务器插件，旨在为Minecraft服务器添加像Mod一样的效果。  
 本插件（将会）添加更多的矿物，机器；酷炫的武器和强大的盔甲，并且为玩家提供一种崭新的玩Minecraft的方法。 
 值得注意的是，本插件不需要任何服务器Mod支持。
 
-需要Bukkit/Spigot 1.15.1(理论支持1.13.2及以上)服务器以运行。
+需要Bukkit/Spigot 1.15.1+(理论支持1.13.2及以上)服务器以运行。
 
 如果发现任何bug或者有好的想法，欢迎在GitHub issues中提出或者发出Pull Request.
 
-## 开发中... :D 目前工作在Spigot 1.15.1版本，请使用Spigot 1.15.1以获得最佳的支持
+### 开发中... :D 目前工作在Spigot 1.15.1版本，请使用Spigot 1.15.1以获得最佳的支持
 
-# 开发进度 (轮子构建期)
+## 开发进度 (轮子构建期)
 * InvGui (Dev)
 * 多方块系统 (Dev)
 * 矿物添加以及世界生成 √

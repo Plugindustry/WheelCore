@@ -2,6 +2,8 @@ package com.industrialworld.event;
 
 import com.industrialworld.IndustrialWorld;
 import com.industrialworld.interfaces.block.Destroyable;
+import com.industrialworld.inventory.InventoryInteractor;
+import com.industrialworld.inventory.WindowInteractor;
 import com.industrialworld.manager.MainManager;
 import com.industrialworld.manager.RecipeRegistry;
 import com.industrialworld.manager.recipe.RecipeBase;
@@ -12,6 +14,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -19,15 +22,14 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.inventory.CraftItemEvent;
-import org.bukkit.event.inventory.FurnaceSmeltEvent;
-import org.bukkit.event.inventory.PrepareAnvilEvent;
-import org.bukkit.event.inventory.PrepareItemCraftEvent;
+import org.bukkit.event.inventory.*;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.event.world.WorldInitEvent;
 import org.bukkit.inventory.CraftingInventory;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -154,6 +156,22 @@ public class EventListener implements Listener {
                                                                          event.getItem(),
                                                                          event.getAction())) {
             event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onInventoryClick(InventoryClickEvent event) {
+        if (!(event.getWhoClicked() instanceof Player)) {
+            return ;
+        }
+        Player p = (Player) event.getWhoClicked();
+        Inventory inv = event.getInventory();
+        if (inv.getHolder() instanceof WindowInteractor) {
+            // Detected InventoryWindow click event
+            WindowInteractor interactor = (WindowInteractor) inv.getHolder();
+            if (interactor.processClick(event.getSlot(), event.getClick())) {
+                event.setCancelled(true);
+            }
         }
     }
 

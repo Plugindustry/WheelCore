@@ -10,7 +10,7 @@ No server mods needed!
 
 ## Under Development :D  
 
-# Development Progress  
+### Development Progress  
 Industrial Crafting Table & recipes √  
 I18n Support √  
 Ores  

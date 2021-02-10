@@ -1,7 +1,6 @@
 package com.industrialworld.inventory;
 
 import com.industrialworld.interfaces.block.windowwidget.WidgetBase;
-import com.industrialworld.inventory.widget.WidgetButton;
 
 import java.util.AbstractMap;
 import java.util.HashMap;
@@ -9,9 +8,9 @@ import java.util.Map;
 
 public class InventoryWindow {
     public final SlotSize windowSize;
+    private final String[][] pos2Id;
+    private final Map<String, AbstractMap.SimpleEntry<Position, WidgetBase>> widgetMap = new HashMap<>();
     public String title;
-    private String[][] pos2Id;
-    private Map<String, AbstractMap.SimpleEntry<Position, WidgetBase>> widgetMap = new HashMap<>();
 
     public InventoryWindow(SlotSize size, String title) {
         this.title = title;
@@ -24,9 +23,9 @@ public class InventoryWindow {
         int width = widget.getSize().width;
         int height = widget.getSize().height;
         int posX = pos.xCoord, posY = pos.yCoord;
-        widgetMap.put(widgetId, new AbstractMap.SimpleEntry<Position, WidgetBase>(pos, widget));
+        widgetMap.put(widgetId, new AbstractMap.SimpleEntry<>(pos, widget));
         for (int i = 1; i <= width; i++) {
-            for (int j = 1; j<= height; j++) {
+            for (int j = 1; j <= height; j++) {
                 pos2Id[i + posX - 1][j + posY - 1] = widgetId;
             }
         }
@@ -34,5 +33,13 @@ public class InventoryWindow {
 
     public Map<String, AbstractMap.SimpleEntry<Position, WidgetBase>> getWidgetMap() {
         return widgetMap;
+    }
+
+    public String[][] getPos2Id() {
+        return pos2Id;
+    }
+
+    public AbstractMap.SimpleEntry<Position, WidgetBase> getWidgetEntryFromWindowPos(Position pos) {
+        return widgetMap.get(pos2Id[pos.xCoord][pos.yCoord]);
     }
 }
