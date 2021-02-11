@@ -16,7 +16,7 @@ public final class WheelCore extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
         // Startup logo
-        getLogger().info(" __          ___               _  _____               \n" +
+        getLogger().info("\n __          ___               _  _____               \n" +
                 " \\ \\        / / |             | |/ ____|              \n" +
                 "  \\ \\  /\\  / /| |__   ___  ___| | |     ___  _ __ ___ \n" +
                 "   \\ \\/  \\/ / | '_ \\ / _ \\/ _ \\ | |    / _ \\| '__/ _ \\\n" +

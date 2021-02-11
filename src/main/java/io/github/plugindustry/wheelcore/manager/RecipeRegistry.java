@@ -1,7 +1,6 @@
 package io.github.plugindustry.wheelcore.manager;
 
 import io.github.plugindustry.wheelcore.WheelCore;
-import com.wheelcore.manager.recipe.*;
 import io.github.plugindustry.wheelcore.manager.recipe.*;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
