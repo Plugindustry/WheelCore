@@ -162,6 +162,7 @@ public class EventListener implements Listener {
         if (!(event.getWhoClicked() instanceof Player)) {
             return ;
         }
+
         Player p = (Player) event.getWhoClicked();
         Inventory inv = event.getInventory();
         if (inv.getHolder() instanceof WindowInteractor) {

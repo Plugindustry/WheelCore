@@ -6,9 +6,11 @@ import com.industrialworld.inventory.InventoryWindow;
 import com.industrialworld.inventory.Position;
 import com.industrialworld.inventory.SlotSize;
 import com.industrialworld.inventory.WindowInteractor;
+import com.industrialworld.inventory.widget.WidgetFixedItem;
 import com.industrialworld.inventory.widget.WidgetProgressBar;
 import com.industrialworld.manager.MainManager;
 import com.industrialworld.utils.PlayerUtil;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
@@ -22,6 +24,7 @@ public class Tester implements ItemBase, Interactive {
     public Tester() {
         window = new InventoryWindow(new SlotSize(9, 6), "Test");
         window.addWidget(new WidgetProgressBar("process_1"), new Position(2, 3));
+        window.addWidget(new WidgetFixedItem("f_1", new ItemStack(Material.IRON_INGOT, 1)), new Position(3, 5));
         windowInteractor = new WindowInteractor(window);
     }
 

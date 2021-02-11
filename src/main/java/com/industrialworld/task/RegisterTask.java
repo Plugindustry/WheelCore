@@ -7,6 +7,7 @@ import com.industrialworld.block.Grinder;
 import com.industrialworld.i18n.I18n;
 import com.industrialworld.i18n.I18nConst;
 import com.industrialworld.item.Recognizer;
+import com.industrialworld.item.Tester;
 import com.industrialworld.manager.ItemMapping;
 import com.industrialworld.manager.MainManager;
 import com.industrialworld.manager.RecipeRegistry;
@@ -121,6 +122,8 @@ public class RegisterTask {
                 .getItemStack());*/
         ItemMapping.set("RECOGNIZER",
                         I18n.processItem("RECOGNIZER", ItemStackUtil.create(Material.STICK)).getItemStack());
+        ItemMapping.set("TESTER",
+                I18n.processItem("TESTER", ItemStackUtil.create(Material.PUFFERFISH)).getItemStack());
         ItemMapping.set("IRON_PLATE",
                         I18n.processItem("IRON_PLATE",
                                          ItemStackUtil.create(Material.PAPER),
@@ -163,6 +166,7 @@ public class RegisterTask {
         //ItemManager.register("INGOT_COPPER", ItemIngot.getInstance().getItemStack(IWMaterial.COPPER));
 
         MainManager.register("RECOGNIZER", new Recognizer());
+        MainManager.register("TESTER", new Tester());
     }
 
     public static void registerGenerator() {

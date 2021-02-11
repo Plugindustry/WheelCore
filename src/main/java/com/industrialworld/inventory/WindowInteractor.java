@@ -19,7 +19,7 @@ public class WindowInteractor implements InventoryInteractor, InventoryHolder {
 
     public WindowInteractor(InventoryWindow window) {
         this.window = window;
-        this.inv = Bukkit.createInventory(null, 9 * window.windowSize.height, window.title);
+        this.inv = Bukkit.createInventory(this, 9 * window.windowSize.height, window.title);
     }
 
     public void renderInventory() {
