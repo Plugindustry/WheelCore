@@ -4,14 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.IndustrialWorld</groupId>
-    <artifactId>IndustrialWorld</artifactId>
+    <groupId>io.github.plugindustry.wheelcore</groupId>
+    <artifactId>WheelCore</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>IndustrialWorld</name>
+    <name>WheelCore</name>
 
-    <description>IndustrialWorld</description>
+    <description>WheelCore</description>
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

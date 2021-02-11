@@ -1,23 +1,23 @@
-name: IndustrialWorld
+name: WheelCore
 version: ${project.version}
-main: com.industrialworld.IndustrialWorld
-api-version: 1.13
-prefix: IndustrialWorld
-authors: [czm]
-description: IndustrialWorld
+main: io.github.plugindustry.wheelcore.WheelCore
+api-version: 1.16
+prefix: WheelCore
+authors: [czm, Luchy-fish, timetraveler314, ChapterII]
+description: WheelCore-LunXin
 load: STARTUP
 
 commands:
-  iw:
-    description: IndustrialWorld插件的指令.
+  wheelcore:
+    description: WheelCore插件的指令.
     usage: /<command> [test/...] [...]
-    permission: industrialworld.iw
+    permission: wheelcore.command
     permission-message: 你没有权限<permission>使用本命令.
 
 permissions:
-  industrialworld.iw:
+  wheelcore.command:
     default: true
-  industrialworld.test:
+  wheelcore.command.test:
     default: op
-  industrialworld.give:
+  wheelcore.command.give:
     default: op
