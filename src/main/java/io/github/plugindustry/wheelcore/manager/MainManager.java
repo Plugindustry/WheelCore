@@ -31,7 +31,7 @@ import java.util.Set;
 public class MainManager {
     public static final HashMap<Base, Set<Location>> baseBlocks = new HashMap<>();
     private static final BiMap<String, Base> mapping = HashBiMap.create();
-    public static DataProvider dataProvider = DataProvider.defaultProvider(mapping);;
+    public static DataProvider dataProvider = DataProvider.defaultProvider(mapping);
     //private static final HashMap<Location, Map.Entry<String, BlockData>> blocks = new HashMap<>();
     //private static final HashSet<Long> loadedChunks = new HashSet<>();
 
