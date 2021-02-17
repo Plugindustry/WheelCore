@@ -58,7 +58,7 @@ public class PlayerUtil {
                                                                                 NMSChatMessageType));
         } catch (Throwable e) {
             e.printStackTrace();
-            System.err.println("[IndustrialWorld] Plugin shutting down...");
+            System.err.println("[WheelCore] Plugin shutting down...");
             Bukkit.getPluginManager().disablePlugin(WheelCore.instance);
         }
     }

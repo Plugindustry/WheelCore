@@ -1,5 +1,6 @@
 package io.github.plugindustry.wheelcore.inventory;
 
+import io.github.plugindustry.wheelcore.interfaces.Tickable;
 import io.github.plugindustry.wheelcore.interfaces.block.windowwidget.WidgetBase;
 import io.github.plugindustry.wheelcore.interfaces.block.windowwidget.WidgetClickable;
 import io.github.plugindustry.wheelcore.utils.InventoryUtil;
@@ -12,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.AbstractMap;
 import java.util.Map;
 
-public class WindowInteractor implements InventoryInteractor, InventoryHolder {
+public class WindowInteractor implements InventoryInteractor, InventoryHolder, Tickable {
     private InventoryWindow window;
     private Inventory inv;
 
@@ -52,5 +53,10 @@ public class WindowInteractor implements InventoryInteractor, InventoryHolder {
     public Inventory getInventory() {
         this.renderInventory();
         return inv;
+    }
+
+    @Override
+    public void onTick() {
+        this.renderInventory();
     }
 }
