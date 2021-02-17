@@ -107,7 +107,7 @@ public class NBTUtil {
             conNBTTagList = lookup.findConstructor(NBTTagList, MethodType.methodType(void.class));
         } catch (Exception e) {
             e.printStackTrace();
-            System.err.println("[IndustrialWorld] Plugin shutting down...");
+            System.err.println("[WheelCore] Plugin shutting down...");
             Bukkit.getPluginManager().disablePlugin(WheelCore.instance);
         }
     }
