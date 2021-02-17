@@ -98,8 +98,7 @@ public class ChunkBasedProvider implements DataProvider {
                      desc.data);
 
         dataBlock.setType(Material.BEDROCK);
-        if (!loadedChunks.containsKey(chunk.getWorld()))
-            loadedChunks.put(chunk.getWorld(), new HashSet<>());
+        loadedChunks.putIfAbsent(chunk.getWorld(), new HashSet<>());
         loadedChunks.get(chunk.getWorld()).add(compress(chunk.getX(), chunk.getZ()));
     }
 

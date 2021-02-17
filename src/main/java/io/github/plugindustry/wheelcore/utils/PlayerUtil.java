@@ -7,6 +7,7 @@ import org.bukkit.entity.Player;
 import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.invoke.MethodType;
+import java.util.UUID;
 
 public class PlayerUtil {
     private static MethodHandle getHandle;
@@ -15,6 +16,7 @@ public class PlayerUtil {
     private static MethodHandle conChatComponentText;
     private static MethodHandle conChatMessageType;
     private static MethodHandle conPacketPlayOutChat;
+    private static boolean conPacketPlayOutChatFlag;
 
     static {
         try {
@@ -24,9 +26,7 @@ public class PlayerUtil {
             Class<?> NMSChatComponentText = Class.forName("net.minecraft.server." +
                                                           WheelCore.serverVersion +
                                                           ".ChatComponentText");
-            Class<?> NMSPlayer = Class.forName("net.minecraft.server." +
-                                               WheelCore.serverVersion +
-                                               ".EntityPlayer");
+            Class<?> NMSPlayer = Class.forName("net.minecraft.server." + WheelCore.serverVersion + ".EntityPlayer");
             Class<?> NMSPacketPlayOutChat = Class.forName("net.minecraft.server." +
                                                           WheelCore.serverVersion +
                                                           ".PacketPlayOutChat");
@@ -52,10 +52,20 @@ public class PlayerUtil {
             conChatMessageType = lookup.findStatic(NMSChatMessageType,
                                                    "a",
                                                    MethodType.methodType(NMSChatMessageType, byte.class));
-            conPacketPlayOutChat = lookup.findConstructor(NMSPacketPlayOutChat,
-                                                          MethodType.methodType(void.class,
-                                                                                NMSIChatBaseComponent,
-                                                                                NMSChatMessageType));
+            try {
+                conPacketPlayOutChat = lookup.findConstructor(NMSPacketPlayOutChat,
+                                                              MethodType.methodType(void.class,
+                                                                                    NMSIChatBaseComponent,
+                                                                                    NMSChatMessageType));
+                conPacketPlayOutChatFlag = true;
+            } catch (NoSuchMethodException | NoSuchMethodError e) {
+                conPacketPlayOutChat = lookup.findConstructor(NMSPacketPlayOutChat,
+                                                              MethodType.methodType(void.class,
+                                                                                    NMSIChatBaseComponent,
+                                                                                    NMSChatMessageType,
+                                                                                    UUID.class));
+                conPacketPlayOutChatFlag = false;
+            }
         } catch (Throwable e) {
             e.printStackTrace();
             System.err.println("[WheelCore] Plugin shutting down...");
@@ -66,7 +76,10 @@ public class PlayerUtil {
     public static void sendActionBar(Player p, String s) {
         try {
             Object o = conChatComponentText.invoke(s);
-            Object bar = conPacketPlayOutChat.invoke(o, conChatMessageType.invoke((byte) 2));
+            Object bar = conPacketPlayOutChatFlag ?
+                         conPacketPlayOutChat.invoke(o,
+                                                     conChatMessageType.invoke((byte) 2)) :
+                         conPacketPlayOutChat.invoke(o, conChatMessageType.invoke((byte) 2), p.getUniqueId());
             Object nmsPlayer = getHandle.bindTo(p).invoke();
             Object connection = playerConnection.bindTo(nmsPlayer).invoke();
             sendPacket.bindTo(connection).invoke(bar);

@@ -110,7 +110,8 @@ public class ItemStackUtil {
             ItemStack tmp = new ItemStack(material, amount);
             if (id != null) {
                 tmp = NBTUtil.setTagValue(tmp, "PIItemId", NBTUtil.NBTValue.of(id));
-                tmp = NBTUtil.setTagValue(tmp, "OreDictionary", NBTUtil.NBTValue.of(oreDictionary));
+                if (oreDictionary != null)
+                    tmp = NBTUtil.setTagValue(tmp, "OreDictionary", NBTUtil.NBTValue.of(oreDictionary));
             }
             ItemMeta meta = tmp.getItemMeta();
             if (meta == null) {

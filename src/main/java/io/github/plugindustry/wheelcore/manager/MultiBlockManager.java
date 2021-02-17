@@ -16,17 +16,19 @@ public class MultiBlockManager {
     private final HashMap<Location, Environment> structureDataMap = new HashMap<>();
 
     public void onTick() {
-        HashSet<Base> structSet = new HashSet<>(structuresMap.keySet());
-
         conditionMap.forEach((b, conditions) -> {
-            Set<Location> updateSet = MainManager.dataProvider.blocksOf(b);
+            HashSet<Location> updateSet = new HashSet<>(MainManager.dataProvider.blocksOf(b));
             if (structuresMap.containsKey(b)) {
                 Set<Location> tempSet = structuresMap.get(b);
-                updateSet.removeAll(tempSet);
 
-                structSet.remove(b);
                 for (Iterator<Location> iterator = tempSet.iterator(); iterator.hasNext(); ) {
                     Location l = iterator.next();
+                    if (!updateSet.contains(l)) {
+                        iterator.remove();
+                        structureDataMap.remove(l);
+                        continue;
+                    }
+
                     Map.Entry<Boolean, Environment> result = conditions.match(l);
                     if (result.getKey())
                         structureDataMap.put(l, result.getValue());
@@ -35,6 +37,7 @@ public class MultiBlockManager {
                         structureDataMap.remove(l);
                     }
                 }
+                updateSet.removeAll(tempSet);
             }
 
             updateSet.forEach(l -> {
@@ -45,21 +48,6 @@ public class MultiBlockManager {
                     structureDataMap.put(l, result.getValue());
                 }
             });
-        });
-
-        structSet.forEach(b -> {
-            Conditions conditions = conditionMap.get(b);
-            Set<Location> tempSet = structuresMap.get(b);
-            for (Iterator<Location> iterator = tempSet.iterator(); iterator.hasNext(); ) {
-                Location l = iterator.next();
-                Map.Entry<Boolean, Environment> result = conditions.match(l);
-                if (result.getKey())
-                    structureDataMap.put(l, result.getValue());
-                else {
-                    iterator.remove();
-                    structureDataMap.remove(l);
-                }
-            }
         });
     }
 

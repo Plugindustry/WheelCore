@@ -30,6 +30,7 @@ public class NBTUtil {
     private static MethodHandle size;
     private static MethodHandle getAt;
     private static MethodHandle add;
+    private static boolean addFlag;
     private static MethodHandle conNBTTagList;
 
     static {
@@ -96,7 +97,13 @@ public class NBTUtil {
             }
             size = lookup.findVirtual(NBTTagList, "size", MethodType.methodType(int.class));
             getAt = lookup.findVirtual(NBTTagList, "get", MethodType.methodType(NBTBase, int.class));
-            add = lookup.findVirtual(NBTTagList, "add", MethodType.methodType(void.class, int.class, NBTBase));
+            try {
+                add = lookup.findVirtual(NBTTagList, "add", MethodType.methodType(void.class, int.class, NBTBase));
+                addFlag = true;
+            } catch (NoSuchMethodException | NoSuchMethodError e) {
+                add = lookup.findVirtual(NBTTagList, "add", MethodType.methodType(boolean.class, NBTBase));
+                addFlag = false;
+            }
             conNBTTagList = lookup.findConstructor(NBTTagList, MethodType.methodType(void.class));
         } catch (Exception e) {
             e.printStackTrace();
@@ -282,7 +289,10 @@ public class NBTUtil {
                         Object tagList = conNBTTagList.invoke();
                         ((List<NBTValue>) base).stream().map(NBTValue::convert).forEach(obj -> {
                             try {
-                                add.bindTo(tagList).invoke(size.bindTo(tagList).invoke(), obj);
+                                if (addFlag)
+                                    add.bindTo(tagList).invoke(size.bindTo(tagList).invoke(), obj);
+                                else
+                                    add.bindTo(tagList).invoke(obj);
                             } catch (Throwable throwable) {
                                 throwable.printStackTrace();
                             }
