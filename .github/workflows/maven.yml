@@ -15,8 +15,8 @@ jobs:
       - name: Build with Maven
         run: mvn -B -e -U clean install --file pom.xml
       - name: Copy jar
-        run: mkdir target/artifacts/ && cp -f -r target/classes/* target/artifacts/ && zip -q -r target/artifacts/WheelCore.zip target/artifacts
+        run: mkdir target/artifacts/ && cp -f -r target/classes/* target/artifacts/ && cd target/artifacts && zip -q -r WheelCore.jar *
       - uses: actions/upload-artifact@v2
         with:
           name: WheelCore
-          path: target/artifacts/WheelCore.zip
+          path: target/artifacts/WheelCore.jar
