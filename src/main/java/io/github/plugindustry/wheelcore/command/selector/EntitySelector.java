@@ -17,7 +17,7 @@ import java.util.function.Predicate;
 
 public class EntitySelector {
     private final CommandSender sender;
-    private List<Entity> selectedEntity = new LinkedList<>();
+    private final List<Entity> selectedEntity = new LinkedList<>();
     private Location baseLoc;
 
     public EntitySelector(CommandSender sender, String selector) {

@@ -35,9 +35,7 @@ public class NBTUtil {
 
     static {
         try {
-            Class<?> NMSItemStack = Class.forName("net.minecraft.server." +
-                                                  WheelCore.serverVersion +
-                                                  ".ItemStack");
+            Class<?> NMSItemStack = Class.forName("net.minecraft.server." + WheelCore.serverVersion + ".ItemStack");
             Class<?> NBTBase = Class.forName("net.minecraft.server." + WheelCore.serverVersion + ".NBTBase");
             Class<?> NBTTagCompound = Class.forName("net.minecraft.server." +
                                                     WheelCore.serverVersion +
@@ -45,16 +43,10 @@ public class NBTUtil {
             Class<?> CraftItemStack = Class.forName("org.bukkit.craftbukkit." +
                                                     WheelCore.serverVersion +
                                                     ".inventory.CraftItemStack");
-            Class<?> NBTTagByte = Class.forName("net.minecraft.server." +
-                                                WheelCore.serverVersion +
-                                                ".NBTTagByte");
-            Class<?> NBTTagString = Class.forName("net.minecraft.server." +
-                                                  WheelCore.serverVersion +
-                                                  ".NBTTagString");
+            Class<?> NBTTagByte = Class.forName("net.minecraft.server." + WheelCore.serverVersion + ".NBTTagByte");
+            Class<?> NBTTagString = Class.forName("net.minecraft.server." + WheelCore.serverVersion + ".NBTTagString");
             Class<?> NBTTagInt = Class.forName("net.minecraft.server." + WheelCore.serverVersion + ".NBTTagInt");
-            Class<?> NBTTagList = Class.forName("net.minecraft.server." +
-                                                WheelCore.serverVersion +
-                                                ".NBTTagList");
+            Class<?> NBTTagList = Class.forName("net.minecraft.server." + WheelCore.serverVersion + ".NBTTagList");
 
             MethodHandles.Lookup lookup = MethodHandles.lookup();
             asNMSCopy = lookup.findStatic(CraftItemStack,

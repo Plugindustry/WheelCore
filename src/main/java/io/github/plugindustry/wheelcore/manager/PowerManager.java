@@ -24,7 +24,7 @@ public class PowerManager {
     }
 
     // Not enabled yet
-    public void onTick() {
+    public static void onTick() {
         /*for (Map.Entry<Location, Request> entry : requestMap.entrySet())
             if (entry.getValue() instanceof OutputRequest) {
                 OutputRequest outReq = ((OutputRequest) entry.getValue());

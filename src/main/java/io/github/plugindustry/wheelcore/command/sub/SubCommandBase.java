@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public abstract class SubCommandBase {
-    private static Map<String, SubCommandBase> commandMap = new HashMap<>();
+    private static final Map<String, SubCommandBase> commandMap = new HashMap<>();
 
     public SubCommandBase() {
         commandMap.put(getName(), this);

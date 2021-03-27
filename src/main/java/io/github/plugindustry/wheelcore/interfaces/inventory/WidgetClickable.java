@@ -1,4 +1,4 @@
-package io.github.plugindustry.wheelcore.interfaces.block.windowwidget;
+package io.github.plugindustry.wheelcore.interfaces.inventory;
 
 import io.github.plugindustry.wheelcore.inventory.Position;
 import org.bukkit.event.inventory.InventoryClickEvent;

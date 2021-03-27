@@ -72,6 +72,8 @@ public class MainManager {
     }
 
     public static void update() {
+        MultiBlockManager.onTick();
+
         for (Base base : mapping.values())
             if (base instanceof Tickable)
                 ((Tickable) base).onTick();

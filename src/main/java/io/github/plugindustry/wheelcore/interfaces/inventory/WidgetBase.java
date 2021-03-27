@@ -1,4 +1,4 @@
-package io.github.plugindustry.wheelcore.interfaces.block.windowwidget;
+package io.github.plugindustry.wheelcore.interfaces.inventory;
 
 import io.github.plugindustry.wheelcore.interfaces.Base;
 import io.github.plugindustry.wheelcore.inventory.Position;
@@ -16,5 +16,6 @@ public interface WidgetBase extends Base {
     SlotSize getSize();
 
     WidgetType getWidgetType();
+
     Map<Position, ItemStack> getChangeMap();
 }

@@ -3,6 +3,7 @@ package io.github.plugindustry.wheelcore.utils;
 import io.github.plugindustry.wheelcore.WheelCore;
 import io.github.plugindustry.wheelcore.i18n.I18n;
 import io.github.plugindustry.wheelcore.i18n.I18nConst;
+import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
@@ -21,10 +22,11 @@ public class EnchantmentUtil {
     }
 
     public static String getLoreOfEnchant(CustomEnchantment enchantment, int level) {
-        return "¡ìr" + (enchantment.isTreasure() ? "¡ì6" : (enchantment.isCursed() ? "¡ìc" : "¡ì7")) +
-                I18n.getLocaleString(String.format(I18nConst.Enchantment.ENCHANTMENT_NAME, enchantment.getName())) +
-                " " +
-                I18n.getLocaleString(String.format(I18nConst.Enchantment.ENCHANTMENT_LEVEL, level));
+        return ChatColor.RESET.toString() +
+               (enchantment.isTreasure() ? ChatColor.GOLD : (enchantment.isCursed() ? ChatColor.RED : ChatColor.GRAY)) +
+               I18n.getLocaleString(String.format(I18nConst.Enchantment.ENCHANTMENT_NAME, enchantment.getName())) +
+               " " +
+               I18n.getLocaleString(String.format(I18nConst.Enchantment.ENCHANTMENT_LEVEL, level));
     }
 
     public static void addToItem(ItemStack item, CustomEnchantment enchantment, int level) {

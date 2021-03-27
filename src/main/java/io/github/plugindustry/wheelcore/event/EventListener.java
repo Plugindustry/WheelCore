@@ -160,7 +160,7 @@ public class EventListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onInventoryClick(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player)) {
-            return ;
+            return;
         }
 
         Player p = (Player) event.getWhoClicked();

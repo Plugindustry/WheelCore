@@ -122,8 +122,7 @@ public class RegisterTask {
                 .getItemStack());*/
         ItemMapping.set("RECOGNIZER",
                         I18n.processItem("RECOGNIZER", ItemStackUtil.create(Material.STICK)).getItemStack());
-        ItemMapping.set("TESTER",
-                I18n.processItem("TESTER", ItemStackUtil.create(Material.PUFFERFISH)).getItemStack());
+        ItemMapping.set("TESTER", I18n.processItem("TESTER", ItemStackUtil.create(Material.PUFFERFISH)).getItemStack());
         ItemMapping.set("IRON_PLATE",
                         I18n.processItem("IRON_PLATE",
                                          ItemStackUtil.create(Material.PAPER),

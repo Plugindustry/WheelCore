@@ -1,23 +1,23 @@
 package io.github.plugindustry.wheelcore.manager;
 
+import com.google.common.collect.Sets;
 import io.github.plugindustry.wheelcore.interfaces.Base;
-import io.github.plugindustry.wheelcore.interfaces.world.multiblock.Definer;
 import io.github.plugindustry.wheelcore.interfaces.world.multiblock.Environment;
-import io.github.plugindustry.wheelcore.interfaces.world.multiblock.Matcher;
-import io.github.plugindustry.wheelcore.interfaces.world.multiblock.Relocator;
 import org.bukkit.Location;
 
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class MultiBlockManager {
-    private final HashMap<Base, Conditions> conditionMap = new HashMap<>();
+    private final static HashMap<Base, Conditions> conditionMap = new HashMap<>();
 
-    private final HashMap<Base, Set<Location>> structuresMap = new HashMap<>();
-    private final HashMap<Location, Environment> structureDataMap = new HashMap<>();
+    private final static HashMap<Base, Set<Location>> structuresMap = new HashMap<>();
+    private final static HashMap<Location, Environment> structureDataMap = new HashMap<>();
 
-    public void onTick() {
+    public static void onTick() {
         conditionMap.forEach((b, conditions) -> {
-            HashSet<Location> updateSet = new HashSet<>(MainManager.dataProvider.blocksOf(b));
+            Set<Location> updateSet = MainManager.dataProvider.blocksOf(b);
             if (structuresMap.containsKey(b)) {
                 Set<Location> tempSet = structuresMap.get(b);
 
@@ -37,7 +37,7 @@ public class MultiBlockManager {
                         structureDataMap.remove(l);
                     }
                 }
-                updateSet.removeAll(tempSet);
+                updateSet = Sets.difference(updateSet, tempSet);
             }
 
             updateSet.forEach(l -> {
@@ -51,6 +51,18 @@ public class MultiBlockManager {
         });
     }
 
+    public static void register(Base matchBase, Conditions condition) {
+        conditionMap.put(matchBase, condition);
+    }
+
+    public static Set<Location> getAvailableStructures(Base matchBase) {
+        return Collections.unmodifiableSet(structuresMap.get(matchBase));
+    }
+
+    public static Environment getStructureData(Location loc) {
+        return structureDataMap.getOrDefault(loc, null);
+    }
+
     public static class Conditions {
         private final LinkedList<Object> ops = new LinkedList<>();
 
@@ -60,18 +72,13 @@ public class MultiBlockManager {
             return new Conditions();
         }
 
-        public Conditions thenMatch(Matcher matcher) {
+        public Conditions check(Function<Environment, Boolean> matcher) {
             ops.add(matcher);
             return this;
         }
 
-        public Conditions thenDefine(Definer definer) {
-            ops.add(definer);
-            return this;
-        }
-
-        public Conditions thenRelocate(Relocator relocator) {
-            ops.add(relocator);
+        public Conditions then(Consumer<Environment> func) {
+            ops.add(func);
             return this;
         }
 
@@ -79,13 +86,11 @@ public class MultiBlockManager {
             Environment environment = Environment.createDefaultEnvironment();
             environment.setEnvironmentArg("location", orgLoc);
             for (Object op : ops) {
-                if (op instanceof Matcher) {
-                    if (!((Matcher) op).match(environment))
+                if (op instanceof Function) {
+                    if (!((Function<Environment, Boolean>) op).apply(environment))
                         return new AbstractMap.SimpleEntry<>(false, environment);
-                } else if (op instanceof Definer)
-                    ((Definer) op).define(environment);
-                else if (op instanceof Relocator)
-                    ((Relocator) op).relocate(environment);
+                } else if (op instanceof Consumer)
+                    ((Consumer<Environment>) op).accept(environment);
             }
 
             return new AbstractMap.SimpleEntry<>(true, environment);

@@ -1,7 +1,7 @@
 package io.github.plugindustry.wheelcore.inventory;
 
-import io.github.plugindustry.wheelcore.interfaces.block.windowwidget.WidgetBase;
-import io.github.plugindustry.wheelcore.interfaces.block.windowwidget.WidgetClickable;
+import io.github.plugindustry.wheelcore.interfaces.inventory.WidgetBase;
+import io.github.plugindustry.wheelcore.interfaces.inventory.WidgetClickable;
 import io.github.plugindustry.wheelcore.utils.InventoryUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -13,8 +13,8 @@ import java.util.AbstractMap;
 import java.util.Map;
 
 public class WindowInteractor implements InventoryInteractor, InventoryHolder {
-    private InventoryWindow window;
-    private Inventory inv;
+    private final InventoryWindow window;
+    private final Inventory inv;
 
     public WindowInteractor(InventoryWindow window) {
         this.window = window;
@@ -29,7 +29,9 @@ public class WindowInteractor implements InventoryInteractor, InventoryHolder {
         for (AbstractMap.SimpleEntry<Position, WidgetBase> currentWidget : widgetMap.values()) {
             changeMap = currentWidget.getValue().getChangeMap();
             for (Map.Entry<Position, ItemStack> entry : changeMap.entrySet()) {
-                slotId = InventoryUtil.convertToSlotNumber(InventoryUtil.getAbsolutePos(entry.getKey(), currentWidget.getKey()), window.windowSize);
+                slotId = InventoryUtil.convertToSlotNumber(InventoryUtil.getAbsolutePos(entry.getKey(),
+                                                                                        currentWidget.getKey()),
+                                                           window.windowSize);
                 inv.setItem(slotId, entry.getValue());
             }
         }
@@ -40,7 +42,9 @@ public class WindowInteractor implements InventoryInteractor, InventoryHolder {
         AbstractMap.SimpleEntry<Position, WidgetBase> widgetEntry = window.getWidgetEntryFromWindowPos(slotPos);
         WidgetBase widget = widgetEntry.getValue();
         if (widget instanceof WidgetClickable) {
-            boolean toReturn = ((WidgetClickable) widget).processClick(InventoryUtil.getRelativePos(slotPos, widgetEntry.getKey()), event);
+            boolean toReturn = ((WidgetClickable) widget).processClick(InventoryUtil.getRelativePos(slotPos,
+                                                                                                    widgetEntry.getKey()),
+                                                                       event);
             renderInventory();
             return toReturn;
         } else {

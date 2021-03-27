@@ -29,8 +29,7 @@ public class RecipeRegistry {
                 ShapedRecipe shaped = (ShapedRecipe) recipeBase;
                 org.bukkit.inventory.ShapedRecipe recipe = new org.bukkit.inventory.ShapedRecipe(new NamespacedKey(
                         WheelCore.instance,
-                        "shaped_recipe_" + id), recipeBase.getResult())
-                        .shape("abc", "def", "ghi");
+                        "shaped_recipe_" + id), recipeBase.getResult()).shape("abc", "def", "ghi");
                 setShapedIfExist(recipe, shaped, 'a', 0);
                 setShapedIfExist(recipe, shaped, 'b', 1);
                 setShapedIfExist(recipe, shaped, 'c', 2);

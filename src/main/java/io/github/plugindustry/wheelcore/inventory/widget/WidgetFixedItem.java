@@ -1,10 +1,11 @@
 package io.github.plugindustry.wheelcore.inventory.widget;
 
-import io.github.plugindustry.wheelcore.interfaces.block.windowwidget.WidgetBase;
+import io.github.plugindustry.wheelcore.interfaces.inventory.WidgetBase;
 import io.github.plugindustry.wheelcore.inventory.Position;
 import io.github.plugindustry.wheelcore.inventory.SlotSize;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -37,7 +38,7 @@ public class WidgetFixedItem implements WidgetBase {
     @Override
     public Map<Position, ItemStack> getChangeMap() {
         if (init) {
-            return new HashMap<>();
+            return Collections.emptyMap();
         } else {
             init = true;
             Map<Position, ItemStack> retMap = new HashMap<>();

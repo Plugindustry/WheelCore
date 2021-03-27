@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.Map;
 
 public class ShapedRecipeFactory {
-    private List<String> patterns = new LinkedList<>();
     private final Map<Character, RecipeChoice> patternMapping = new HashMap<>();
     private final Map<RecipeChoice, Integer> damageMapping = new HashMap<>();
+    private List<String> patterns = new LinkedList<>();
 
     public ShapedRecipeFactory map(char c, ItemStack target) {
         return map(c, new ItemStackChoice(target));

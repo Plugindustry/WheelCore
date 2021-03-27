@@ -1,6 +1,6 @@
 package io.github.plugindustry.wheelcore.inventory;
 
-import io.github.plugindustry.wheelcore.interfaces.block.windowwidget.WidgetBase;
+import io.github.plugindustry.wheelcore.interfaces.inventory.WidgetBase;
 
 import java.util.AbstractMap;
 import java.util.HashMap;

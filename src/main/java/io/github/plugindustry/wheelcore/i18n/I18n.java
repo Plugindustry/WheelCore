@@ -27,8 +27,9 @@ public class I18n {
 
         try (BufferedInputStream inputStream = new BufferedInputStream(langFile.isFile() ?
                                                                        new FileInputStream(langFile) :
-                                                                       WheelCore.class.getResourceAsStream(
-                                                                               "/lang/" + localeString + ".lang"))) {
+                                                                       WheelCore.class.getResourceAsStream("/lang/" +
+                                                                                                           localeString +
+                                                                                                           ".lang"))) {
             bundle = new PropertyResourceBundle(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
         } catch (Exception e) {
             e.printStackTrace();
