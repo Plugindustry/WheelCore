@@ -4,7 +4,6 @@ on: [push]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
@@ -16,8 +15,8 @@ jobs:
       - name: Build with Maven
         run: mvn -B -e -U clean install --file pom.xml
       - name: Copy jar
-        run: mkdir target/artifacts/ && cp -f target/IndustrialWorld-1.0-SNAPSHOT.jar target/artifacts/IndustrialWorld.jar
-      - uses: actions/upload-artifact@v1
+        run: mkdir target/artifacts/ && cp -f target/* target/artifacts/
+      - uses: actions/upload-artifact@v2
         with:
-          name: IndustrialWorld.jar
+          name: WheelCore
           path: target/artifacts/
