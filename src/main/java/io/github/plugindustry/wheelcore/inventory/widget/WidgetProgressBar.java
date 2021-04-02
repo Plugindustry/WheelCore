@@ -11,10 +11,10 @@ import java.util.*;
 
 public class WidgetProgressBar implements WidgetBase {
     private final SlotSize size = new SlotSize(1, 1);
-    double ratio = 0.0d;
-    boolean changed = true;
-    String id;
-    List<Material> materialList;
+    private final String id;
+    private final List<Material> materialList;
+    private double ratio = 0.0d;
+    private boolean changed = true;
 
     public WidgetProgressBar(String id, List<Material> materialList) {
         this.id = id;
@@ -23,20 +23,10 @@ public class WidgetProgressBar implements WidgetBase {
 
     public WidgetProgressBar(String id) {
         this.id = id;
-        materialList = Arrays.asList(Material.GRAY_STAINED_GLASS_PANE,
-                                     Material.RED_STAINED_GLASS_PANE,
+        materialList = Arrays.asList(Material.GRAY_STAINED_GLASS_PANE, Material.RED_STAINED_GLASS_PANE,
                                      Material.ORANGE_STAINED_GLASS_PANE,
                                      Material.YELLOW_STAINED_GLASS_PANE,
                                      Material.LIME_STAINED_GLASS_PANE);
-    }
-
-    public void setProgress(int percent) {
-        setProgress((double) percent / 100.0d);
-    }
-
-    public void setProgress(double ratio) {
-        this.ratio = ratio;
-        changed = true;
     }
 
     @Override
@@ -79,5 +69,18 @@ public class WidgetProgressBar implements WidgetBase {
             return retMap;
         } else
             return Collections.emptyMap();
+    }
+
+    public double getProgress() {
+        return ratio;
+    }
+
+    public void setProgress(int percent) {
+        setProgress((double) percent / 100.0d);
+    }
+
+    public void setProgress(double ratio) {
+        this.ratio = ratio;
+        changed = true;
     }
 }

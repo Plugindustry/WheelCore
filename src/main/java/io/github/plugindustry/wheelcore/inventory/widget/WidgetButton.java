@@ -13,9 +13,9 @@ import java.util.function.BiConsumer;
 
 public class WidgetButton implements WidgetClickable {
     private final SlotSize size = new SlotSize(1, 1);
-    String id;
-    ItemStack slotItemStack;
-    BiConsumer<Position, InventoryClickEvent> onClickFunc;
+    private final String id;
+    private final BiConsumer<Position, InventoryClickEvent> onClickFunc;
+    private ItemStack slotItemStack;
     private boolean init = false;
 
     public WidgetButton(String id, ItemStack slotItemStack, BiConsumer<Position, InventoryClickEvent> onClickFunc) {
@@ -57,5 +57,13 @@ public class WidgetButton implements WidgetClickable {
         // return true for cancelling the event, false for doing nothing
         onClickFunc.accept(pos, event);
         return true;
+    }
+
+    public ItemStack getItem() {
+        return slotItemStack;
+    }
+
+    public void setItem(ItemStack slotItemStack) {
+        this.slotItemStack = slotItemStack;
     }
 }

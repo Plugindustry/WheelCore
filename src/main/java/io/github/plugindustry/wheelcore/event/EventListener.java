@@ -163,15 +163,10 @@ public class EventListener implements Listener {
             return;
         }
 
-        Player p = (Player) event.getWhoClicked();
         Inventory inv = event.getInventory();
-        if (inv.getHolder() instanceof WindowInteractor) {
+        if (inv.getHolder() instanceof WindowInteractor)
             // Detected InventoryWindow click event
-            WindowInteractor interactor = (WindowInteractor) inv.getHolder();
-            if (interactor.processClick(event.getSlot(), event)) {
-                event.setCancelled(true);
-            }
-        }
+            event.setCancelled(((WindowInteractor) inv.getHolder()).processClick(event.getSlot(), event));
     }
 
     @EventHandler

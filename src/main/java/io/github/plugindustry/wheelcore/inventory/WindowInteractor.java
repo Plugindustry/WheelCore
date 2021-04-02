@@ -1,6 +1,5 @@
 package io.github.plugindustry.wheelcore.inventory;
 
-import io.github.plugindustry.wheelcore.interfaces.Tickable;
 import io.github.plugindustry.wheelcore.interfaces.inventory.WidgetBase;
 import io.github.plugindustry.wheelcore.interfaces.inventory.WidgetClickable;
 import io.github.plugindustry.wheelcore.utils.InventoryUtil;
@@ -8,12 +7,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.AbstractMap;
-import java.util.Map;
 
-public class WindowInteractor implements InventoryInteractor, InventoryHolder, Tickable {
+public class WindowInteractor implements InventoryInteractor, InventoryHolder {
     private final InventoryWindow window;
     private final Inventory inv;
 
@@ -22,32 +19,25 @@ public class WindowInteractor implements InventoryInteractor, InventoryHolder, T
         this.inv = Bukkit.createInventory(this, 9 * window.windowSize.height, window.title);
     }
 
+    @Override
     public void renderInventory() {
-        Map<String, AbstractMap.SimpleEntry<Position, WidgetBase>> widgetMap = window.getWidgetMap();
-        Map<Position, ItemStack> changeMap;
-        int slotId;
-
-        for (AbstractMap.SimpleEntry<Position, WidgetBase> currentWidget : widgetMap.values()) {
-            changeMap = currentWidget.getValue().getChangeMap();
-            for (Map.Entry<Position, ItemStack> entry : changeMap.entrySet()) {
-                slotId = InventoryUtil.convertToSlotNumber(InventoryUtil.getAbsolutePos(entry.getKey(),
-                                                                                        currentWidget.getKey()),
-                                                           window.windowSize);
-                inv.setItem(slotId, entry.getValue());
-            }
-        }
+        window.getWidgetMap().values().forEach(we -> we.getValue()
+                .getChangeMap()
+                .forEach((pos, item) -> inv.setItem(InventoryUtil.convertToSlotNumber(InventoryUtil.getAbsolutePos(we.getKey(),
+                                                                                                                   pos),
+                                                                                      window.windowSize), item)));
     }
 
+    @Override
     public boolean processClick(int slot, InventoryClickEvent event) {
         Position slotPos = InventoryUtil.convertToPos(slot, window.windowSize);
-        AbstractMap.SimpleEntry<Position, WidgetBase> widgetEntry = window.getWidgetEntryFromWindowPos(slotPos);
+        AbstractMap.SimpleEntry<Position, WidgetBase> widgetEntry = window.getWidgetAt(slotPos);
         WidgetBase widget = widgetEntry.getValue();
         if (widget instanceof WidgetClickable) {
-            boolean toReturn = ((WidgetClickable) widget).processClick(InventoryUtil.getRelativePos(slotPos,
-                                                                                                    widgetEntry.getKey()),
-                                                                       event);
+            boolean ret = ((WidgetClickable) widget).processClick(InventoryUtil.getRelativePos(widgetEntry.getKey(),
+                                                                                               slotPos), event);
             renderInventory();
-            return toReturn;
+            return ret;
         } else {
             return true; // true for cancelling the event
         }
@@ -57,10 +47,5 @@ public class WindowInteractor implements InventoryInteractor, InventoryHolder, T
     public Inventory getInventory() {
         this.renderInventory();
         return inv;
-    }
-
-    @Override
-    public void onTick() {
-        this.renderInventory();
     }
 }

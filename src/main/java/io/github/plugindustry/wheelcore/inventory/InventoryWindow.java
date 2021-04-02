@@ -39,7 +39,7 @@ public class InventoryWindow {
         return pos2Id;
     }
 
-    public AbstractMap.SimpleEntry<Position, WidgetBase> getWidgetEntryFromWindowPos(Position pos) {
+    public AbstractMap.SimpleEntry<Position, WidgetBase> getWidgetAt(Position pos) {
         return widgetMap.get(pos2Id[pos.xCoord][pos.yCoord]);
     }
 }

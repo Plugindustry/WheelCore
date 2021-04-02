@@ -11,8 +11,8 @@ import java.util.Map;
 
 public class WidgetFixedItem implements WidgetBase {
     private final SlotSize size = new SlotSize(1, 1);
-    String id;
-    ItemStack slotItemStack;
+    private final String id;
+    private ItemStack slotItemStack;
     private boolean init = false;
 
     public WidgetFixedItem(String id, ItemStack slotItemStack) {
@@ -45,5 +45,13 @@ public class WidgetFixedItem implements WidgetBase {
             retMap.put(new Position(1, 1), slotItemStack);
             return retMap;
         }
+    }
+
+    public ItemStack getItem() {
+        return slotItemStack;
+    }
+
+    public void setItem(ItemStack slotItemStack) {
+        this.slotItemStack = slotItemStack;
     }
 }
