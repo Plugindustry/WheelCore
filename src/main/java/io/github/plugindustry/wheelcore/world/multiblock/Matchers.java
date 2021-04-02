@@ -40,7 +40,7 @@ public class Matchers {
                 for (int y = Math.min(0, yOffset); y <= bound1; y++) {
                     int bound2 = Math.max(0, zOffset);
                     for (int z = Math.min(0, zOffset); z <= bound2; z++)
-                        if (!(loc.clone().add(x, y, z).getBlock().getType() == type)) {
+                        if (loc.clone().add(x, y, z).getBlock().getType() != type) {
                             flag = false;
                             break outer;
                         }
@@ -61,7 +61,7 @@ public class Matchers {
                 for (int y = Math.min(0, yOffset); y <= bound1; y++) {
                     int bound2 = Math.max(0, zOffset);
                     for (int z = Math.min(0, zOffset); z <= bound2; z++)
-                        if (!(MainManager.getBlockInstance(loc.clone().add(x, y, z)) == type)) {
+                        if (MainManager.getBlockInstance(loc.clone().add(x, y, z)) != type) {
                             flag = false;
                             break outer;
                         }
