@@ -24,7 +24,7 @@ public class ConfigManager {
             pl.saveDefaultConfig();
         }
         config = YamlConfiguration.loadConfiguration(config_yml);
-        I18n.init(config);
+        I18n.readNewFile(config.getString("lang"), dataFolder.getPath() + config.getString("lang") + ".lang");
 
         File world_generation_yml = new File(dataFolder, "world_generation.yml");
         if (!(world_generation_yml.isFile())) {

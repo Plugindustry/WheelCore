@@ -1,8 +1,6 @@
 package io.github.plugindustry.wheelcore.i18n;
 
 import io.github.plugindustry.wheelcore.WheelCore;
-import io.github.plugindustry.wheelcore.utils.ItemStackUtil;
-import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -13,72 +11,44 @@ import java.util.*;
 import java.util.logging.Level;
 
 public class I18n {
-    public static String localeString;
-    public static File dataFolder = WheelCore.instance.getDataFolder();
+    private static Map<I18nLocale, Map<String, String>> localeMap;
 
-    private static ResourceBundle bundle;
+    public static void readNewFile(I18nLocale locale, String path) {
+        File langFile = new File(path);
+        ResourceBundle bundle;
 
-    public static void init(YamlConfiguration config) {
-        localeString = config.getString("lang");
-        File langDir = new File(dataFolder, "lang");
-        if (langDir.isDirectory() || langDir.mkdir())
-            ;
-        File langFile = new File(langDir, localeString + ".lang");
-
-        try (BufferedInputStream inputStream = new BufferedInputStream(langFile.isFile() ?
-                                                                       new FileInputStream(langFile) :
-                                                                       WheelCore.class.getResourceAsStream("/lang/" +
-                                                                                                           localeString +
-                                                                                                           ".lang"))) {
+        try (BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(langFile))) {
             bundle = new PropertyResourceBundle(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
         } catch (Exception e) {
             e.printStackTrace();
-            WheelCore.instance.getLogger().log(Level.SEVERE, "Error while reading lang file");
-            WheelCore.instance.getServer().getPluginManager().disablePlugin(WheelCore.instance);
+            WheelCore.instance.getLogger().log(Level.SEVERE, "Can't read lang file at " + path);
+            return;
         }
+
+        Map<String, String> currentLocaleMap = localeMap.containsKey(locale) ? localeMap.get(locale) : new HashMap<>();
+
+        for (String key : bundle.keySet()) {
+            currentLocaleMap.put(key, bundle.getString(key));
+        }
+
+        localeMap.put(locale, currentLocaleMap);
     }
 
-    public static ItemStackUtil.ItemStackFactory processItem(String id, ItemStackUtil.ItemStackFactory factory) {
-        return processItemLore(id, processItemName(id, factory.setId(id)));
+    public static void readNewFile(String localeName, String path) {
+        readNewFile(getLocaleFromName(localeName), path);
     }
 
-    public static ItemStackUtil.ItemStackFactory processItem(String id, ItemStackUtil.ItemStackFactory factory, List<String> prefix) {
-        return processItemLore(id, processItemName(id, factory.setId(id)), prefix);
+    public static String getLocaleString(I18nLocale locale, String key) {
+        return localeMap.containsKey(locale) ? localeMap.get(locale).getOrDefault(key, key) : key;
     }
 
-    public static ItemStackUtil.ItemStackFactory processItem(String id, ItemStackUtil.ItemStackFactory factory, List<String> prefix, List<String> suffix) {
-        return processItemLore(id, processItemName(id, factory.setId(id)), prefix, suffix);
+    private static Map<String, I18nLocale> nameLocaleMap = new HashMap<>();
+    static {
+        nameLocaleMap.put("en_US", I18nLocale.EN_US);
+        nameLocaleMap.put("zh_CN", I18nLocale.ZH_CN);
     }
 
-    public static ItemStackUtil.ItemStackFactory processItemName(String id, ItemStackUtil.ItemStackFactory factory) {
-        String lowerId = id.toLowerCase(Locale.ENGLISH);
-        factory.setDisplayName(getLocaleString(String.format(I18nConst.Item.ITEM_NAME, lowerId)));
-        return factory;
-    }
-
-    public static ItemStackUtil.ItemStackFactory processItemLore(String id, ItemStackUtil.ItemStackFactory factory) {
-        return processItemLore(id, factory, Collections.emptyList(), Collections.emptyList());
-    }
-
-    public static ItemStackUtil.ItemStackFactory processItemLore(String id, ItemStackUtil.ItemStackFactory factory, List<String> prefix) {
-        return processItemLore(id, factory, prefix, Collections.emptyList());
-    }
-
-    public static ItemStackUtil.ItemStackFactory processItemLore(String id, ItemStackUtil.ItemStackFactory factory, List<String> prefix, List<String> suffix) {
-        String lowerId = id.toLowerCase(Locale.ENGLISH);
-        LinkedList<String> tempList = new LinkedList<>();
-        tempList.addAll(prefix);
-        tempList.addAll(getLocaleStringList(String.format(I18nConst.Item.ITEM_LORE, lowerId)));
-        tempList.addAll(suffix);
-        factory.setLore(tempList);
-        return factory;
-    }
-
-    public static String getLocaleString(String key) {
-        return bundle.containsKey(key) ? bundle.getString(key) : key;
-    }
-
-    public static List<String> getLocaleStringList(String key) {
-        return bundle.containsKey(key) ? Arrays.asList(bundle.getStringArray(key)) : Collections.singletonList(key);
+    public static I18nLocale getLocaleFromName(String name) {
+        return nameLocaleMap.get(name);
     }
 }
