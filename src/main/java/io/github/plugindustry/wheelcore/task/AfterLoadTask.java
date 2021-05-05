@@ -15,7 +15,7 @@ public class AfterLoadTask implements Runnable {
 
         DebuggingLogger.debug("register blocks");
         RegisterTask.registerBlock();
-        ConfigManager.loadBlocks();
+        MainManager.loadBlocks();
 
         // Register recipes, blocks
         DebuggingLogger.debug("register items");

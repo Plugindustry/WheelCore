@@ -2,7 +2,7 @@ package io.github.plugindustry.wheelcore;
 
 import io.github.plugindustry.wheelcore.command.WheelCoreCommand;
 import io.github.plugindustry.wheelcore.event.EventListener;
-import io.github.plugindustry.wheelcore.manager.ConfigManager;
+import io.github.plugindustry.wheelcore.manager.MainManager;
 import io.github.plugindustry.wheelcore.task.AfterLoadTask;
 import io.github.plugindustry.wheelcore.task.RegisterTask;
 import org.bukkit.Bukkit;
@@ -42,6 +42,6 @@ public final class WheelCore extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        ConfigManager.shutdown();
+        MainManager.saveBlocks();
     }
 }

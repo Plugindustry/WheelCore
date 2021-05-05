@@ -1,8 +1,5 @@
 package io.github.plugindustry.wheelcore.task;
 
-import io.github.plugindustry.wheelcore.world.NormalOrePopulator;
-import io.github.plugindustry.wheelcore.world.WorldGenCopperOre;
-
 public class RegisterTask {
     public static void registerRecipes() {
         // Example:
@@ -19,6 +16,6 @@ public class RegisterTask {
     }
 
     public static void registerGenerator() {
-        NormalOrePopulator.generators.add(new WorldGenCopperOre());
+        //NormalOrePopulator.generators.add(new WorldGenCopperOre());
     }
 }

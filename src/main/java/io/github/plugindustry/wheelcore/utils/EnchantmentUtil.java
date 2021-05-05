@@ -1,42 +1,77 @@
 package io.github.plugindustry.wheelcore.utils;
 
-import io.github.plugindustry.wheelcore.WheelCore;
+import io.github.plugindustry.wheelcore.i18n.I18n;
+import org.apache.commons.lang3.StringUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.Plugin;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 public class EnchantmentUtil {
-    public static CustomEnchantment create(String name) {
-        return new CustomEnchantment(name);
+    private static final LinkedHashMap<Integer, String> lookup = new LinkedHashMap<>();
+
+    static {
+        lookup.put(1000, "M");
+        lookup.put(900, "CM");
+        lookup.put(500, "D");
+        lookup.put(400, "CD");
+        lookup.put(100, "C");
+        lookup.put(90, "XC");
+        lookup.put(50, "L");
+        lookup.put(40, "XL");
+        lookup.put(10, "X");
+        lookup.put(9, "IX");
+        lookup.put(5, "V");
+        lookup.put(4, "IV");
+        lookup.put(1, "I");
+    }
+
+    public static CustomEnchantment create(@Nonnull Plugin instance, @Nonnull String name, @Nonnull String localizedNameKey) {
+        return new CustomEnchantment(instance, name, localizedNameKey);
     }
 
     public static String getLoreOfEnchant(CustomEnchantment enchantment, int level) {
-        return "";
-        /*
         return ChatColor.RESET.toString() +
                (enchantment.isTreasure() ? ChatColor.GOLD : (enchantment.isCursed() ? ChatColor.RED : ChatColor.GRAY)) +
-               I18n.getLocaleString(String.format(I18nConst.Enchantment.ENCHANTMENT_NAME, enchantment.getName())) +
+               I18n.getLocaleString(enchantment.getLocalizedNameKey()) +
                " " +
-               I18n.getLocaleString(String.format(I18nConst.Enchantment.ENCHANTMENT_LEVEL, level));
-        */
+               getLevelStr(level);
+    }
+
+    private static String getLevelStr(int level) {
+        if (level >= 32767)
+            return level + "L";
+
+        StringBuilder res = new StringBuilder();
+        int temp = level;
+        for (Map.Entry<Integer, String> entry : lookup.entrySet()) {
+            Integer k = entry.getKey();
+            res.append(StringUtils.repeat(entry.getValue(), temp / k));
+            temp %= k;
+            if (temp == 0)
+                break;
+        }
+        return res.toString();
     }
 
     public static void addToItem(ItemStack item, CustomEnchantment enchantment, int level) {
         item.addUnsafeEnchantment(enchantment, level);
         if (item.hasItemMeta()) {
             ItemMeta meta = item.getItemMeta();
-            assert meta != null;
-            List<String> lore = meta.hasLore() ? meta.getLore() : new LinkedList<>();
-            assert lore != null;
-            lore.add(getLoreOfEnchant(enchantment, level));
+            List<String> lore = Objects.requireNonNull(meta).hasLore() ? meta.getLore() : new LinkedList<>();
+            Objects.requireNonNull(lore).add(getLoreOfEnchant(enchantment, level));
             meta.setLore(lore);
             item.setItemMeta(meta);
         }
@@ -59,6 +94,7 @@ public class EnchantmentUtil {
 
     public static class CustomEnchantment extends Enchantment {
         private final String name;
+        private final String localizedNameKey;
         private int startLevel = 1;
         private int maxLevel = 1;
         private EnchantmentTarget target = EnchantmentTarget.ALL;
@@ -67,15 +103,21 @@ public class EnchantmentUtil {
         private List<Enchantment> conflictEnchantments = Collections.emptyList();
         private List<ItemStack> otherItems = Collections.emptyList();
 
-        public CustomEnchantment(String name) {
-            super(new NamespacedKey(WheelCore.instance, "enchantment." + name));
+        public CustomEnchantment(@Nonnull Plugin instance, @Nonnull String name, @Nonnull String localizedNameKey) {
+            super(new NamespacedKey(instance, "enchantment." + name));
             this.name = name;
+            this.localizedNameKey = localizedNameKey;
         }
 
         @Nonnull
         @Override
         public String getName() {
             return name;
+        }
+
+        @Nonnull
+        public String getLocalizedNameKey() {
+            return localizedNameKey;
         }
 
         @Override
