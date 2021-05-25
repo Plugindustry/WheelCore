@@ -1,10 +1,11 @@
 package io.github.plugindustry.wheelcore.manager.recipe;
 
-import io.github.plugindustry.wheelcore.manager.recipe.choice.ItemStackChoice;
 import io.github.plugindustry.wheelcore.manager.recipe.choice.RecipeChoice;
+import io.github.plugindustry.wheelcore.utils.ItemStackUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
@@ -33,8 +34,8 @@ public class ShapedRecipe implements CraftingRecipe {
                 damages.forEach((items, dmg) -> {
                     if (items.matches(is)) {
                         ItemStack newIs = is.clone();
-                        newIs.setDurability((short) (newIs.getDurability() + dmg));
-                        if (newIs.getDurability() > newIs.getType().getMaxDurability())
+                        ItemStackUtil.setDurability(newIs, ItemStackUtil.getDurability(newIs) + dmg);
+                        if (ItemStackUtil.getDurability(newIs) > newIs.getType().getMaxDurability())
                             newIs = new ItemStack(Material.AIR);
                         if (damage != null) {
                             damage.put(finalI * 3 + finalJ + 1, newIs);
@@ -46,7 +47,7 @@ public class ShapedRecipe implements CraftingRecipe {
     }
 
     @Override
-    public boolean matches(List<List<ItemStack>> matrix, @Nullable Map<Integer, ItemStack> damage) {
+    public boolean matches(@Nonnull List<List<ItemStack>> matrix, @Nullable Map<Integer, ItemStack> damage) {
         if (matrix.size() != 3) {
             return false;
         }
@@ -70,11 +71,6 @@ public class ShapedRecipe implements CraftingRecipe {
             checkItemDamage(matrix, damage, this.damages);
 
         return true;
-    }
-
-    @Override
-    public CraftingRecipe addItemCost(ItemStack is, int durability) {
-        return addItemCost(new ItemStackChoice(is), durability);
     }
 
     @Override

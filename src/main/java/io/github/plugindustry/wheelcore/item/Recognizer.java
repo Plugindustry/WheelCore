@@ -10,6 +10,7 @@ import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 
 public class Recognizer implements ItemBase, Interactive {
+    @Override
     public boolean onInteract(Player player, Action action, ItemStack tool, Block block, InteractActor actor) {
         if (actor == InteractActor.ITEM && block != null && action == Action.RIGHT_CLICK_BLOCK) {
             StringBuilder builder = new StringBuilder();

@@ -1,20 +1,22 @@
 package io.github.plugindustry.wheelcore.manager.data;
 
 import com.google.common.collect.BiMap;
-import io.github.plugindustry.wheelcore.interfaces.Base;
+import io.github.plugindustry.wheelcore.interfaces.block.BlockBase;
 import io.github.plugindustry.wheelcore.interfaces.block.BlockData;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.World;
 
 import java.io.File;
 import java.util.Set;
 
 // TODO: Implement this
 public class FileBasedProvider implements DataProvider {
-    private final BiMap<String, Base> mapping;
+    private final BiMap<String, BlockBase> mapping;
     private final File file;
 
-    public FileBasedProvider(BiMap<String, Base> mapping, File file) {
+    public FileBasedProvider(BiMap<String, BlockBase> mapping, File file) {
         this.mapping = mapping;
         this.file = file;
     }
@@ -35,7 +37,7 @@ public class FileBasedProvider implements DataProvider {
     }
 
     @Override
-    public Set<Location> blocksOf(Base base) {
+    public Set<Location> blocksOf(BlockBase base) {
         return null;
     }
 
@@ -50,13 +52,8 @@ public class FileBasedProvider implements DataProvider {
     }
 
     @Override
-    public Base instanceAt(Location loc) {
+    public BlockBase instanceAt(Location loc) {
         return null;
-    }
-
-    @Override
-    public void setInstanceAt(Location loc, Base instance) {
-
     }
 
     @Override
@@ -65,7 +62,7 @@ public class FileBasedProvider implements DataProvider {
     }
 
     @Override
-    public void addBlock(Location block, Base instance, BlockData data) {
+    public void addBlock(Location block, BlockBase instance, BlockData data) {
 
     }
 
@@ -76,6 +73,7 @@ public class FileBasedProvider implements DataProvider {
 
     @Override
     public void saveAll() {
-
+        for (World world : Bukkit.getWorlds())
+            world.save();
     }
 }

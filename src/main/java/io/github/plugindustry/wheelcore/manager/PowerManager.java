@@ -7,7 +7,13 @@ import io.github.plugindustry.wheelcore.utils.BlockUtil;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -25,65 +31,6 @@ public class PowerManager {
 
     // Not enabled yet
     public static void onTick() {
-        /*for (Map.Entry<Location, Request> entry : requestMap.entrySet())
-            if (entry.getValue() instanceof OutputRequest) {
-                OutputRequest outReq = ((OutputRequest) entry.getValue());
-                Location buf = entry.getKey();
-                Location[] buf2 = new Location[]{
-                        buf.clone().add(1, 0, 0), buf.clone().add(-1, 0, 0), buf.clone().add(0, 1, 0),
-                        buf.clone().add(0, -1, 0), buf.clone().add(0, 0, 1), buf.clone().add(0, 0, -1),
-                        };
-                int d = 0;
-                for (Location l : buf2)
-                    if (BlockUtil.isWire(l.getBlock()) ||
-                        (BlockUtil.isMachine(l.getBlock()) && getInputRequest(l) != null))
-                        ++d;
-                if (d == 0)
-                    continue;
-                outReq.power /= d;
-                for (Location l : buf2)
-                    if (BlockUtil.isWire(l.getBlock())) {
-                        Map.Entry<HashTree<Location>, List<BlockUtil.SearchResult>> result = BlockUtil.searchFromWire
-                        (l.getBlock(), buf);
-                        for (BlockUtil.SearchResult r : result.getValue()) {
-                            InputRequest resq = getInputRequest(r.machineBlock.getLocation());
-                            if (resq == null)
-                                continue;
-                            float powerGet = Math.min(outReq.power / r.divisorOfElectricity, resq.power);
-                            outReq.result += powerGet;
-                            for (HashTree.Node<Location> node : result.getKey().getAllNodes())
-                                if (node.getValue().equals(r.machineBlock.getLocation()))
-                                    for (HashTree.Node<Location> wireNode : node.getAllParents()) {
-                                        Wire wireObj = ((Wire) MainManager.getInstanceFromId(MainManager.getBlockId
-                                        (wireNode.getValue().getBlock())));
-                                        powerGet -= wireObj.getEnergyLoss();
-                                        if (wireMap.containsKey(wireNode.getValue())) {
-                                            float nowPower = wireMap.get(wireNode.getValue());
-                                            float maxPower = wireObj.getMaxTransmissionEnergy();
-                                            float newPower = nowPower + powerGet;
-                                            if (newPower > maxPower) {
-                                                newPower = maxPower;
-                                                powerGet = newPower - nowPower;
-                                            }
-                                            wireMap.replace(wireNode.getValue(), newPower);
-                                        } else
-                                            wireMap.put(wireNode.getValue(), powerGet);
-                                    }
-                            resq.result = powerGet;
-                        }
-                    } else if (BlockUtil.isMachine(l.getBlock())) {
-                        InputRequest resq = getInputRequest(l);
-                        if (resq != null) {
-                            float powerGet = Math.min(outReq.power, resq.power);
-                            outReq.result += powerGet;
-                            resq.result = powerGet;
-                        }
-                    }
-            }
-
-        lastRequestMap = requestMap;
-        requestMap = new HashMap<>();*/
-
         // Output
         outputMap.forEach((key, value) -> BlockUtil.findWireAround(key).forEach(location -> {
             Wire.WireData data = (Wire.WireData) MainManager.getBlockData(location);
@@ -268,7 +215,7 @@ public class PowerManager {
     }
 
     public static class OutputRequest extends Request {
-        public double power;
+        public final double power;
         public double result;
 
         public OutputRequest(double power) {

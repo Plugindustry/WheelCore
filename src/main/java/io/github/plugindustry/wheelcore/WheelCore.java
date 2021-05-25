@@ -8,9 +8,11 @@ import io.github.plugindustry.wheelcore.task.RegisterTask;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.Objects;
+
 public final class WheelCore extends JavaPlugin {
+    public static final String serverVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
     public static WheelCore instance;
-    public static String serverVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
 
     @Override
     public void onEnable() {
@@ -28,7 +30,7 @@ public final class WheelCore extends JavaPlugin {
         instance = this;
 
         // Register command, EventListener
-        this.getCommand("wheelcore").setExecutor(new WheelCoreCommand());
+        Objects.requireNonNull(this.getCommand("wheelcore")).setExecutor(new WheelCoreCommand());
 
         RegisterTask.registerGenerator();
 
@@ -42,6 +44,6 @@ public final class WheelCore extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        MainManager.saveBlocks();
+        MainManager.save();
     }
 }

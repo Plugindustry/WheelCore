@@ -1,7 +1,13 @@
 package io.github.plugindustry.wheelcore.manager;
 
 import io.github.plugindustry.wheelcore.WheelCore;
-import io.github.plugindustry.wheelcore.manager.recipe.*;
+import io.github.plugindustry.wheelcore.manager.recipe.CraftingRecipe;
+import io.github.plugindustry.wheelcore.manager.recipe.MatrixInputRecipe;
+import io.github.plugindustry.wheelcore.manager.recipe.RecipeBase;
+import io.github.plugindustry.wheelcore.manager.recipe.ShapedRecipe;
+import io.github.plugindustry.wheelcore.manager.recipe.ShapelessRecipe;
+import io.github.plugindustry.wheelcore.manager.recipe.SingleInputRecipe;
+import io.github.plugindustry.wheelcore.manager.recipe.SmeltingRecipe;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.FurnaceRecipe;
@@ -9,7 +15,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
 
-import java.util.*;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class RecipeRegistry {
     private static final List<RecipeBase> recipes = new LinkedList<>();
@@ -52,8 +64,20 @@ public class RecipeRegistry {
             }
     }
 
-    public static void register(RecipeBase recipeBase, String id) {
-        register(recipeBase, id, true);
+    public static void register(SmeltingRecipe recipe, String id) {
+        register(recipe, id, true);
+    }
+
+    public static void register(ShapedRecipe recipe, String id) {
+        register(recipe, id, true);
+    }
+
+    public static void register(ShapelessRecipe recipe, String id) {
+        register(recipe, id, true);
+    }
+
+    public static void register(RecipeBase recipe, String id) {
+        register(recipe, id, false);
     }
 
     private static void setShapedIfExist(org.bukkit.inventory.ShapedRecipe recipe, ShapedRecipe shaped, char key, int slot) {
@@ -71,7 +95,7 @@ public class RecipeRegistry {
             return false;
     }
 
-    public static CraftingRecipe matchCraftingRecipe(List<ItemStack> items, Map<Integer, ItemStack> damageResult) {
+    public static CraftingRecipe matchCraftingRecipe(@Nonnull List<ItemStack> items, @Nullable Map<Integer, ItemStack> damageResult) {
         // tidy up the matrix
         List<List<ItemStack>> matrix = new LinkedList<>();
         List<ItemStack> current = new LinkedList<>();
@@ -98,7 +122,7 @@ public class RecipeRegistry {
         return null;
     }
 
-    public static SmeltingRecipe matchSmeltingRecipe(ItemStack origin) {
+    public static SmeltingRecipe matchSmeltingRecipe(@Nonnull ItemStack origin) {
         for (RecipeBase recipeBase : recipes) {
             if (recipeBase instanceof SmeltingRecipe && ((SmeltingRecipe) recipeBase).matches(origin)) {
                 return (SmeltingRecipe) recipeBase;
@@ -107,10 +131,19 @@ public class RecipeRegistry {
         return null;
     }
 
-    public static GrindRecipe matchGrindRecipe(ItemStack origin) {
+    public static <T extends SingleInputRecipe> T matchSpecificRecipe(@Nonnull Class<T> recipeType, @Nonnull ItemStack origin) {
         for (RecipeBase recipeBase : recipes) {
-            if (recipeBase instanceof GrindRecipe && ((GrindRecipe) recipeBase).matches(origin)) {
-                return (GrindRecipe) recipeBase;
+            if (recipeType.isInstance(recipeBase) && ((SingleInputRecipe) recipeBase).matches(origin)) {
+                return (T) recipeBase;
+            }
+        }
+        return null;
+    }
+
+    public static <T extends MatrixInputRecipe> T matchSpecificRecipe(@Nonnull Class<T> recipeType, @Nonnull List<List<ItemStack>> matrix) {
+        for (RecipeBase recipeBase : recipes) {
+            if (recipeType.isInstance(recipeBase) && ((MatrixInputRecipe) recipeBase).matches(matrix)) {
+                return (T) recipeBase;
             }
         }
         return null;

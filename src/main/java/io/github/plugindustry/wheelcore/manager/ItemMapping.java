@@ -8,8 +8,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 public class ItemMapping {
-    public static HashMap<String, ItemStack> itemMap = new HashMap<>();
-    public static HashMap<String, HashSet<Material>> dictMaterial = new HashMap<>();
+    public static final HashMap<String, ItemStack> itemMap = new HashMap<>();
+    public static final HashMap<String, HashSet<Material>> dictMaterial = new HashMap<>();
 
     public static void set(String id, ItemStack itemStack) {
         itemMap.put(id, itemStack);

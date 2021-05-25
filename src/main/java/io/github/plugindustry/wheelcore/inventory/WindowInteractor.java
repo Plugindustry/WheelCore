@@ -8,6 +8,7 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
+import javax.annotation.Nonnull;
 import java.util.AbstractMap;
 
 public class WindowInteractor implements InventoryInteractor, InventoryHolder {
@@ -43,6 +44,7 @@ public class WindowInteractor implements InventoryInteractor, InventoryHolder {
         }
     }
 
+    @Nonnull
     @Override
     public Inventory getInventory() {
         this.renderInventory();

@@ -3,7 +3,7 @@ package io.github.plugindustry.wheelcore.manager.data;
 import com.google.common.collect.BiMap;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import io.github.plugindustry.wheelcore.interfaces.Base;
+import io.github.plugindustry.wheelcore.interfaces.block.BlockBase;
 import io.github.plugindustry.wheelcore.interfaces.block.BlockData;
 import io.github.plugindustry.wheelcore.utils.NBTUtil;
 import io.github.plugindustry.wheelcore.utils.NBTUtil.NBTValue;
@@ -27,13 +27,13 @@ import java.util.Objects;
 import java.util.Set;
 
 public class ChunkBasedProvider implements DataProvider {
-    private final BiMap<String, Base> mapping;
-    private final HashMap<Base, Set<Location>> baseBlocks = new HashMap<>();
-    private final HashMap<Location, Map.Entry<Base, BlockData>> blocks = new HashMap<>();
+    private final BiMap<String, BlockBase> mapping;
+    private final HashMap<BlockBase, Set<Location>> baseBlocks = new HashMap<>();
+    private final HashMap<Location, Map.Entry<BlockBase, BlockData>> blocks = new HashMap<>();
     private final HashMap<World, HashSet<Long>> loadedChunks = new HashMap<>();
     private final Gson gson = new Gson();
 
-    public ChunkBasedProvider(BiMap<String, Base> mapping) {
+    public ChunkBasedProvider(BiMap<String, BlockBase> mapping) {
         this.mapping = mapping;
     }
 
@@ -60,16 +60,8 @@ public class ChunkBasedProvider implements DataProvider {
     }
 
     @Override
-    public Base instanceAt(Location loc) {
+    public BlockBase instanceAt(Location loc) {
         return blocks.get(loc).getKey();
-    }
-
-    @Override
-    public void setInstanceAt(Location loc, Base instance) {
-        Base baseOrg = instanceAt(loc);
-        baseBlocks.get(baseOrg).remove(loc);
-        blocks.put(loc, new AbstractMap.SimpleEntry<>(instance, null));
-        baseBlocks.get(instance).add(loc);
     }
 
     @Override
@@ -78,7 +70,7 @@ public class ChunkBasedProvider implements DataProvider {
     }
 
     @Override
-    public void addBlock(Location block, Base instance, BlockData data) {
+    public void addBlock(Location block, BlockBase instance, BlockData data) {
         if (!baseBlocks.containsKey(instance))
             baseBlocks.put(instance, new HashSet<>());
         baseBlocks.get(instance).add(block);
@@ -87,7 +79,7 @@ public class ChunkBasedProvider implements DataProvider {
 
     @Override
     public void removeBlock(Location block) {
-        Base base = instanceAt(block);
+        BlockBase base = instanceAt(block);
         baseBlocks.get(base).remove(block);
         blocks.remove(block);
     }
@@ -137,11 +129,19 @@ public class ChunkBasedProvider implements DataProvider {
 
     @Override
     public void saveAll() {
-        for (Map.Entry<World, HashSet<Long>> entry : loadedChunks.entrySet())
-            for (long chunkDesc : entry.getValue()) {
+        for (Map.Entry<World, HashSet<Long>> entry : loadedChunks.entrySet()) {
+            HashSet<Long> temp = (HashSet<Long>) entry.getValue().clone();
+            for (long chunkDesc : temp) {
                 Map.Entry<Integer, Integer> decompressed = decompress(chunkDesc);
                 unloadChunk(entry.getKey().getChunkAt(decompressed.getKey(), decompressed.getValue()));
             }
+            entry.getKey().save();
+            for (long chunkDesc : temp) {
+                Map.Entry<Integer, Integer> decompressed = decompress(chunkDesc);
+                loadChunk(entry.getKey().getChunkAt(decompressed.getKey(), decompressed.getValue()));
+            }
+        }
+        Bukkit.getWorlds().stream().filter(world -> !loadedChunks.containsKey(world)).forEach(World::save);
     }
 
     @Override
@@ -150,7 +150,7 @@ public class ChunkBasedProvider implements DataProvider {
     }
 
     @Override
-    public Set<Location> blocksOf(Base base) {
+    public Set<Location> blocksOf(BlockBase base) {
         return Collections.unmodifiableSet(baseBlocks.get(base));
     }
 

@@ -3,6 +3,7 @@ package io.github.plugindustry.wheelcore.utils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Arrays;
@@ -12,8 +13,8 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class ItemStackUtil {
-    public static ItemStackFactory create(Material mtrl) {
-        return new ItemStackFactory(mtrl);
+    public static ItemStackFactory create(Material material) {
+        return new ItemStackFactory(material);
     }
 
     public static boolean isPIItem(ItemStack item) {
@@ -43,8 +44,8 @@ public class ItemStackUtil {
         ItemStack ta = a.clone();
         ItemStack tb = b.clone();
         if (ignoreDurability) {
-            ta.setDurability((short) 0);
-            tb.setDurability((short) 0);
+            ItemStackUtil.setDurability(ta, 0);
+            ItemStackUtil.setDurability(tb, 0);
         }
 
         if (!ta.isSimilar(tb)) {
@@ -63,6 +64,25 @@ public class ItemStackUtil {
                                                                                                  bId.asString()));
         }
         return true;
+    }
+
+    public static int getDurability(ItemStack itemStack) {
+        return itemStack.getItemMeta() instanceof Damageable ? ((Damageable) itemStack.getItemMeta()).getDamage() : 0;
+    }
+
+    public static void setDurability(ItemStack itemStack, int damage) {
+        ItemMeta meta = itemStack.getItemMeta();
+        if (meta == null) {
+            meta = Bukkit.getItemFactory().getItemMeta(itemStack.getType());
+            if (meta == null) {
+                throw new IllegalStateException("¿");
+            }
+        }
+
+        if (meta instanceof Damageable) {
+            ((Damageable) meta).setDamage(damage);
+            itemStack.setItemMeta(meta);
+        }
     }
 
     public static class ItemStackFactory {

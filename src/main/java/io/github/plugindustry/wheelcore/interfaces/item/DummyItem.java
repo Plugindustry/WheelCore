@@ -1,17 +1,14 @@
 package io.github.plugindustry.wheelcore.interfaces.item;
 
-import org.bukkit.Material;
+import io.github.plugindustry.wheelcore.interfaces.Interactive;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.bukkit.event.block.Action;
+import org.bukkit.inventory.ItemStack;
 
-public abstract class DummyItem implements ItemBase {
-    public Material displayBukkitMaterial;
-
-    private String unlocalizedName;
-
-    private void setUnlocalizedName(String name) {
-        this.unlocalizedName = "item." + name;
-    }
-
-    private void setDisplayBukkitMaterial(Material material) {
-        this.displayBukkitMaterial = material;
+public abstract class DummyItem implements ItemBase, Interactive {
+    @Override
+    public boolean onInteract(Player player, Action action, ItemStack tool, Block block, InteractActor actor) {
+        return true;
     }
 }

@@ -1,11 +1,11 @@
 package io.github.plugindustry.wheelcore.task;
 
-import io.github.plugindustry.wheelcore.ConstItems;
 import io.github.plugindustry.wheelcore.WheelCore;
 import io.github.plugindustry.wheelcore.manager.ConfigManager;
 import io.github.plugindustry.wheelcore.manager.MainManager;
 import io.github.plugindustry.wheelcore.utils.DebuggingLogger;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 
 public class AfterLoadTask implements Runnable {
     @Override
@@ -15,19 +15,28 @@ public class AfterLoadTask implements Runnable {
 
         DebuggingLogger.debug("register blocks");
         RegisterTask.registerBlock();
-        MainManager.loadBlocks();
+        MainManager.load();
 
         // Register recipes, blocks
         DebuggingLogger.debug("register items");
         RegisterTask.registerItem();
-        ConstItems.initConst();
         DebuggingLogger.debug("register recipes");
         RegisterTask.registerRecipes();
 
         // Register tick
         Bukkit.getScheduler().runTaskTimer(WheelCore.instance, MainManager::update, 0, 0);
 
-        /*MultiBlockManager.register(MainManager.getInstanceFromId("BASIC_MACHINE_BLOCK"), MultiBlockManager.Conditions.create()
+        // Register auto save
+        if (ConfigManager.autoSaveDelay != 0) {
+            for (World world : Bukkit.getWorlds())
+                world.setAutoSave(false);
+            Bukkit.getScheduler().runTaskTimer(WheelCore.instance,
+                                               MainManager::save,
+                                               ConfigManager.autoSaveDelay * 20L,
+                                               ConfigManager.autoSaveDelay * 20L);
+        }
+
+        /*MultiBlockManager.register(MainManager.getBlockInstanceFromId("BASIC_MACHINE_BLOCK"), MultiBlockManager.Conditions.create()
                 .then(Relocators.move(1, 0, 1))
                 .check(Matchers.cube(9, 0, 9, Material.ACACIA_PLANKS))
                 .then(Definers.scan("height", new Vector(0, 1, 0), Material.ACACIA_PLANKS, 10))

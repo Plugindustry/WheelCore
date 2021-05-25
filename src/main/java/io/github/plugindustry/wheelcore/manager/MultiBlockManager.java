@@ -1,18 +1,26 @@
 package io.github.plugindustry.wheelcore.manager;
 
 import com.google.common.collect.Sets;
-import io.github.plugindustry.wheelcore.interfaces.Base;
+import io.github.plugindustry.wheelcore.interfaces.block.BlockBase;
 import io.github.plugindustry.wheelcore.interfaces.world.multiblock.Environment;
 import org.bukkit.Location;
 
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
 public class MultiBlockManager {
-    private final static HashMap<Base, Conditions> conditionMap = new HashMap<>();
+    private final static HashMap<BlockBase, Conditions> conditionMap = new HashMap<>();
 
-    private final static HashMap<Base, Set<Location>> structuresMap = new HashMap<>();
+    private final static HashMap<BlockBase, Set<Location>> structuresMap = new HashMap<>();
     private final static HashMap<Location, Environment> structureDataMap = new HashMap<>();
 
     public static void onTick() {
@@ -51,11 +59,11 @@ public class MultiBlockManager {
         });
     }
 
-    public static void register(Base matchBase, Conditions condition) {
+    public static void register(BlockBase matchBase, Conditions condition) {
         conditionMap.put(matchBase, condition);
     }
 
-    public static Set<Location> getAvailableStructures(Base matchBase) {
+    public static Set<Location> getAvailableStructures(BlockBase matchBase) {
         return Collections.unmodifiableSet(structuresMap.get(matchBase));
     }
 

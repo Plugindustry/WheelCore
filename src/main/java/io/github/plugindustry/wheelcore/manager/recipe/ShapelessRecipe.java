@@ -5,8 +5,15 @@ import io.github.plugindustry.wheelcore.manager.recipe.choice.RecipeChoice;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -30,18 +37,13 @@ public class ShapelessRecipe implements CraftingRecipe {
     }
 
     @Override
-    public CraftingRecipe addItemCost(ItemStack is, int durability) {
-        return addItemCost(new ItemStackChoice(is), durability);
-    }
-
-    @Override
     public CraftingRecipe addItemCost(RecipeChoice choice, int durability) {
         this.damages.put(choice, durability);
         return this;
     }
 
     @Override
-    public boolean matches(List<List<ItemStack>> recipe, @Nullable Map<Integer, ItemStack> damage) {
+    public boolean matches(@Nonnull List<List<ItemStack>> recipe, @Nullable Map<Integer, ItemStack> damage) {
         List<ItemStack> shapeless = new LinkedList<>();
         List<RecipeChoice> checkList = new LinkedList<>(this.recipe);
         // convert everything to shapeless
