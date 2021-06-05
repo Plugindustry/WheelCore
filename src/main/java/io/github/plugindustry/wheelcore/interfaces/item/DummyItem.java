@@ -8,7 +8,7 @@ import org.bukkit.inventory.ItemStack;
 
 public abstract class DummyItem implements ItemBase, Interactive {
     @Override
-    public boolean onInteract(Player player, Action action, ItemStack tool, Block block, InteractActor actor) {
+    public boolean onInteract(Player player, Action action, ItemStack tool, Block block) {
         return true;
     }
 }

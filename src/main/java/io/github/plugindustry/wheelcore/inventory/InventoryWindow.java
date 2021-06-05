@@ -15,7 +15,7 @@ public class InventoryWindow {
     public InventoryWindow(SlotSize size, String title) {
         this.title = title;
         this.windowSize = size;
-        pos2Id = new String[size.width][size.height];
+        pos2Id = new String[size.width + 1][size.height + 1];
     }
 
     public void addWidget(WidgetBase widget, Position pos) {

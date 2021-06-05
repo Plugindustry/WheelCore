@@ -6,9 +6,5 @@ import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 
 public interface Interactive {
-    boolean onInteract(Player player, Action action, ItemStack tool, Block block, InteractActor actor);
-
-    enum InteractActor {
-        ITEM, BLOCK
-    }
+    boolean onInteract(Player player, Action action, ItemStack tool, Block block);
 }

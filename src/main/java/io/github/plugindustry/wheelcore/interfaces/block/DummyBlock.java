@@ -18,12 +18,14 @@ public abstract class DummyBlock implements BlockBase, Tickable, Placeable, Dest
     }
 
     @Override
-    public boolean onInteract(Player player, Action action, ItemStack tool, Block block, InteractActor actor) {
+    public boolean onInteract(Player player, Action action, ItemStack tool, Block block) {
         return true;
     }
 
     public boolean onBlockPlace(ItemStack item, Block block) {
         MainManager.addBlock(block.getLocation(), this, null);
+        if (getMaterial() != item.getType())
+            block.setType(getMaterial());
         return true;
     }
 

@@ -61,7 +61,7 @@ public class ChunkBasedProvider implements DataProvider {
 
     @Override
     public BlockBase instanceAt(Location loc) {
-        return blocks.get(loc).getKey();
+        return blocks.containsKey(loc) ? blocks.get(loc).getKey() : null;
     }
 
     @Override

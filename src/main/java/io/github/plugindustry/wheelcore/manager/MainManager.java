@@ -52,11 +52,7 @@ public class MainManager {
         if (blockBase == null) {
             return true;
         }
-        return blockBase instanceof Interactive && ((Interactive) blockBase).onInteract(player,
-                                                                                        action,
-                                                                                        tool,
-                                                                                        block,
-                                                                                        Interactive.InteractActor.BLOCK);
+        return blockBase instanceof Interactive && ((Interactive) blockBase).onInteract(player, action, tool, block);
     }
 
     public static boolean processItemInteract(Player player, Block block, ItemStack tool, Action action) {
@@ -65,11 +61,7 @@ public class MainManager {
             return true;
         }
 
-        return itemBase instanceof Interactive && ((Interactive) itemBase).onInteract(player,
-                                                                                      action,
-                                                                                      tool,
-                                                                                      block,
-                                                                                      Interactive.InteractActor.ITEM);
+        return itemBase instanceof Interactive && ((Interactive) itemBase).onInteract(player, action, tool, block);
     }
 
     public static void update() {

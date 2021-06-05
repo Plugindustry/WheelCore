@@ -10,7 +10,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 
 public class I18n {
-    private static LinkedList<ResourceBundle> locales;
+    private static final LinkedList<ResourceBundle> locales = new LinkedList<>();
 
     public static void load(InputStreamReader reader) {
         try {
