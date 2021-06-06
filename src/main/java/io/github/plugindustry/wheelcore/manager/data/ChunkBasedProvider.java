@@ -130,9 +130,10 @@ public class ChunkBasedProvider implements DataProvider {
                 dataBlock.setType(Material.JUKEBOX);
                 String json = gson.toJson(descList);
                 DebuggingLogger.debug(json);
-                ((Jukebox) dataBlock.getState()).setRecord(NBTUtil.setTagValue(new ItemStack(Material.PAPER),
-                                                                               "data",
-                                                                               NBTValue.of(json)));
+
+                Jukebox bs = (Jukebox) dataBlock.getState();
+                bs.setRecord(NBTUtil.setTagValue(new ItemStack(Material.MUSIC_DISC_11), "data", NBTValue.of(json)));
+                bs.update();
             }
             loadedChunks.get(chunk.getWorld()).remove(chunkDesc);
         }
