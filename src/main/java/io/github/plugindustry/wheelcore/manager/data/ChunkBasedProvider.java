@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import io.github.plugindustry.wheelcore.interfaces.block.BlockBase;
 import io.github.plugindustry.wheelcore.interfaces.block.BlockData;
+import io.github.plugindustry.wheelcore.utils.DebuggingLogger;
 import io.github.plugindustry.wheelcore.utils.NBTUtil;
 import io.github.plugindustry.wheelcore.utils.NBTUtil.NBTValue;
 import org.bukkit.Bukkit;
@@ -86,6 +87,10 @@ public class ChunkBasedProvider implements DataProvider {
 
     @Override
     public void loadChunk(Chunk chunk) {
+        DebuggingLogger.debug("Load chunk " + chunk.getX() + " " + chunk.getZ());
+        loadedChunks.putIfAbsent(chunk.getWorld(), new HashSet<>());
+        loadedChunks.get(chunk.getWorld()).add(compress(chunk.getX(), chunk.getZ()));
+
         Block dataBlock = chunk.getBlock(0, 0, 0);
         if (dataBlock.getType() != Material.JUKEBOX)
             return;
@@ -94,6 +99,7 @@ public class ChunkBasedProvider implements DataProvider {
         NBTValue value = NBTUtil.getTagValue(dataItem, "data");
         if (value == null)
             return;
+        DebuggingLogger.debug(value.asString());
         List<BlockDescription> blockList = gson.fromJson(value.asString(), new TypeToken<List<BlockDescription>>() {
         }.getType());
         for (BlockDescription desc : blockList)
@@ -102,27 +108,32 @@ public class ChunkBasedProvider implements DataProvider {
                      desc.data);
 
         dataBlock.setType(Material.BEDROCK);
-        loadedChunks.putIfAbsent(chunk.getWorld(), new HashSet<>());
-        loadedChunks.get(chunk.getWorld()).add(compress(chunk.getX(), chunk.getZ()));
     }
 
     @Override
     public void unloadChunk(Chunk chunk) {
+        DebuggingLogger.debug("Unload chunk " + chunk.getX() + " " + chunk.getZ());
         long chunkDesc = compress(chunk.getX(), chunk.getZ());
         if (loadedChunks.containsKey(chunk.getWorld()) && loadedChunks.get(chunk.getWorld()).contains(chunkDesc)) {
+            DebuggingLogger.debug("Save chunk " + chunk.getX() + " " + chunk.getZ());
             LinkedList<BlockDescription> descList = new LinkedList<>();
+            LinkedList<Location> locations = new LinkedList<>();
             blocks.keySet().stream().filter(loc -> chunkDescAt(loc) == chunkDesc).forEach(loc -> {
                 descList.add(new BlockDescription(loc,
                                                   mapping.inverse().get(blocks.get(loc).getKey()),
                                                   blocks.get(loc).getValue()));
-                removeBlock(loc);
+                locations.add(loc);
             });
-
-            Block dataBlock = chunk.getBlock(0, 0, 0);
-            dataBlock.setType(Material.JUKEBOX);
-            ((Jukebox) dataBlock.getState()).setRecord(NBTUtil.setTagValue(new ItemStack(Material.PAPER),
-                                                                           "data",
-                                                                           NBTValue.of(gson.toJson(descList))));
+            locations.forEach(this::removeBlock);
+            if (!descList.isEmpty()) {
+                Block dataBlock = chunk.getBlock(0, 0, 0);
+                dataBlock.setType(Material.JUKEBOX);
+                String json = gson.toJson(descList);
+                DebuggingLogger.debug(json);
+                ((Jukebox) dataBlock.getState()).setRecord(NBTUtil.setTagValue(new ItemStack(Material.PAPER),
+                                                                               "data",
+                                                                               NBTValue.of(json)));
+            }
             loadedChunks.get(chunk.getWorld()).remove(chunkDesc);
         }
     }

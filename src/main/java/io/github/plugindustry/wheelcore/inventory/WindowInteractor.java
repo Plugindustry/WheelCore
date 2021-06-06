@@ -33,6 +33,8 @@ public class WindowInteractor implements InventoryInteractor, InventoryHolder {
     public boolean processClick(int slot, InventoryClickEvent event) {
         Position slotPos = InventoryUtil.convertToPos(slot, window.windowSize);
         AbstractMap.SimpleEntry<Position, WidgetBase> widgetEntry = window.getWidgetAt(slotPos);
+        if (widgetEntry == null)
+            return true;
         WidgetBase widget = widgetEntry.getValue();
         if (widget instanceof WidgetClickable) {
             boolean ret = ((WidgetClickable) widget).processClick(InventoryUtil.getRelativePos(widgetEntry.getKey(),

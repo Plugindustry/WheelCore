@@ -4,7 +4,9 @@ import io.github.plugindustry.wheelcore.WheelCore;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -29,11 +31,12 @@ public class I18n {
                 .orElse(key);
     }
 
-    public static String[] getLocaleStringArray(String key) {
-        return locales.stream()
-                .filter(bundle -> bundle.containsKey(key))
-                .map(bundle -> bundle.getStringArray(key))
-                .findFirst()
-                .orElse(new String[]{key});
+    public static List<String> getLocaleStringList(String key) {
+        return locales.stream().filter(bundle -> bundle.containsKey(key + "[0]")).map(bundle -> {
+            List<String> list = new LinkedList<>();
+            for (int index = 0; bundle.containsKey(key + "[" + index + "]"); ++index)
+                list.add(bundle.getString(key + "[" + index + "]"));
+            return list;
+        }).findFirst().orElse(Collections.singletonList(key));
     }
 }
