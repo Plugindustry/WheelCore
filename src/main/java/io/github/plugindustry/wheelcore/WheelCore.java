@@ -6,9 +6,13 @@ import io.github.plugindustry.wheelcore.manager.MainManager;
 import io.github.plugindustry.wheelcore.task.AfterLoadTask;
 import io.github.plugindustry.wheelcore.task.RegisterTask;
 import org.bukkit.Bukkit;
+import org.bukkit.Chunk;
+import org.bukkit.World;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
+import java.util.logging.Filter;
+import java.util.logging.LogRecord;
 
 public final class WheelCore extends JavaPlugin {
     public static final String serverVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
@@ -39,11 +43,27 @@ public final class WheelCore extends JavaPlugin {
 
         // Register crafting table recipe
         Bukkit.getScheduler().runTask(this, new AfterLoadTask());
+
+        Filter oldFilter = Bukkit.getLogger().getFilter();
+        Bukkit.getLogger().setFilter(new Filter() {
+            private final Filter old = oldFilter;
+
+            @Override
+            public boolean isLoggable(LogRecord record) {
+                return (old == null || old.isLoggable(record)) &&
+                       !record.getMessage().equals(
+                               "A manual (plugin-induced) save has been detected while server is configured to auto-save. This may affect performance.") &&
+                       !record.getMessage().endsWith(
+                               "Bukkit will attempt to fix this, but there may be additional damage that we cannot recover.");
+            }
+        });
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        MainManager.save();
+        for (World world : Bukkit.getWorlds())
+            for (Chunk chunk : world.getLoadedChunks())
+                MainManager.dataProvider.unloadChunk(chunk);
     }
 }

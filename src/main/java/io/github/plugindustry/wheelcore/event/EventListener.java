@@ -10,6 +10,7 @@ import io.github.plugindustry.wheelcore.manager.recipe.SmeltingRecipe;
 import io.github.plugindustry.wheelcore.utils.EnchantmentUtil;
 import io.github.plugindustry.wheelcore.utils.ItemStackUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
@@ -26,7 +27,9 @@ import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.event.world.WorldInitEvent;
@@ -39,6 +42,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Objects;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -190,5 +194,23 @@ public class EventListener implements Listener {
     @EventHandler
     public void onChunkUnLoad(ChunkUnloadEvent event) {
         MainManager.onChunkUnload(event);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onServerCommand(ServerCommandEvent event) {
+        if (event.getCommand().equals("reload")) {
+            event.setCancelled(true);
+            WheelCore.instance.getLogger().log(Level.WARNING,
+                                               "With WheelCore installed, you cannot perform this operation which will cause severe problems. Restart your server to reload plugins instead.");
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void prePlayerCommand(PlayerCommandPreprocessEvent event) {
+        if (event.getMessage().equals("/reload")) {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(ChatColor.DARK_RED +
+                                          "With WheelCore installed, you cannot perform this operation which will cause severe problems. Restart your server to reload plugins instead.");
+        }
     }
 }

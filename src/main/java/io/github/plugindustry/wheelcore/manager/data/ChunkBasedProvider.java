@@ -24,14 +24,13 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 public class ChunkBasedProvider implements DataProvider {
     private final BiMap<String, BlockBase> mapping;
     private final HashMap<BlockBase, Set<Location>> baseBlocks = new HashMap<>();
     private final HashMap<Location, Map.Entry<BlockBase, BlockData>> blocks = new HashMap<>();
-    private final HashMap<World, HashSet<Long>> loadedChunks = new HashMap<>();
+    private final HashMap<World, HashMap<Long, HashSet<Location>>> blockInChunks = new HashMap<>();
     private final Gson gson = new Gson();
 
     public ChunkBasedProvider(BiMap<String, BlockBase> mapping) {
@@ -72,24 +71,29 @@ public class ChunkBasedProvider implements DataProvider {
 
     @Override
     public void addBlock(Location block, BlockBase instance, BlockData data) {
-        if (!baseBlocks.containsKey(instance))
-            baseBlocks.put(instance, new HashSet<>());
+        baseBlocks.putIfAbsent(instance, new HashSet<>());
         baseBlocks.get(instance).add(block);
         blocks.put(block, new AbstractMap.SimpleEntry<>(instance, data));
+        blockInChunks.putIfAbsent(block.getWorld(), new HashMap<>());
+        blockInChunks.get(block.getWorld()).putIfAbsent(chunkDescAt(block), new HashSet<>());
+        blockInChunks.get(block.getWorld()).get(chunkDescAt(block)).add(block);
     }
 
     @Override
     public void removeBlock(Location block) {
         BlockBase base = instanceAt(block);
-        baseBlocks.get(base).remove(block);
+        if (baseBlocks.containsKey(base))
+            baseBlocks.get(base).remove(block);
+        if (blockInChunks.containsKey(block.getWorld()) && blockInChunks.get(block.getWorld()).containsKey(chunkDescAt(
+                block)))
+            blockInChunks.get(block.getWorld()).get(chunkDescAt(block)).remove(block);
         blocks.remove(block);
     }
 
     @Override
     public void loadChunk(Chunk chunk) {
-        DebuggingLogger.debug("Load chunk " + chunk.getX() + " " + chunk.getZ());
-        loadedChunks.putIfAbsent(chunk.getWorld(), new HashSet<>());
-        loadedChunks.get(chunk.getWorld()).add(compress(chunk.getX(), chunk.getZ()));
+        //DebuggingLogger.debug("Load chunk " + chunk.getX() + " " + chunk.getZ());
+        World world = chunk.getWorld();
 
         Block dataBlock = chunk.getBlock(0, 0, 0);
         if (dataBlock.getType() != Material.JUKEBOX)
@@ -103,57 +107,56 @@ public class ChunkBasedProvider implements DataProvider {
         List<BlockDescription> blockList = gson.fromJson(value.asString(), new TypeToken<List<BlockDescription>>() {
         }.getType());
         for (BlockDescription desc : blockList)
-            addBlock(new Location(Bukkit.getWorld(desc.worldName), desc.x, desc.y, desc.z),
-                     mapping.get(desc.id),
-                     desc.data);
+            addBlock(new Location(world, desc.x, desc.y, desc.z), mapping.get(desc.id), desc.data);
 
         dataBlock.setType(Material.BEDROCK);
     }
 
     @Override
     public void unloadChunk(Chunk chunk) {
-        DebuggingLogger.debug("Unload chunk " + chunk.getX() + " " + chunk.getZ());
-        long chunkDesc = compress(chunk.getX(), chunk.getZ());
-        if (loadedChunks.containsKey(chunk.getWorld()) && loadedChunks.get(chunk.getWorld()).contains(chunkDesc)) {
-            DebuggingLogger.debug("Save chunk " + chunk.getX() + " " + chunk.getZ());
-            LinkedList<BlockDescription> descList = new LinkedList<>();
-            LinkedList<Location> locations = new LinkedList<>();
-            blocks.keySet().stream().filter(loc -> chunkDescAt(loc) == chunkDesc).forEach(loc -> {
-                descList.add(new BlockDescription(loc,
-                                                  mapping.inverse().get(blocks.get(loc).getKey()),
-                                                  blocks.get(loc).getValue()));
-                locations.add(loc);
-            });
-            locations.forEach(this::removeBlock);
-            if (!descList.isEmpty()) {
-                Block dataBlock = chunk.getBlock(0, 0, 0);
-                dataBlock.setType(Material.JUKEBOX);
-                String json = gson.toJson(descList);
-                DebuggingLogger.debug(json);
+        //DebuggingLogger.debug("Unload chunk " + chunk.getX() + " " + chunk.getZ());
+        saveChunkImpl(chunk, true);
+    }
 
-                Jukebox bs = (Jukebox) dataBlock.getState();
-                bs.setRecord(NBTUtil.setTagValue(new ItemStack(Material.MUSIC_DISC_11), "data", NBTValue.of(json)));
-                bs.update();
+    @SuppressWarnings("unchecked")
+    private void saveChunkImpl(Chunk chunk, boolean remove) {
+        long chunkDesc = compress(chunk.getX(), chunk.getZ());
+
+        if (!blockInChunks.containsKey(chunk.getWorld()))
+            return;
+        HashSet<Location> locations = blockInChunks.get(chunk.getWorld()).get(chunkDesc);
+        if (locations != null) {
+            LinkedList<BlockDescription> descriptions = new LinkedList<>();
+            locations.forEach(loc -> descriptions.add(new BlockDescription(loc,
+                                                                           mapping.inverse()
+                                                                                   .get(blocks.get(loc).getKey()),
+                                                                           blocks.get(loc).getValue())));
+            if (remove) {
+                ((HashSet<Location>) locations.clone()).forEach(this::removeBlock);
+                blockInChunks.get(chunk.getWorld()).remove(chunkDesc);
             }
-            loadedChunks.get(chunk.getWorld()).remove(chunkDesc);
+
+            Block dataBlock = chunk.getBlock(0, 0, 0);
+            dataBlock.setType(Material.JUKEBOX);
+            String json = gson.toJson(descriptions);
+            DebuggingLogger.debug(json);
+
+            Jukebox bs = (Jukebox) dataBlock.getState();
+            bs.setRecord(NBTUtil.setTagValue(new ItemStack(Material.MUSIC_DISC_11), "data", NBTValue.of(json)));
+            bs.update();
         }
     }
 
     @Override
     public void saveAll() {
-        for (Map.Entry<World, HashSet<Long>> entry : loadedChunks.entrySet()) {
-            HashSet<Long> temp = (HashSet<Long>) entry.getValue().clone();
-            for (long chunkDesc : temp) {
-                Map.Entry<Integer, Integer> decompressed = decompress(chunkDesc);
-                unloadChunk(entry.getKey().getChunkAt(decompressed.getKey(), decompressed.getValue()));
-            }
-            entry.getKey().save();
-            for (long chunkDesc : temp) {
-                Map.Entry<Integer, Integer> decompressed = decompress(chunkDesc);
-                loadChunk(entry.getKey().getChunkAt(decompressed.getKey(), decompressed.getValue()));
-            }
+        for (World world : Bukkit.getWorlds()) {
+            Chunk[] loaded = world.getLoadedChunks();
+            for (Chunk chunk : loaded)
+                saveChunkImpl(chunk, false);
+            world.save();
+            for (Chunk chunk : loaded)
+                chunk.getBlock(0, 0, 0).setType(Material.BEDROCK);
         }
-        Bukkit.getWorlds().stream().filter(world -> !loadedChunks.containsKey(world)).forEach(World::save);
     }
 
     @Override
@@ -167,7 +170,6 @@ public class ChunkBasedProvider implements DataProvider {
     }
 
     private static class BlockDescription {
-        String worldName;
         int x;
         int y;
         int z;
@@ -175,7 +177,6 @@ public class ChunkBasedProvider implements DataProvider {
         BlockData data;
 
         BlockDescription(Location loc, String id, BlockData data) {
-            this.worldName = Objects.requireNonNull(loc.getWorld()).getName();
             this.x = loc.getBlockX();
             this.y = loc.getBlockY();
             this.z = loc.getBlockZ();
