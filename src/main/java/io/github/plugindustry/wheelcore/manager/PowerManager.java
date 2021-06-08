@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -49,10 +48,11 @@ public class PowerManager {
         }));
 
         // Input and spread
-        MainManager.baseBlocks.entrySet()
+        MainManager.getBlockMapping()
+                .values()
                 .stream()
-                .filter(entry -> entry.getKey() instanceof Wire)
-                .map(Map.Entry::getValue)
+                .filter(base -> base instanceof Wire)
+                .map(MainManager.dataProvider::blocksOf)
                 .flatMap(Collection::stream)
                 .forEach(location -> {
                     Wire instanceOri = ((Wire) MainManager.getBlockInstance(location));
@@ -153,10 +153,12 @@ public class PowerManager {
                 });
 
         // Swap
-        MainManager.baseBlocks.entrySet()
+        MainManager.getBlockMapping()
+                .values()
                 .stream()
-                .filter(entry -> entry.getKey() instanceof Wire)
-                .flatMap(entry -> entry.getValue().stream())
+                .filter(base -> base instanceof Wire)
+                .map(MainManager.dataProvider::blocksOf)
+                .flatMap(Collection::stream)
                 .map(MainManager::getBlockData)
                 .forEach(data -> {
                     Wire.WireData temp = (Wire.WireData) data;

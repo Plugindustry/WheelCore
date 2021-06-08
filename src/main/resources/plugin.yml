@@ -21,3 +21,5 @@ permissions:
     default: op
   wheelcore.command.give:
     default: op
+  wheelcore.command.debug:
+    default: op

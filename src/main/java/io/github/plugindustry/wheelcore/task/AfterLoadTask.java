@@ -3,26 +3,12 @@ package io.github.plugindustry.wheelcore.task;
 import io.github.plugindustry.wheelcore.WheelCore;
 import io.github.plugindustry.wheelcore.manager.ConfigManager;
 import io.github.plugindustry.wheelcore.manager.MainManager;
-import io.github.plugindustry.wheelcore.utils.DebuggingLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
 public class AfterLoadTask implements Runnable {
     @Override
     public void run() {
-        ConfigManager.init(WheelCore.instance);
-
-
-        DebuggingLogger.debug("register blocks");
-        RegisterTask.registerBlock();
-        MainManager.load();
-
-        // Register recipes, blocks
-        DebuggingLogger.debug("register items");
-        RegisterTask.registerItem();
-        DebuggingLogger.debug("register recipes");
-        RegisterTask.registerRecipes();
-
         // Register tick
         Bukkit.getScheduler().runTaskTimer(WheelCore.instance, MainManager::update, 0, 0);
 

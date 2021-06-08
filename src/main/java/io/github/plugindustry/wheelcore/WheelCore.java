@@ -2,9 +2,11 @@ package io.github.plugindustry.wheelcore;
 
 import io.github.plugindustry.wheelcore.command.WheelCoreCommand;
 import io.github.plugindustry.wheelcore.event.EventListener;
+import io.github.plugindustry.wheelcore.manager.ConfigManager;
 import io.github.plugindustry.wheelcore.manager.MainManager;
 import io.github.plugindustry.wheelcore.task.AfterLoadTask;
 import io.github.plugindustry.wheelcore.task.RegisterTask;
+import io.github.plugindustry.wheelcore.utils.DebuggingLogger;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.World;
@@ -41,7 +43,19 @@ public final class WheelCore extends JavaPlugin {
         // Register EventListener
         Bukkit.getPluginManager().registerEvents(new EventListener(), WheelCore.instance);
 
-        // Register crafting table recipe
+        // Load config
+        ConfigManager.init(WheelCore.instance);
+
+        // Register blocks, items, recipes
+        DebuggingLogger.debug("register blocks");
+        RegisterTask.registerBlock();
+        MainManager.load();
+        DebuggingLogger.debug("register items");
+        RegisterTask.registerItem();
+        DebuggingLogger.debug("register recipes");
+        RegisterTask.registerRecipes();
+
+        // Schedule the task that starts on the post-load stage
         Bukkit.getScheduler().runTask(this, new AfterLoadTask());
 
         Filter oldFilter = Bukkit.getLogger().getFilter();
@@ -50,8 +64,7 @@ public final class WheelCore extends JavaPlugin {
 
             @Override
             public boolean isLoggable(LogRecord record) {
-                return (old == null || old.isLoggable(record)) &&
-                       !record.getMessage().equals(
+                return (old == null || old.isLoggable(record)) && !record.getMessage().equals(
                                "A manual (plugin-induced) save has been detected while server is configured to auto-save. This may affect performance.") &&
                        !record.getMessage().endsWith(
                                "Bukkit will attempt to fix this, but there may be additional damage that we cannot recover.");

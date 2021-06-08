@@ -1,13 +1,11 @@
 package io.github.plugindustry.wheelcore.utils;
 
 import io.github.plugindustry.wheelcore.WheelCore;
+import io.github.plugindustry.wheelcore.manager.ConfigManager;
 
 public class DebuggingLogger {
-    private static final boolean DEBUGGING = true;
-
     public static void debug(String msg) {
-        if (DEBUGGING) {
+        if (ConfigManager.debug)
             WheelCore.instance.getLogger().info("DEBUG: " + msg);
-        }
     }
 }

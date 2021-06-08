@@ -2,6 +2,7 @@ package io.github.plugindustry.wheelcore.manager;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import com.google.common.collect.Maps;
 import io.github.plugindustry.wheelcore.interfaces.Base;
 import io.github.plugindustry.wheelcore.interfaces.Interactive;
 import io.github.plugindustry.wheelcore.interfaces.Tickable;
@@ -27,11 +28,7 @@ import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.event.world.WorldInitEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.Set;
-
 public class MainManager {
-    public static final HashMap<Base, Set<Location>> baseBlocks = new HashMap<>();
     private static final BiMap<String, BlockBase> blockMapping = HashBiMap.create();
     private static final BiMap<String, ItemBase> itemMapping = HashBiMap.create();
     public static DataProvider dataProvider = DataProvider.defaultProvider(blockMapping);
@@ -160,5 +157,13 @@ public class MainManager {
 
     public static void registerItem(String id, ItemBase b) {
         itemMapping.put(id, b);
+    }
+
+    public static BiMap<String, BlockBase> getBlockMapping() {
+        return Maps.unmodifiableBiMap(blockMapping);
+    }
+
+    public static BiMap<String, ItemBase> getItemMapping() {
+        return Maps.unmodifiableBiMap(itemMapping);
     }
 }

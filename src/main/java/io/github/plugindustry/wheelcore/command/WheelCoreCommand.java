@@ -1,5 +1,6 @@
 package io.github.plugindustry.wheelcore.command;
 
+import io.github.plugindustry.wheelcore.command.sub.DebugCommand;
 import io.github.plugindustry.wheelcore.command.sub.GiveCommand;
 import io.github.plugindustry.wheelcore.command.sub.SubCommandBase;
 import io.github.plugindustry.wheelcore.command.sub.TestCommand;
@@ -14,6 +15,7 @@ public class WheelCoreCommand implements CommandExecutor {
     public WheelCoreCommand() {
         new TestCommand();
         new GiveCommand();
+        new DebugCommand();
     }
 
     @Override
