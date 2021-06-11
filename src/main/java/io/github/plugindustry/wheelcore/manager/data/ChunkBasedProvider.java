@@ -2,7 +2,11 @@ package io.github.plugindustry.wheelcore.manager.data;
 
 import com.google.common.collect.BiMap;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.TypeAdapter;
 import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import io.github.plugindustry.wheelcore.interfaces.block.BlockBase;
 import io.github.plugindustry.wheelcore.interfaces.block.BlockData;
 import io.github.plugindustry.wheelcore.utils.DebuggingLogger;
@@ -17,6 +21,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Jukebox;
 import org.bukkit.inventory.ItemStack;
 
+import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,11 +32,74 @@ import java.util.Map;
 import java.util.Set;
 
 public class ChunkBasedProvider implements DataProvider {
+    private static final Gson gson;
+    private static final TypeAdapter<BlockDescription> BLOCK_DESCRIPTION_TYPE_ADAPTER = new TypeAdapter<BlockDescription>() {
+        @Override
+        public void write(JsonWriter out, BlockDescription value) throws IOException {
+            out.beginObject();
+            out.name("x").value(value.x);
+            out.name("y").value(value.y);
+            out.name("z").value(value.z);
+            out.name("id").value(value.id);
+            if (value.data != null) {
+                out.name("dataType").value(value.data.getClass().getName());
+                out.name("data").value(gson.toJson(value.data));
+            }
+            out.endObject();
+        }
+
+        @Override
+        public BlockDescription read(JsonReader in) throws IOException {
+            int x = 0, y = 0, z = 0;
+            String id = "", dataType = "", data = "";
+            in.beginObject();
+            while (in.hasNext()) {
+                switch (in.nextName()) {
+                    case "x":
+                        x = in.nextInt();
+                        break;
+                    case "y":
+                        y = in.nextInt();
+                        break;
+                    case "z":
+                        z = in.nextInt();
+                        break;
+                    case "id":
+                        id = in.nextString();
+                        break;
+                    case "dataType":
+                        dataType = in.nextString();
+                        break;
+                    case "data":
+                        data = in.nextString();
+                        break;
+                }
+            }
+            in.endObject();
+
+            Class<?> dataClass = null;
+            try {
+                dataClass = Class.forName(dataType);
+                if (!BlockData.class.isAssignableFrom(dataClass))
+                    dataClass = null;
+            } catch (ClassNotFoundException ignored) {
+            }
+
+            return new BlockDescription(new Location(null, x, y, z),
+                                        id,
+                                        dataClass == null ? null : (BlockData) gson.fromJson(data, dataClass));
+        }
+    };
     private final BiMap<String, BlockBase> mapping;
     private final HashMap<BlockBase, Set<Location>> baseBlocks = new HashMap<>();
     private final HashMap<Location, Map.Entry<BlockBase, BlockData>> blocks = new HashMap<>();
     private final HashMap<World, HashMap<Long, HashSet<Location>>> blockInChunks = new HashMap<>();
-    private final Gson gson = new Gson();
+
+    static {
+        GsonBuilder gbs = new GsonBuilder();
+        gbs.registerTypeAdapter(BlockDescription.class, BLOCK_DESCRIPTION_TYPE_ADAPTER);
+        gson = gbs.create();
+    }
 
     public ChunkBasedProvider(BiMap<String, BlockBase> mapping) {
         this.mapping = mapping;
