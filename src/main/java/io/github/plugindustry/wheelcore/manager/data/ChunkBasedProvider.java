@@ -50,8 +50,12 @@ public class ChunkBasedProvider implements DataProvider {
 
         @Override
         public BlockDescription read(JsonReader in) throws IOException {
-            int x = 0, y = 0, z = 0;
-            String id = "", dataType = "", data = "";
+            int x = 0;
+            int y = 0;
+            int z = 0;
+            String id = "";
+            String dataType = null;
+            String data = "";
             in.beginObject();
             while (in.hasNext()) {
                 switch (in.nextName()) {
@@ -73,16 +77,20 @@ public class ChunkBasedProvider implements DataProvider {
                     case "data":
                         data = in.nextString();
                         break;
+                    default:
+                        break;
                 }
             }
             in.endObject();
 
             Class<?> dataClass = null;
-            try {
-                dataClass = Class.forName(dataType);
-                if (!BlockData.class.isAssignableFrom(dataClass))
-                    dataClass = null;
-            } catch (ClassNotFoundException ignored) {
+            if (dataType != null) {
+                try {
+                    dataClass = Class.forName(dataType);
+                    if (!BlockData.class.isAssignableFrom(dataClass))
+                        dataClass = null;
+                } catch (ClassNotFoundException ignored) {
+                }
             }
 
             return new BlockDescription(new Location(null, x, y, z),
