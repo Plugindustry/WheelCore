@@ -1,6 +1,6 @@
 package io.github.plugindustry.wheelcore.world.multiblock;
 
-import io.github.plugindustry.wheelcore.interfaces.Base;
+import io.github.plugindustry.wheelcore.interfaces.block.BlockBase;
 import io.github.plugindustry.wheelcore.interfaces.world.multiblock.Environment;
 import io.github.plugindustry.wheelcore.manager.MainManager;
 import org.bukkit.Location;
@@ -22,93 +22,130 @@ public class Definers {
     }
 
     public static Consumer<Environment> scan(String resultKey, Vector direction, Material type, int maxCount) {
-        return env -> {
-            Location loc = env.getEnvironmentArg("location");
-            BlockIterator bi = new BlockIterator(Objects.requireNonNull(loc.getWorld()),
-                                                 loc.toVector(),
-                                                 direction,
-                                                 0.0,
-                                                 maxCount);
-            int count = 0;
-            while (bi.hasNext()) {
-                if (bi.next().getType() != type)
-                    break;
-                ++count;
-            }
-            env.setEnvironmentArg(resultKey, count);
-        };
+        return env -> env.setEnvironmentArg(resultKey,
+                                            scanImpl(env.getEnvironmentArg("location"), direction, type, maxCount));
     }
 
-    public static Consumer<Environment> scan(String resultKey, Vector direction, Base type, int maxCount) {
-        return env -> {
-            Location loc = env.getEnvironmentArg("location");
-            BlockIterator bi = new BlockIterator(Objects.requireNonNull(loc.getWorld()),
-                                                 loc.toVector(),
-                                                 direction,
-                                                 0.0,
-                                                 maxCount);
-            int count = 0;
-            while (bi.hasNext()) {
-                if (MainManager.getBlockInstance(bi.next().getLocation()) != type)
-                    break;
-                ++count;
-            }
-            env.setEnvironmentArg(resultKey, count);
-        };
+    private static int scanImpl(Location loc, Vector direction, Material type, int maxCount) {
+        BlockIterator bi = new BlockIterator(Objects.requireNonNull(loc.getWorld()),
+                                             loc.toVector(),
+                                             direction,
+                                             0.0,
+                                             maxCount);
+        int count = 0;
+        while (bi.hasNext()) {
+            if (bi.next().getType() != type)
+                break;
+            ++count;
+        }
+        return count;
+    }
+
+    public static Consumer<Environment> scan(String resultKey, Vector direction, BlockBase type, int maxCount) {
+        return env -> env.setEnvironmentArg(resultKey,
+                                            scanImpl(env.getEnvironmentArg("location"), direction, type, maxCount));
+    }
+
+    private static int scanImpl(Location loc, Vector direction, BlockBase type, int maxCount) {
+        BlockIterator bi = new BlockIterator(Objects.requireNonNull(loc.getWorld()),
+                                             loc.toVector(),
+                                             direction,
+                                             0.0,
+                                             maxCount);
+        int count = 0;
+        while (bi.hasNext()) {
+            if (MainManager.getBlockInstance(bi.next().getLocation()) != type)
+                break;
+            ++count;
+        }
+        return count;
     }
 
     public static Consumer<Environment> scan(String resultKey, Vector direction, String typeKey, int maxCount) {
-        return env -> {
-            Object o = env.getEnvironmentArg(typeKey);
-            if (o instanceof Material)
-                scan(resultKey, direction, (Material) o, maxCount).accept(env);
-            else if (o instanceof Base)
-                scan(resultKey, direction, (Base) o, maxCount).accept(env);
-        };
+        return env -> env.setEnvironmentArg(resultKey,
+                                            scanImpl(env.getEnvironmentArg("location"),
+                                                     direction,
+                                                     env.<Object>getEnvironmentArg(typeKey),
+                                                     maxCount));
+    }
+
+    private static int scanImpl(Location loc, Vector direction, Object type, int maxCount) {
+        if (type instanceof Material)
+            return scanImpl(loc, direction, (Material) type, maxCount);
+        else if (type instanceof BlockBase)
+            return scanImpl(loc, direction, (BlockBase) type, maxCount);
+        return 0;
     }
 
     public static Consumer<Environment> scan(String resultKey, String directionKey, Material type, int maxCount) {
-        return env -> scan(resultKey, env.<Vector>getEnvironmentArg(directionKey), type, maxCount).accept(env);
+        return env -> env.setEnvironmentArg(resultKey,
+                                            scanImpl(env.getEnvironmentArg("location"),
+                                                     env.getEnvironmentArg(directionKey),
+                                                     type,
+                                                     maxCount));
     }
 
-    public static Consumer<Environment> scan(String resultKey, String directionKey, Base type, int maxCount) {
-        return env -> scan(resultKey, env.<Vector>getEnvironmentArg(directionKey), type, maxCount).accept(env);
+    public static Consumer<Environment> scan(String resultKey, String directionKey, BlockBase type, int maxCount) {
+        return env -> env.setEnvironmentArg(resultKey,
+                                            scanImpl(env.getEnvironmentArg("location"),
+                                                     env.getEnvironmentArg(directionKey),
+                                                     type,
+                                                     maxCount));
     }
 
     public static Consumer<Environment> scan(String resultKey, String directionKey, String typeKey, int maxCount) {
-        return env -> scan(resultKey, env.<Vector>getEnvironmentArg(directionKey), typeKey, maxCount).accept(env);
+        return env -> env.setEnvironmentArg(resultKey,
+                                            scanImpl(env.getEnvironmentArg("location"),
+                                                     env.getEnvironmentArg(directionKey),
+                                                     env.<Object>getEnvironmentArg(typeKey),
+                                                     maxCount));
     }
 
     public static Consumer<Environment> scan(String resultKey, Vector direction, Material type, String maxCountKey) {
-        return env -> scan(resultKey, direction, type, env.<Integer>getEnvironmentArg(maxCountKey)).accept(env);
+        return env -> env.setEnvironmentArg(resultKey,
+                                            scanImpl(env.getEnvironmentArg("location"),
+                                                     direction,
+                                                     type,
+                                                     env.getEnvironmentArg(maxCountKey)));
     }
 
-    public static Consumer<Environment> scan(String resultKey, Vector direction, Base type, String maxCountKey) {
-        return env -> scan(resultKey, direction, type, env.<Integer>getEnvironmentArg(maxCountKey)).accept(env);
+    public static Consumer<Environment> scan(String resultKey, Vector direction, BlockBase type, String maxCountKey) {
+        return env -> env.setEnvironmentArg(resultKey,
+                                            scanImpl(env.getEnvironmentArg("location"),
+                                                     direction,
+                                                     type,
+                                                     env.getEnvironmentArg(maxCountKey)));
     }
 
     public static Consumer<Environment> scan(String resultKey, Vector direction, String typeKey, String maxCountKey) {
-        return env -> scan(resultKey, direction, typeKey, env.<Integer>getEnvironmentArg(maxCountKey)).accept(env);
+        return env -> env.setEnvironmentArg(resultKey,
+                                            scanImpl(env.getEnvironmentArg("location"),
+                                                     direction,
+                                                     env.<Object>getEnvironmentArg(typeKey),
+                                                     env.getEnvironmentArg(maxCountKey)));
     }
 
     public static Consumer<Environment> scan(String resultKey, String directionKey, Material type, String maxCountKey) {
-        return env -> scan(resultKey,
-                           env.<Vector>getEnvironmentArg(directionKey),
-                           type,
-                           env.<Integer>getEnvironmentArg(maxCountKey)).accept(env);
+        return env -> env.setEnvironmentArg(resultKey,
+                                            scanImpl(env.getEnvironmentArg("location"),
+                                                     env.getEnvironmentArg(directionKey),
+                                                     type,
+                                                     env.getEnvironmentArg(maxCountKey)));
     }
 
-    public static Consumer<Environment> scan(String resultKey, String directionKey, Base type, String maxCountKey) {
-        return env -> scan(resultKey,
-                           env.<Vector>getEnvironmentArg(directionKey),
-                           type,
-                           env.<Integer>getEnvironmentArg(maxCountKey)).accept(env);
+    public static Consumer<Environment> scan(String resultKey, String directionKey, BlockBase type, String maxCountKey) {
+        return env -> env.setEnvironmentArg(resultKey,
+                                            scanImpl(env.getEnvironmentArg("location"),
+                                                     env.getEnvironmentArg(directionKey),
+                                                     type,
+                                                     env.getEnvironmentArg(maxCountKey)));
     }
 
     public static Consumer<Environment> scan(String resultKey, String directionKey, String typeKey, String maxCountKey) {
-        return env -> scan(resultKey,
-                           env.<Vector>getEnvironmentArg(directionKey),
-                           typeKey,
-                           env.<Integer>getEnvironmentArg(maxCountKey)).accept(env);
+        return env -> env.setEnvironmentArg(resultKey,
+                                            scanImpl(env.getEnvironmentArg("location"),
+                                                     env.getEnvironmentArg(directionKey),
+                                                     env.<Object>getEnvironmentArg(typeKey),
+                                                     env.getEnvironmentArg(maxCountKey)));
     }
 }

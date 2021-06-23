@@ -90,6 +90,7 @@ public class MultiBlockManager {
             return this;
         }
 
+        @SuppressWarnings("unchecked")
         public Map.Entry<Boolean, Environment> match(Location orgLoc) {
             Environment environment = Environment.createDefaultEnvironment();
             environment.setEnvironmentArg("location", orgLoc);
@@ -109,6 +110,7 @@ public class MultiBlockManager {
         private final TreeMap<String, Object> envMap = new TreeMap<>();
 
         @Override
+        @SuppressWarnings("unchecked")
         public <T> T getEnvironmentArg(String key) {
             return (T) envMap.get(key);
         }

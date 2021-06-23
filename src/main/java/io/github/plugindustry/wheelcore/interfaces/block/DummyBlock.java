@@ -1,7 +1,6 @@
 package io.github.plugindustry.wheelcore.interfaces.block;
 
 import io.github.plugindustry.wheelcore.interfaces.Interactive;
-import io.github.plugindustry.wheelcore.interfaces.Tickable;
 import io.github.plugindustry.wheelcore.manager.MainManager;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -11,12 +10,7 @@ import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public abstract class DummyBlock implements BlockBase, Tickable, Placeable, Destroyable, Interactive {
-    @Override
-    public void onTick() {
-        // Do nothing.
-    }
-
+public abstract class DummyBlock implements BlockBase, Placeable, Destroyable, Interactive {
     @Override
     public boolean onInteract(Player player, Action action, ItemStack tool, Block block) {
         return true;
