@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Set;
 import java.util.Spliterator;
 import java.util.function.Consumer;
@@ -27,9 +28,7 @@ public class CollectionUtil {
         final Function<E, E> cloner;
 
         UnmodifiableCopyOnReadCollection(Collection<? extends E> c, Function<E, E> cloner) {
-            if (c == null)
-                throw new NullPointerException();
-            this.c = c;
+            this.c = Objects.requireNonNull(c);
             this.cloner = cloner;
         }
 
