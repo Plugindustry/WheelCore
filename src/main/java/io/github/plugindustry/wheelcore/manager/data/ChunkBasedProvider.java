@@ -9,6 +9,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import io.github.plugindustry.wheelcore.interfaces.block.BlockBase;
 import io.github.plugindustry.wheelcore.interfaces.block.BlockData;
+import io.github.plugindustry.wheelcore.utils.CollectionUtil;
 import io.github.plugindustry.wheelcore.utils.DebuggingLogger;
 import io.github.plugindustry.wheelcore.utils.NBTUtil;
 import io.github.plugindustry.wheelcore.utils.NBTUtil.NBTValue;
@@ -21,6 +22,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Jukebox;
 import org.bukkit.inventory.ItemStack;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.Collections;
@@ -183,7 +185,8 @@ public class ChunkBasedProvider implements DataProvider {
         List<BlockDescription> blockList = gson.fromJson(value.asString(), new TypeToken<List<BlockDescription>>() {
         }.getType());
         for (BlockDescription desc : blockList)
-            addBlock(new Location(world, desc.x, desc.y, desc.z), mapping.get(desc.id), desc.data);
+            if (mapping.containsKey(desc.id))
+                addBlock(new Location(world, desc.x, desc.y, desc.z), mapping.get(desc.id), desc.data);
 
         dataBlock.setType(Material.BEDROCK);
     }
@@ -235,14 +238,19 @@ public class ChunkBasedProvider implements DataProvider {
         }
     }
 
+    @Nonnull
     @Override
     public Set<Location> blocks() {
-        return Collections.unmodifiableSet(blocks.keySet());
+        return CollectionUtil.unmodifiableCopyOnReadSet(blocks.keySet(), Location::clone);
     }
 
+    @Nonnull
     @Override
     public Set<Location> blocksOf(BlockBase base) {
-        return Collections.unmodifiableSet(baseBlocks.get(base));
+        return baseBlocks.containsKey(base) ?
+               CollectionUtil.unmodifiableCopyOnReadSet(baseBlocks.get(base),
+                                                        Location::clone) :
+               Collections.emptySet();
     }
 
     private static class BlockDescription {

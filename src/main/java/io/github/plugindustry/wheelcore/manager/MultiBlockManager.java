@@ -64,7 +64,9 @@ public class MultiBlockManager {
     }
 
     public static Set<Location> getAvailableStructures(BlockBase matchBase) {
-        return Collections.unmodifiableSet(structuresMap.get(matchBase));
+        return structuresMap.containsKey(matchBase) ?
+               Collections.unmodifiableSet(structuresMap.get(matchBase)) :
+               Collections.emptySet();
     }
 
     public static Environment getStructureData(Location loc) {

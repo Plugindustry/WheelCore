@@ -8,6 +8,7 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 import java.util.Set;
 
@@ -31,11 +32,13 @@ public class FileBasedProvider implements DataProvider {
 
     }
 
+    @Nonnull
     @Override
     public Set<Location> blocks() {
         return null;
     }
 
+    @Nonnull
     @Override
     public Set<Location> blocksOf(BlockBase base) {
         return null;

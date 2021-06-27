@@ -6,6 +6,7 @@ import io.github.plugindustry.wheelcore.interfaces.block.BlockData;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 
+import javax.annotation.Nonnull;
 import java.util.Set;
 
 public interface DataProvider {
@@ -17,8 +18,10 @@ public interface DataProvider {
 
     void unloadChunk(Chunk chunk);
 
+    @Nonnull
     Set<Location> blocks();
 
+    @Nonnull
     Set<Location> blocksOf(BlockBase base);
 
     BlockData dataAt(Location loc);
