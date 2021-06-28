@@ -123,32 +123,48 @@ public class ChunkBasedProvider implements DataProvider {
         return ((i1 & 0x00000000ffffffffL) << 32) | (i2 & 0x00000000ffffffffL);
     }
 
-    private static Map.Entry<Integer, Integer> decompress(long l) {
-        return new AbstractMap.SimpleEntry<>((int) (l & 0xffffffff00000000L), (int) (l & 0x00000000ffffffffL));
-    }
-
     @Override
     public BlockData dataAt(Location loc) {
+        loc = loc.clone();
+        loc.setPitch(0);
+        loc.setYaw(0);
+
         return blocks.get(loc).getValue();
     }
 
     @Override
     public void setDataAt(Location loc, BlockData data) {
+        loc = loc.clone();
+        loc.setPitch(0);
+        loc.setYaw(0);
+
         blocks.get(loc).setValue(data);
     }
 
     @Override
     public BlockBase instanceAt(Location loc) {
+        loc = loc.clone();
+        loc.setPitch(0);
+        loc.setYaw(0);
+
         return blocks.containsKey(loc) ? blocks.get(loc).getKey() : null;
     }
 
     @Override
     public boolean hasBlock(Location block) {
+        block = block.clone();
+        block.setPitch(0);
+        block.setYaw(0);
+
         return blocks.containsKey(block);
     }
 
     @Override
     public void addBlock(Location block, BlockBase instance, BlockData data) {
+        block = block.clone();
+        block.setPitch(0);
+        block.setYaw(0);
+
         baseBlocks.putIfAbsent(instance, new HashSet<>());
         baseBlocks.get(instance).add(block);
         blocks.put(block, new AbstractMap.SimpleEntry<>(instance, data));
@@ -159,6 +175,10 @@ public class ChunkBasedProvider implements DataProvider {
 
     @Override
     public void removeBlock(Location block) {
+        block = block.clone();
+        block.setPitch(0);
+        block.setYaw(0);
+
         BlockBase base = instanceAt(block);
         if (baseBlocks.containsKey(base))
             baseBlocks.get(base).remove(block);

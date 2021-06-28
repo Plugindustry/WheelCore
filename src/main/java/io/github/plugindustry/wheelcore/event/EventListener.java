@@ -15,6 +15,7 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -153,19 +154,23 @@ public class EventListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerInteract(PlayerInteractEvent event) {
         // item interact priority is higher than blocks
-        if (event.hasItem() && !MainManager.processItemInteract(event.getPlayer(),
-                                                                event.getClickedBlock(),
-                                                                event.getItem(),
-                                                                event.getAction())) {
-            event.setCancelled(true);
-        } else if (event.hasBlock() && !MainManager.processBlockInteract(event.getPlayer(),
-                                                                         Objects.requireNonNull(event.getClickedBlock()),
-                                                                         event.getItem(),
-                                                                         event.getAction())) {
-            event.setCancelled(true);
+        if (event.hasItem() &&
+            event.useItemInHand() != Event.Result.DENY &&
+            !MainManager.processItemInteract(event.getPlayer(),
+                                             event.getClickedBlock(),
+                                             event.getItem(),
+                                             event.getAction())) {
+            event.setUseItemInHand(Event.Result.DENY);
+        } else if (event.hasBlock() &&
+                   event.useInteractedBlock() != Event.Result.DENY &&
+                   !MainManager.processBlockInteract(event.getPlayer(),
+                                                     Objects.requireNonNull(event.getClickedBlock()),
+                                                     event.getItem(),
+                                                     event.getAction())) {
+            event.setUseInteractedBlock(Event.Result.DENY);
         }
     }
 
