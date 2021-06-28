@@ -45,11 +45,11 @@ public class CollectionUtil {
         }
 
         public Object[] toArray() {
-            throw new UnsupportedOperationException("toArray is not supported.");
+            throw new UnsupportedOperationException();
         }
 
         public <T> T[] toArray(@Nonnull T[] a) {
-            throw new UnsupportedOperationException("toArray is not supported.");
+            throw new UnsupportedOperationException();
         }
 
         public String toString() {
