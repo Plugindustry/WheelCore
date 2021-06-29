@@ -27,8 +27,8 @@ WheelCore是一个Bukkit/Spigot服务器前置插件，用于支持IndustrialWor
 (你也可以去config里改点设置)
 
 ## 开发进度 (Wheel构建期……好像这就是个wheel了)
-* InvGui (Almost finished)
-* 多方块系统 (Not tested yet)
+* InvGui (More widgets needed)
+* 多方块系统 √
 * 矿物添加以及世界生成 √
 * 合成系统 √
 * 电力系统 (Not tested yet)
