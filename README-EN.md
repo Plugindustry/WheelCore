@@ -21,13 +21,13 @@ Simply download the plugin from (Not downloadable yet) and put it into the plugi
 You may change the language in config if needed.
 
 ## Development Progress  
-* Inventory GUI interface (Almost finished)
-* Multi-block structure support (Under development)
+* Inventory GUI interface (More widgets needed)
+* Multi-block structure support √
 * Custom ores and world generation √
 * Custom (general) recipes √
 * Electronic device system (Not tested yet)
 * Custom enchantments √
 * Custom items and materials √
-* I18n support (Multi language) (Not open to other plugins for now)
+* I18n support (Multi language) √
 
 [1]: https://github.com/czm23333/IndustrialWorld/
