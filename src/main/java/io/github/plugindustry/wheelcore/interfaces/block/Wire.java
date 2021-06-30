@@ -1,6 +1,9 @@
 package io.github.plugindustry.wheelcore.interfaces.block;
 
+import io.github.plugindustry.wheelcore.manager.MainManager;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -9,6 +12,15 @@ public abstract class Wire extends DummyBlock {
     public abstract double getMaxTransmissionEnergy();
 
     public abstract double getEnergyLoss();
+
+    @Override
+    public boolean onBlockPlace(ItemStack item, Block block) {
+        if (super.onBlockPlace(item, block)) {
+            MainManager.setBlockData(block.getLocation(), new WireData());
+            return true;
+        }
+        return false;
+    }
 
     public static class WireData extends BlockData {
         public transient double stat = 0.0D;

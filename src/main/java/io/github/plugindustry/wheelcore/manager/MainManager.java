@@ -71,6 +71,8 @@ public class MainManager {
         for (ItemBase base : itemMapping.values())
             if (base instanceof Tickable)
                 ((Tickable) base).onTick();
+
+        PowerManager.onTick();
     }
 
     public static void onWorldInit(WorldInitEvent event) {

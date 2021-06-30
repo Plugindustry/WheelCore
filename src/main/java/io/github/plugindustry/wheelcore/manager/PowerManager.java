@@ -5,7 +5,6 @@ import io.github.plugindustry.wheelcore.interfaces.power.EnergyInputable;
 import io.github.plugindustry.wheelcore.interfaces.power.EnergyOutputable;
 import io.github.plugindustry.wheelcore.utils.BlockUtil;
 import org.bukkit.Location;
-import org.bukkit.block.Block;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -20,15 +19,14 @@ public class PowerManager {
     private final static HashMap<Location, InputRequest> inputMap = new HashMap<>();
     private final static HashMap<Location, OutputRequest> outputMap = new HashMap<>();
 
-    public static void inputPower(Block block, double power) {
-        inputMap.put(block.getLocation(), new InputRequest(power));
+    public static void inputPower(Location block, double power) {
+        inputMap.put(block, new InputRequest(power));
     }
 
-    public static void outputPower(Block block, double power) {
-        outputMap.put(block.getLocation(), new OutputRequest(power));
+    public static void outputPower(Location block, double power) {
+        outputMap.put(block, new OutputRequest(power));
     }
 
-    // Not enabled yet
     public static void onTick() {
         // Output
         outputMap.forEach((key, value) -> BlockUtil.findWireAround(key).forEach(location -> {
