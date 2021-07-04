@@ -10,6 +10,7 @@ import io.github.plugindustry.wheelcore.interfaces.block.BlockBase;
 import io.github.plugindustry.wheelcore.interfaces.block.BlockData;
 import io.github.plugindustry.wheelcore.interfaces.block.Destroyable;
 import io.github.plugindustry.wheelcore.interfaces.block.Placeable;
+import io.github.plugindustry.wheelcore.interfaces.item.Consumable;
 import io.github.plugindustry.wheelcore.interfaces.item.ItemBase;
 import io.github.plugindustry.wheelcore.manager.data.DataProvider;
 import io.github.plugindustry.wheelcore.utils.DebuggingLogger;
@@ -139,7 +140,7 @@ public class MainManager {
         return dataProvider.instanceAt(block);
     }
 
-    private static ItemBase getItemInstance(ItemStack is) {
+    public static ItemBase getItemInstance(ItemStack is) {
         if (!ItemStackUtil.isPIItem(is))
             return null;
         return getItemInstanceFromId(ItemStackUtil.getPIItemId(is));

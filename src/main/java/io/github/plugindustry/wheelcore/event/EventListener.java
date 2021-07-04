@@ -3,6 +3,9 @@ package io.github.plugindustry.wheelcore.event;
 import io.github.plugindustry.wheelcore.WheelCore;
 import io.github.plugindustry.wheelcore.interfaces.block.Destroyable;
 import io.github.plugindustry.wheelcore.interfaces.inventory.InventoryClickInfo;
+import io.github.plugindustry.wheelcore.interfaces.item.Breakable;
+import io.github.plugindustry.wheelcore.interfaces.item.Consumable;
+import io.github.plugindustry.wheelcore.interfaces.item.ItemBase;
 import io.github.plugindustry.wheelcore.inventory.ClassicInventoryInteractor;
 import io.github.plugindustry.wheelcore.manager.MainManager;
 import io.github.plugindustry.wheelcore.manager.RecipeRegistry;
@@ -29,8 +32,7 @@ import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
@@ -217,6 +219,24 @@ public class EventListener implements Listener {
             event.setCancelled(true);
             event.getPlayer().sendMessage(ChatColor.DARK_RED +
                                           "With WheelCore installed, you cannot perform this operation which will cause severe problems. Restart your server to reload plugins instead.");
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onItemConsume(PlayerItemConsumeEvent event) {
+        ItemBase itemBase = MainManager.getItemInstance(event.getItem());
+        if (itemBase == null) {
+            return ;
+        }
+
+        event.setCancelled(itemBase instanceof Consumable && ((Consumable) itemBase).onItemConsume(event.getPlayer()));
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onItemBreak(PlayerItemBreakEvent event) {
+        ItemBase itemBase = MainManager.getItemInstance(event.getBrokenItem());
+        if (itemBase instanceof Breakable) {
+             ((Breakable) itemBase).onItemBreak(event.getPlayer(), event.getBrokenItem());
         }
     }
 }
