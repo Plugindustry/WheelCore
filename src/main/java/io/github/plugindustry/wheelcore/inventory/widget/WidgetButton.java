@@ -4,7 +4,6 @@ import io.github.plugindustry.wheelcore.interfaces.inventory.InventoryClickInfo;
 import io.github.plugindustry.wheelcore.interfaces.inventory.WidgetClickable;
 import io.github.plugindustry.wheelcore.inventory.Position;
 import io.github.plugindustry.wheelcore.inventory.SlotSize;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Collections;
@@ -15,11 +14,11 @@ import java.util.function.BiConsumer;
 public class WidgetButton implements WidgetClickable {
     private final SlotSize size = new SlotSize(1, 1);
     private final String id;
-    private final BiConsumer<Position, InventoryClickEvent> onClickFunc;
+    private final BiConsumer<Position, InventoryClickInfo> onClickFunc;
     private ItemStack slotItemStack;
     private boolean init = false;
 
-    public WidgetButton(String id, ItemStack slotItemStack, BiConsumer<Position, InventoryClickEvent> onClickFunc) {
+    public WidgetButton(String id, ItemStack slotItemStack, BiConsumer<Position, InventoryClickInfo> onClickFunc) {
         this.id = id;
         this.slotItemStack = slotItemStack;
         this.onClickFunc = onClickFunc;
