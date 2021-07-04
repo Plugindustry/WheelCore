@@ -6,6 +6,7 @@ import io.github.plugindustry.wheelcore.inventory.Position;
 import io.github.plugindustry.wheelcore.inventory.SlotSize;
 import org.bukkit.inventory.ItemStack;
 
+import javax.annotation.Nonnull;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -16,7 +17,6 @@ public class WidgetButton implements WidgetClickable {
     private final String id;
     private final BiConsumer<Position, InventoryClickInfo> onClickFunc;
     private ItemStack slotItemStack;
-    private boolean init = false;
 
     public WidgetButton(String id, ItemStack slotItemStack, BiConsumer<Position, InventoryClickInfo> onClickFunc) {
         this.id = id;
@@ -24,26 +24,27 @@ public class WidgetButton implements WidgetClickable {
         this.onClickFunc = onClickFunc;
     }
 
+    @Nonnull
     @Override
     public String getId() {
         return this.id;
     }
 
+    @Nonnull
     @Override
     public SlotSize getSize() {
         return size;
     }
 
     @Override
-    public Map<Position, ItemStack> getChangeMap(boolean force) {
-        if (init && !force)
-            return Collections.emptyMap();
-        else {
-            init = true;
+    public @Nonnull
+    Map<Position, ItemStack> getChangeMap(boolean force) {
+        if (force) {
             Map<Position, ItemStack> retMap = new HashMap<>();
             retMap.put(new Position(1, 1), slotItemStack);
             return retMap;
-        }
+        } else
+            return Collections.emptyMap();
     }
 
     @Override

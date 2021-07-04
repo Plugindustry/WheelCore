@@ -1,8 +1,8 @@
 package io.github.plugindustry.wheelcore.inventory;
 
 public class Position {
-    public int xCoord;
-    public int yCoord;
+    public final int xCoord;
+    public final int yCoord;
 
     public Position(int xCoord, int yCoord) {
         this.xCoord = xCoord;

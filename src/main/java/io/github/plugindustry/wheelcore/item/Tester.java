@@ -14,6 +14,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 
+import javax.annotation.Nonnull;
+
 public class Tester implements ItemBase, Interactive {
     final Window window;
     final ClassicInventoryInteractor windowInteractor;
@@ -26,7 +28,7 @@ public class Tester implements ItemBase, Interactive {
     }
 
     @Override
-    public boolean onInteract(Player player, Action action, ItemStack tool, Block block) {
+    public boolean onInteract(@Nonnull Player player, @Nonnull Action action, ItemStack tool, Block block) {
         if (block != null && action == Action.RIGHT_CLICK_BLOCK) {
             player.openInventory(windowInteractor.getInventory());
             ((WidgetProgressBar) window.getWidgetMap().get("process_1").getValue()).setProgress(0.6);

@@ -5,16 +5,23 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 
+import javax.annotation.Nonnull;
 import java.util.LinkedList;
 import java.util.List;
 
 public abstract class Wire extends DummyBlock {
+    /**
+     * @return The max value of the energy transferred through this type of wire per tick
+     */
     public abstract double getMaxTransmissionEnergy();
 
+    /**
+     * @return The loss of the energy transferred through this type of wire per block
+     */
     public abstract double getEnergyLoss();
 
     @Override
-    public boolean onBlockPlace(ItemStack item, Block block) {
+    public boolean onBlockPlace(@Nonnull ItemStack item, @Nonnull Block block) {
         if (super.onBlockPlace(item, block)) {
             MainManager.setBlockData(block.getLocation(), new WireData());
             return true;

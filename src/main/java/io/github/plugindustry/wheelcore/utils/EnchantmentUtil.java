@@ -66,6 +66,9 @@ public class EnchantmentUtil {
         return res.toString();
     }
 
+    /**
+     * Add the given custom enchantment of the given level to the given item
+     */
     public static void addToItem(ItemStack item, CustomEnchantment enchantment, int level) {
         item.addUnsafeEnchantment(enchantment, level);
         if (item.hasItemMeta()) {
@@ -77,6 +80,11 @@ public class EnchantmentUtil {
         }
     }
 
+    /**
+     * Remove the given custom enchantment of the given level on the given item <br/>
+     * <br/>
+     * The item must has the given enchantment on it
+     */
     public static void removeFromItem(ItemStack item, CustomEnchantment enchantment, int level) {
         if (item.hasItemMeta()) {
             ItemMeta meta = item.getItemMeta();
@@ -90,6 +98,15 @@ public class EnchantmentUtil {
             }
         }
         item.removeEnchantment(enchantment);
+    }
+
+    /**
+     * Remove the given custom enchantment on the given item <br/>
+     * <br/>
+     * The item must has the given enchantment on it
+     */
+    public static void removeFromItem(ItemStack item, CustomEnchantment enchantment) {
+        removeFromItem(item, enchantment, item.getEnchantmentLevel(enchantment));
     }
 
     public static class CustomEnchantment extends Enchantment {

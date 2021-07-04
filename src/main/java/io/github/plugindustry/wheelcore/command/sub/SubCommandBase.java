@@ -17,6 +17,10 @@ public abstract class SubCommandBase {
         }
     }
 
+    /**
+     * @param cmd The name of the sub command needed
+     * @return The sub command with the given name
+     */
     public static SubCommandBase getCommand(String cmd) {
         return commandMap.get(cmd);
     }

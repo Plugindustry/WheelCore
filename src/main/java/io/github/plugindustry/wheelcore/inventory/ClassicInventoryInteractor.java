@@ -1,6 +1,7 @@
 package io.github.plugindustry.wheelcore.inventory;
 
 import io.github.plugindustry.wheelcore.interfaces.inventory.InventoryClickInfo;
+import io.github.plugindustry.wheelcore.interfaces.inventory.WindowInteractor;
 import io.github.plugindustry.wheelcore.utils.InventoryUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.event.inventory.InventoryType;
