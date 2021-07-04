@@ -1,7 +1,10 @@
 package io.github.plugindustry.wheelcore.event;
 
 import io.github.plugindustry.wheelcore.WheelCore;
+import io.github.plugindustry.wheelcore.interfaces.Interactive;
+import io.github.plugindustry.wheelcore.interfaces.block.BlockBase;
 import io.github.plugindustry.wheelcore.interfaces.block.Destroyable;
+import io.github.plugindustry.wheelcore.interfaces.block.Placeable;
 import io.github.plugindustry.wheelcore.interfaces.inventory.InventoryClickInfo;
 import io.github.plugindustry.wheelcore.interfaces.item.Breakable;
 import io.github.plugindustry.wheelcore.interfaces.item.Consumable;
@@ -32,7 +35,10 @@ import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
-import org.bukkit.event.player.*;
+import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerItemBreakEvent;
+import org.bukkit.event.player.PlayerItemConsumeEvent;
 import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
@@ -54,7 +60,10 @@ public class EventListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
         if (ItemStackUtil.isPIItem(event.getItemInHand())) {
-            event.setCancelled(!MainManager.processBlockPlacement(event.getItemInHand(), event.getBlockPlaced()));
+            ItemStack item = event.getItemInHand();
+            BlockBase blockBase = MainManager.getBlockInstanceFromId(ItemStackUtil.getPIItemId(item));
+            event.setCancelled(!(blockBase instanceof Placeable &&
+                                 ((Placeable) blockBase).onBlockPlace(item, event.getBlockPlaced())));
         }
     }
 
@@ -63,9 +72,14 @@ public class EventListener implements Listener {
         if (MainManager.hasBlock(event.getBlock().getLocation())) {
             // don't drop any item by default.
             event.setDropItems(false);
-            event.setCancelled(!MainManager.processBlockDestroy(event.getPlayer().getInventory().getItemInMainHand(),
-                                                                event.getBlock(),
-                                                                Destroyable.DestroyMethod.PLAYER_DESTROY));
+            Block target = event.getBlock();
+            BlockBase blockBase = MainManager.getBlockInstance(target.getLocation());
+            event.setCancelled(!(blockBase instanceof Destroyable &&
+                                 ((Destroyable) blockBase).onBlockDestroy(target,
+                                                                          event.getPlayer()
+                                                                                  .getInventory()
+                                                                                  .getItemInMainHand(),
+                                                                          Destroyable.DestroyMethod.PLAYER_DESTROY)));
         }
     }
 
@@ -84,7 +98,10 @@ public class EventListener implements Listener {
             Block block = iterator.next();
             if (MainManager.hasBlock(block.getLocation())) {
                 iterator.remove();
-                if (MainManager.processBlockDestroy(null, block, Destroyable.DestroyMethod.EXPLOSION))
+                BlockBase blockBase = MainManager.getBlockInstance(block.getLocation());
+                if (blockBase instanceof Destroyable && ((Destroyable) blockBase).onBlockDestroy(block,
+                                                                                                 null,
+                                                                                                 Destroyable.DestroyMethod.EXPLOSION))
                     block.setType(Material.AIR);
             }
         }
@@ -160,20 +177,26 @@ public class EventListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerInteract(PlayerInteractEvent event) {
         // item interact priority is higher than blocks
-        if (event.hasItem() &&
-            event.useItemInHand() != Event.Result.DENY &&
-            !MainManager.processItemInteract(event.getPlayer(),
-                                             event.getClickedBlock(),
-                                             event.getItem(),
-                                             event.getAction())) {
-            event.setUseItemInHand(Event.Result.DENY);
-        } else if (event.hasBlock() &&
-                   event.useInteractedBlock() != Event.Result.DENY &&
-                   !MainManager.processBlockInteract(event.getPlayer(),
-                                                     Objects.requireNonNull(event.getClickedBlock()),
-                                                     event.getItem(),
-                                                     event.getAction())) {
-            event.setUseInteractedBlock(Event.Result.DENY);
+
+
+        if (event.hasItem() && event.useItemInHand() != Event.Result.DENY) {
+            ItemStack tool = event.getItem();
+            ItemBase itemBase = MainManager.getItemInstance(tool);
+            if (!(itemBase == null ||
+                  itemBase instanceof Interactive && ((Interactive) itemBase).onInteract(event.getPlayer(),
+                                                                                         event.getAction(),
+                                                                                         tool,
+                                                                                         event.getClickedBlock())))
+                event.setUseItemInHand(Event.Result.DENY);
+        } else if (event.hasBlock() && event.useInteractedBlock() != Event.Result.DENY) {
+            Block block = Objects.requireNonNull(event.getClickedBlock());
+            BlockBase blockBase = MainManager.getBlockInstance(block.getLocation());
+            if (!(blockBase == null ||
+                  blockBase instanceof Interactive && ((Interactive) blockBase).onInteract(event.getPlayer(),
+                                                                                           event.getAction(),
+                                                                                           event.getItem(),
+                                                                                           block)))
+                event.setUseInteractedBlock(Event.Result.DENY);
         }
     }
 
@@ -226,17 +249,17 @@ public class EventListener implements Listener {
     public void onItemConsume(PlayerItemConsumeEvent event) {
         ItemBase itemBase = MainManager.getItemInstance(event.getItem());
         if (itemBase == null) {
-            return ;
+            return;
         }
 
-        event.setCancelled(itemBase instanceof Consumable && ((Consumable) itemBase).onItemConsume(event.getPlayer()));
+        event.setCancelled(!(itemBase instanceof Consumable &&
+                             ((Consumable) itemBase).onItemConsume(event.getPlayer(), event.getItem())));
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onItemBreak(PlayerItemBreakEvent event) {
         ItemBase itemBase = MainManager.getItemInstance(event.getBrokenItem());
-        if (itemBase instanceof Breakable) {
-             ((Breakable) itemBase).onItemBreak(event.getPlayer(), event.getBrokenItem());
-        }
+        if (itemBase instanceof Breakable)
+            ((Breakable) itemBase).onItemBreak(event.getPlayer(), event.getBrokenItem());
     }
 }

@@ -4,13 +4,9 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Maps;
 import io.github.plugindustry.wheelcore.interfaces.Base;
-import io.github.plugindustry.wheelcore.interfaces.Interactive;
 import io.github.plugindustry.wheelcore.interfaces.Tickable;
 import io.github.plugindustry.wheelcore.interfaces.block.BlockBase;
 import io.github.plugindustry.wheelcore.interfaces.block.BlockData;
-import io.github.plugindustry.wheelcore.interfaces.block.Destroyable;
-import io.github.plugindustry.wheelcore.interfaces.block.Placeable;
-import io.github.plugindustry.wheelcore.interfaces.item.Consumable;
 import io.github.plugindustry.wheelcore.interfaces.item.ItemBase;
 import io.github.plugindustry.wheelcore.manager.data.DataProvider;
 import io.github.plugindustry.wheelcore.utils.DebuggingLogger;
@@ -21,9 +17,6 @@ import io.github.plugindustry.wheelcore.world.OverworldPopulator;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Player;
-import org.bukkit.event.block.Action;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.event.world.WorldInitEvent;
@@ -35,32 +28,6 @@ public class MainManager {
     public static DataProvider dataProvider = DataProvider.defaultProvider(blockMapping);
 
     // returns true if the event doesn't need to be cancelled
-    public static boolean processBlockPlacement(ItemStack item, Block newBlock) {
-        BlockBase blockBase = getBlockInstanceFromId(ItemStackUtil.getPIItemId(item));
-        return blockBase instanceof Placeable && ((Placeable) blockBase).onBlockPlace(item, newBlock);
-    }
-
-    public static boolean processBlockDestroy(ItemStack tool, Block target, Destroyable.DestroyMethod method) {
-        BlockBase blockBase = getBlockInstance(target.getLocation());
-        return blockBase instanceof Destroyable && ((Destroyable) blockBase).onBlockDestroy(target, tool, method);
-    }
-
-    public static boolean processBlockInteract(Player player, Block block, ItemStack tool, Action action) {
-        BlockBase blockBase = getBlockInstance(block.getLocation());
-        if (blockBase == null) {
-            return true;
-        }
-        return blockBase instanceof Interactive && ((Interactive) blockBase).onInteract(player, action, tool, block);
-    }
-
-    public static boolean processItemInteract(Player player, Block block, ItemStack tool, Action action) {
-        ItemBase itemBase = getItemInstance(tool);
-        if (itemBase == null) {
-            return true;
-        }
-
-        return itemBase instanceof Interactive && ((Interactive) itemBase).onInteract(player, action, tool, block);
-    }
 
     public static void update() {
         MultiBlockManager.onTick();

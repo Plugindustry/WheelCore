@@ -16,6 +16,7 @@ public abstract class DummyBlock implements BlockBase, Placeable, Destroyable, I
         return true;
     }
 
+    @Override
     public boolean onBlockPlace(@Nonnull ItemStack item, @Nonnull Block block) {
         MainManager.addBlock(block.getLocation(), this, null);
         if (getMaterial() != item.getType())
@@ -23,6 +24,7 @@ public abstract class DummyBlock implements BlockBase, Placeable, Destroyable, I
         return true;
     }
 
+    @Override
     public boolean onBlockDestroy(@Nonnull Block block, ItemStack tool, @Nonnull DestroyMethod method) {
         // We do nothing by default so you should do this job in your implementation too.
         MainManager.removeBlock(block.getLocation());
