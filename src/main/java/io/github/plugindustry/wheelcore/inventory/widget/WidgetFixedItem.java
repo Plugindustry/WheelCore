@@ -31,15 +31,10 @@ public class WidgetFixedItem implements WidgetBase {
     }
 
     @Override
-    public WidgetType getWidgetType() {
-        return WidgetType.FIXED_ITEM;
-    }
-
-    @Override
-    public Map<Position, ItemStack> getChangeMap() {
-        if (init) {
+    public Map<Position, ItemStack> getChangeMap(boolean force) {
+        if (init && !force)
             return Collections.emptyMap();
-        } else {
+        else {
             init = true;
             Map<Position, ItemStack> retMap = new HashMap<>();
             retMap.put(new Position(1, 1), slotItemStack);

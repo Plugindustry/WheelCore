@@ -2,7 +2,8 @@ package io.github.plugindustry.wheelcore.event;
 
 import io.github.plugindustry.wheelcore.WheelCore;
 import io.github.plugindustry.wheelcore.interfaces.block.Destroyable;
-import io.github.plugindustry.wheelcore.inventory.WindowInteractor;
+import io.github.plugindustry.wheelcore.interfaces.inventory.InventoryClickInfo;
+import io.github.plugindustry.wheelcore.inventory.ClassicInventoryInteractor;
 import io.github.plugindustry.wheelcore.manager.MainManager;
 import io.github.plugindustry.wheelcore.manager.RecipeRegistry;
 import io.github.plugindustry.wheelcore.manager.recipe.RecipeBase;
@@ -181,9 +182,9 @@ public class EventListener implements Listener {
         }
 
         Inventory inv = event.getClickedInventory();
-        if (inv != null && inv.getHolder() instanceof WindowInteractor)
+        if (inv != null && inv.getHolder() instanceof ClassicInventoryInteractor)
             // Detected InventoryWindow click event
-            event.setCancelled(((WindowInteractor) inv.getHolder()).processClick(event.getSlot(), event));
+            event.setCancelled(((ClassicInventoryInteractor) inv.getHolder()).processClick(new InventoryClickInfo(event)));
     }
 
     @EventHandler

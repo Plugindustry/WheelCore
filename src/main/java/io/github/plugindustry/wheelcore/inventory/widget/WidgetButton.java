@@ -1,5 +1,6 @@
 package io.github.plugindustry.wheelcore.inventory.widget;
 
+import io.github.plugindustry.wheelcore.interfaces.inventory.InventoryClickInfo;
 import io.github.plugindustry.wheelcore.interfaces.inventory.WidgetClickable;
 import io.github.plugindustry.wheelcore.inventory.Position;
 import io.github.plugindustry.wheelcore.inventory.SlotSize;
@@ -35,15 +36,10 @@ public class WidgetButton implements WidgetClickable {
     }
 
     @Override
-    public WidgetType getWidgetType() {
-        return WidgetType.BUTTON;
-    }
-
-    @Override
-    public Map<Position, ItemStack> getChangeMap() {
-        if (init) {
+    public Map<Position, ItemStack> getChangeMap(boolean force) {
+        if (init && !force)
             return Collections.emptyMap();
-        } else {
+        else {
             init = true;
             Map<Position, ItemStack> retMap = new HashMap<>();
             retMap.put(new Position(1, 1), slotItemStack);
@@ -52,10 +48,14 @@ public class WidgetButton implements WidgetClickable {
     }
 
     @Override
-    public boolean processClick(Position pos, InventoryClickEvent event) {
-        // TODO process click
+    public boolean onClick(Position pos, InventoryClickInfo info) {
         // return true for cancelling the event, false for doing nothing
-        onClickFunc.accept(pos, event);
+        onClickFunc.accept(pos, info);
+        return true;
+    }
+
+    @Override
+    public boolean isClickable() {
         return true;
     }
 

@@ -2,10 +2,10 @@ package io.github.plugindustry.wheelcore.item;
 
 import io.github.plugindustry.wheelcore.interfaces.Interactive;
 import io.github.plugindustry.wheelcore.interfaces.item.ItemBase;
-import io.github.plugindustry.wheelcore.inventory.InventoryWindow;
+import io.github.plugindustry.wheelcore.inventory.ClassicInventoryInteractor;
 import io.github.plugindustry.wheelcore.inventory.Position;
 import io.github.plugindustry.wheelcore.inventory.SlotSize;
-import io.github.plugindustry.wheelcore.inventory.WindowInteractor;
+import io.github.plugindustry.wheelcore.inventory.Window;
 import io.github.plugindustry.wheelcore.inventory.widget.WidgetFixedItem;
 import io.github.plugindustry.wheelcore.inventory.widget.WidgetProgressBar;
 import org.bukkit.Material;
@@ -15,14 +15,14 @@ import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 
 public class Tester implements ItemBase, Interactive {
-    final InventoryWindow window;
-    final WindowInteractor windowInteractor;
+    final Window window;
+    final ClassicInventoryInteractor windowInteractor;
 
     public Tester() {
-        window = new InventoryWindow(new SlotSize(9, 6), "Test");
+        window = new Window(new SlotSize(9, 6), "Test");
         window.addWidget(new WidgetProgressBar("process_1"), new Position(2, 3));
         window.addWidget(new WidgetFixedItem("f_1", new ItemStack(Material.IRON_INGOT, 1)), new Position(3, 5));
-        windowInteractor = new WindowInteractor(window);
+        windowInteractor = new ClassicInventoryInteractor(window);
     }
 
     @Override

@@ -45,13 +45,8 @@ public class WidgetProgressBar implements WidgetBase {
     }
 
     @Override
-    public WidgetType getWidgetType() {
-        return WidgetType.PROGRESS_BAR;
-    }
-
-    @Override
-    public Map<Position, ItemStack> getChangeMap() {
-        if (changed) {
+    public Map<Position, ItemStack> getChangeMap(boolean force) {
+        if (changed || force) {
             Map<Position, ItemStack> retMap = new HashMap<>();
             ItemStack currentItem;
             int materialIndex;
