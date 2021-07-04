@@ -59,6 +59,10 @@ public class MultiBlockManager {
         });
     }
 
+    /**
+     * @param matchBase The type of blocks where we should start matching
+     * @param condition The condition that this structure should meet
+     */
     public static void register(BlockBase matchBase, Conditions condition) {
         conditionMap.put(matchBase, condition);
     }

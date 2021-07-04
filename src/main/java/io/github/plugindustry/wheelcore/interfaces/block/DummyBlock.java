@@ -12,18 +12,18 @@ import javax.annotation.Nonnull;
 
 public abstract class DummyBlock implements BlockBase, Placeable, Destroyable, Interactive {
     @Override
-    public boolean onInteract(Player player, Action action, ItemStack tool, Block block) {
+    public boolean onInteract(@Nonnull Player player, @Nonnull Action action, ItemStack tool, Block block) {
         return true;
     }
 
-    public boolean onBlockPlace(ItemStack item, Block block) {
+    public boolean onBlockPlace(@Nonnull ItemStack item, @Nonnull Block block) {
         MainManager.addBlock(block.getLocation(), this, null);
         if (getMaterial() != item.getType())
             block.setType(getMaterial());
         return true;
     }
 
-    public boolean onBlockDestroy(Block block, ItemStack tool, DestroyMethod method) {
+    public boolean onBlockDestroy(@Nonnull Block block, ItemStack tool, @Nonnull DestroyMethod method) {
         // We do nothing by default so you should do this job in your implementation too.
         MainManager.removeBlock(block.getLocation());
         block.getWorld().dropItem(block.getLocation(), getItemStack());
@@ -33,6 +33,7 @@ public abstract class DummyBlock implements BlockBase, Placeable, Destroyable, I
     @Nonnull
     public abstract ItemStack getItemStack();
 
+    @Override
     @Nonnull
     public abstract Material getMaterial();
 }

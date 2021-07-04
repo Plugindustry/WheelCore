@@ -44,7 +44,7 @@ public final class WheelCore extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new EventListener(), WheelCore.instance);
 
         // Load config
-        ConfigManager.init(WheelCore.instance);
+        ConfigManager.init();
 
         // Register blocks, items, recipes
         DebuggingLogger.debug("register blocks");

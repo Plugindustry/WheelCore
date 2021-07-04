@@ -27,6 +27,11 @@ public class RecipeRegistry {
     private static final List<RecipeBase> recipes = new LinkedList<>();
     private static final Set<NamespacedKey> placeholders = new HashSet<>();
 
+    /**
+     * @param recipeBase      The recipe to register
+     * @param id              The id of the recipe
+     * @param needPlaceholder Whether this recipe need a vanilla placeholder (that's to say, if there has already been a vanilla recipe sharing the same form with this recipe, set this to false, otherwise, set this to true)
+     */
     public static void register(RecipeBase recipeBase, String id, boolean needPlaceholder) {
         recipes.add(recipeBase);
         if (needPlaceholder)

@@ -7,34 +7,55 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Set;
 
 public interface DataProvider {
+    @Nonnull
+    // TODO: Provider switch according to the config
     static DataProvider defaultProvider(BiMap<String, BlockBase> mapping) {
         return new ChunkBasedProvider(mapping);
     }
 
-    void loadChunk(Chunk chunk);
+    void loadChunk(@Nonnull Chunk chunk);
 
-    void unloadChunk(Chunk chunk);
+    void unloadChunk(@Nonnull Chunk chunk);
 
+    /**
+     * @return A set containing all custom blocks loaded
+     */
     @Nonnull
     Set<Location> blocks();
 
+    /**
+     * @param base The base instance of the blocks needed
+     * @return A set containing all custom blocks which are loaded and with the given instance
+     */
     @Nonnull
-    Set<Location> blocksOf(BlockBase base);
+    Set<Location> blocksOf(@Nonnull BlockBase base);
 
-    BlockData dataAt(Location loc);
+    /**
+     * @return The block data at the given location (or null if there isn't a custom block)
+     */
+    @Nullable
+    BlockData dataAt(@Nonnull Location loc);
 
-    void setDataAt(Location loc, BlockData data);
+    /**
+     * Set the block data at the given location to the given value (or do nothing if there isn't a custom block)
+     */
+    void setDataAt(@Nonnull Location loc, @Nullable BlockData data);
 
-    BlockBase instanceAt(Location loc);
+    @Nullable
+    BlockBase instanceAt(@Nonnull Location loc);
 
-    boolean hasBlock(Location block);
+    boolean hasBlock(@Nonnull Location block);
 
-    void addBlock(Location block, BlockBase instance, BlockData data);
+    void addBlock(@Nonnull Location block, @Nonnull BlockBase instance, @Nullable BlockData data);
 
-    void removeBlock(Location block);
+    void removeBlock(@Nonnull Location block);
 
+    /**
+     * Save all blocks
+     */
     void saveAll();
 }

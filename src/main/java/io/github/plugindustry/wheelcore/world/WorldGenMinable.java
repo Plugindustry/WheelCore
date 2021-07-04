@@ -9,6 +9,7 @@ import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 
+import javax.annotation.Nonnull;
 import java.util.Random;
 
 public class WorldGenMinable implements WorldGenerator {
@@ -28,7 +29,7 @@ public class WorldGenMinable implements WorldGenerator {
         this.maxHeight = maxHeight;
     }
 
-    public void generate(World worldIn, Random rand, Chunk chunk) {
+    public void generate(@Nonnull World worldIn, @Nonnull Random rand, @Nonnull Chunk chunk) {
         int clustersGen = 0;
         int triesGen = 0;
         for (; clustersGen < numberOfClusters && triesGen < numberOfClusters * 2; ++triesGen) {

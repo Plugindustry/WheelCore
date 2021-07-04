@@ -10,8 +10,8 @@ public class ConfigManager {
     public static boolean debug;
     private static YamlConfiguration config;
 
-    public static void init(WheelCore pl) {
-        File dataFolder = pl.getDataFolder();
+    public static void init() {
+        File dataFolder = WheelCore.instance.getDataFolder();
 
         if (!dataFolder.isDirectory()) {
             dataFolder.mkdirs();
@@ -19,7 +19,7 @@ public class ConfigManager {
 
         File config_yml = new File(dataFolder, "config.yml");
         if (!(config_yml.isFile())) {
-            pl.saveDefaultConfig();
+            WheelCore.instance.saveDefaultConfig();
         }
         config = YamlConfiguration.loadConfiguration(config_yml);
 

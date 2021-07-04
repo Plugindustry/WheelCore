@@ -9,9 +9,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 
+import javax.annotation.Nonnull;
+
 public class Recognizer implements ItemBase, Interactive {
     @Override
-    public boolean onInteract(Player player, Action action, ItemStack tool, Block block) {
+    public boolean onInteract(@Nonnull Player player, @Nonnull Action action, ItemStack tool, Block block) {
         if (block != null && action == Action.RIGHT_CLICK_BLOCK) {
             StringBuilder builder = new StringBuilder();
             builder.append(block.getType().name());

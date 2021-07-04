@@ -9,6 +9,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.File;
 import java.util.Set;
 
@@ -23,12 +24,12 @@ public class FileBasedProvider implements DataProvider {
     }
 
     @Override
-    public void loadChunk(Chunk chunk) {
+    public void loadChunk(@Nonnull Chunk chunk) {
 
     }
 
     @Override
-    public void unloadChunk(Chunk chunk) {
+    public void unloadChunk(@Nonnull Chunk chunk) {
 
     }
 
@@ -40,37 +41,38 @@ public class FileBasedProvider implements DataProvider {
 
     @Nonnull
     @Override
-    public Set<Location> blocksOf(BlockBase base) {
+    public Set<Location> blocksOf(@Nonnull BlockBase base) {
         return null;
     }
 
     @Override
-    public BlockData dataAt(Location loc) {
+    public BlockData dataAt(@Nonnull Location loc) {
         return null;
     }
 
     @Override
-    public void setDataAt(Location loc, BlockData data) {
+    public void setDataAt(@Nonnull Location loc, BlockData data) {
 
     }
 
     @Override
-    public BlockBase instanceAt(Location loc) {
+    public @Nullable
+    BlockBase instanceAt(@Nonnull Location loc) {
         return null;
     }
 
     @Override
-    public boolean hasBlock(Location block) {
+    public boolean hasBlock(@Nonnull Location block) {
         return false;
     }
 
     @Override
-    public void addBlock(Location block, BlockBase instance, BlockData data) {
+    public void addBlock(@Nonnull Location block, @Nonnull BlockBase instance, BlockData data) {
 
     }
 
     @Override
-    public void removeBlock(Location block) {
+    public void removeBlock(@Nonnull Location block) {
 
     }
 

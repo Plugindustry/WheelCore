@@ -23,6 +23,7 @@ import org.bukkit.block.Jukebox;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.Collections;
@@ -124,25 +125,32 @@ public class ChunkBasedProvider implements DataProvider {
     }
 
     @Override
-    public BlockData dataAt(Location loc) {
+    public BlockData dataAt(@Nonnull Location loc) {
         loc = loc.clone();
         loc.setPitch(0);
         loc.setYaw(0);
+
+        if (!hasBlock(loc))
+            return null;
 
         return blocks.get(loc).getValue();
     }
 
     @Override
-    public void setDataAt(Location loc, BlockData data) {
+    public void setDataAt(@Nonnull Location loc, BlockData data) {
         loc = loc.clone();
         loc.setPitch(0);
         loc.setYaw(0);
+
+        if (!hasBlock(loc))
+            return;
 
         blocks.get(loc).setValue(data);
     }
 
     @Override
-    public BlockBase instanceAt(Location loc) {
+    public @Nullable
+    BlockBase instanceAt(@Nonnull Location loc) {
         loc = loc.clone();
         loc.setPitch(0);
         loc.setYaw(0);
@@ -151,7 +159,7 @@ public class ChunkBasedProvider implements DataProvider {
     }
 
     @Override
-    public boolean hasBlock(Location block) {
+    public boolean hasBlock(@Nonnull Location block) {
         block = block.clone();
         block.setPitch(0);
         block.setYaw(0);
@@ -160,7 +168,7 @@ public class ChunkBasedProvider implements DataProvider {
     }
 
     @Override
-    public void addBlock(Location block, BlockBase instance, BlockData data) {
+    public void addBlock(@Nonnull Location block, @Nonnull BlockBase instance, BlockData data) {
         block = block.clone();
         block.setPitch(0);
         block.setYaw(0);
@@ -174,7 +182,7 @@ public class ChunkBasedProvider implements DataProvider {
     }
 
     @Override
-    public void removeBlock(Location block) {
+    public void removeBlock(@Nonnull Location block) {
         block = block.clone();
         block.setPitch(0);
         block.setYaw(0);
@@ -189,7 +197,7 @@ public class ChunkBasedProvider implements DataProvider {
     }
 
     @Override
-    public void loadChunk(Chunk chunk) {
+    public void loadChunk(@Nonnull Chunk chunk) {
         //DebuggingLogger.debug("Load chunk " + chunk.getX() + " " + chunk.getZ());
         World world = chunk.getWorld();
 
@@ -212,7 +220,7 @@ public class ChunkBasedProvider implements DataProvider {
     }
 
     @Override
-    public void unloadChunk(Chunk chunk) {
+    public void unloadChunk(@Nonnull Chunk chunk) {
         //DebuggingLogger.debug("Unload chunk " + chunk.getX() + " " + chunk.getZ());
         saveChunkImpl(chunk, true);
     }
@@ -266,7 +274,7 @@ public class ChunkBasedProvider implements DataProvider {
 
     @Nonnull
     @Override
-    public Set<Location> blocksOf(BlockBase base) {
+    public Set<Location> blocksOf(@Nonnull BlockBase base) {
         return baseBlocks.containsKey(base) ?
                CollectionUtil.unmodifiableCopyOnReadSet(baseBlocks.get(base),
                                                         Location::clone) :

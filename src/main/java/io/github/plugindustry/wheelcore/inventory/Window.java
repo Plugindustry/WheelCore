@@ -3,6 +3,7 @@ package io.github.plugindustry.wheelcore.inventory;
 import io.github.plugindustry.wheelcore.interfaces.inventory.InventoryClickInfo;
 import io.github.plugindustry.wheelcore.interfaces.inventory.WidgetBase;
 import io.github.plugindustry.wheelcore.interfaces.inventory.WidgetClickable;
+import io.github.plugindustry.wheelcore.interfaces.inventory.WindowInteractor;
 import io.github.plugindustry.wheelcore.utils.InventoryUtil;
 
 import java.util.AbstractMap;

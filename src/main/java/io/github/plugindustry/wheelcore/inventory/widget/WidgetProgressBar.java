@@ -7,6 +7,7 @@ import io.github.plugindustry.wheelcore.utils.ItemStackUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -34,18 +35,21 @@ public class WidgetProgressBar implements WidgetBase {
                                      Material.LIME_STAINED_GLASS_PANE);
     }
 
+    @Nonnull
     @Override
     public String getId() {
         return this.id;
     }
 
+    @Nonnull
     @Override
     public SlotSize getSize() {
         return size;
     }
 
     @Override
-    public Map<Position, ItemStack> getChangeMap(boolean force) {
+    public @Nonnull
+    Map<Position, ItemStack> getChangeMap(boolean force) {
         if (changed || force) {
             Map<Position, ItemStack> retMap = new HashMap<>();
             ItemStack currentItem;
