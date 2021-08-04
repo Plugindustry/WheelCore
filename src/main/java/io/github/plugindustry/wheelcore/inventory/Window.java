@@ -43,6 +43,11 @@ public class Window {
         return widgetMap;
     }
 
+    @SuppressWarnings("unchecked")
+    public <T extends WidgetBase> T getWidget(String id) {
+        return (T) getWidgetMap().get(id).getValue();
+    }
+
     public AbstractMap.SimpleEntry<Position, WidgetBase> getWidgetAt(Position pos) {
         return widgetMap.get(pos2Id[pos.xCoord][pos.yCoord]);
     }
@@ -60,6 +65,9 @@ public class Window {
         linkedInteractors.remove(interactor);
     }
 
+    /**
+     * Call this manually after changing the content of the window to sync changes with interactors
+     */
     public void sync() {
         getWidgetMap().values().forEach(we -> we.getValue()
                 .getChangeMap(false)

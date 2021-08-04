@@ -95,8 +95,10 @@ public class PowerManager {
 
                                     // I/O
                                     if (((EnergyOutputable) MainManager.getBlockInstance(packet.src)).finishOutput(
+                                            packet.src,
                                             packetClone))
                                         ((EnergyInputable) MainManager.getBlockInstance(availableInput)).finishInput(
+                                                availableInput,
                                                 packetClone);
 
                                     if (packetClone.amount == powerNeed)

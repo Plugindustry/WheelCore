@@ -14,6 +14,7 @@ public class WidgetFixedItem implements WidgetBase {
     private final SlotSize size = new SlotSize(1, 1);
     private final String id;
     private ItemStack slotItemStack;
+    private boolean changed = true;
 
     public WidgetFixedItem(String id, ItemStack slotItemStack) {
         this.id = id;
@@ -35,9 +36,10 @@ public class WidgetFixedItem implements WidgetBase {
     @Override
     public @Nonnull
     Map<Position, ItemStack> getChangeMap(boolean force) {
-        if (force) {
+        if (changed || force) {
             Map<Position, ItemStack> retMap = new HashMap<>();
             retMap.put(new Position(1, 1), slotItemStack);
+            changed = false;
             return retMap;
         } else
             return Collections.emptyMap();
@@ -49,5 +51,6 @@ public class WidgetFixedItem implements WidgetBase {
 
     public void setItem(ItemStack slotItemStack) {
         this.slotItemStack = slotItemStack;
+        this.changed = true;
     }
 }

@@ -17,6 +17,7 @@ public class WidgetButton implements WidgetClickable {
     private final String id;
     private final BiConsumer<Position, InventoryClickInfo> onClickFunc;
     private ItemStack slotItemStack;
+    private boolean changed = true;
 
     public WidgetButton(String id, ItemStack slotItemStack, BiConsumer<Position, InventoryClickInfo> onClickFunc) {
         this.id = id;
@@ -39,9 +40,10 @@ public class WidgetButton implements WidgetClickable {
     @Override
     public @Nonnull
     Map<Position, ItemStack> getChangeMap(boolean force) {
-        if (force) {
+        if (changed || force) {
             Map<Position, ItemStack> retMap = new HashMap<>();
             retMap.put(new Position(1, 1), slotItemStack);
+            changed = false;
             return retMap;
         } else
             return Collections.emptyMap();
@@ -65,5 +67,6 @@ public class WidgetButton implements WidgetClickable {
 
     public void setItem(ItemStack slotItemStack) {
         this.slotItemStack = slotItemStack;
+        this.changed = true;
     }
 }

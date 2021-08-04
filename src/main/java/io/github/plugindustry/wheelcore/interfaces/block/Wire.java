@@ -36,15 +36,17 @@ public abstract class Wire extends DummyBlock {
         public transient List<PowerPacket> nextPackets = new LinkedList<>();
     }
 
-    public static class PowerPacket {
+    public static class PowerPacket implements Cloneable {
         public Location src;
         public Location from;
         public double amount;
+        public double orgAmount;
 
         public PowerPacket(Location src, double amount) {
             this.src = src;
             this.from = src;
             this.amount = amount;
+            this.orgAmount = amount;
         }
 
         public PowerPacket clone() {
@@ -53,6 +55,7 @@ public abstract class Wire extends DummyBlock {
                 clone.src = src;
                 clone.from = from;
                 clone.amount = amount;
+                clone.orgAmount = orgAmount;
                 return clone;
             } catch (CloneNotSupportedException e) {
                 throw new AssertionError(e);
