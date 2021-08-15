@@ -5,6 +5,7 @@ import io.github.plugindustry.wheelcore.interfaces.inventory.WidgetBase;
 import io.github.plugindustry.wheelcore.interfaces.inventory.WidgetClickable;
 import io.github.plugindustry.wheelcore.interfaces.inventory.WindowInteractor;
 import io.github.plugindustry.wheelcore.utils.InventoryUtil;
+import org.bukkit.entity.HumanEntity;
 
 import java.util.AbstractMap;
 import java.util.Collections;
@@ -12,13 +13,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
+import java.util.function.Consumer;
 
 public class Window {
     public final SlotSize windowSize;
     private final String[][] pos2Id;
     private final Map<String, AbstractMap.SimpleEntry<Position, WidgetBase>> widgetMap = new HashMap<>();
     private final Set<WindowInteractor> linkedInteractors = Collections.newSetFromMap(new WeakHashMap<>());
-    public String title;
+    private Consumer<HumanEntity> closeHandler = null;
+    private String title;
 
     public Window(SlotSize size, String title) {
         this.title = title;
@@ -53,11 +56,12 @@ public class Window {
     }
 
     public void link(WindowInteractor interactor) {
+        interactor.onWindowTitleChange(title);
         sync();
         getWidgetMap().values().forEach(we -> we.getValue()
                 .getChangeMap(true)
-                .forEach((pos, item) -> interactor.onWindowChange(InventoryUtil.getAbsolutePos(we.getKey(), pos),
-                                                                  item)));
+                .forEach((pos, item) -> interactor.onWindowContentChange(InventoryUtil.getAbsolutePos(we.getKey(), pos),
+                                                                         item)));
         linkedInteractors.add(interactor);
     }
 
@@ -71,9 +75,9 @@ public class Window {
     public void sync() {
         getWidgetMap().values().forEach(we -> we.getValue()
                 .getChangeMap(false)
-                .forEach((pos, item) -> linkedInteractors.forEach(interactor -> interactor.onWindowChange(InventoryUtil.getAbsolutePos(
-                        we.getKey(),
-                        pos), item))));
+                .forEach((pos, item) -> linkedInteractors.forEach(interactor -> interactor.onWindowContentChange(
+                        InventoryUtil.getAbsolutePos(we.getKey(), pos),
+                        item))));
     }
 
     public boolean onClick(Position pos, InventoryClickInfo info) {
@@ -85,5 +89,27 @@ public class Window {
             return ((WidgetClickable) widget).onClick(InventoryUtil.getRelativePos(widgetEntry.getKey(), pos), info);
         else
             return true;
+    }
+
+    public void onClose(HumanEntity whoClosed) {
+        if (closeHandler != null)
+            closeHandler.accept(whoClosed);
+    }
+
+    public Consumer<HumanEntity> getCloseHandler() {
+        return closeHandler;
+    }
+
+    public void setCloseHandler(Consumer<HumanEntity> closeHandler) {
+        this.closeHandler = closeHandler;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+        linkedInteractors.forEach(interactor -> interactor.onWindowTitleChange(title));
     }
 }

@@ -33,6 +33,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
@@ -210,6 +211,14 @@ public class EventListener implements Listener {
         if (inv != null && inv.getHolder() instanceof ClassicInventoryInteractor)
             // Detected InventoryWindow click event
             event.setCancelled(((ClassicInventoryInteractor) inv.getHolder()).processClick(new InventoryClickInfo(event)));
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR)
+    public void onInventoryClose(InventoryCloseEvent event) {
+        Inventory inv = event.getInventory();
+        if (inv.getHolder() instanceof ClassicInventoryInteractor)
+            // Detected InventoryWindow close event
+            ((ClassicInventoryInteractor) inv.getHolder()).processClose(event.getPlayer());
     }
 
     @EventHandler
