@@ -12,12 +12,14 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class PowerManager {
     private final static HashMap<Location, InputRequest> inputMap = new HashMap<>();
     private final static HashMap<Location, OutputRequest> outputMap = new HashMap<>();
+    private final static Random r = new Random();
 
     public static void inputPower(Location block, double power) {
         inputMap.put(block, new InputRequest(power));
@@ -75,9 +77,10 @@ public class PowerManager {
                     Iterator<Wire.PowerPacket> iterator = data.packets.iterator();
                     while (iterator.hasNext()) {
                         Wire.PowerPacket packet = iterator.next();
-                        if (packet.amount > energyLoss) {
+                        if (MainManager.getBlockInstance(packet.src) instanceof EnergyOutputable &&
+                            packet.amount > energyLoss) {
                             // Input
-                            if (!inputs.isEmpty()) {
+                            if (!inputs.isEmpty() && r.nextBoolean()) {
                                 Location availableInput = inputs.stream()
                                         .filter(loc -> !loc.equals(packet.from))
                                         .parallel()
@@ -101,9 +104,10 @@ public class PowerManager {
                                                 availableInput,
                                                 packetClone);
 
-                                    if (packetClone.amount == powerNeed)
+                                    if (packetClone.amount == powerNeed) {
                                         inputs.remove(availableInput);
-                                    else
+                                        inputMap.remove(availableInput);
+                                    } else
                                         inputRequest.result += packetClone.amount;
 
                                     if (packetClone.amount < packet.amount - energyLoss) {
@@ -158,9 +162,7 @@ public class PowerManager {
                 .stream()
                 .filter(base -> base instanceof Wire)
                 .map(MainManager.dataProvider::blocksOf)
-                .flatMap(Collection::stream)
-                .map(MainManager::getBlockData)
-                .forEach(data -> {
+                .flatMap(Collection::stream).map(MainManager::getBlockData).forEach(data -> {
                     Wire.WireData temp = (Wire.WireData) data;
                     List<Wire.PowerPacket> packets = temp.packets;
                     double stat = temp.stat;
@@ -169,6 +171,9 @@ public class PowerManager {
                     temp.stat = temp.statNext;
                     temp.statNext = stat;
                 });
+
+        inputMap.clear();
+        outputMap.clear();
     }
 
     public static abstract class Request {
