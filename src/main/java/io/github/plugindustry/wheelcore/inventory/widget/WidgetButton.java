@@ -1,9 +1,9 @@
 package io.github.plugindustry.wheelcore.inventory.widget;
 
 import io.github.plugindustry.wheelcore.interfaces.inventory.InventoryClickInfo;
+import io.github.plugindustry.wheelcore.interfaces.inventory.Position;
+import io.github.plugindustry.wheelcore.interfaces.inventory.SlotSize;
 import io.github.plugindustry.wheelcore.interfaces.inventory.WidgetClickable;
-import io.github.plugindustry.wheelcore.inventory.Position;
-import io.github.plugindustry.wheelcore.inventory.SlotSize;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;

@@ -1,6 +1,5 @@
-package io.github.plugindustry.wheelcore.manager.data;
+package io.github.plugindustry.wheelcore.manager.data.block;
 
-import com.google.common.collect.BiMap;
 import io.github.plugindustry.wheelcore.interfaces.block.BlockBase;
 import io.github.plugindustry.wheelcore.interfaces.block.BlockData;
 import org.bukkit.Chunk;
@@ -10,11 +9,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Set;
 
-public interface DataProvider {
+public interface BlockDataProvider {
     @Nonnull
-    // TODO: Provider switch according to the config
-    static DataProvider defaultProvider(BiMap<String, BlockBase> mapping) {
-        return new ChunkBasedProvider(mapping);
+    // TODO: Provider switching according to the config
+    static BlockDataProvider defaultProvider() {
+        return new ChunkBasedProvider();
     }
 
     void loadChunk(@Nonnull Chunk chunk);
@@ -55,7 +54,12 @@ public interface DataProvider {
     void removeBlock(@Nonnull Location block);
 
     /**
-     * Save all blocks
+     * Before save all
      */
-    void saveAll();
+    void beforeSave();
+
+    /**
+     * After save all
+     */
+    void afterSave();
 }

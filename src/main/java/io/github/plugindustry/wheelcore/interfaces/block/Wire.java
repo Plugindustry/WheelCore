@@ -3,6 +3,7 @@ package io.github.plugindustry.wheelcore.interfaces.block;
 import io.github.plugindustry.wheelcore.manager.MainManager;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
@@ -21,8 +22,8 @@ public abstract class Wire extends DummyBlock {
     public abstract double getEnergyLoss();
 
     @Override
-    public boolean onBlockPlace(@Nonnull ItemStack item, @Nonnull Block block) {
-        if (super.onBlockPlace(item, block)) {
+    public boolean onBlockPlace(@Nonnull ItemStack item, @Nonnull Block block, @Nonnull Block blockAgainst, @Nonnull Player player) {
+        if (super.onBlockPlace(item, block, blockAgainst, player)) {
             MainManager.setBlockData(block.getLocation(), new WireData());
             return true;
         }

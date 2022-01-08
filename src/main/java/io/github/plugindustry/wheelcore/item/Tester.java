@@ -1,15 +1,16 @@
 package io.github.plugindustry.wheelcore.item;
 
 import io.github.plugindustry.wheelcore.interfaces.Interactive;
+import io.github.plugindustry.wheelcore.interfaces.inventory.Position;
+import io.github.plugindustry.wheelcore.interfaces.inventory.SlotSize;
 import io.github.plugindustry.wheelcore.interfaces.item.ItemBase;
 import io.github.plugindustry.wheelcore.inventory.ClassicInventoryInteractor;
-import io.github.plugindustry.wheelcore.inventory.Position;
-import io.github.plugindustry.wheelcore.inventory.SlotSize;
 import io.github.plugindustry.wheelcore.inventory.Window;
 import io.github.plugindustry.wheelcore.inventory.widget.WidgetFixedItem;
 import io.github.plugindustry.wheelcore.inventory.widget.WidgetProgressBar;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
@@ -28,10 +29,10 @@ public class Tester implements ItemBase, Interactive {
     }
 
     @Override
-    public boolean onInteract(@Nonnull Player player, @Nonnull Action action, ItemStack tool, Block block) {
+    public boolean onInteract(@Nonnull Player player, @Nonnull Action action, ItemStack tool, Block block, Entity entity) {
         if (block != null && action == Action.RIGHT_CLICK_BLOCK) {
             player.openInventory(windowInteractor.getInventory());
-            ((WidgetProgressBar) window.getWidgetMap().get("process_1").getValue()).setProgress(0.6);
+            ((WidgetProgressBar) window.getWidgetMap().get("process_1").second).setProgress(0.6);
         }
 
         return false;

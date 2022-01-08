@@ -1,8 +1,6 @@
 package io.github.plugindustry.wheelcore.interfaces.inventory;
 
 import io.github.plugindustry.wheelcore.interfaces.Base;
-import io.github.plugindustry.wheelcore.inventory.Position;
-import io.github.plugindustry.wheelcore.inventory.SlotSize;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;

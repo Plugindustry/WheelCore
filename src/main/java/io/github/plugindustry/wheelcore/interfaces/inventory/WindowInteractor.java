@@ -1,6 +1,5 @@
 package io.github.plugindustry.wheelcore.interfaces.inventory;
 
-import io.github.plugindustry.wheelcore.inventory.Position;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.inventory.ItemStack;
 

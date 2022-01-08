@@ -1,5 +1,7 @@
 package io.github.plugindustry.wheelcore;
 
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
 import io.github.plugindustry.wheelcore.command.WheelCoreCommand;
 import io.github.plugindustry.wheelcore.event.EventListener;
 import io.github.plugindustry.wheelcore.manager.ConfigManager;
@@ -19,6 +21,7 @@ import java.util.logging.LogRecord;
 public final class WheelCore extends JavaPlugin {
     public static final String serverVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
     public static WheelCore instance;
+    public static ProtocolManager protocolManager;
 
     @Override
     public void onEnable() {
@@ -35,6 +38,9 @@ public final class WheelCore extends JavaPlugin {
 
         instance = this;
 
+        // Preheat
+        protocolManager = ProtocolLibrary.getProtocolManager();
+
         // Register command, EventListener
         Objects.requireNonNull(this.getCommand("wheelcore")).setExecutor(new WheelCoreCommand());
 
@@ -49,7 +55,6 @@ public final class WheelCore extends JavaPlugin {
         // Register blocks, items, recipes
         DebuggingLogger.debug("register blocks");
         RegisterTask.registerBlock();
-        MainManager.load();
         DebuggingLogger.debug("register items");
         RegisterTask.registerItem();
         DebuggingLogger.debug("register recipes");
@@ -77,6 +82,6 @@ public final class WheelCore extends JavaPlugin {
         // Plugin shutdown logic
         for (World world : Bukkit.getWorlds())
             for (Chunk chunk : world.getLoadedChunks())
-                MainManager.dataProvider.unloadChunk(chunk);
+                MainManager.blockDataProvider.unloadChunk(chunk);
     }
 }

@@ -1,7 +1,5 @@
 package io.github.plugindustry.wheelcore.interfaces.inventory;
 
-import io.github.plugindustry.wheelcore.inventory.Position;
-
 public interface WidgetClickable extends WidgetBase {
     /**
      * @param pos  The relative pos where the click was performed

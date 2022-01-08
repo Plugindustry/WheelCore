@@ -1,18 +1,16 @@
-package io.github.plugindustry.wheelcore.manager.data;
+package io.github.plugindustry.wheelcore.manager.data.block;
 
-import com.google.common.collect.BiMap;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.TypeAdapter;
 import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonWriter;
 import io.github.plugindustry.wheelcore.interfaces.block.BlockBase;
 import io.github.plugindustry.wheelcore.interfaces.block.BlockData;
+import io.github.plugindustry.wheelcore.interfaces.item.ItemData;
+import io.github.plugindustry.wheelcore.manager.MainManager;
 import io.github.plugindustry.wheelcore.utils.CollectionUtil;
 import io.github.plugindustry.wheelcore.utils.DebuggingLogger;
-import io.github.plugindustry.wheelcore.utils.NBTUtil;
-import io.github.plugindustry.wheelcore.utils.NBTUtil.NBTValue;
+import io.github.plugindustry.wheelcore.utils.GsonHelper;
+import io.github.plugindustry.wheelcore.utils.Pair;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -24,97 +22,27 @@ import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.IOException;
-import java.util.AbstractMap;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
-public class ChunkBasedProvider implements DataProvider {
+public class LegacyChunkBasedProvider implements BlockDataProvider {
     private static final Gson gson;
-    private static final TypeAdapter<BlockDescription> BLOCK_DESCRIPTION_TYPE_ADAPTER = new TypeAdapter<BlockDescription>() {
-        @Override
-        public void write(JsonWriter out, BlockDescription value) throws IOException {
-            out.beginObject();
-            out.name("x").value(value.x);
-            out.name("y").value(value.y);
-            out.name("z").value(value.z);
-            out.name("id").value(value.id);
-            if (value.data != null) {
-                out.name("dataType").value(value.data.getClass().getName());
-                out.name("data").value(gson.toJson(value.data));
-            }
-            out.endObject();
-        }
-
-        @Override
-        public BlockDescription read(JsonReader in) throws IOException {
-            int x = 0;
-            int y = 0;
-            int z = 0;
-            String id = "";
-            String dataType = null;
-            String data = "";
-            in.beginObject();
-            while (in.hasNext()) {
-                switch (in.nextName()) {
-                    case "x":
-                        x = in.nextInt();
-                        break;
-                    case "y":
-                        y = in.nextInt();
-                        break;
-                    case "z":
-                        z = in.nextInt();
-                        break;
-                    case "id":
-                        id = in.nextString();
-                        break;
-                    case "dataType":
-                        dataType = in.nextString();
-                        break;
-                    case "data":
-                        data = in.nextString();
-                        break;
-                    default:
-                        break;
-                }
-            }
-            in.endObject();
-
-            Class<?> dataClass = null;
-            if (dataType != null) {
-                try {
-                    dataClass = Class.forName(dataType);
-                    if (!BlockData.class.isAssignableFrom(dataClass))
-                        dataClass = null;
-                } catch (ClassNotFoundException ignored) {
-                }
-            }
-
-            return new BlockDescription(new Location(null, x, y, z),
-                                        id,
-                                        dataClass == null ? null : (BlockData) gson.fromJson(data, dataClass));
-        }
-    };
-    private final BiMap<String, BlockBase> mapping;
-    private final HashMap<BlockBase, Set<Location>> baseBlocks = new HashMap<>();
-    private final HashMap<Location, Map.Entry<BlockBase, BlockData>> blocks = new HashMap<>();
-    private final HashMap<World, HashMap<Long, HashSet<Location>>> blockInChunks = new HashMap<>();
 
     static {
-        GsonBuilder gbs = new GsonBuilder();
-        gbs.registerTypeAdapter(BlockDescription.class, BLOCK_DESCRIPTION_TYPE_ADAPTER);
+        GsonBuilder gbs = GsonHelper.bukkitCompact();
+        gbs.registerTypeAdapter(BlockData.class, GsonHelper.POLYMORPHISM_SERIALIZER);
+        gbs.registerTypeAdapter(BlockData.class, GsonHelper.POLYMORPHISM_DESERIALIZER);
         gson = gbs.create();
     }
 
-    public ChunkBasedProvider(BiMap<String, BlockBase> mapping) {
-        this.mapping = mapping;
-    }
+    private final HashMap<BlockBase, Set<Location>> baseBlocks = new HashMap<>();
+    private final HashMap<Location, Pair<BlockBase, BlockData>> blocks = new HashMap<>();
+    private final HashMap<World, HashMap<Long, HashSet<Location>>> blockInChunks = new HashMap<>();
 
     private static long chunkDescAt(Location loc) {
         return compress(loc.getBlockX() >> 4, loc.getBlockZ() >> 4);
@@ -133,7 +61,7 @@ public class ChunkBasedProvider implements DataProvider {
         if (!hasBlock(loc))
             return null;
 
-        return blocks.get(loc).getValue();
+        return blocks.get(loc).second;
     }
 
     @Override
@@ -145,17 +73,17 @@ public class ChunkBasedProvider implements DataProvider {
         if (!hasBlock(loc))
             return;
 
-        blocks.get(loc).setValue(data);
+        blocks.get(loc).second = data;
     }
 
     @Override
-    public @Nullable
-    BlockBase instanceAt(@Nonnull Location loc) {
+    @Nullable
+    public BlockBase instanceAt(@Nonnull Location loc) {
         loc = loc.clone();
         loc.setPitch(0);
         loc.setYaw(0);
 
-        return blocks.containsKey(loc) ? blocks.get(loc).getKey() : null;
+        return blocks.containsKey(loc) ? blocks.get(loc).first : null;
     }
 
     @Override
@@ -175,7 +103,7 @@ public class ChunkBasedProvider implements DataProvider {
 
         baseBlocks.putIfAbsent(instance, new HashSet<>());
         baseBlocks.get(instance).add(block);
-        blocks.put(block, new AbstractMap.SimpleEntry<>(instance, data));
+        blocks.put(block, Pair.of(instance, data));
         blockInChunks.putIfAbsent(block.getWorld(), new HashMap<>());
         blockInChunks.get(block.getWorld()).putIfAbsent(chunkDescAt(block), new HashSet<>());
         blockInChunks.get(block.getWorld()).get(chunkDescAt(block)).add(block);
@@ -206,15 +134,17 @@ public class ChunkBasedProvider implements DataProvider {
             return;
 
         ItemStack dataItem = ((Jukebox) dataBlock.getState()).getRecord();
-        NBTValue value = NBTUtil.getTagValue(dataItem, "data");
-        if (value == null)
+        SimpleStringItemData data = (SimpleStringItemData) MainManager.getItemData(dataItem);
+        if (data == null)
             return;
-        DebuggingLogger.debug(value.asString());
-        List<BlockDescription> blockList = gson.fromJson(value.asString(), new TypeToken<List<BlockDescription>>() {
+        DebuggingLogger.debug(data.data);
+        List<BlockDescription> blockList = gson.fromJson(data.data, new TypeToken<List<BlockDescription>>() {
         }.getType());
         for (BlockDescription desc : blockList)
-            if (mapping.containsKey(desc.id))
-                addBlock(new Location(world, desc.x, desc.y, desc.z), mapping.get(desc.id), desc.data);
+            if (MainManager.getBlockInstanceFromId(desc.id) != null)
+                addBlock(new Location(world, desc.x, desc.y, desc.z),
+                         Objects.requireNonNull(MainManager.getBlockInstanceFromId(desc.id)),
+                         desc.data);
 
         dataBlock.setType(Material.BEDROCK);
     }
@@ -235,9 +165,8 @@ public class ChunkBasedProvider implements DataProvider {
         if (locations != null) {
             LinkedList<BlockDescription> descriptions = new LinkedList<>();
             locations.forEach(loc -> descriptions.add(new BlockDescription(loc,
-                                                                           mapping.inverse()
-                                                                                   .get(blocks.get(loc).getKey()),
-                                                                           blocks.get(loc).getValue())));
+                                                                           MainManager.getIdFromInstance(blocks.get(loc).first),
+                                                                           blocks.get(loc).second)));
             if (remove) {
                 ((HashSet<Location>) locations.clone()).forEach(this::removeBlock);
                 blockInChunks.get(chunk.getWorld()).remove(chunkDesc);
@@ -249,18 +178,26 @@ public class ChunkBasedProvider implements DataProvider {
             DebuggingLogger.debug(json);
 
             Jukebox bs = (Jukebox) dataBlock.getState();
-            bs.setRecord(NBTUtil.setTagValue(new ItemStack(Material.MUSIC_DISC_11), "data", NBTValue.of(json)));
+            ItemStack dataItem = new ItemStack(Material.MUSIC_DISC_11);
+            MainManager.setItemData(dataItem, new SimpleStringItemData(json));
+            bs.setRecord(dataItem);
             bs.update();
         }
     }
 
     @Override
-    public void saveAll() {
+    public void beforeSave() {
         for (World world : Bukkit.getWorlds()) {
             Chunk[] loaded = world.getLoadedChunks();
             for (Chunk chunk : loaded)
                 saveChunkImpl(chunk, false);
-            world.save();
+        }
+    }
+
+    @Override
+    public void afterSave() {
+        for (World world : Bukkit.getWorlds()) {
+            Chunk[] loaded = world.getLoadedChunks();
             for (Chunk chunk : loaded)
                 chunk.getBlock(0, 0, 0).setType(Material.BEDROCK);
         }
@@ -288,11 +225,23 @@ public class ChunkBasedProvider implements DataProvider {
         String id;
         BlockData data;
 
+        BlockDescription() {}
+
         BlockDescription(Location loc, String id, BlockData data) {
             this.x = loc.getBlockX();
             this.y = loc.getBlockY();
             this.z = loc.getBlockZ();
             this.id = id;
+            this.data = data;
+        }
+    }
+
+    public static class SimpleStringItemData implements ItemData {
+        String data;
+
+        SimpleStringItemData() {}
+
+        SimpleStringItemData(String data) {
             this.data = data;
         }
     }

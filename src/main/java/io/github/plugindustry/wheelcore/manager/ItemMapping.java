@@ -1,6 +1,5 @@
 package io.github.plugindustry.wheelcore.manager;
 
-import io.github.plugindustry.wheelcore.utils.ItemStackUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -13,7 +12,7 @@ public class ItemMapping {
 
     public static void set(String id, ItemStack itemStack) {
         itemMap.put(id, itemStack);
-        ItemStackUtil.getOreDictionary(itemStack).forEach(dict -> {
+        MainManager.getItemOreDictionary(itemStack).forEach(dict -> {
             if (!dictMaterial.containsKey(dict))
                 dictMaterial.put(dict, new HashSet<>());
             dictMaterial.get(dict).add(itemStack.getType());

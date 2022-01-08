@@ -1,13 +1,15 @@
 package io.github.plugindustry.wheelcore.inventory;
 
 import io.github.plugindustry.wheelcore.interfaces.inventory.InventoryClickInfo;
+import io.github.plugindustry.wheelcore.interfaces.inventory.Position;
+import io.github.plugindustry.wheelcore.interfaces.inventory.SlotSize;
 import io.github.plugindustry.wheelcore.interfaces.inventory.WidgetBase;
 import io.github.plugindustry.wheelcore.interfaces.inventory.WidgetClickable;
 import io.github.plugindustry.wheelcore.interfaces.inventory.WindowInteractor;
 import io.github.plugindustry.wheelcore.utils.InventoryUtil;
+import io.github.plugindustry.wheelcore.utils.Pair;
 import org.bukkit.entity.HumanEntity;
 
-import java.util.AbstractMap;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +20,7 @@ import java.util.function.Consumer;
 public class Window {
     public final SlotSize windowSize;
     private final String[][] pos2Id;
-    private final Map<String, AbstractMap.SimpleEntry<Position, WidgetBase>> widgetMap = new HashMap<>();
+    private final Map<String, Pair<Position, WidgetBase>> widgetMap = new HashMap<>();
     private final Set<WindowInteractor> linkedInteractors = Collections.newSetFromMap(new WeakHashMap<>());
     private Consumer<HumanEntity> closeHandler = null;
     private String title;
@@ -34,7 +36,7 @@ public class Window {
         int width = widget.getSize().width;
         int height = widget.getSize().height;
         int posX = pos.xCoord, posY = pos.yCoord;
-        widgetMap.put(widgetId, new AbstractMap.SimpleEntry<>(pos, widget));
+        widgetMap.put(widgetId, Pair.of(pos, widget));
         for (int i = 1; i <= width; i++) {
             for (int j = 1; j <= height; j++) {
                 pos2Id[i + posX - 1][j + posY - 1] = widgetId;
@@ -42,25 +44,24 @@ public class Window {
         }
     }
 
-    public Map<String, AbstractMap.SimpleEntry<Position, WidgetBase>> getWidgetMap() {
+    public Map<String, Pair<Position, WidgetBase>> getWidgetMap() {
         return widgetMap;
     }
 
     @SuppressWarnings("unchecked")
     public <T extends WidgetBase> T getWidget(String id) {
-        return (T) getWidgetMap().get(id).getValue();
+        return (T) getWidgetMap().get(id).second;
     }
 
-    public AbstractMap.SimpleEntry<Position, WidgetBase> getWidgetAt(Position pos) {
+    public Pair<Position, WidgetBase> getWidgetAt(Position pos) {
         return widgetMap.get(pos2Id[pos.xCoord][pos.yCoord]);
     }
 
     public void link(WindowInteractor interactor) {
         interactor.onWindowTitleChange(title);
         sync();
-        getWidgetMap().values().forEach(we -> we.getValue()
-                .getChangeMap(true)
-                .forEach((pos, item) -> interactor.onWindowContentChange(InventoryUtil.getAbsolutePos(we.getKey(), pos),
+        getWidgetMap().values().forEach(we -> we.second.getChangeMap(true)
+                .forEach((pos, item) -> interactor.onWindowContentChange(InventoryUtil.getAbsolutePos(we.first, pos),
                                                                          item)));
         linkedInteractors.add(interactor);
     }
@@ -73,20 +74,19 @@ public class Window {
      * Call this manually after changing the content of the window to sync changes with interactors
      */
     public void sync() {
-        getWidgetMap().values().forEach(we -> we.getValue()
-                .getChangeMap(false)
+        getWidgetMap().values().forEach(we -> we.second.getChangeMap(false)
                 .forEach((pos, item) -> linkedInteractors.forEach(interactor -> interactor.onWindowContentChange(
-                        InventoryUtil.getAbsolutePos(we.getKey(), pos),
+                        InventoryUtil.getAbsolutePos(we.first, pos),
                         item))));
     }
 
     public boolean onClick(Position pos, InventoryClickInfo info) {
-        AbstractMap.SimpleEntry<Position, WidgetBase> widgetEntry = getWidgetAt(pos);
-        if (widgetEntry == null)
+        Pair<Position, WidgetBase> widgetPair = getWidgetAt(pos);
+        if (widgetPair == null)
             return true;
-        WidgetBase widget = widgetEntry.getValue();
+        WidgetBase widget = widgetPair.second;
         if (widget instanceof WidgetClickable && ((WidgetClickable) widget).isClickable())
-            return ((WidgetClickable) widget).onClick(InventoryUtil.getRelativePos(widgetEntry.getKey(), pos), info);
+            return ((WidgetClickable) widget).onClick(InventoryUtil.getRelativePos(widgetPair.first, pos), info);
         else
             return true;
     }

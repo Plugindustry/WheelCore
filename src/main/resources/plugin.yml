@@ -5,6 +5,7 @@ api-version: 1.16
 prefix: WheelCore
 authors: [ czm, Luchy-fish, timetraveler314 ]
 description: WheelCore-LunXin
+depend: [ ProtocolLib ]
 load: STARTUP
 
 commands:

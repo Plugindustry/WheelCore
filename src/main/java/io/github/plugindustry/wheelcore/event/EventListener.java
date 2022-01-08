@@ -4,32 +4,38 @@ import io.github.plugindustry.wheelcore.WheelCore;
 import io.github.plugindustry.wheelcore.interfaces.Interactive;
 import io.github.plugindustry.wheelcore.interfaces.block.BlockBase;
 import io.github.plugindustry.wheelcore.interfaces.block.Destroyable;
-import io.github.plugindustry.wheelcore.interfaces.block.Placeable;
+import io.github.plugindustry.wheelcore.interfaces.entity.EntityBase;
 import io.github.plugindustry.wheelcore.interfaces.inventory.InventoryClickInfo;
 import io.github.plugindustry.wheelcore.interfaces.item.Breakable;
 import io.github.plugindustry.wheelcore.interfaces.item.Consumable;
 import io.github.plugindustry.wheelcore.interfaces.item.ItemBase;
+import io.github.plugindustry.wheelcore.interfaces.item.Placeable;
 import io.github.plugindustry.wheelcore.inventory.ClassicInventoryInteractor;
 import io.github.plugindustry.wheelcore.manager.MainManager;
 import io.github.plugindustry.wheelcore.manager.RecipeRegistry;
 import io.github.plugindustry.wheelcore.manager.recipe.RecipeBase;
 import io.github.plugindustry.wheelcore.manager.recipe.SmeltingRecipe;
 import io.github.plugindustry.wheelcore.utils.EnchantmentUtil;
-import io.github.plugindustry.wheelcore.utils.ItemStackUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -37,6 +43,7 @@ import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
@@ -58,14 +65,17 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class EventListener implements Listener {
+    // methods return true if the event doesn't need to be cancelled
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
-        if (ItemStackUtil.isPIItem(event.getItemInHand())) {
-            ItemStack item = event.getItemInHand();
-            BlockBase blockBase = MainManager.getBlockInstanceFromId(ItemStackUtil.getPIItemId(item));
-            event.setCancelled(!(blockBase instanceof Placeable &&
-                                 ((Placeable) blockBase).onBlockPlace(item, event.getBlockPlaced())));
-        }
+        ItemBase instance = MainManager.getItemInstance(event.getItemInHand());
+        if (instance != null)
+            event.setCancelled(!(instance instanceof Placeable &&
+                                 ((Placeable) instance).onItemPlace(event.getItemInHand(),
+                                                                    event.getBlockPlaced(),
+                                                                    event.getBlockAgainst(),
+                                                                    event.getPlayer())));
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -77,10 +87,11 @@ public class EventListener implements Listener {
             BlockBase blockBase = MainManager.getBlockInstance(target.getLocation());
             event.setCancelled(!(blockBase instanceof Destroyable &&
                                  ((Destroyable) blockBase).onBlockDestroy(target,
+                                                                          Destroyable.DestroyMethod.PLAYER_DESTROY,
                                                                           event.getPlayer()
                                                                                   .getInventory()
                                                                                   .getItemInMainHand(),
-                                                                          Destroyable.DestroyMethod.PLAYER_DESTROY)));
+                                                                          event.getPlayer())));
         }
     }
 
@@ -101,8 +112,9 @@ public class EventListener implements Listener {
                 iterator.remove();
                 BlockBase blockBase = MainManager.getBlockInstance(block.getLocation());
                 if (blockBase instanceof Destroyable && ((Destroyable) blockBase).onBlockDestroy(block,
+                                                                                                 Destroyable.DestroyMethod.EXPLOSION,
                                                                                                  null,
-                                                                                                 Destroyable.DestroyMethod.EXPLOSION))
+                                                                                                 null))
                     block.setType(Material.AIR);
             }
         }
@@ -143,7 +155,7 @@ public class EventListener implements Listener {
     @EventHandler
     public void onPrepareItemCraft(PrepareItemCraftEvent event) {
         CraftingInventory craftingInv = event.getInventory();
-        if (Stream.of(craftingInv.getMatrix()).anyMatch(ItemStackUtil::isPIItem) ||
+        if (Stream.of(craftingInv.getMatrix()).anyMatch(item -> MainManager.getItemInstance(item) != null) ||
             RecipeRegistry.isPlaceholder(event.getRecipe())) {
             RecipeBase result = RecipeRegistry.matchCraftingRecipe(Arrays.asList(craftingInv.getMatrix()), null);
             craftingInv.setResult(result == null ? null : result.getResult());
@@ -154,7 +166,7 @@ public class EventListener implements Listener {
     public void onCraftItem(CraftItemEvent event) {
         CraftingInventory craftingInv = event.getInventory();
         HashMap<Integer, ItemStack> map = new HashMap<>();
-        if ((Stream.of(craftingInv.getMatrix()).anyMatch(ItemStackUtil::isPIItem) ||
+        if ((Stream.of(craftingInv.getMatrix()).anyMatch(item -> MainManager.getItemInstance(item) != null) ||
              RecipeRegistry.isPlaceholder(event.getRecipe())) && RecipeRegistry.matchCraftingRecipe(Arrays.asList(
                 craftingInv.getMatrix()), map) != null) {
             ItemStack[] contents = craftingInv.getStorageContents();
@@ -165,7 +177,7 @@ public class EventListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onItemSmelt(FurnaceSmeltEvent event) {
-        if (ItemStackUtil.isPIItem(event.getSource())) {
+        if (MainManager.getItemInstance(event.getSource()) != null) {
             SmeltingRecipe recipe = RecipeRegistry.matchSmeltingRecipe(event.getSource());
             if (recipe != null) {
                 event.setResult(recipe.getResult());
@@ -178,16 +190,15 @@ public class EventListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerInteract(PlayerInteractEvent event) {
         // item interact priority is higher than blocks
-
-
         if (event.hasItem() && event.useItemInHand() != Event.Result.DENY) {
-            ItemStack tool = event.getItem();
+            ItemStack tool = Objects.requireNonNull(event.getItem());
             ItemBase itemBase = MainManager.getItemInstance(tool);
             if (!(itemBase == null ||
                   itemBase instanceof Interactive && ((Interactive) itemBase).onInteract(event.getPlayer(),
                                                                                          event.getAction(),
                                                                                          tool,
-                                                                                         event.getClickedBlock())))
+                                                                                         event.getClickedBlock(),
+                                                                                         null)))
                 event.setUseItemInHand(Event.Result.DENY);
         } else if (event.hasBlock() && event.useInteractedBlock() != Event.Result.DENY) {
             Block block = Objects.requireNonNull(event.getClickedBlock());
@@ -196,7 +207,8 @@ public class EventListener implements Listener {
                   blockBase instanceof Interactive && ((Interactive) blockBase).onInteract(event.getPlayer(),
                                                                                            event.getAction(),
                                                                                            event.getItem(),
-                                                                                           block)))
+                                                                                           block,
+                                                                                           null)))
                 event.setUseInteractedBlock(Event.Result.DENY);
         }
     }
@@ -228,12 +240,20 @@ public class EventListener implements Listener {
 
     @EventHandler
     public void onChunkLoad(ChunkLoadEvent event) {
-        MainManager.onChunkLoad(event);
+        Chunk chunk = event.getChunk();
+        for (Entity entity : chunk.getEntities())
+            MainManager.entityDataProvider.loadEntity(entity);
+        MainManager.blockDataProvider.loadChunk(chunk);
+
     }
 
     @EventHandler
     public void onChunkUnLoad(ChunkUnloadEvent event) {
-        MainManager.onChunkUnload(event);
+        Chunk chunk = event.getChunk();
+        for (Entity entity : chunk.getEntities())
+            MainManager.entityDataProvider.unloadEntity(entity);
+        MainManager.blockDataProvider.unloadChunk(chunk);
+
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -270,5 +290,32 @@ public class EventListener implements Listener {
         ItemBase itemBase = MainManager.getItemInstance(event.getBrokenItem());
         if (itemBase instanceof Breakable)
             ((Breakable) itemBase).onItemBreak(event.getPlayer(), event.getBrokenItem());
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
+        EntityBase instance = MainManager.getEntityInstance(event.getRightClicked());
+        if (instance != null)
+            event.setCancelled(!(instance instanceof Interactive &&
+                                 ((Interactive) instance).onInteract(event.getPlayer(),
+                                                                     Action.RIGHT_CLICK_AIR,
+                                                                     event.getPlayer()
+                                                                             .getInventory()
+                                                                             .getItemInMainHand(),
+                                                                     null,
+                                                                     event.getRightClicked())));
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onEntitySpawn(EntitySpawnEvent event) {
+        if (event instanceof CreatureSpawnEvent &&
+            ((CreatureSpawnEvent) event).getSpawnReason() == CreatureSpawnEvent.SpawnReason.CHUNK_GEN)
+            return;
+        MainManager.entityDataProvider.loadEntity(event.getEntity());
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onEntityDeath(EntityDeathEvent event) {
+        MainManager.entityDataProvider.unloadEntity(event.getEntity());
     }
 }

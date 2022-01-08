@@ -1,6 +1,7 @@
 package io.github.plugindustry.wheelcore.manager.recipe.choice;
 
 import io.github.plugindustry.wheelcore.manager.ItemMapping;
+import io.github.plugindustry.wheelcore.manager.MainManager;
 import io.github.plugindustry.wheelcore.utils.ItemStackUtil;
 import org.bukkit.inventory.ItemStack;
 
@@ -30,7 +31,7 @@ public class OreDictionaryChoice implements RecipeChoice {
     @Override
     public boolean matches(ItemStack item) {
         return ((!exact) || ItemStackUtil.getDurability(item) == 0) &&
-               ItemStackUtil.getOreDictionary(item).stream().anyMatch(dictionaryKeys::contains);
+               MainManager.getItemOreDictionary(item).stream().anyMatch(dictionaryKeys::contains);
     }
 
     @Override

@@ -55,7 +55,7 @@ public class WorldGenMinable implements WorldGenerator {
                 continue;
             }
 
-            for (int i = 0; i < numberOfBlocks; i++) {  // Number of ore blocks in each ore
+            for (int i = 1; i < numberOfBlocks; i++) {  // Number of ore blocks in each ore
                 switch (rand.nextInt(6)) {
                     case 0:
                         x++;

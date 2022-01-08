@@ -1,20 +1,19 @@
-package io.github.plugindustry.wheelcore.manager.data;
+package io.github.plugindustry.wheelcore.manager.data.block;
 
 import com.google.common.collect.BiMap;
 import io.github.plugindustry.wheelcore.interfaces.block.BlockBase;
 import io.github.plugindustry.wheelcore.interfaces.block.BlockData;
-import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
-import org.bukkit.World;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.File;
+import java.util.Collections;
 import java.util.Set;
 
 // TODO: Implement this
-public class FileBasedProvider implements DataProvider {
+public class FileBasedProvider implements BlockDataProvider {
     private final BiMap<String, BlockBase> mapping;
     private final File file;
 
@@ -36,13 +35,13 @@ public class FileBasedProvider implements DataProvider {
     @Nonnull
     @Override
     public Set<Location> blocks() {
-        return null;
+        return Collections.emptySet();
     }
 
     @Nonnull
     @Override
     public Set<Location> blocksOf(@Nonnull BlockBase base) {
-        return null;
+        return Collections.emptySet();
     }
 
     @Override
@@ -77,8 +76,12 @@ public class FileBasedProvider implements DataProvider {
     }
 
     @Override
-    public void saveAll() {
-        for (World world : Bukkit.getWorlds())
-            world.save();
+    public void beforeSave() {
+
+    }
+
+    @Override
+    public void afterSave() {
+
     }
 }

@@ -7,32 +7,44 @@ import io.github.plugindustry.wheelcore.interfaces.Base;
 import io.github.plugindustry.wheelcore.interfaces.Tickable;
 import io.github.plugindustry.wheelcore.interfaces.block.BlockBase;
 import io.github.plugindustry.wheelcore.interfaces.block.BlockData;
+import io.github.plugindustry.wheelcore.interfaces.entity.EntityBase;
+import io.github.plugindustry.wheelcore.interfaces.entity.EntityData;
 import io.github.plugindustry.wheelcore.interfaces.item.ItemBase;
-import io.github.plugindustry.wheelcore.manager.data.DataProvider;
+import io.github.plugindustry.wheelcore.interfaces.item.ItemData;
+import io.github.plugindustry.wheelcore.manager.data.block.BlockDataProvider;
+import io.github.plugindustry.wheelcore.manager.data.entity.EntityDataProvider;
+import io.github.plugindustry.wheelcore.manager.data.item.ItemDataProvider;
 import io.github.plugindustry.wheelcore.utils.DebuggingLogger;
-import io.github.plugindustry.wheelcore.utils.ItemStackUtil;
 import io.github.plugindustry.wheelcore.world.EndPopulator;
 import io.github.plugindustry.wheelcore.world.NetherPopulator;
 import io.github.plugindustry.wheelcore.world.OverworldPopulator;
-import org.bukkit.Chunk;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.event.world.ChunkLoadEvent;
-import org.bukkit.event.world.ChunkUnloadEvent;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.world.WorldInitEvent;
 import org.bukkit.inventory.ItemStack;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.Set;
 
 public class MainManager {
     private static final BiMap<String, BlockBase> blockMapping = HashBiMap.create();
     private static final BiMap<String, ItemBase> itemMapping = HashBiMap.create();
-    public static DataProvider dataProvider = DataProvider.defaultProvider(blockMapping);
-
-    // returns true if the event doesn't need to be cancelled
+    private static final BiMap<String, EntityBase> entityMapping = HashBiMap.create();
+    public static BlockDataProvider blockDataProvider = BlockDataProvider.defaultProvider();
+    public static EntityDataProvider entityDataProvider = EntityDataProvider.defaultProvider();
+    public static ItemDataProvider itemDataProvider = ItemDataProvider.defaultProvider();
 
     public static void update() {
         MultiBlockManager.onTick();
 
         for (BlockBase base : blockMapping.values())
+            if (base instanceof Tickable)
+                ((Tickable) base).onTick();
+
+        for (EntityBase base : entityMapping.values())
             if (base instanceof Tickable)
                 ((Tickable) base).onTick();
 
@@ -53,87 +65,139 @@ public class MainManager {
         }
     }
 
-    public static void onChunkLoad(ChunkLoadEvent event) {
-        Chunk chunk = event.getChunk();
-        dataProvider.loadChunk(chunk);
-    }
-
-    public static void onChunkUnload(ChunkUnloadEvent event) {
-        Chunk chunk = event.getChunk();
-        dataProvider.unloadChunk(chunk);
-    }
-
-    public static String getIdFromInstance(Base instance) {
+    @Nullable
+    public static String getIdFromInstance(@Nullable Base instance) {
         if (instance instanceof BlockBase)
             return blockMapping.inverse().getOrDefault(instance, null);
         else if (instance instanceof ItemBase)
             return itemMapping.inverse().getOrDefault(instance, null);
+        else if (instance instanceof EntityBase)
+            return entityMapping.inverse().getOrDefault(instance, null);
         else
             return null;
     }
 
-    public static BlockBase getBlockInstanceFromId(String id) {
+    @Nullable
+    public static BlockBase getBlockInstanceFromId(@Nullable String id) {
+        if (id == null)
+            return null;
         return blockMapping.getOrDefault(id, null);
     }
 
-    public static ItemBase getItemInstanceFromId(String id) {
+    @Nullable
+    public static ItemBase getItemInstanceFromId(@Nullable String id) {
         if (id == null)
             return null;
         return itemMapping.getOrDefault(id, null);
     }
 
-    public static void load() {
-        dataProvider = DataProvider.defaultProvider(blockMapping);
+    @Nullable
+    public static EntityBase getEntityInstanceFromId(@Nullable String id) {
+        if (id == null)
+            return null;
+        return entityMapping.getOrDefault(id, null);
     }
 
     public static void save() {
-        dataProvider.saveAll();
+        entityDataProvider.beforeSave();
+        blockDataProvider.beforeSave();
+        Bukkit.getWorlds().forEach(World::save);
+        blockDataProvider.afterSave();
+        entityDataProvider.afterSave();
     }
 
     public static void addBlock(Location block, BlockBase instance, BlockData data) {
         DebuggingLogger.debug("Block at " + block.toString());
-        dataProvider.addBlock(block, instance, data);
+        blockDataProvider.addBlock(block, instance, data);
     }
 
     public static void removeBlock(Location block) {
-        dataProvider.removeBlock(block);
+        blockDataProvider.removeBlock(block);
     }
 
     public static boolean hasBlock(Location block) {
-        return dataProvider.hasBlock(block);
+        return blockDataProvider.hasBlock(block);
     }
 
-    public static BlockBase getBlockInstance(Location block) {
-        return dataProvider.instanceAt(block);
+    @Nullable
+    public static BlockBase getBlockInstance(@Nonnull Location block) {
+        return blockDataProvider.instanceAt(block);
     }
 
-    public static ItemBase getItemInstance(ItemStack is) {
-        if (!ItemStackUtil.isPIItem(is))
-            return null;
-        return getItemInstanceFromId(ItemStackUtil.getPIItemId(is));
+    @Nullable
+    public static ItemBase getItemInstance(@Nonnull ItemStack is) {
+        return itemDataProvider.getInstance(is);
     }
 
-    public static BlockData getBlockData(Location block) {
-        return dataProvider.dataAt(block);
+    @Nullable
+    public static EntityBase getEntityInstance(@Nonnull Entity entity) {
+        return entityDataProvider.instanceOf(entity);
     }
 
-    public static void setBlockData(Location block, BlockData data) {
-        dataProvider.setDataAt(block, data);
+    @Nullable
+    public static BlockData getBlockData(@Nonnull Location block) {
+        return blockDataProvider.dataAt(block);
     }
 
-    public static void registerBlock(String id, BlockBase b) {
+    @Nullable
+    public static ItemData getItemData(@Nonnull ItemStack is) {
+        return itemDataProvider.getData(is);
+    }
+
+    @Nonnull
+    public static Set<String> getItemOreDictionary(@Nonnull ItemStack is) {
+        return itemDataProvider.getOreDictionary(is);
+    }
+
+    @Nullable
+    public static EntityData getEntityData(@Nonnull Entity entity) {
+        return entityDataProvider.getData(entity);
+    }
+
+    public static void setBlockData(@Nonnull Location block, @Nullable BlockData data) {
+        blockDataProvider.setDataAt(block, data);
+    }
+
+    public static void setItemInstance(@Nonnull ItemStack is, @Nullable ItemBase instance) {
+        itemDataProvider.setInstance(is, instance);
+    }
+
+    public static void setItemData(@Nonnull ItemStack is, @Nullable ItemData data) {
+        itemDataProvider.setData(is, data);
+    }
+
+    public static void setItemOreDictionary(@Nonnull ItemStack is, @Nonnull Set<String> oreDictionary) {
+        itemDataProvider.setOreDictionary(is, oreDictionary);
+    }
+
+    public static void setEntityData(@Nonnull Entity entity, @Nullable EntityData data) {
+        entityDataProvider.setData(entity, data);
+    }
+
+    public static void registerBlock(@Nonnull String id, @Nonnull BlockBase b) {
         blockMapping.put(id, b);
     }
 
-    public static void registerItem(String id, ItemBase b) {
+    public static void registerItem(@Nonnull String id, @Nonnull ItemBase b) {
         itemMapping.put(id, b);
     }
 
+    public static void registerEntity(@Nonnull String id, @Nonnull EntityBase b) {
+        entityMapping.put(id, b);
+    }
+
+    @Nonnull
     public static BiMap<String, BlockBase> getBlockMapping() {
         return Maps.unmodifiableBiMap(blockMapping);
     }
 
+    @Nonnull
     public static BiMap<String, ItemBase> getItemMapping() {
         return Maps.unmodifiableBiMap(itemMapping);
+    }
+
+    @Nonnull
+    public static BiMap<String, EntityBase> getEntityMapping() {
+        return Maps.unmodifiableBiMap(entityMapping);
     }
 }

@@ -1,35 +1,21 @@
 package io.github.plugindustry.wheelcore.utils;
 
+import com.google.common.collect.Sets;
+import io.github.plugindustry.wheelcore.interfaces.item.ItemBase;
+import io.github.plugindustry.wheelcore.manager.MainManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 public class ItemStackUtil {
     public static ItemStackFactory create(Material material) {
         return new ItemStackFactory(material);
-    }
-
-    public static boolean isPIItem(ItemStack item) {
-        return NBTUtil.getTagValue(item, "PIItemId") != null;
-    }
-
-    public static String getPIItemId(ItemStack item) {
-        return isPIItem(item) ? Objects.requireNonNull(NBTUtil.getTagValue(item, "PIItemId")).asString() : "";
-    }
-
-    public static List<String> getOreDictionary(ItemStack item) {
-        NBTUtil.NBTValue value = NBTUtil.getTagValue(item, "OreDictionary");
-        return value == null ?
-               Collections.emptyList() :
-               value.asList().stream().map(NBTUtil.NBTValue::asString).collect(Collectors.toList());
     }
 
     public static boolean isSimilar(ItemStack a, ItemStack b) {
@@ -52,18 +38,7 @@ public class ItemStackUtil {
             return false;
         }
 
-        // check NBT tag
-        boolean aIs = isPIItem(ta);
-        if (aIs != isPIItem(tb))
-            return false;
-
-        if (aIs) {
-            NBTUtil.NBTValue aId = NBTUtil.getTagValue(ta, "PIItemId");
-            NBTUtil.NBTValue bId = NBTUtil.getTagValue(tb, "PIItemId");
-            return (aId == null && bId == null) || (aId != null && bId != null && Objects.equals(aId.asString(),
-                                                                                                 bId.asString()));
-        }
-        return true;
+        return MainManager.getItemInstance(ta) == MainManager.getItemInstance(tb);
     }
 
     public static int getDurability(ItemStack itemStack) {
@@ -88,10 +63,10 @@ public class ItemStackUtil {
     public static class ItemStackFactory {
         private final Material material;
         private int amount = 1;
-        private String id = null;
-        private String displayName = "";
-        private List<String> lore = Collections.singletonList("");
-        private List<NBTUtil.NBTValue> oreDictionary = null;
+        private ItemBase instance = null;
+        private String displayName = null;
+        private List<String> lore = Collections.emptyList();
+        private Set<String> oreDictionary = null;
 
         public ItemStackFactory(Material material) {
             this.material = material;
@@ -102,8 +77,8 @@ public class ItemStackUtil {
             return this;
         }
 
-        public ItemStackFactory setId(String id) {
-            this.id = id;
+        public ItemStackFactory setInstance(ItemBase instance) {
+            this.instance = instance;
             return this;
         }
 
@@ -118,29 +93,28 @@ public class ItemStackUtil {
         }
 
         public ItemStackFactory setOreDictionary(String... dictionary) {
-            return setOreDictionary(Arrays.asList(dictionary));
+            return setOreDictionary(Sets.newHashSet(dictionary));
         }
 
-        public ItemStackFactory setOreDictionary(List<String> dictionary) {
-            oreDictionary = dictionary.stream().map(NBTUtil.NBTValue::of).sorted().collect(Collectors.toList());
+        public ItemStackFactory setOreDictionary(Set<String> dictionary) {
+            oreDictionary = dictionary;
             return this;
         }
 
         public ItemStack getItemStack() {
             ItemStack tmp = new ItemStack(material, amount);
-            if (id != null) {
-                tmp = NBTUtil.setTagValue(tmp, "PIItemId", NBTUtil.NBTValue.of(id));
-                if (oreDictionary != null)
-                    tmp = NBTUtil.setTagValue(tmp, "OreDictionary", NBTUtil.NBTValue.of(oreDictionary));
-            }
+            if (instance != null)
+                MainManager.setItemInstance(tmp, instance);
+            if (oreDictionary != null)
+                MainManager.setItemOreDictionary(tmp, oreDictionary);
             ItemMeta meta = tmp.getItemMeta();
             if (meta == null) {
                 meta = Bukkit.getItemFactory().getItemMeta(material);
-                if (meta == null) {
+                if (meta == null)
                     throw new IllegalStateException("¿");
-                }
             }
-            meta.setDisplayName(displayName);
+            if (displayName != null)
+                meta.setDisplayName(displayName);
             meta.setLore(lore);
             tmp.setItemMeta(meta);
             return tmp.clone();

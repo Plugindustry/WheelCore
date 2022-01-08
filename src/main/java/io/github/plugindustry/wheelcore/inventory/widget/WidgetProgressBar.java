@@ -1,8 +1,8 @@
 package io.github.plugindustry.wheelcore.inventory.widget;
 
+import io.github.plugindustry.wheelcore.interfaces.inventory.Position;
+import io.github.plugindustry.wheelcore.interfaces.inventory.SlotSize;
 import io.github.plugindustry.wheelcore.interfaces.inventory.WidgetBase;
-import io.github.plugindustry.wheelcore.inventory.Position;
-import io.github.plugindustry.wheelcore.inventory.SlotSize;
 import io.github.plugindustry.wheelcore.utils.ItemStackUtil;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

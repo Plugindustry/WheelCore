@@ -1,4 +1,4 @@
-package io.github.plugindustry.wheelcore.inventory;
+package io.github.plugindustry.wheelcore.interfaces.inventory;
 
 public class SlotSize {
     public final int height;

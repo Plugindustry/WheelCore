@@ -1,7 +1,7 @@
 package io.github.plugindustry.wheelcore.utils;
 
-import io.github.plugindustry.wheelcore.inventory.Position;
-import io.github.plugindustry.wheelcore.inventory.SlotSize;
+import io.github.plugindustry.wheelcore.interfaces.inventory.Position;
+import io.github.plugindustry.wheelcore.interfaces.inventory.SlotSize;
 
 public class InventoryUtil {
     public static Position convertToPos(int slot, SlotSize size) {
