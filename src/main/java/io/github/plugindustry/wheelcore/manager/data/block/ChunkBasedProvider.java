@@ -129,7 +129,7 @@ public class ChunkBasedProvider implements BlockDataProvider {
         List<BlockDescription> blockList = gson.fromJson(chunk.getPersistentDataContainer()
                                                                  .getOrDefault(CHUNK_DATA_KEY,
                                                                                PersistentDataType.STRING,
-                                                                               ""),
+                                                                               "[]"),
                                                          new TypeToken<List<BlockDescription>>() {
                                                          }.getType());
         for (BlockDescription desc : blockList)

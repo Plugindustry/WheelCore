@@ -37,7 +37,7 @@ public class PersistenceBasedProvider implements EntityDataProvider {
         EntityDescription description = gson.fromJson(entity.getPersistentDataContainer()
                                                               .getOrDefault(ENTITY_DATA_KEY,
                                                                             PersistentDataType.STRING,
-                                                                            ""), EntityDescription.class);
+                                                                            "{}"), EntityDescription.class);
         if (MainManager.getEntityMapping().containsKey(description.id))
             entityData.put(entity.getUniqueId(),
                            Pair.of(MainManager.getEntityMapping().get(description.id), description.data));

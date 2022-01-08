@@ -15,7 +15,7 @@ public class GsonHelper {
     public static final JsonSerializer<?> POLYMORPHISM_SERIALIZER = (obj, type, jsonSerializationContext) -> {
         JsonObject result = new JsonObject();
         result.addProperty("type", obj.getClass().getName());
-        result.add("data", jsonSerializationContext.serialize(obj, type));
+        result.add("data", jsonSerializationContext.serialize(obj, obj.getClass()));
         return result;
     };
     public static final JsonDeserializer<?> POLYMORPHISM_DESERIALIZER = (jsonElement, type, jsonDeserializationContext) -> {

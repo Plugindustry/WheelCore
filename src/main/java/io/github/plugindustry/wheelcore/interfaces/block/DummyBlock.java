@@ -13,7 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public abstract class DummyBlock implements BlockBase, Placeable, Destroyable, Interactive {
+public class DummyBlock implements BlockBase, Placeable, Destroyable, Interactive {
     @Override
     public boolean onInteract(@Nonnull Player player, @Nonnull Action action, ItemStack tool, Block block, Entity entity) {
         return true;
