@@ -34,10 +34,10 @@ public class PersistenceBasedProvider implements EntityDataProvider {
 
     @Override
     public void loadEntity(@Nonnull Entity entity) {
-        EntityDescription description = gson.fromJson(entity.getPersistentDataContainer()
-                                                              .getOrDefault(ENTITY_DATA_KEY,
-                                                                            PersistentDataType.STRING,
-                                                                            "{}"), EntityDescription.class);
+        String data = entity.getPersistentDataContainer().get(ENTITY_DATA_KEY, PersistentDataType.STRING);
+        if (data == null)
+            return;
+        EntityDescription description = gson.fromJson(data, EntityDescription.class);
         if (MainManager.getEntityMapping().containsKey(description.id))
             entityData.put(entity.getUniqueId(),
                            Pair.of(MainManager.getEntityMapping().get(description.id), description.data));

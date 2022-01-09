@@ -2,8 +2,12 @@ package io.github.plugindustry.wheelcore.manager.data.block;
 
 import io.github.plugindustry.wheelcore.interfaces.block.BlockBase;
 import io.github.plugindustry.wheelcore.interfaces.block.BlockData;
+import io.github.plugindustry.wheelcore.interfaces.block.Destroyable;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -49,8 +53,16 @@ public interface BlockDataProvider {
 
     boolean hasBlock(@Nonnull Location block);
 
+    /**
+     * Don't use this method unless you know exactly what you are doing.
+     * To place a block, use {@link io.github.plugindustry.wheelcore.interfaces.block.Placeable#onBlockPlace(ItemStack, Block, Block, Player)} instead
+     */
     void addBlock(@Nonnull Location block, @Nonnull BlockBase instance, @Nullable BlockData data);
 
+    /**
+     * This method is only used to simply remove a block without doing anything else.
+     * To simulate destroying a block, use {@link io.github.plugindustry.wheelcore.interfaces.block.Destroyable#onBlockDestroy(Block, Destroyable.DestroyMethod, ItemStack, Player)} instead
+     */
     void removeBlock(@Nonnull Location block);
 
     /**

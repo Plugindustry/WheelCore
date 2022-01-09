@@ -20,10 +20,10 @@ public class DummyBlock implements BlockBase, Placeable, Destroyable, Interactiv
     }
 
     @Override
-    public boolean onBlockPlace(@Nonnull ItemStack item, @Nonnull Block block, @Nonnull Block blockAgainst, @Nonnull Player player) {
+    public boolean onBlockPlace(@Nullable ItemStack item, @Nonnull Block block, @Nullable Block blockAgainst, @Nullable Player player) {
         // We do nothing by default, so you should do this job in your implementation too.
         MainManager.addBlock(block.getLocation(), this, null);
-        if (getMaterial() != item.getType())
+        if (item == null || getMaterial() != item.getType())
             block.setType(getMaterial());
         return true;
     }
