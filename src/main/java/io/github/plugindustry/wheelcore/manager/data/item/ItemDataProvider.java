@@ -16,13 +16,13 @@ public interface ItemDataProvider {
     }
 
     @Nullable
-    ItemBase getInstance(@Nonnull ItemStack itemStack);
+    ItemBase getInstance(@Nullable ItemStack itemStack);
 
     @Nullable
-    ItemData getData(@Nonnull ItemStack itemStack);
+    ItemData getData(@Nullable ItemStack itemStack);
 
     @Nonnull
-    Set<String> getOreDictionary(@Nonnull ItemStack itemStack);
+    Set<String> getOreDictionary(@Nullable ItemStack itemStack);
 
     void setInstance(@Nonnull ItemStack itemStack, @Nullable ItemBase instance);
 

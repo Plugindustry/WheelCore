@@ -33,7 +33,9 @@ public class NBTBasedProvider implements ItemDataProvider {
 
     @Nullable
     @Override
-    public ItemBase getInstance(@Nonnull ItemStack itemStack) {
+    public ItemBase getInstance(@Nullable ItemStack itemStack) {
+        if (itemStack == null)
+            return null;
         Optional<NbtWrapper<?>> nbtWrapperOptional = NbtFactory.fromItemOptional(itemStack);
         if (!nbtWrapperOptional.isPresent())
             return null;
@@ -49,7 +51,9 @@ public class NBTBasedProvider implements ItemDataProvider {
 
     @Nullable
     @Override
-    public ItemData getData(@Nonnull ItemStack itemStack) {
+    public ItemData getData(@Nullable ItemStack itemStack) {
+        if (itemStack == null)
+            return null;
         Optional<NbtWrapper<?>> nbtWrapperOptional = NbtFactory.fromItemOptional(itemStack);
         if (!nbtWrapperOptional.isPresent())
             return null;
@@ -66,7 +70,9 @@ public class NBTBasedProvider implements ItemDataProvider {
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
-    public Set<String> getOreDictionary(@Nonnull ItemStack itemStack) {
+    public Set<String> getOreDictionary(@Nullable ItemStack itemStack) {
+        if (itemStack == null)
+            return Collections.emptySet();
         Optional<NbtWrapper<?>> nbtWrapperOptional = NbtFactory.fromItemOptional(itemStack);
         if (!nbtWrapperOptional.isPresent())
             return Collections.emptySet();
