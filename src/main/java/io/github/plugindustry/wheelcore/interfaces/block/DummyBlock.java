@@ -3,6 +3,7 @@ package io.github.plugindustry.wheelcore.interfaces.block;
 import io.github.plugindustry.wheelcore.interfaces.Interactive;
 import io.github.plugindustry.wheelcore.manager.ItemMapping;
 import io.github.plugindustry.wheelcore.manager.MainManager;
+import io.github.plugindustry.wheelcore.utils.BlockUtil;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -32,8 +33,19 @@ public class DummyBlock implements BlockBase, Placeable, Destroyable, Interactiv
     public boolean onBlockDestroy(@Nonnull Block block, @Nonnull DestroyMethod method, ItemStack tool, @Nullable Player player) {
         // We do nothing by default, so you should do this job in your implementation too.
         MainManager.removeBlock(block.getLocation());
+        block.setType(Material.AIR);
         block.getWorld().dropItem(block.getLocation(), getItemStack());
         return true;
+    }
+
+    @Override
+    public float getHardness(@Nonnull Block block) {
+        return BlockUtil.getVanillaHardness(block);
+    }
+
+    @Override
+    public boolean isPreferredTool(@Nonnull Block block, @Nonnull ItemStack tool) {
+        return BlockUtil.isVanillaPreferredTool(block, tool);
     }
 
     @Nonnull

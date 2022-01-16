@@ -19,6 +19,7 @@ import io.github.plugindustry.wheelcore.utils.EnchantmentUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
@@ -30,6 +31,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -267,7 +269,7 @@ public class EventListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void prePlayerCommand(PlayerCommandPreprocessEvent event) {
-        if (event.getMessage().equals("/reload")) {
+        if (event.getMessage().equals("/reload") || event.getMessage().equals("/bukkit:reload")) {
             event.setCancelled(true);
             event.getPlayer().sendMessage(ChatColor.DARK_RED +
                                           "With WheelCore installed, you cannot perform this operation which will cause severe problems. Restart your server to reload plugins instead.");
@@ -317,5 +319,12 @@ public class EventListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onEntityDeath(EntityDeathEvent event) {
         MainManager.entityDataProvider.unloadEntity(event.getEntity());
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onBlockDamage(BlockDamageEvent event) {
+        if (event.getPlayer().getGameMode() == GameMode.SURVIVAL ||
+            event.getPlayer().getGameMode() == GameMode.ADVENTURE)
+            event.setCancelled(true);
     }
 }

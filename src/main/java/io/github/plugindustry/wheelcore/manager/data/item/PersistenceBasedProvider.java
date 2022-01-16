@@ -36,8 +36,8 @@ public class PersistenceBasedProvider implements ItemDataProvider {
 
     @Nullable
     @Override
-    public ItemBase getInstance(@Nonnull ItemStack itemStack) {
-        if (!itemStack.hasItemMeta())
+    public ItemBase getInstance(@Nullable ItemStack itemStack) {
+        if (itemStack == null || !itemStack.hasItemMeta())
             return null;
         return MainManager.getItemInstanceFromId(Objects.requireNonNull(itemStack.getItemMeta())
                                                          .getPersistentDataContainer()
@@ -46,8 +46,8 @@ public class PersistenceBasedProvider implements ItemDataProvider {
 
     @Nullable
     @Override
-    public ItemData getData(@Nonnull ItemStack itemStack) {
-        if (!itemStack.hasItemMeta())
+    public ItemData getData(@Nullable ItemStack itemStack) {
+        if (itemStack == null || !itemStack.hasItemMeta())
             return null;
         String data = Objects.requireNonNull(itemStack.getItemMeta()).getPersistentDataContainer().get(ITEM_DATA_KEY,
                                                                                                        PersistentDataType.STRING);
@@ -56,8 +56,8 @@ public class PersistenceBasedProvider implements ItemDataProvider {
 
     @Nonnull
     @Override
-    public Set<String> getOreDictionary(@Nonnull ItemStack itemStack) {
-        if (!itemStack.hasItemMeta())
+    public Set<String> getOreDictionary(@Nullable ItemStack itemStack) {
+        if (itemStack == null || !itemStack.hasItemMeta())
             return Collections.emptySet();
         String oreDict = Objects.requireNonNull(itemStack.getItemMeta()).getPersistentDataContainer().get(
                 ITEM_ORE_DICTIONARY_KEY,

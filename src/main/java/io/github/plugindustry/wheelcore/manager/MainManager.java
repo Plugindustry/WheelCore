@@ -38,6 +38,8 @@ public class MainManager {
     public static ItemDataProvider itemDataProvider = ItemDataProvider.defaultProvider();
 
     public static void update() {
+        PlayerDigHandler.onTick();
+
         MultiBlockManager.onTick();
 
         for (BlockBase base : blockMapping.values())

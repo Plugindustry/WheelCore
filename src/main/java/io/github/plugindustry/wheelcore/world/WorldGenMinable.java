@@ -41,7 +41,7 @@ public class WorldGenMinable implements WorldGenerator {
 
             if (BlockUtil.isReplaceableOreGen(currentBlock)) {
                 ++clustersGen;
-                currentBlock.setType(this.ore.getMaterial());
+                currentBlock.setType(this.ore.getMaterial(), false);
                 MainManager.addBlock(currentBlock.getLocation(), this.ore, null);
                 DebuggingLogger.debug("Gen in " +
                                       (currentBlock.getLocation().getWorld() == null ?
@@ -82,7 +82,7 @@ public class WorldGenMinable implements WorldGenerator {
                 currentBlock = chunk.getBlock(x, y, z);
 
                 if (BlockUtil.isReplaceableOreGen(currentBlock)) {
-                    currentBlock.setType(this.ore.getMaterial());
+                    currentBlock.setType(this.ore.getMaterial(), false);
                     MainManager.addBlock(currentBlock.getLocation(), this.ore, null);
                 }
             }

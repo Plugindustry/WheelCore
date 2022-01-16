@@ -181,7 +181,7 @@ public class CollectionUtil {
 
             @Override
             public Spliterator<E> trySplit() {
-                return new CopySpliterator<E>(s.trySplit(), cloner);
+                return new CopySpliterator<>(s.trySplit(), cloner);
             }
 
             @Override
@@ -274,7 +274,7 @@ public class CollectionUtil {
         }
 
         @Override
-        public boolean addAll(int index, Collection<? extends E> c) {
+        public boolean addAll(int index, @Nonnull Collection<? extends E> c) {
             throw new UnsupportedOperationException();
         }
 

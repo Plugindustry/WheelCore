@@ -10,6 +10,10 @@ import javax.annotation.Nullable;
 public interface Destroyable {
     boolean onBlockDestroy(@Nonnull Block block, @Nonnull DestroyMethod method, @Nullable ItemStack tool, @Nullable Player player);
 
+    float getHardness(@Nonnull Block block);
+
+    boolean isPreferredTool(@Nonnull Block block, @Nonnull ItemStack tool);
+
     enum DestroyMethod {
         PLAYER_DESTROY, EXPLOSION, OTHER
     }
