@@ -34,7 +34,7 @@ public class GiveCommand extends SubCommandBase {
         }
 
         EntitySelector selector = new EntitySelector(commandSender, args[0]);
-        String itemName = args[1].toUpperCase();
+        String itemName = args[1];
 
         if (!ItemMapping.isItemExists(itemName)) {
             commandSender.sendMessage("Uh we didn't found that item.");
