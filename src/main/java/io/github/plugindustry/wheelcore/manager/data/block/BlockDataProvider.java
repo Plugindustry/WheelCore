@@ -25,14 +25,18 @@ public interface BlockDataProvider {
     void unloadChunk(@Nonnull Chunk chunk);
 
     /**
-     * @return A set containing all custom blocks loaded
+     * @return A set containing all custom blocks loaded.
+     * Note that the returned set may be based on the internal container, so any modifications mustn't be done when traversing this set.
+     * You can delay modifications by using {@link io.github.plugindustry.wheelcore.manager.MainManager#queuePostTickTask(Runnable)}.
      */
     @Nonnull
     Set<Location> blocks();
 
     /**
      * @param base The base instance of the blocks needed
-     * @return A set containing all custom blocks which are loaded and with the given instance
+     * @return A set containing all custom blocks which are loaded and with the given instance.
+     * Note that the returned set may be based on the internal container, so any modifications mustn't be done when traversing this set.
+     * You can delay modifications by using {@link io.github.plugindustry.wheelcore.manager.MainManager#queuePostTickTask(Runnable)}.
      */
     @Nonnull
     Set<Location> blocksOf(@Nonnull BlockBase base);

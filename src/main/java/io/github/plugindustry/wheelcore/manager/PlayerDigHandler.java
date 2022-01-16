@@ -149,6 +149,7 @@ public class PlayerDigHandler {
                         iterator2.remove();
                     }
                 }
+                PlayerUtil.broadcastBlockCrack(entry.getKey(), -1);
                 PlayerUtil.breakBlock(Objects.requireNonNull(Bukkit.getPlayer(Objects.requireNonNull(uuid))),
                                       entry.getKey().getBlock());
                 iterator1.remove();

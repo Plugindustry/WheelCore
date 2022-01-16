@@ -27,6 +27,8 @@ import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayDeque;
+import java.util.Queue;
 import java.util.Set;
 
 public class MainManager {
@@ -36,6 +38,7 @@ public class MainManager {
     public static BlockDataProvider blockDataProvider = BlockDataProvider.defaultProvider();
     public static EntityDataProvider entityDataProvider = EntityDataProvider.defaultProvider();
     public static ItemDataProvider itemDataProvider = ItemDataProvider.defaultProvider();
+    private static final Queue<Runnable> postTickTasks = new ArrayDeque<>();
 
     public static void update() {
         PlayerDigHandler.onTick();
@@ -55,6 +58,16 @@ public class MainManager {
                 ((Tickable) base).onTick();
 
         PowerManager.onTick();
+
+        while (!postTickTasks.isEmpty())
+            postTickTasks.poll().run();
+    }
+
+    /**
+     * @param task The task that need to be executed at the end of tick
+     */
+    public void queuePostTickTask(@Nonnull Runnable task) {
+        postTickTasks.add(task);
     }
 
     public static void onWorldInit(WorldInitEvent event) {
