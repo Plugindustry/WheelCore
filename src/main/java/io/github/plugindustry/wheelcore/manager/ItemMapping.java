@@ -20,7 +20,7 @@ public class ItemMapping {
     }
 
     public static ItemStack get(String id) {
-        return itemMap.get(id);
+        return itemMap.get(id).clone();
     }
 
     public static boolean isItemExists(String id) {
