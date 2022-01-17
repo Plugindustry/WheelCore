@@ -25,6 +25,8 @@ public class ItemStackUtil {
     public static boolean isSimilar(ItemStack a, ItemStack b, boolean ignoreDurability) {
         if (a == null) {
             return b == null;
+        } else if (b == null) {
+            return false;
         }
 
         ItemStack ta = a.clone();
