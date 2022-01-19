@@ -48,6 +48,11 @@ public class DummyBlock implements BlockBase, Placeable, Destroyable, Interactiv
         return BlockUtil.isVanillaPreferredTool(block, tool);
     }
 
+    @Override
+    public boolean needCorrectTool(@Nonnull Block block) {
+        return BlockUtil.vanillaNeedCorrectTool(block);
+    }
+
     @Nonnull
     public ItemStack getItemStack() {
         return ItemMapping.get(MainManager.getIdFromInstance(this));

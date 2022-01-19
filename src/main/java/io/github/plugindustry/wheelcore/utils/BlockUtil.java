@@ -5,6 +5,8 @@ import io.github.plugindustry.wheelcore.interfaces.block.Destroyable;
 import io.github.plugindustry.wheelcore.interfaces.block.Wire;
 import io.github.plugindustry.wheelcore.interfaces.item.ItemBase;
 import io.github.plugindustry.wheelcore.interfaces.item.Tool;
+import io.github.plugindustry.wheelcore.internal.shadow.CraftBlock;
+import io.github.plugindustry.wheelcore.internal.shadow.CraftItemStack;
 import io.github.plugindustry.wheelcore.manager.MainManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -72,9 +74,8 @@ public class BlockUtil {
         return block.getType().getHardness();
     }
 
-    // TODO: Compact API
     public static boolean isVanillaPreferredTool(@Nonnull Block block, @Nonnull ItemStack tool) {
-        return block.isPreferredTool(tool);
+        return CraftItemStack.asNMSCopy(tool).isPreferredTool(new CraftBlock(block).getHandle());
     }
 
     public static float getHardness(@Nonnull Block block) {
@@ -101,24 +102,7 @@ public class BlockUtil {
     }
 
     public static float getVanillaToolBonus(@Nonnull Block block, @Nonnull ItemStack tool) {
-        Material blockType = block.getType();
-        Material itemType = tool.getType();
-        if (commonToolBonus.containsKey(itemType))
-            return commonToolBonus.get(itemType);
-        if (itemType == Material.SHEARS) {
-            if (blockType.name().endsWith("WOOL"))
-                return 5;
-            else if (blockType == Material.COBWEB)
-                return 15;
-            else
-                return 1.5f;
-        } else if (itemType.name().endsWith("SWORD")) {
-            if (blockType == Material.COBWEB)
-                return 15;
-            else
-                return 1.5f;
-        }
-        return 1;
+        return CraftItemStack.asNMSCopy(tool).getToolBonus(new CraftBlock(block).getHandle());
     }
 
     public static float getToolBonus(@Nonnull Block block, @Nonnull ItemStack tool) {
@@ -130,4 +114,16 @@ public class BlockUtil {
         return ((Tool) instance).getToolBonus(block, tool);
     }
 
+    public static boolean vanillaNeedCorrectTool(@Nonnull Block block) {
+        return new CraftBlock(block).getHandle().needCorrectTool();
+    }
+
+    public static boolean needCorrectTool(@Nonnull Block block) {
+        BlockBase instance = MainManager.getBlockInstance(block.getLocation());
+        if (instance == null)
+            return vanillaNeedCorrectTool(block);
+        if (!(instance instanceof Destroyable))
+            return true;
+        return ((Destroyable) instance).needCorrectTool(block);
+    }
 }

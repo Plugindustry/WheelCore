@@ -5,6 +5,9 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.BlockPosition;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import io.github.plugindustry.wheelcore.WheelCore;
+import io.github.plugindustry.wheelcore.internal.shadow.CraftBlock;
+import io.github.plugindustry.wheelcore.internal.shadow.CraftPlayer;
+import io.github.plugindustry.wheelcore.internal.shadow.NMSBlock;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -14,6 +17,8 @@ import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
 
 public class PlayerUtil {
+    public static final int EFFECT_BLOCK_BREAK = 2001;
+
     public static void sendActionBar(@Nonnull Player p, String s) {
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.SET_ACTION_BAR_TEXT);
         packet.getChatComponents().write(0, WrappedChatComponent.fromLegacyText(s));
@@ -74,8 +79,26 @@ public class PlayerUtil {
         return player.isInWater();
     }
 
-    // TODO: Compact API
+    public static void sendBlockBreak(@Nonnull Player player, @Nonnull Block block) {
+        PacketContainer packet = new PacketContainer(PacketType.Play.Server.WORLD_EVENT);
+        packet.getIntegers().write(0, EFFECT_BLOCK_BREAK);
+        packet.getBlockPositionModifier().write(0, new BlockPosition(block.getLocation().toVector()));
+        packet.getIntegers().write(1, NMSBlock.getDataId(new CraftBlock(block).getHandle()));
+        packet.getBooleans().write(0, false);
+        try {
+            WheelCore.protocolManager.sendServerPacket(player, packet);
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static boolean breakBlock(@Nonnull Player player, @Nonnull Block block) {
-        return player.breakBlock(block);
+        sendBlockBreak(player, block);
+        return new CraftPlayer(player).getHandle()
+                .getInteractManager()
+                .breakBlock(new io.github.plugindustry.wheelcore.internal.shadow.BlockPosition(BlockPosition.getConverter()
+                                                                                                       .getGeneric(new BlockPosition(
+                                                                                                               block.getLocation()
+                                                                                                                       .toVector()))));
     }
 }

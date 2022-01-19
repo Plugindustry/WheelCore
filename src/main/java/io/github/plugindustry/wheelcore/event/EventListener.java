@@ -10,6 +10,7 @@ import io.github.plugindustry.wheelcore.interfaces.item.Breakable;
 import io.github.plugindustry.wheelcore.interfaces.item.Consumable;
 import io.github.plugindustry.wheelcore.interfaces.item.ItemBase;
 import io.github.plugindustry.wheelcore.interfaces.item.Placeable;
+import io.github.plugindustry.wheelcore.interfaces.item.Tool;
 import io.github.plugindustry.wheelcore.inventory.ClassicInventoryInteractor;
 import io.github.plugindustry.wheelcore.manager.MainManager;
 import io.github.plugindustry.wheelcore.manager.RecipeRegistry;
@@ -60,6 +61,7 @@ import org.bukkit.inventory.ItemStack;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -68,6 +70,15 @@ import java.util.stream.Stream;
 
 public class EventListener implements Listener {
     // methods return true if the event doesn't need to be cancelled
+
+    private static List<ItemStack> fillMatrix(ItemStack[] matrix) {
+        if (matrix.length == 9)
+            return Arrays.asList(matrix);
+        else if (matrix.length == 4)
+            return Arrays.asList(matrix[0], matrix[1], null, matrix[2], matrix[3], null, null, null, null);
+        else
+            throw new IllegalArgumentException("Illegal matrix size");
+    }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
@@ -82,6 +93,18 @@ public class EventListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event) {
+        ItemStack toolItem = event.getPlayer().getInventory().getItemInMainHand();
+        ItemBase itemInstance = MainManager.getItemInstance(toolItem);
+        if (itemInstance instanceof Tool) {
+            ((Tool) itemInstance).getOverrideItemDrop(event.getBlock(), toolItem).ifPresent(items -> {
+                event.setDropItems(false);
+                items.forEach(item -> event.getBlock()
+                        .getWorld()
+                        .dropItemNaturally(event.getBlock().getLocation(), item));
+            });
+            ((Tool) itemInstance).getOverrideExpDrop(event.getBlock(), toolItem).ifPresent(event::setExpToDrop);
+        }
+
         if (MainManager.hasBlock(event.getBlock().getLocation())) {
             // don't drop any item by default.
             event.setDropItems(false);
@@ -159,7 +182,7 @@ public class EventListener implements Listener {
         CraftingInventory craftingInv = event.getInventory();
         if (Stream.of(craftingInv.getMatrix()).anyMatch(item -> MainManager.getItemInstance(item) != null) ||
             RecipeRegistry.isPlaceholder(event.getRecipe())) {
-            RecipeBase result = RecipeRegistry.matchCraftingRecipe(Arrays.asList(craftingInv.getMatrix()), null);
+            RecipeBase result = RecipeRegistry.matchCraftingRecipe(fillMatrix(craftingInv.getMatrix()), null);
             craftingInv.setResult(result == null ? null : result.getResult());
         }
     }
@@ -169,7 +192,7 @@ public class EventListener implements Listener {
         CraftingInventory craftingInv = event.getInventory();
         HashMap<Integer, ItemStack> map = new HashMap<>();
         if ((Stream.of(craftingInv.getMatrix()).anyMatch(item -> MainManager.getItemInstance(item) != null) ||
-             RecipeRegistry.isPlaceholder(event.getRecipe())) && RecipeRegistry.matchCraftingRecipe(Arrays.asList(
+             RecipeRegistry.isPlaceholder(event.getRecipe())) && RecipeRegistry.matchCraftingRecipe(fillMatrix(
                 craftingInv.getMatrix()), map) != null) {
             ItemStack[] contents = craftingInv.getStorageContents();
             map.forEach((key, value) -> contents[key] = value);

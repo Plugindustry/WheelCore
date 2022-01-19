@@ -15,6 +15,10 @@ public class ShapedRecipeFactory {
     private final Map<RecipeChoice, Integer> damageMapping = new HashMap<>();
     private List<String> patterns = new LinkedList<>();
 
+    public static ShapedRecipeFactory create() {
+        return new ShapedRecipeFactory();
+    }
+
     public ShapedRecipeFactory map(char c, ItemStack target) {
         return map(c, new ItemStackChoice(target));
     }

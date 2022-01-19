@@ -14,6 +14,8 @@ public interface Destroyable {
 
     boolean isPreferredTool(@Nonnull Block block, @Nonnull ItemStack tool);
 
+    boolean needCorrectTool(@Nonnull Block block);
+
     enum DestroyMethod {
         PLAYER_DESTROY, EXPLOSION, OTHER
     }

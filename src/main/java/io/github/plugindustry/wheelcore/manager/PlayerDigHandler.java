@@ -38,12 +38,12 @@ public class PlayerDigHandler {
             return 1;
         ItemStack tool = player.getInventory().getItemInMainHand();
         boolean prefer = BlockUtil.isPreferredTool(block, tool);
-        float baseTime = hardness * (prefer ? 30 : 100);
+        float baseTime = hardness * (prefer || !BlockUtil.needCorrectTool(block) ? 30 : 100);
         float speed = 1;
         if (prefer) {
             speed *= BlockUtil.getToolBonus(block, tool);
             int level = tool.getEnchantments().getOrDefault(Enchantment.DIG_SPEED, 0);
-            speed *= level * level + 1;
+            speed += level * level + 1;
         }
         for (PotionEffect potionEffect : player.getActivePotionEffects()) {
             if (potionEffect.getType() == PotionEffectType.FAST_DIGGING) {

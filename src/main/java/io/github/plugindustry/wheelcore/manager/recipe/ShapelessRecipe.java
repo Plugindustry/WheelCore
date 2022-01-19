@@ -69,7 +69,7 @@ public class ShapelessRecipe implements CraftingRecipe {
             ShapedRecipe.checkItemDamage(recipe, damage, this.damages);
         }
 
-        return true;
+        return result;
     }
 
     public List<org.bukkit.inventory.RecipeChoice.MaterialChoice> getChoices() {
