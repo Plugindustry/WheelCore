@@ -71,7 +71,7 @@
         <repository>
             <id>bukkit-rip</id>
             <name>Bukkit.RIP</name>
-            <url>https://mvn.bukkit.rip/{repository}</url>
+            <url>https://mvn.bukkit.rip/release</url>
         </repository>
     </repositories>
 
