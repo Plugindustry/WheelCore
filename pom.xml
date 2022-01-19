@@ -68,6 +68,11 @@
             <name>aliyun maven</name>
             <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
         </repository>
+        <repository>
+            <id>bukkit-rip</id>
+            <name>Bukkit.RIP</name>
+            <url>https://mvn.bukkit.rip/{repository}</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -108,6 +113,11 @@
             <groupId>org.reflections</groupId>
             <artifactId>reflections</artifactId>
             <version>0.10.2</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.czm23333</groupId>
+            <artifactId>TransparentReflect</artifactId>
+            <version>1.0</version>
         </dependency>
     </dependencies>
 </project>
