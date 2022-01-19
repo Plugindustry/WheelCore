@@ -69,9 +69,9 @@
             <url>http://maven.aliyun.com/nexus/content/groups/public/</url>
         </repository>
         <repository>
-            <id>bukkit-rip</id>
+            <id>bukkit-rip-releases</id>
             <name>Bukkit.RIP</name>
-            <url>https://mvn.bukkit.rip/release</url>
+            <url>https://mvn.bukkit.rip/releases</url>
         </repository>
     </repositories>
 
