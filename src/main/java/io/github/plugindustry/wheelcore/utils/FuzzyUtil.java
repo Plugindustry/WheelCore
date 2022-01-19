@@ -21,8 +21,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class FuzzyUtil {
-    private static Method tempPassValue;
-
     @Nonnull
     public static Method findDeclaredFirstMatch(@Nonnull FuzzyMethodContract contract, @Nonnull Class<?> clazz) {
         return Arrays.stream(clazz.getDeclaredMethods())
