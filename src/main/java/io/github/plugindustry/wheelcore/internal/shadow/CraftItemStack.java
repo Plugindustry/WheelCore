@@ -14,4 +14,10 @@ public class CraftItemStack {
     public static NMSItemStack asNMSCopy(ItemStack itemStack) {
         return null;
     }
+
+    @Shadow("cb/CraftItemStack.asCraftCopy")
+    @Nonnull
+    public static CraftItemStack asCraftCopy(ItemStack original) {
+        return null;
+    }
 }

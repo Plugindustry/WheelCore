@@ -45,7 +45,7 @@ public class EnchantmentUtil {
     public static String getLoreOfEnchant(CustomEnchantment enchantment, int level) {
         return ChatColor.RESET.toString() +
                (enchantment.isTreasure() ? ChatColor.GOLD : (enchantment.isCursed() ? ChatColor.RED : ChatColor.GRAY)) +
-               I18n.getLocaleString(enchantment.getLocalizedNameKey()) +
+               I18n.getLocalePlaceholder(enchantment.getLocalizedNameKey()) +
                " " +
                getLevelStr(level);
     }

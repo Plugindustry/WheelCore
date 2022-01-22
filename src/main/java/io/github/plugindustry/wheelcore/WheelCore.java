@@ -4,10 +4,11 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import io.github.plugindustry.wheelcore.command.WheelCoreCommand;
 import io.github.plugindustry.wheelcore.event.EventListener;
-import io.github.plugindustry.wheelcore.event.PacketListener;
+import io.github.plugindustry.wheelcore.i18n.I18n;
 import io.github.plugindustry.wheelcore.internal.shadow.ShadowRegistry;
 import io.github.plugindustry.wheelcore.manager.ConfigManager;
 import io.github.plugindustry.wheelcore.manager.MainManager;
+import io.github.plugindustry.wheelcore.manager.PlayerDigHandler;
 import io.github.plugindustry.wheelcore.task.AfterLoadTask;
 import io.github.plugindustry.wheelcore.task.RegisterTask;
 import io.github.plugindustry.wheelcore.utils.DebuggingLogger;
@@ -53,7 +54,8 @@ public final class WheelCore extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new EventListener(), WheelCore.instance);
 
         // Register PacketListener
-        protocolManager.addPacketListener(new PacketListener());
+        protocolManager.addPacketListener(new PlayerDigHandler.PacketListener());
+        protocolManager.addPacketListener(new I18n.PacketListener());
 
         // Load config
         ConfigManager.init();

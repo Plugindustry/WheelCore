@@ -50,6 +50,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerLocaleChangeEvent;
 import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
@@ -349,5 +350,10 @@ public class EventListener implements Listener {
         if (event.getPlayer().getGameMode() == GameMode.SURVIVAL ||
             event.getPlayer().getGameMode() == GameMode.ADVENTURE)
             event.setCancelled(true);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onPlayerLocaleChange(PlayerLocaleChangeEvent event) {
+        Bukkit.getScheduler().runTask(WheelCore.instance, () -> event.getPlayer().updateInventory());
     }
 }

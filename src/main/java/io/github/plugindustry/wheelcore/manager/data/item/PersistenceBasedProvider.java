@@ -16,6 +16,7 @@ import org.bukkit.persistence.PersistentDataType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
@@ -59,9 +60,10 @@ public class PersistenceBasedProvider implements ItemDataProvider {
     public Set<String> getOreDictionary(@Nullable ItemStack itemStack) {
         if (itemStack == null || !itemStack.hasItemMeta())
             return Collections.emptySet();
-        String oreDict = Objects.requireNonNull(itemStack.getItemMeta()).getPersistentDataContainer().get(
+        byte[] bytes = Objects.requireNonNull(itemStack.getItemMeta()).getPersistentDataContainer().get(
                 ITEM_ORE_DICTIONARY_KEY,
-                PersistentDataType.STRING);
+                PersistentDataType.BYTE_ARRAY);
+        String oreDict = bytes == null ? null : new String(bytes, StandardCharsets.UTF_8);
         return oreDict == null ? Collections.emptySet() : gson.fromJson(oreDict, new TypeToken<Set<String>>() {
         }.getType());
     }
@@ -111,10 +113,11 @@ public class PersistenceBasedProvider implements ItemDataProvider {
                         Objects.requireNonNull(itemStack.getItemMeta()) :
                         Bukkit.getItemFactory().getItemMeta(itemStack.getType());
         Objects.requireNonNull(meta).getPersistentDataContainer().set(ITEM_ORE_DICTIONARY_KEY,
-                                                                      PersistentDataType.STRING,
+                                                                      PersistentDataType.BYTE_ARRAY,
                                                                       gson.toJson(oreDictionary,
                                                                                   new TypeToken<Set<String>>() {
-                                                                                  }.getType()));
+                                                                                  }.getType())
+                                                                              .getBytes(StandardCharsets.UTF_8));
         itemStack.setItemMeta(meta);
     }
 }

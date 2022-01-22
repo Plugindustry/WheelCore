@@ -4,12 +4,12 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSerializer;
-import org.bukkit.Location;
-import org.bukkit.World;
-import org.bukkit.inventory.ItemStack;
+import com.google.gson.reflect.TypeToken;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.UUID;
 
 public class GsonHelper {
     public static final JsonSerializer<?> POLYMORPHISM_SERIALIZER = (obj, type, jsonSerializationContext) -> {
@@ -28,40 +28,34 @@ public class GsonHelper {
             return null;
         }
     };
-    private static final JsonSerializer<Location> LOCATION_SERIALIZER = (location, type, jsonSerializationContext) -> {
-        JsonObject result = new JsonObject();
-        result.addProperty("x", location.getX());
-        result.addProperty("y", location.getY());
-        result.addProperty("z", location.getZ());
-        result.addProperty("pitch", location.getPitch());
-        result.addProperty("yaw", location.getYaw());
-        if (location.getWorld() != null)
-            result.add("world", jsonSerializationContext.serialize(location.getWorld().getUID(), UUID.class));
-        return result;
+
+    private static final JsonSerializer<ConfigurationSerializable> CONFIGURATION_SERIALIZABLE_SERIALIZER = (configurationSerializable, type, jsonSerializationContext) -> {
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put(ConfigurationSerialization.SERIALIZED_TYPE_KEY,
+                ConfigurationSerialization.getAlias(configurationSerializable.getClass()));
+        map.putAll(configurationSerializable.serialize());
+        return jsonSerializationContext.serialize(map, new TypeToken<Map<String, Object>>() {
+        }.getType());
     };
-    private static final JsonDeserializer<Location> LOCATION_DESERIALIZER = (jsonElement, type, jsonDeserializationContext) -> {
-        JsonObject jsonObject = jsonElement.getAsJsonObject();
-        double x = jsonObject.get("x").getAsDouble();
-        double y = jsonObject.get("y").getAsDouble();
-        double z = jsonObject.get("z").getAsDouble();
-        float pitch = jsonObject.get("pitch").getAsFloat();
-        float yaw = jsonObject.get("yaw").getAsFloat();
-        World world = jsonObject.has("world") ? jsonDeserializationContext.deserialize(jsonObject.get("world"),
-                                                                                       UUID.class) : null;
-        return new Location(world, x, y, z, yaw, pitch);
-    };
-    private static final JsonSerializer<ItemStack> ITEM_STACK_SERIALIZER = (itemStack, type, jsonSerializationContext) -> jsonSerializationContext.serialize(
-            itemStack.serialize(),
-            Map.class);
-    private static final JsonDeserializer<ItemStack> ITEM_STACK_DESERIALIZER = (jsonElement, type, jsonDeserializationContext) -> ItemStack.deserialize(
-            jsonDeserializationContext.deserialize(jsonElement, Map.class));
+    private static final JsonDeserializer<ConfigurationSerializable> CONFIGURATION_SERIALIZABLE_DESERIALIZER = (jsonElement, type, jsonDeserializationContext) -> deserializeMap(
+            jsonDeserializationContext.deserialize(jsonElement, new TypeToken<Map<String, Object>>() {
+            }.getType()));
+
+    private static ConfigurationSerializable deserializeMap(Map<String, Object> map) {
+        map.entrySet().forEach(entry -> {
+            if (entry.getValue() instanceof Map) {
+                Map<?, ?> subMap = (Map<?, ?>) entry.getValue();
+                if (subMap.containsKey(ConfigurationSerialization.SERIALIZED_TYPE_KEY))
+                    entry.setValue(deserializeMap((Map<String, Object>) subMap));
+            }
+        });
+        return ConfigurationSerialization.deserializeObject(map);
+    }
 
     public static GsonBuilder bukkitCompact() {
         GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(Location.class, LOCATION_SERIALIZER);
-        builder.registerTypeAdapter(Location.class, LOCATION_DESERIALIZER);
-        builder.registerTypeAdapter(ItemStack.class, ITEM_STACK_SERIALIZER);
-        builder.registerTypeAdapter(ItemStack.class, ITEM_STACK_DESERIALIZER);
+        builder.registerTypeHierarchyAdapter(ConfigurationSerializable.class, CONFIGURATION_SERIALIZABLE_SERIALIZER);
+        builder.registerTypeHierarchyAdapter(ConfigurationSerializable.class, CONFIGURATION_SERIALIZABLE_DESERIALIZER);
         return builder;
     }
 }

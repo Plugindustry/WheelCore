@@ -114,6 +114,12 @@ public class ShadowRegistry {
                                                                         ItemStack.class).requireModifier(Modifier.STATIC).build(),
                                                                 MinecraftReflection.getCraftItemStackClass())
                                        .getName());
+        cbDir.makeSubDirectory("CraftItemStack.asCraftCopy",
+                               FuzzyUtil.findDeclaredFirstMatch(FuzzyMethodContract.newBuilder().returnTypeExact(
+                                                                        MinecraftReflection.getCraftItemStackClass()).requirePublic().parameterExactType(
+                                                                        ItemStack.class).requireModifier(Modifier.STATIC).build(),
+                                                                MinecraftReflection.getCraftItemStackClass())
+                                       .getName());
 
         try {
             ShadowManager.initShadow(ShadowRegistry.class);

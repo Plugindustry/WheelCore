@@ -4,10 +4,12 @@ import io.github.plugindustry.wheelcore.WheelCore;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.util.Locale;
 
 public class ConfigManager {
     public static int autoSaveDelay;
     public static boolean debug;
+    public static Locale fallbackLang;
     private static YamlConfiguration config;
 
     public static void init() {
@@ -25,6 +27,7 @@ public class ConfigManager {
 
         autoSaveDelay = config.getInt("autosave-delay", 0);
         debug = config.getBoolean("debug", false);
+        fallbackLang = Locale.forLanguageTag(config.getString("fallback-lang", "en-US"));
     }
 
     public static YamlConfiguration getConfig() {

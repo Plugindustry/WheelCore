@@ -8,8 +8,10 @@ import com.comphenix.protocol.wrappers.nbt.NbtType;
 import com.comphenix.protocol.wrappers.nbt.NbtWrapper;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import io.github.czm23333.transparentreflect.ShadowManager;
 import io.github.plugindustry.wheelcore.interfaces.item.ItemBase;
 import io.github.plugindustry.wheelcore.interfaces.item.ItemData;
+import io.github.plugindustry.wheelcore.internal.shadow.CraftItemStack;
 import io.github.plugindustry.wheelcore.manager.MainManager;
 import io.github.plugindustry.wheelcore.utils.GsonHelper;
 import org.bukkit.inventory.ItemStack;
@@ -36,8 +38,9 @@ public class NBTBasedProvider implements ItemDataProvider {
     public ItemBase getInstance(@Nullable ItemStack itemStack) {
         if (itemStack == null)
             return null;
-        Optional<NbtWrapper<?>> nbtWrapperOptional = NbtFactory.fromItemOptional(itemStack);
-        if (!nbtWrapperOptional.isPresent())
+        Optional<NbtWrapper<?>> nbtWrapperOptional = NbtFactory.fromItemOptional((ItemStack) ShadowManager.shadowUnpack(
+                CraftItemStack.asCraftCopy(itemStack)));
+        if (nbtWrapperOptional.isEmpty())
             return null;
         NbtWrapper<?> nbtWrapper = nbtWrapperOptional.get();
         if (nbtWrapper.getType() != NbtType.TAG_COMPOUND)
@@ -54,8 +57,9 @@ public class NBTBasedProvider implements ItemDataProvider {
     public ItemData getData(@Nullable ItemStack itemStack) {
         if (itemStack == null)
             return null;
-        Optional<NbtWrapper<?>> nbtWrapperOptional = NbtFactory.fromItemOptional(itemStack);
-        if (!nbtWrapperOptional.isPresent())
+        Optional<NbtWrapper<?>> nbtWrapperOptional = NbtFactory.fromItemOptional((ItemStack) ShadowManager.shadowUnpack(
+                CraftItemStack.asCraftCopy(itemStack)));
+        if (nbtWrapperOptional.isEmpty())
             return null;
         NbtWrapper<?> nbtWrapper = nbtWrapperOptional.get();
         if (nbtWrapper.getType() != NbtType.TAG_COMPOUND)
@@ -73,8 +77,9 @@ public class NBTBasedProvider implements ItemDataProvider {
     public Set<String> getOreDictionary(@Nullable ItemStack itemStack) {
         if (itemStack == null)
             return Collections.emptySet();
-        Optional<NbtWrapper<?>> nbtWrapperOptional = NbtFactory.fromItemOptional(itemStack);
-        if (!nbtWrapperOptional.isPresent())
+        Optional<NbtWrapper<?>> nbtWrapperOptional = NbtFactory.fromItemOptional((ItemStack) ShadowManager.shadowUnpack(
+                CraftItemStack.asCraftCopy(itemStack)));
+        if (nbtWrapperOptional.isEmpty())
             return Collections.emptySet();
         NbtWrapper<?> nbtWrapper = nbtWrapperOptional.get();
         if (nbtWrapper.getType() != NbtType.TAG_COMPOUND)
@@ -90,7 +95,8 @@ public class NBTBasedProvider implements ItemDataProvider {
 
     @Override
     public void setInstance(@Nonnull ItemStack itemStack, @Nullable ItemBase instance) {
-        NbtWrapper<?> nbtWrapper = NbtFactory.fromItemTag(itemStack);
+        ItemStack newItemStack = (ItemStack) ShadowManager.shadowUnpack(CraftItemStack.asCraftCopy(itemStack));
+        NbtWrapper<?> nbtWrapper = NbtFactory.fromItemTag(newItemStack);
         NbtCompound compound = nbtWrapper.getType() == NbtType.TAG_COMPOUND ?
                                NbtFactory.asCompound(nbtWrapper) :
                                NbtFactory.ofCompound("tag");
@@ -98,12 +104,14 @@ public class NBTBasedProvider implements ItemDataProvider {
             compound.remove("wheel_core_item_type");
         else
             compound.put("wheel_core_item_type", MainManager.getIdFromInstance(instance));
-        NbtFactory.setItemTag(itemStack, compound);
+        NbtFactory.setItemTag(newItemStack, compound);
+        itemStack.setItemMeta(newItemStack.getItemMeta());
     }
 
     @Override
     public void setData(@Nonnull ItemStack itemStack, @Nullable ItemData data) {
-        NbtWrapper<?> nbtWrapper = NbtFactory.fromItemTag(itemStack);
+        ItemStack newItemStack = (ItemStack) ShadowManager.shadowUnpack(CraftItemStack.asCraftCopy(itemStack));
+        NbtWrapper<?> nbtWrapper = NbtFactory.fromItemTag(newItemStack);
         NbtCompound compound = nbtWrapper.getType() == NbtType.TAG_COMPOUND ?
                                NbtFactory.asCompound(nbtWrapper) :
                                NbtFactory.ofCompound("tag");
@@ -111,17 +119,20 @@ public class NBTBasedProvider implements ItemDataProvider {
             compound.remove("wheel_core_item_data");
         else
             compound.put("wheel_core_item_data", gson.toJson(data, ItemData.class));
-        NbtFactory.setItemTag(itemStack, compound);
+        NbtFactory.setItemTag(newItemStack, compound);
+        itemStack.setItemMeta(newItemStack.getItemMeta());
     }
 
     @Override
     public void setOreDictionary(@Nonnull ItemStack itemStack, @Nonnull Set<String> oreDictionary) {
-        NbtWrapper<?> nbtWrapper = NbtFactory.fromItemTag(itemStack);
+        ItemStack newItemStack = (ItemStack) ShadowManager.shadowUnpack(CraftItemStack.asCraftCopy(itemStack));
+        NbtWrapper<?> nbtWrapper = NbtFactory.fromItemTag(newItemStack);
         NbtCompound compound = nbtWrapper.getType() == NbtType.TAG_COMPOUND ?
                                NbtFactory.asCompound(nbtWrapper) :
                                NbtFactory.ofCompound("tag");
         compound.put("wheel_core_item_ore_dictionary",
                      NbtFactory.ofList("wheel_core_item_ore_dictionary", oreDictionary));
-        NbtFactory.setItemTag(itemStack, compound);
+        NbtFactory.setItemTag(newItemStack, compound);
+        itemStack.setItemMeta(newItemStack.getItemMeta());
     }
 }
