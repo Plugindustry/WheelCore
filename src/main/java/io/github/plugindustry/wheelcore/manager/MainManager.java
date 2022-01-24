@@ -66,7 +66,7 @@ public class MainManager {
     /**
      * @param task The task that need to be executed at the end of tick
      */
-    public void queuePostTickTask(@Nonnull Runnable task) {
+    public static void queuePostTickTask(@Nonnull Runnable task) {
         postTickTasks.add(task);
     }
 
