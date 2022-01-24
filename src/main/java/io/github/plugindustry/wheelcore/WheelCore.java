@@ -24,7 +24,6 @@ import java.util.logging.Filter;
 import java.util.logging.LogRecord;
 
 public final class WheelCore extends JavaPlugin {
-    public static final String serverVersion = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
     public static WheelCore instance;
     public static ProtocolManager protocolManager;
 
