@@ -12,9 +12,11 @@ import io.github.plugindustry.wheelcore.manager.PlayerDigHandler;
 import io.github.plugindustry.wheelcore.task.AfterLoadTask;
 import io.github.plugindustry.wheelcore.task.RegisterTask;
 import io.github.plugindustry.wheelcore.utils.DebuggingLogger;
+import io.github.plugindustry.wheelcore.utils.GsonHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.World;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Objects;
@@ -56,6 +58,9 @@ public final class WheelCore extends JavaPlugin {
         // Register PacketListener
         protocolManager.addPacketListener(new PlayerDigHandler.PacketListener());
         protocolManager.addPacketListener(new I18n.PacketListener());
+
+        // Register GsonHelper.TypedNumber
+        ConfigurationSerialization.registerClass(GsonHelper.TypedNumber.class);
 
         // Load config
         ConfigManager.init();
