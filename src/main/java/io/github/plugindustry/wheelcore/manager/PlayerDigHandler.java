@@ -162,8 +162,10 @@ public class PlayerDigHandler {
                 iterator1.remove();
             }
         }
-        digProcess.forEach((location, pair) -> PlayerUtil.broadcastBlockCrack(location,
-                                                                              (int) Math.floor(pair.first * 10)));
+        digProcess.forEach((location, pair) -> {
+            if (pair.first != 0.0f)
+                PlayerUtil.broadcastBlockCrack(location, (int) Math.floor(pair.first * 10));
+        });
     }
 
     public static abstract class DestroySpeedModifier {
