@@ -76,7 +76,8 @@ public class PlayerDigHandler {
     }
 
     private static boolean isDigIllegal(Player player, Location block) {
-        return !(block.distance(player.getLocation()) <= 6) || !block.getChunk().isLoaded();
+        return (!(block.distance(player.getLocation()) <= 6) || !block.getChunk().isLoaded()) ||
+               block.getBlock().getType() == Material.AIR;
     }
 
     public static void startDig(Player player, Location block) {
@@ -190,6 +191,7 @@ public class PlayerDigHandler {
                 return;
             Bukkit.getScheduler().runTask(WheelCore.instance, () -> {
                 if (type == EnumWrappers.PlayerDigType.START_DESTROY_BLOCK) {
+                    event.setCancelled(true);
                     byte flags = 0;
                     if (player.hasPotionEffect(PotionEffectType.SLOW_DIGGING)) {
                         PotionEffect effect = player.getActivePotionEffects()
