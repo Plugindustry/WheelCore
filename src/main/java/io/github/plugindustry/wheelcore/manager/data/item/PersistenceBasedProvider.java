@@ -6,6 +6,7 @@ import com.google.gson.reflect.TypeToken;
 import io.github.plugindustry.wheelcore.WheelCore;
 import io.github.plugindustry.wheelcore.interfaces.item.ItemBase;
 import io.github.plugindustry.wheelcore.interfaces.item.ItemData;
+import io.github.plugindustry.wheelcore.manager.ItemMapping;
 import io.github.plugindustry.wheelcore.manager.MainManager;
 import io.github.plugindustry.wheelcore.utils.GsonHelper;
 import org.bukkit.Bukkit;
@@ -58,14 +59,17 @@ public class PersistenceBasedProvider implements ItemDataProvider {
     @Nonnull
     @Override
     public Set<String> getOreDictionary(@Nullable ItemStack itemStack) {
-        if (itemStack == null || !itemStack.hasItemMeta())
+        if (itemStack == null)
             return Collections.emptySet();
+        if (!itemStack.hasItemMeta())
+            return ItemMapping.getVanillaOreDict(itemStack.getType());
         byte[] bytes = Objects.requireNonNull(itemStack.getItemMeta()).getPersistentDataContainer().get(
                 ITEM_ORE_DICTIONARY_KEY,
                 PersistentDataType.BYTE_ARRAY);
         String oreDict = bytes == null ? null : new String(bytes, StandardCharsets.UTF_8);
-        return oreDict == null ? Collections.emptySet() : gson.fromJson(oreDict, new TypeToken<Set<String>>() {
-        }.getType());
+        return oreDict == null ? ItemMapping.getVanillaOreDict(itemStack.getType()) : gson.fromJson(oreDict,
+                                                                                                    new TypeToken<Set<String>>() {
+                                                                                                    }.getType());
     }
 
     @Override

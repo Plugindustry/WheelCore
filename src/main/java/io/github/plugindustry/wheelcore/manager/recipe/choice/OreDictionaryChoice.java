@@ -5,6 +5,7 @@ import io.github.plugindustry.wheelcore.manager.MainManager;
 import io.github.plugindustry.wheelcore.utils.ItemStackUtil;
 import org.bukkit.inventory.ItemStack;
 
+import javax.annotation.Nonnull;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
@@ -29,11 +30,12 @@ public class OreDictionaryChoice implements RecipeChoice {
     }
 
     @Override
-    public boolean matches(ItemStack item) {
+    public boolean matches(@Nonnull ItemStack item) {
         return ((!exact) || ItemStackUtil.getDurability(item) == 0) &&
                MainManager.getItemOreDictionary(item).stream().anyMatch(dictionaryKeys::contains);
     }
 
+    @Nonnull
     @Override
     public org.bukkit.inventory.RecipeChoice.MaterialChoice getPlaceholderChoice() {
         return new org.bukkit.inventory.RecipeChoice.MaterialChoice(dictionaryKeys.stream()

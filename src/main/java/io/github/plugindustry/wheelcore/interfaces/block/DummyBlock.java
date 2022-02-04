@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 public class DummyBlock implements BlockBase, Placeable, Destroyable, Interactive {
     @Override
@@ -55,7 +56,7 @@ public class DummyBlock implements BlockBase, Placeable, Destroyable, Interactiv
 
     @Nonnull
     public ItemStack getItemStack() {
-        return ItemMapping.get(MainManager.getIdFromInstance(this));
+        return ItemMapping.get(Objects.requireNonNull(MainManager.getIdFromInstance(this)));
     }
 
     @Override

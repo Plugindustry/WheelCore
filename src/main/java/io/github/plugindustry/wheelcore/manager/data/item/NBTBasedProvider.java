@@ -12,6 +12,7 @@ import io.github.czm23333.transparentreflect.ShadowManager;
 import io.github.plugindustry.wheelcore.interfaces.item.ItemBase;
 import io.github.plugindustry.wheelcore.interfaces.item.ItemData;
 import io.github.plugindustry.wheelcore.internal.shadow.CraftItemStack;
+import io.github.plugindustry.wheelcore.manager.ItemMapping;
 import io.github.plugindustry.wheelcore.manager.MainManager;
 import io.github.plugindustry.wheelcore.utils.GsonHelper;
 import org.bukkit.inventory.ItemStack;
@@ -80,16 +81,16 @@ public class NBTBasedProvider implements ItemDataProvider {
         Optional<NbtWrapper<?>> nbtWrapperOptional = NbtFactory.fromItemOptional((ItemStack) ShadowManager.shadowUnpack(
                 CraftItemStack.asCraftCopy(itemStack)));
         if (nbtWrapperOptional.isEmpty())
-            return Collections.emptySet();
+            return ItemMapping.getVanillaOreDict(itemStack.getType());
         NbtWrapper<?> nbtWrapper = nbtWrapperOptional.get();
         if (nbtWrapper.getType() != NbtType.TAG_COMPOUND)
-            return Collections.emptySet();
+            return ItemMapping.getVanillaOreDict(itemStack.getType());
         NbtCompound compound = NbtFactory.asCompound(nbtWrapper);
         if (!compound.containsKey("wheel_core_item_ore_dictionary"))
-            return Collections.emptySet();
+            return ItemMapping.getVanillaOreDict(itemStack.getType());
         Object data = compound.getObject("wheel_core_item_ore_dictionary");
         if ((!(data instanceof NbtList)) || ((NbtList<?>) data).getElementType() != NbtType.TAG_STRING)
-            return Collections.emptySet();
+            return ItemMapping.getVanillaOreDict(itemStack.getType());
         return ((NbtList<String>) data).asCollection().stream().map(NbtBase::getValue).collect(Collectors.toSet());
     }
 

@@ -1,5 +1,8 @@
 package io.github.plugindustry.wheelcore.manager.recipe;
 
+import io.github.plugindustry.wheelcore.interfaces.item.Damageable;
+import io.github.plugindustry.wheelcore.interfaces.item.ItemBase;
+import io.github.plugindustry.wheelcore.manager.MainManager;
 import io.github.plugindustry.wheelcore.manager.recipe.choice.RecipeChoice;
 import io.github.plugindustry.wheelcore.utils.ItemStackUtil;
 import org.bukkit.Material;
@@ -10,6 +13,7 @@ import javax.annotation.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class ShapedRecipe implements CraftingRecipe {
     private final List<List<RecipeChoice>> matrix;
@@ -34,12 +38,25 @@ public class ShapedRecipe implements CraftingRecipe {
                 damages.forEach((items, dmg) -> {
                     if (items.matches(is)) {
                         ItemStack newIs = is.clone();
-                        ItemStackUtil.setDurability(newIs, ItemStackUtil.getDurability(newIs) + dmg);
+
+                        boolean flag = true;
+                        int realDmg = dmg;
+                        ItemBase itemBase = MainManager.getItemInstance(newIs);
+                        if (itemBase instanceof Damageable) {
+                            Optional<Integer> result = ((Damageable) itemBase).onItemDamage(null, newIs, dmg);
+                            if (result.isPresent())
+                                realDmg = result.get();
+                            else
+                                flag = false;
+                        } else if (itemBase != null)
+                            flag = false;
+
+                        if (flag)
+                            ItemStackUtil.setDurability(newIs, ItemStackUtil.getDurability(newIs) + realDmg);
                         if (ItemStackUtil.getDurability(newIs) > newIs.getType().getMaxDurability())
                             newIs = new ItemStack(Material.AIR);
-                        if (damage != null) {
+                        if (damage != null)
                             damage.put(finalI * 3 + finalJ + 1, newIs);
-                        }
                     }
                 });
             }

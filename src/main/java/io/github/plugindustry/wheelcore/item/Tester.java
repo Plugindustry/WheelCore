@@ -1,9 +1,8 @@
 package io.github.plugindustry.wheelcore.item;
 
-import io.github.plugindustry.wheelcore.interfaces.Interactive;
 import io.github.plugindustry.wheelcore.interfaces.inventory.Position;
 import io.github.plugindustry.wheelcore.interfaces.inventory.SlotSize;
-import io.github.plugindustry.wheelcore.interfaces.item.ItemBase;
+import io.github.plugindustry.wheelcore.interfaces.item.DummyItem;
 import io.github.plugindustry.wheelcore.inventory.ClassicInventoryInteractor;
 import io.github.plugindustry.wheelcore.inventory.Window;
 import io.github.plugindustry.wheelcore.inventory.widget.WidgetFixedItem;
@@ -17,7 +16,7 @@ import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public class Tester implements ItemBase, Interactive {
+public class Tester extends DummyItem {
     final Window window;
     final ClassicInventoryInteractor windowInteractor;
 

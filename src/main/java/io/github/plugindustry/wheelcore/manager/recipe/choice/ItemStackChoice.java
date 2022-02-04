@@ -3,6 +3,8 @@ package io.github.plugindustry.wheelcore.manager.recipe.choice;
 import io.github.plugindustry.wheelcore.utils.ItemStackUtil;
 import org.bukkit.inventory.ItemStack;
 
+import javax.annotation.Nonnull;
+
 public class ItemStackChoice implements RecipeChoice {
     private final ItemStack item;
     private boolean exact = false;
@@ -17,10 +19,11 @@ public class ItemStackChoice implements RecipeChoice {
     }
 
     @Override
-    public boolean matches(ItemStack item) {
+    public boolean matches(@Nonnull ItemStack item) {
         return ItemStackUtil.isSimilar(this.item, item, !exact);
     }
 
+    @Nonnull
     @Override
     public org.bukkit.inventory.RecipeChoice.MaterialChoice getPlaceholderChoice() {
         return new org.bukkit.inventory.RecipeChoice.MaterialChoice(item.getType());

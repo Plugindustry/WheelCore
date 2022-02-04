@@ -71,6 +71,8 @@ public final class WheelCore extends JavaPlugin {
         RegisterTask.registerItem();
         DebuggingLogger.debug("register recipes");
         RegisterTask.registerRecipes();
+        DebuggingLogger.debug("register vanilla ore dict");
+        RegisterTask.registerVanillaOreDict();
 
         // Schedule the task that starts on the post-load stage
         Bukkit.getScheduler().runTask(this, new AfterLoadTask());

@@ -1,7 +1,6 @@
 package io.github.plugindustry.wheelcore.item;
 
-import io.github.plugindustry.wheelcore.interfaces.Interactive;
-import io.github.plugindustry.wheelcore.interfaces.item.ItemBase;
+import io.github.plugindustry.wheelcore.interfaces.item.DummyItem;
 import io.github.plugindustry.wheelcore.manager.MainManager;
 import io.github.plugindustry.wheelcore.utils.PlayerUtil;
 import org.bukkit.block.Block;
@@ -12,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public class Recognizer implements ItemBase, Interactive {
+public class Recognizer extends DummyItem {
     @Override
     public boolean onInteract(@Nonnull Player player, @Nonnull Action action, ItemStack tool, Block block, Entity entity) {
         if (block != null && action == Action.RIGHT_CLICK_BLOCK) {

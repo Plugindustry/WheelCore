@@ -8,6 +8,7 @@ import io.github.plugindustry.wheelcore.interfaces.entity.EntityBase;
 import io.github.plugindustry.wheelcore.interfaces.inventory.InventoryClickInfo;
 import io.github.plugindustry.wheelcore.interfaces.item.Breakable;
 import io.github.plugindustry.wheelcore.interfaces.item.Consumable;
+import io.github.plugindustry.wheelcore.interfaces.item.Damageable;
 import io.github.plugindustry.wheelcore.interfaces.item.ItemBase;
 import io.github.plugindustry.wheelcore.interfaces.item.Placeable;
 import io.github.plugindustry.wheelcore.interfaces.item.Tool;
@@ -50,6 +51,7 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemBreakEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.player.PlayerLocaleChangeEvent;
 import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
@@ -65,6 +67,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -319,14 +322,28 @@ public class EventListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onItemDamage(PlayerItemDamageEvent event) {
+        ItemBase itemBase = MainManager.getItemInstance(event.getItem());
+        if (itemBase instanceof Damageable) {
+            Optional<Integer> result = ((Damageable) itemBase).onItemDamage(event.getPlayer(),
+                                                                            event.getItem(),
+                                                                            event.getDamage());
+            if (result.isPresent())
+                event.setDamage(result.get());
+            else
+                event.setCancelled(true);
+        } else if (itemBase != null)
+            event.setCancelled(true);
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
         EntityBase instance = MainManager.getEntityInstance(event.getRightClicked());
         if (instance != null)
             event.setCancelled(!(instance instanceof Interactive &&
                                  ((Interactive) instance).onInteract(event.getPlayer(),
                                                                      Action.RIGHT_CLICK_AIR,
-                                                                     event.getPlayer()
-                                                                             .getInventory()
+                                                                     event.getPlayer().getInventory()
                                                                              .getItemInMainHand(),
                                                                      null,
                                                                      event.getRightClicked())));
