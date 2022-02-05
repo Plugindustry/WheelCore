@@ -33,6 +33,8 @@ public class ShapedRecipe implements CraftingRecipe {
             List<ItemStack> row = matrix.get(i);
             for (int j = 0; j < row.size(); ++j) {
                 ItemStack is = row.get(j);
+                if (is == null)
+                    continue;
                 final int finalI = i;
                 final int finalJ = j;
                 damages.forEach((items, dmg) -> {
@@ -65,17 +67,15 @@ public class ShapedRecipe implements CraftingRecipe {
 
     @Override
     public boolean matches(@Nonnull List<List<ItemStack>> matrix, @Nullable Map<Integer, ItemStack> damage) {
-        if (matrix.size() != 3) {
+        if (matrix.size() != 3)
             return false;
-        }
 
         for (int i = 0; i < matrix.size(); i++) {
             List<ItemStack> row = matrix.get(i);
             for (int j = 0; j < row.size(); j++) {
-                if (this.matrix.get(i).get(j) != null) {
-                    if (!this.matrix.get(i).get(j).matches(row.get(j))) {
+                if (this.matrix.size() > i && this.matrix.get(i).size() > j && this.matrix.get(i).get(j) != null) {
+                    if (row.get(j) == null || !this.matrix.get(i).get(j).matches(row.get(j)))
                         return false;
-                    }
                 } else {
                     if (row.get(j) != null)
                         return false;
@@ -97,9 +97,11 @@ public class ShapedRecipe implements CraftingRecipe {
     }
 
     public org.bukkit.inventory.RecipeChoice.MaterialChoice getChoiceAt(int slot) {
-        if (matrix.get(slot / 3) == null || matrix.get(slot / 3).get(slot % 3) == null) {
+        if (matrix.size() <= slot / 3 ||
+            matrix.get(slot / 3) == null ||
+            matrix.get(slot / 3).size() <= slot % 3 ||
+            matrix.get(slot / 3).get(slot % 3) == null)
             return null;
-        }
         return matrix.get(slot / 3).get(slot % 3).getPlaceholderChoice();
     }
 

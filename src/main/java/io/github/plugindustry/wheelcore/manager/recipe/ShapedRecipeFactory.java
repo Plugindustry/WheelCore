@@ -61,7 +61,7 @@ public class ShapedRecipeFactory {
         return this;
     }
 
-    public RecipeBase build(ItemStack result) {
+    public ShapedRecipe build(ItemStack result) {
         List<List<RecipeChoice>> recipe = new LinkedList<>();
 
         for (String pattern : patterns) {
@@ -73,7 +73,7 @@ public class ShapedRecipeFactory {
             }
         }
 
-        CraftingRecipe craftingRecipe = new ShapedRecipe(recipe, result.clone());
+        ShapedRecipe craftingRecipe = new ShapedRecipe(recipe, result.clone());
 
         this.damageMapping.forEach(craftingRecipe::addItemCost);
         DebuggingLogger.debug(craftingRecipe.toString());

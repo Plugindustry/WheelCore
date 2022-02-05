@@ -61,15 +61,17 @@ public class PersistenceBasedProvider implements ItemDataProvider {
     public Set<String> getOreDictionary(@Nullable ItemStack itemStack) {
         if (itemStack == null)
             return Collections.emptySet();
+        Set<String> defaultOreDict = getInstance(itemStack) == null ?
+                                     ItemMapping.getVanillaOreDict(itemStack.getType()) :
+                                     Collections.emptySet();
         if (!itemStack.hasItemMeta())
-            return ItemMapping.getVanillaOreDict(itemStack.getType());
+            return defaultOreDict;
         byte[] bytes = Objects.requireNonNull(itemStack.getItemMeta()).getPersistentDataContainer().get(
                 ITEM_ORE_DICTIONARY_KEY,
                 PersistentDataType.BYTE_ARRAY);
         String oreDict = bytes == null ? null : new String(bytes, StandardCharsets.UTF_8);
-        return oreDict == null ? ItemMapping.getVanillaOreDict(itemStack.getType()) : gson.fromJson(oreDict,
-                                                                                                    new TypeToken<Set<String>>() {
-                                                                                                    }.getType());
+        return oreDict == null ? defaultOreDict : gson.fromJson(oreDict, new TypeToken<Set<String>>() {
+        }.getType());
     }
 
     @Override

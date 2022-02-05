@@ -8,6 +8,7 @@ import io.github.plugindustry.wheelcore.manager.recipe.ShapedRecipe;
 import io.github.plugindustry.wheelcore.manager.recipe.ShapelessRecipe;
 import io.github.plugindustry.wheelcore.manager.recipe.SingleInputRecipe;
 import io.github.plugindustry.wheelcore.manager.recipe.SmeltingRecipe;
+import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.FurnaceRecipe;
@@ -17,6 +18,7 @@ import org.bukkit.inventory.RecipeChoice;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -54,11 +56,36 @@ public class RecipeRegistry {
                                      smelting.getCookingTime());
         } else if (recipeBase instanceof ShapedRecipe) {
             ShapedRecipe shaped = (ShapedRecipe) recipeBase;
+            ArrayList<String> shape = new ArrayList<>();
+            int maxCnt = -1;
+            for (int i = 0; i < 3; ++i) {
+                int cnt = -1;
+                for (int j = 2; j >= 0; --j) {
+                    if (shaped.getChoiceAt(i * 3 + j) != null) {
+                        cnt = j;
+                        break;
+                    }
+                }
+                maxCnt = Math.max(cnt, maxCnt);
+                StringBuilder builder = new StringBuilder();
+                for (int j = 0; j <= cnt; ++j)
+                    builder.append((char) ('a' + i * 3 + j));
+                shape.add(cnt == -1 ? "N" : builder.toString());
+            }
+            ++maxCnt;
+            while (shape.size() > 1 && shape.get(shape.size() - 1).equals("N"))
+                shape.remove(shape.size() - 1);
+            for (int i = 0; i < shape.size(); ++i) {
+                String s = shape.get(i);
+                if (s.length() < maxCnt) {
+                    s += StringUtils.repeat('N', maxCnt - s.length());
+                    shape.set(i, s);
+                }
+            }
+
             org.bukkit.inventory.ShapedRecipe recipe = new org.bukkit.inventory.ShapedRecipe(key,
                                                                                              recipeBase.getResult()).shape(
-                    "abc",
-                    "def",
-                    "ghi");
+                    shape.toArray(String[]::new));
             setShapedIfExist(recipe, shaped, 'a', 0);
             setShapedIfExist(recipe, shaped, 'b', 1);
             setShapedIfExist(recipe, shaped, 'c', 2);

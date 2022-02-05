@@ -161,12 +161,8 @@ public class I18n {
             for (int i = 0; i < jsonArray.size(); ++i)
                 newJsonArray.add(replaceAll(locale, jsonArray.get(i)));
             element = newJsonArray;
-        } else if (element.isJsonPrimitive()) {
-            try {
-                element = new JsonPrimitive(replaceAll(locale, element.getAsString()));
-            } catch (Exception ignored) {
-            }
-        }
+        } else if (element.isJsonPrimitive() && ((JsonPrimitive) element).isString())
+            element = new JsonPrimitive(replaceAll(locale, element.getAsString()));
         return element;
     }
 

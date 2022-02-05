@@ -78,19 +78,22 @@ public class NBTBasedProvider implements ItemDataProvider {
     public Set<String> getOreDictionary(@Nullable ItemStack itemStack) {
         if (itemStack == null)
             return Collections.emptySet();
+        Set<String> defaultOreDict = getInstance(itemStack) == null ?
+                                     ItemMapping.getVanillaOreDict(itemStack.getType()) :
+                                     Collections.emptySet();
         Optional<NbtWrapper<?>> nbtWrapperOptional = NbtFactory.fromItemOptional((ItemStack) ShadowManager.shadowUnpack(
                 CraftItemStack.asCraftCopy(itemStack)));
         if (nbtWrapperOptional.isEmpty())
-            return ItemMapping.getVanillaOreDict(itemStack.getType());
+            return defaultOreDict;
         NbtWrapper<?> nbtWrapper = nbtWrapperOptional.get();
         if (nbtWrapper.getType() != NbtType.TAG_COMPOUND)
-            return ItemMapping.getVanillaOreDict(itemStack.getType());
+            return defaultOreDict;
         NbtCompound compound = NbtFactory.asCompound(nbtWrapper);
         if (!compound.containsKey("wheel_core_item_ore_dictionary"))
-            return ItemMapping.getVanillaOreDict(itemStack.getType());
+            return defaultOreDict;
         Object data = compound.getObject("wheel_core_item_ore_dictionary");
         if ((!(data instanceof NbtList)) || ((NbtList<?>) data).getElementType() != NbtType.TAG_STRING)
-            return ItemMapping.getVanillaOreDict(itemStack.getType());
+            return defaultOreDict;
         return ((NbtList<String>) data).asCollection().stream().map(NbtBase::getValue).collect(Collectors.toSet());
     }
 
