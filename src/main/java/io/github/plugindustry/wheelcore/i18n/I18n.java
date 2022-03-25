@@ -210,9 +210,19 @@ public class I18n {
         private static final Set<PacketType> outTypes = new HashSet<>();
 
         static {
-            for (PacketType type : PacketType.values())
-                if (type.isServer() && type.isSupported() && !type.isDeprecated())
-                    outTypes.add(type);
+            outTypes.add(PacketType.Play.Server.CHAT);
+            outTypes.add(PacketType.Play.Server.TAB_COMPLETE);
+            outTypes.add(PacketType.Play.Server.WINDOW_ITEMS);
+            outTypes.add(PacketType.Play.Server.SET_SLOT);
+            outTypes.add(PacketType.Play.Server.OPEN_WINDOW);
+            outTypes.add(PacketType.Play.Server.SET_ACTION_BAR_TEXT);
+            outTypes.add(PacketType.Play.Server.SCOREBOARD_OBJECTIVE);
+            outTypes.add(PacketType.Play.Server.SCOREBOARD_SCORE);
+            outTypes.add(PacketType.Play.Server.SCOREBOARD_DISPLAY_OBJECTIVE);
+            outTypes.add(PacketType.Play.Server.SCOREBOARD_TEAM);
+            outTypes.add(PacketType.Play.Server.SET_TITLE_TEXT);
+            outTypes.add(PacketType.Play.Server.SET_SUBTITLE_TEXT);
+            outTypes.add(PacketType.Play.Server.PLAYER_LIST_HEADER_FOOTER);
             outTypes.add(PacketType.Play.Client.SET_CREATIVE_SLOT);
         }
 

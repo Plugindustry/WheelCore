@@ -5,7 +5,9 @@ import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.wrappers.BlockPosition;
 import com.comphenix.protocol.wrappers.EnumWrappers;
+import com.comphenix.protocol.wrappers.WrappedBlockData;
 import io.github.plugindustry.wheelcore.WheelCore;
 import io.github.plugindustry.wheelcore.interfaces.block.BlockBase;
 import io.github.plugindustry.wheelcore.utils.BlockUtil;
@@ -24,6 +26,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import javax.annotation.Nonnull;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -182,6 +185,25 @@ public class PlayerDigHandler {
                           .types(PacketType.Play.Client.BLOCK_DIG));
         }
 
+        private static void ackDigAction(Player player, PacketContainer packet) {
+            if (PacketType.Play.Server.BLOCK_BREAK.isSupported()) {
+                PacketContainer ack = new PacketContainer(PacketType.Play.Server.BLOCK_BREAK);
+                BlockPosition pos = packet.getBlockPositionModifier().read(0);
+                ack.getBlockPositionModifier().write(0, pos);
+                ack.getBlockData().write(0,
+                                         WrappedBlockData.createData(pos.toLocation(player.getWorld())
+                                                                             .getBlock()
+                                                                             .getBlockData()));
+                ack.getPlayerDigTypes().write(0, packet.getPlayerDigTypes().read(0));
+                ack.getBooleans().write(0, true);
+                try {
+                    WheelCore.protocolManager.sendServerPacket(player, ack);
+                } catch (InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
         @Override
         public void onPacketReceiving(PacketEvent event) {
             PacketContainer packet = event.getPacket().deepClone();
@@ -189,9 +211,9 @@ public class PlayerDigHandler {
             Player player = event.getPlayer();
             if (player.getGameMode() != GameMode.SURVIVAL && player.getGameMode() != GameMode.ADVENTURE)
                 return;
+            event.setCancelled(true);
             Bukkit.getScheduler().runTask(WheelCore.instance, () -> {
                 if (type == EnumWrappers.PlayerDigType.START_DESTROY_BLOCK) {
-                    event.setCancelled(true);
                     byte flags = 0;
                     if (player.hasPotionEffect(PotionEffectType.SLOW_DIGGING)) {
                         PotionEffect effect = player.getActivePotionEffects()
@@ -212,6 +234,7 @@ public class PlayerDigHandler {
                                                 flags);
 
                     startDig(player, packet.getBlockPositionModifier().read(0).toLocation(player.getWorld()));
+                    ackDigAction(player, packet);
                 } else if (type == EnumWrappers.PlayerDigType.ABORT_DESTROY_BLOCK ||
                            type == EnumWrappers.PlayerDigType.STOP_DESTROY_BLOCK) {
                     if (player.hasPotionEffect(PotionEffectType.SLOW_DIGGING)) {
@@ -232,6 +255,7 @@ public class PlayerDigHandler {
                     }
 
                     abortDig(player);
+                    ackDigAction(player, packet);
                 }
             });
         }

@@ -188,6 +188,20 @@ public class ChunkBasedProvider implements BlockDataProvider {
 
     @Nonnull
     @Override
+    public Set<Location> blockInChunk(@Nonnull Chunk chunk) {
+        if (blockInChunks.containsKey(chunk.getWorld()))
+            if (blockInChunks.get(chunk.getWorld()).containsKey(compress(chunk.getX(), chunk.getZ())))
+                return CollectionUtil.unmodifiableCopyOnReadSet(blockInChunks.get(chunk.getWorld())
+                                                                        .get(compress(chunk.getX(), chunk.getZ())),
+                                                                Location::clone);
+            else
+                return Collections.emptySet();
+        else
+            return Collections.emptySet();
+    }
+
+    @Nonnull
+    @Override
     public Set<Location> blocksOf(@Nonnull BlockBase base) {
         return baseBlocks.containsKey(base) ?
                CollectionUtil.unmodifiableCopyOnReadSet(baseBlocks.get(base),

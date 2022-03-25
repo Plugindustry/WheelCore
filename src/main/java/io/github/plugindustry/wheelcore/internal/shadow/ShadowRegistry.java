@@ -61,6 +61,7 @@ public class ShadowRegistry {
                                                                                       .getSuperclass()))
                                         .get(0)
                                         .getName());
+        nmsDir.makeSubDirectory("NBTTagCompound", MinecraftReflection.getNBTCompoundClass().getName());
         nmsDir.makeSubDirectory("ItemStack", MinecraftReflection.getItemStackClass().getName());
         nmsDir.makeSubDirectory("ItemStack.isPreferredTool",
                                 FuzzyUtil.findDeclaredFirstMatch(FuzzyMethodContract.newBuilder()
@@ -76,6 +77,11 @@ public class ShadowRegistry {
                                                                          .requirePublic()
                                                                          .build(),
                                                                  MinecraftReflection.getItemStackClass()).getName());
+        nmsDir.makeSubDirectory("ItemStack.save",
+                                FuzzyUtil.findDeclaredFirstMatch(FuzzyMethodContract.newBuilder().returnTypeExact(
+                                                                         MinecraftReflection.getNBTCompoundClass()).parameterExactType(
+                                                                         MinecraftReflection.getNBTCompoundClass()).requirePublic().build(),
+                                                                 MinecraftReflection.getItemStackClass()).getName());
         nmsDir.makeSubDirectory("Block", MinecraftReflection.getBlockClass().getName());
         nmsDir.makeSubDirectory("Block.getDataId",
                                 FuzzyUtil.findDeclaredFirstMatch(FuzzyMethodContract.newBuilder()
@@ -83,6 +89,13 @@ public class ShadowRegistry {
                                                                          .parameterExactType(MinecraftReflection.getIBlockDataClass())
                                                                          .requirePublic()
                                                                          .requireModifier(Modifier.STATIC)
+                                                                         .build(), MinecraftReflection.getBlockClass())
+                                        .getName());
+        nmsDir.makeSubDirectory("Block.getBlockData",
+                                FuzzyUtil.findDeclaredFirstMatch(FuzzyMethodContract.newBuilder()
+                                                                         .returnTypeExact(MinecraftReflection.getIBlockDataClass())
+                                                                         .parameterCount(0)
+                                                                         .requirePublic()
                                                                          .build(), MinecraftReflection.getBlockClass())
                                         .getName());
 

@@ -33,6 +33,13 @@ public interface BlockDataProvider {
     Set<Location> blocks();
 
     /**
+     * @param chunk The chunk of the blocks needed
+     * @return A set containing all custom blocks loaded that belong to the given chunk.
+     */
+    @Nonnull
+    Set<Location> blockInChunk(@Nonnull Chunk chunk);
+
+    /**
      * @param base The base instance of the blocks needed
      * @return A set containing all custom blocks which are loaded and with the given instance.
      * Note that the returned set may be based on the internal container, so any modifications mustn't be done when traversing this set.

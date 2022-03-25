@@ -69,37 +69,48 @@ public class ItemStackUtil {
         private String displayName = null;
         private List<String> lore = Collections.emptyList();
         private Set<String> oreDictionary = null;
+        private Integer customModelData = null;
 
         public ItemStackFactory(Material material) {
             this.material = material;
         }
 
-        public ItemStackFactory setAmount(int amount) {
+        public ItemStackFactory amount(int amount) {
             this.amount = amount;
             return this;
         }
 
-        public ItemStackFactory setInstance(ItemBase instance) {
+        public ItemStackFactory instance(ItemBase instance) {
             this.instance = instance;
             return this;
         }
 
-        public ItemStackFactory setLore(List<String> lore) {
+        public ItemStackFactory lore(List<String> lore) {
             this.lore = lore;
             return this;
         }
 
-        public ItemStackFactory setDisplayName(String dpName) {
+        public ItemStackFactory displayName(String dpName) {
             this.displayName = dpName;
             return this;
         }
 
-        public ItemStackFactory setOreDictionary(String... dictionary) {
-            return setOreDictionary(Sets.newHashSet(dictionary));
+        public ItemStackFactory oreDictionary(String... dictionary) {
+            return oreDictionary(Sets.newHashSet(dictionary));
         }
 
-        public ItemStackFactory setOreDictionary(Set<String> dictionary) {
+        public ItemStackFactory oreDictionary(Set<String> dictionary) {
             oreDictionary = dictionary;
+            return this;
+        }
+
+        public ItemStackFactory customModelData(String id) {
+            customModelData = CRC24.calculateForString(id);
+            return this;
+        }
+
+        public ItemStackFactory customModelData(int id) {
+            customModelData = id;
             return this;
         }
 
@@ -117,6 +128,8 @@ public class ItemStackUtil {
             }
             if (displayName != null)
                 meta.setDisplayName(displayName);
+            if (customModelData != null)
+                meta.setCustomModelData(customModelData);
             meta.setLore(lore);
             tmp.setItemMeta(meta);
             return tmp.clone();

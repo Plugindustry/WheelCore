@@ -12,5 +12,12 @@ public class NMSItemStack {
     }
 
     @Shadow("nms/ItemStack.getToolBonus")
-    public float getToolBonus(IBlockData block) {return 1.0f;}
+    public float getToolBonus(IBlockData block) {
+        return 1.0f;
+    }
+
+    @Shadow("nms/ItemStack.save")
+    public NBTTagCompound save(NBTTagCompound tag) {
+        return null;
+    }
 }

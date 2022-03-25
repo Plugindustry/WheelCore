@@ -64,9 +64,9 @@ public class WidgetProgressBar implements WidgetBase {
                 materialIndex = 3;
             else
                 materialIndex = 4;
-            currentItem = new ItemStackUtil.ItemStackFactory(materialList.get(materialIndex)).setAmount(1)
-                    .setDisplayName("进度")
-                    .setLore(Collections.singletonList(((int) (ratio * 100)) + "%"))
+            currentItem = new ItemStackUtil.ItemStackFactory(materialList.get(materialIndex)).amount(1)
+                    .displayName("进度")
+                    .lore(Collections.singletonList(((int) (ratio * 100)) + "%"))
                     .getItemStack();
             retMap.put(new Position(1, 1), currentItem);
             changed = false;

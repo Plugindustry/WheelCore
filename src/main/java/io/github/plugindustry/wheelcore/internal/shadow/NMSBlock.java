@@ -10,4 +10,9 @@ public class NMSBlock {
     public static int getDataId(IBlockData data) {
         return 0;
     }
+
+    @Shadow("nms/Block.getBlockData")
+    public IBlockData getBlockData() {
+        return null;
+    }
 }

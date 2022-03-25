@@ -9,6 +9,7 @@ import io.github.plugindustry.wheelcore.internal.shadow.ShadowRegistry;
 import io.github.plugindustry.wheelcore.manager.ConfigManager;
 import io.github.plugindustry.wheelcore.manager.MainManager;
 import io.github.plugindustry.wheelcore.manager.PlayerDigHandler;
+import io.github.plugindustry.wheelcore.manager.TextureManager;
 import io.github.plugindustry.wheelcore.task.AfterLoadTask;
 import io.github.plugindustry.wheelcore.task.RegisterTask;
 import io.github.plugindustry.wheelcore.utils.DebuggingLogger;
@@ -57,6 +58,7 @@ public final class WheelCore extends JavaPlugin {
         // Register PacketListener
         protocolManager.addPacketListener(new PlayerDigHandler.PacketListener());
         protocolManager.addPacketListener(new I18n.PacketListener());
+        protocolManager.addPacketListener(new TextureManager.PacketListener());
 
         // Register GsonHelper.TypedNumber
         ConfigurationSerialization.registerClass(GsonHelper.TypedNumber.class);

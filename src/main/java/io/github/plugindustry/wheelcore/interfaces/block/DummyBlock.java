@@ -3,6 +3,7 @@ package io.github.plugindustry.wheelcore.interfaces.block;
 import io.github.plugindustry.wheelcore.interfaces.Interactive;
 import io.github.plugindustry.wheelcore.manager.ItemMapping;
 import io.github.plugindustry.wheelcore.manager.MainManager;
+import io.github.plugindustry.wheelcore.manager.TextureManager;
 import io.github.plugindustry.wheelcore.utils.BlockUtil;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -27,6 +28,8 @@ public class DummyBlock implements BlockBase, Placeable, Destroyable, Interactiv
         MainManager.addBlock(block.getLocation(), this, null);
         if (item == null || getMaterial() != item.getType())
             block.setType(getMaterial());
+        if (this instanceof TexturedBlock)
+            TextureManager.updateTexture(block.getLocation());
         return true;
     }
 

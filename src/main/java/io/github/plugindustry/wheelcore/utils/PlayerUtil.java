@@ -3,6 +3,7 @@ package io.github.plugindustry.wheelcore.utils;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.BlockPosition;
+import com.comphenix.protocol.wrappers.WrappedBlockData;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
 import io.github.plugindustry.wheelcore.WheelCore;
 import io.github.plugindustry.wheelcore.internal.shadow.CraftBlock;
@@ -90,6 +91,24 @@ public class PlayerUtil {
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void sendBlockChange(@Nonnull Player player, @Nonnull Location loc, WrappedBlockData data) {
+        PacketContainer packet = new PacketContainer(PacketType.Play.Server.BLOCK_CHANGE);
+        packet.getBlockPositionModifier().write(0, new BlockPosition(loc.toVector()));
+        packet.getBlockData().write(0, data);
+        try {
+            WheelCore.protocolManager.sendServerPacket(player, packet);
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void broadcastBlockChange(@Nonnull Location loc, WrappedBlockData data) {
+        PacketContainer packet = new PacketContainer(PacketType.Play.Server.BLOCK_CHANGE);
+        packet.getBlockPositionModifier().write(0, new BlockPosition(loc.toVector()));
+        packet.getBlockData().write(0, data);
+        WheelCore.protocolManager.broadcastServerPacket(packet);
     }
 
     public static boolean breakBlock(@Nonnull Player player, @Nonnull Block block) {
