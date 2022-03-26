@@ -27,13 +27,7 @@ import org.bukkit.potion.PotionEffectType;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 public class PlayerDigHandler {
     public static final List<DestroySpeedModifier> destroySpeedModifiers = new ArrayList<>();
@@ -80,7 +74,7 @@ public class PlayerDigHandler {
 
     private static boolean isDigIllegal(Player player, Location block) {
         return (!(block.distance(player.getLocation()) <= 6) || !block.getChunk().isLoaded()) ||
-               block.getBlock().getType() == Material.AIR;
+                block.getBlock().getType() == Material.AIR;
     }
 
     public static void startDig(Player player, Location block) {
@@ -101,13 +95,13 @@ public class PlayerDigHandler {
         Bukkit.getOnlinePlayers()
                 .stream()
                 .filter(p -> (p.getGameMode() == GameMode.SURVIVAL ||
-                              p.getGameMode() == GameMode.ADVENTURE) &&
-                             !p.hasPotionEffect(PotionEffectType.SLOW_DIGGING))
+                        p.getGameMode() == GameMode.ADVENTURE) &&
+                        !p.hasPotionEffect(PotionEffectType.SLOW_DIGGING))
                 .forEach(player -> PlayerUtil.sendPotionEffect(player,
-                                                               PotionEffectType.SLOW_DIGGING,
-                                                               (byte) -1,
-                                                               Integer.MAX_VALUE,
-                                                               (byte) 0));
+                        PotionEffectType.SLOW_DIGGING,
+                        (byte) -1,
+                        Integer.MAX_VALUE,
+                        (byte) 0));
 
         for (Iterator<Map.Entry<UUID, Location>> iterator = playerDig.entrySet().iterator(); iterator.hasNext(); ) {
             Map.Entry<UUID, Location> entry = iterator.next();
@@ -138,8 +132,8 @@ public class PlayerDigHandler {
                 pair.first += progress;
             } else {
                 digProcess.put(location,
-                               Pair.of(progress,
-                                       Pair.of(location.getBlock().getType(), MainManager.getBlockInstance(location))));
+                        Pair.of(progress,
+                                Pair.of(location.getBlock().getType(), MainManager.getBlockInstance(location))));
             }
         });
         for (Iterator<Map.Entry<Location, Pair<Float, Pair<Material, BlockBase>>>> iterator1 = digProcess.entrySet()
@@ -162,7 +156,7 @@ public class PlayerDigHandler {
                 }
                 PlayerUtil.broadcastBlockCrack(entry.getKey(), -1);
                 PlayerUtil.breakBlock(Objects.requireNonNull(Bukkit.getPlayer(Objects.requireNonNull(uuid))),
-                                      entry.getKey().getBlock());
+                        entry.getKey().getBlock());
                 iterator1.remove();
             }
         }
@@ -179,10 +173,10 @@ public class PlayerDigHandler {
     public static class PacketListener extends PacketAdapter {
         public PacketListener() {
             super(PacketAdapter.params()
-                          .clientSide()
-                          .plugin(WheelCore.instance)
-                          .listenerPriority(ListenerPriority.LOW)
-                          .types(PacketType.Play.Client.BLOCK_DIG));
+                    .clientSide()
+                    .plugin(WheelCore.instance)
+                    .listenerPriority(ListenerPriority.LOW)
+                    .types(PacketType.Play.Client.BLOCK_DIG));
         }
 
         private static void ackDigAction(Player player, PacketContainer packet) {
@@ -191,9 +185,9 @@ public class PlayerDigHandler {
                 BlockPosition pos = packet.getBlockPositionModifier().read(0);
                 ack.getBlockPositionModifier().write(0, pos);
                 ack.getBlockData().write(0,
-                                         WrappedBlockData.createData(pos.toLocation(player.getWorld())
-                                                                             .getBlock()
-                                                                             .getBlockData()));
+                        WrappedBlockData.createData(pos.toLocation(player.getWorld())
+                                .getBlock()
+                                .getBlockData()));
                 ack.getPlayerDigTypes().write(0, packet.getPlayerDigTypes().read(0));
                 ack.getBooleans().write(0, true);
                 try {
@@ -223,20 +217,20 @@ public class PlayerDigHandler {
                                 .findFirst()
                                 .orElseThrow(() -> new IllegalStateException("Impossible null"));
                         flags = (byte) ((effect.isAmbient() ? 1 : 0) |
-                                        (effect.hasParticles() ? 2 : 0) |
-                                        (effect.hasIcon() ? 4 : 0));
+                                (effect.hasParticles() ? 2 : 0) |
+                                (effect.hasIcon() ? 4 : 0));
                         PlayerUtil.sendRemovePotionEffect(player, PotionEffectType.SLOW_DIGGING);
                     }
                     PlayerUtil.sendPotionEffect(player,
-                                                PotionEffectType.SLOW_DIGGING,
-                                                (byte) -1,
-                                                Integer.MAX_VALUE,
-                                                flags);
+                            PotionEffectType.SLOW_DIGGING,
+                            (byte) -1,
+                            Integer.MAX_VALUE,
+                            flags);
 
                     startDig(player, packet.getBlockPositionModifier().read(0).toLocation(player.getWorld()));
                     ackDigAction(player, packet);
                 } else if (type == EnumWrappers.PlayerDigType.ABORT_DESTROY_BLOCK ||
-                           type == EnumWrappers.PlayerDigType.STOP_DESTROY_BLOCK) {
+                        type == EnumWrappers.PlayerDigType.STOP_DESTROY_BLOCK) {
                     if (player.hasPotionEffect(PotionEffectType.SLOW_DIGGING)) {
                         PlayerUtil.sendRemovePotionEffect(player, PotionEffectType.SLOW_DIGGING);
                         PotionEffect effect = player.getActivePotionEffects()
@@ -246,12 +240,12 @@ public class PlayerDigHandler {
                                 .findFirst()
                                 .orElseThrow(() -> new IllegalStateException("Impossible null"));
                         PlayerUtil.sendPotionEffect(player,
-                                                    PotionEffectType.SLOW_DIGGING,
-                                                    (byte) effect.getAmplifier(),
-                                                    effect.getDuration(),
-                                                    (byte) ((effect.isAmbient() ? 1 : 0) |
-                                                            (effect.hasParticles() ? 2 : 0) |
-                                                            (effect.hasIcon() ? 4 : 0)));
+                                PotionEffectType.SLOW_DIGGING,
+                                (byte) effect.getAmplifier(),
+                                effect.getDuration(),
+                                (byte) ((effect.isAmbient() ? 1 : 0) |
+                                        (effect.hasParticles() ? 2 : 0) |
+                                        (effect.hasIcon() ? 4 : 0)));
                     }
 
                     abortDig(player);

@@ -12,43 +12,43 @@ public class Relocators {
 
     public static Consumer<Environment> move(String xOffsetKey, int yOffset, int zOffset) {
         return env -> env.<Location>getEnvironmentArg("location").add(env.<Integer>getEnvironmentArg(xOffsetKey),
-                                                                      yOffset,
-                                                                      zOffset);
+                yOffset,
+                zOffset);
     }
 
     public static Consumer<Environment> move(int xOffset, String yOffsetKey, int zOffset) {
         return env -> env.<Location>getEnvironmentArg("location").add(xOffset,
-                                                                      env.<Integer>getEnvironmentArg(yOffsetKey),
-                                                                      zOffset);
+                env.<Integer>getEnvironmentArg(yOffsetKey),
+                zOffset);
     }
 
     public static Consumer<Environment> move(int xOffset, int yOffset, String zOffsetKey) {
         return env -> env.<Location>getEnvironmentArg("location").add(xOffset,
-                                                                      yOffset,
-                                                                      env.<Integer>getEnvironmentArg(zOffsetKey));
+                yOffset,
+                env.<Integer>getEnvironmentArg(zOffsetKey));
     }
 
     public static Consumer<Environment> move(int xOffset, String yOffsetKey, String zOffsetKey) {
         return env -> env.<Location>getEnvironmentArg("location").add(xOffset,
-                                                                      env.<Integer>getEnvironmentArg(yOffsetKey),
-                                                                      env.<Integer>getEnvironmentArg(zOffsetKey));
+                env.<Integer>getEnvironmentArg(yOffsetKey),
+                env.<Integer>getEnvironmentArg(zOffsetKey));
     }
 
     public static Consumer<Environment> move(String xOffsetKey, int yOffset, String zOffsetKey) {
         return env -> env.<Location>getEnvironmentArg("location").add(env.<Integer>getEnvironmentArg(xOffsetKey),
-                                                                      yOffset,
-                                                                      env.<Integer>getEnvironmentArg(zOffsetKey));
+                yOffset,
+                env.<Integer>getEnvironmentArg(zOffsetKey));
     }
 
     public static Consumer<Environment> move(String xOffsetKey, String yOffsetKey, int zOffset) {
         return env -> env.<Location>getEnvironmentArg("location").add(env.<Integer>getEnvironmentArg(xOffsetKey),
-                                                                      env.<Integer>getEnvironmentArg(yOffsetKey),
-                                                                      zOffset);
+                env.<Integer>getEnvironmentArg(yOffsetKey),
+                zOffset);
     }
 
     public static Consumer<Environment> move(String xOffsetKey, String yOffsetKey, String zOffsetKey) {
         return env -> env.<Location>getEnvironmentArg("location").add(env.<Integer>getEnvironmentArg(xOffsetKey),
-                                                                      env.<Integer>getEnvironmentArg(yOffsetKey),
-                                                                      env.<Integer>getEnvironmentArg(zOffsetKey));
+                env.<Integer>getEnvironmentArg(yOffsetKey),
+                env.<Integer>getEnvironmentArg(zOffsetKey));
     }
 }

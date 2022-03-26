@@ -26,7 +26,7 @@ public class PersistenceBasedProvider implements ItemDataProvider {
     private static final NamespacedKey ITEM_TYPE_KEY = new NamespacedKey(WheelCore.instance, "item_type");
     private static final NamespacedKey ITEM_DATA_KEY = new NamespacedKey(WheelCore.instance, "item_data");
     private static final NamespacedKey ITEM_ORE_DICTIONARY_KEY = new NamespacedKey(WheelCore.instance,
-                                                                                   "item_ore_dictionary");
+            "item_ore_dictionary");
     private static final Gson gson;
 
     static {
@@ -42,8 +42,8 @@ public class PersistenceBasedProvider implements ItemDataProvider {
         if (itemStack == null || !itemStack.hasItemMeta())
             return null;
         return MainManager.getItemInstanceFromId(Objects.requireNonNull(itemStack.getItemMeta())
-                                                         .getPersistentDataContainer()
-                                                         .get(ITEM_TYPE_KEY, PersistentDataType.STRING));
+                .getPersistentDataContainer()
+                .get(ITEM_TYPE_KEY, PersistentDataType.STRING));
     }
 
     @Nullable
@@ -52,7 +52,7 @@ public class PersistenceBasedProvider implements ItemDataProvider {
         if (itemStack == null || !itemStack.hasItemMeta())
             return null;
         String data = Objects.requireNonNull(itemStack.getItemMeta()).getPersistentDataContainer().get(ITEM_DATA_KEY,
-                                                                                                       PersistentDataType.STRING);
+                PersistentDataType.STRING);
         return data == null ? null : gson.fromJson(data, ItemData.class);
     }
 
@@ -62,8 +62,8 @@ public class PersistenceBasedProvider implements ItemDataProvider {
         if (itemStack == null)
             return Collections.emptySet();
         Set<String> defaultOreDict = getInstance(itemStack) == null ?
-                                     ItemMapping.getVanillaOreDict(itemStack.getType()) :
-                                     Collections.emptySet();
+                ItemMapping.getVanillaOreDict(itemStack.getType()) :
+                Collections.emptySet();
         if (!itemStack.hasItemMeta())
             return defaultOreDict;
         byte[] bytes = Objects.requireNonNull(itemStack.getItemMeta()).getPersistentDataContainer().get(
@@ -84,12 +84,12 @@ public class PersistenceBasedProvider implements ItemDataProvider {
             }
         } else {
             ItemMeta meta = itemStack.hasItemMeta() ?
-                            Objects.requireNonNull(itemStack.getItemMeta()) :
-                            Bukkit.getItemFactory().getItemMeta(itemStack.getType());
+                    Objects.requireNonNull(itemStack.getItemMeta()) :
+                    Bukkit.getItemFactory().getItemMeta(itemStack.getType());
             Objects.requireNonNull(meta).getPersistentDataContainer().set(ITEM_TYPE_KEY,
-                                                                          PersistentDataType.STRING,
-                                                                          Objects.requireNonNull(MainManager.getIdFromInstance(
-                                                                                  instance)));
+                    PersistentDataType.STRING,
+                    Objects.requireNonNull(MainManager.getIdFromInstance(
+                            instance)));
             itemStack.setItemMeta(meta);
         }
     }
@@ -104,11 +104,11 @@ public class PersistenceBasedProvider implements ItemDataProvider {
             }
         } else {
             ItemMeta meta = itemStack.hasItemMeta() ?
-                            Objects.requireNonNull(itemStack.getItemMeta()) :
-                            Bukkit.getItemFactory().getItemMeta(itemStack.getType());
+                    Objects.requireNonNull(itemStack.getItemMeta()) :
+                    Bukkit.getItemFactory().getItemMeta(itemStack.getType());
             Objects.requireNonNull(meta).getPersistentDataContainer().set(ITEM_DATA_KEY,
-                                                                          PersistentDataType.STRING,
-                                                                          gson.toJson(data, ItemData.class));
+                    PersistentDataType.STRING,
+                    gson.toJson(data, ItemData.class));
             itemStack.setItemMeta(meta);
         }
     }
@@ -116,14 +116,14 @@ public class PersistenceBasedProvider implements ItemDataProvider {
     @Override
     public void setOreDictionary(@Nonnull ItemStack itemStack, @Nonnull Set<String> oreDictionary) {
         ItemMeta meta = itemStack.hasItemMeta() ?
-                        Objects.requireNonNull(itemStack.getItemMeta()) :
-                        Bukkit.getItemFactory().getItemMeta(itemStack.getType());
+                Objects.requireNonNull(itemStack.getItemMeta()) :
+                Bukkit.getItemFactory().getItemMeta(itemStack.getType());
         Objects.requireNonNull(meta).getPersistentDataContainer().set(ITEM_ORE_DICTIONARY_KEY,
-                                                                      PersistentDataType.BYTE_ARRAY,
-                                                                      gson.toJson(oreDictionary,
-                                                                                  new TypeToken<Set<String>>() {
-                                                                                  }.getType())
-                                                                              .getBytes(StandardCharsets.UTF_8));
+                PersistentDataType.BYTE_ARRAY,
+                gson.toJson(oreDictionary,
+                                new TypeToken<Set<String>>() {
+                                }.getType())
+                        .getBytes(StandardCharsets.UTF_8));
         itemStack.setItemMeta(meta);
     }
 }

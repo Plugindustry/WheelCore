@@ -4,7 +4,8 @@ import io.github.czm23333.transparentreflect.annotations.Shadow;
 
 @Shadow("nms/ItemStack")
 public class NMSItemStack {
-    public NMSItemStack(Object o) {}
+    public NMSItemStack(Object o) {
+    }
 
     @Shadow("nms/ItemStack.isPreferredTool")
     public boolean isPreferredTool(IBlockData block) {

@@ -43,15 +43,15 @@ public class TextureManager {
         Class<?> PacketPlayOutTileEntityData = PacketType.Play.Server.TILE_ENTITY_DATA.getPacketClass();
         Class TileEntityTypes = Arrays.stream(PacketPlayOutTileEntityData.getDeclaredFields())
                 .filter(field -> field.getType() != MinecraftReflection.getBlockPositionClass() &&
-                                 field.getType() != MinecraftReflection.getNBTCompoundClass())
+                        field.getType() != MinecraftReflection.getNBTCompoundClass())
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("Can't find TileEntityTypes field"))
                 .getType();
 
         Reflections reflections = new Reflections(new ConfigurationBuilder().forPackages(MinecraftReflection.getCraftBukkitPackage())
-                                                          .setInputsFilter(new FilterBuilder().includePackage(
-                                                                  MinecraftReflection.getCraftBukkitPackage()))
-                                                          .setExpandSuperTypes(false));
+                .setInputsFilter(new FilterBuilder().includePackage(
+                        MinecraftReflection.getCraftBukkitPackage()))
+                .setExpandSuperTypes(false));
         Class<?> CraftCreatureSpawner = reflections.getSubTypesOf(CreatureSpawner.class)
                 .stream()
                 .findFirst()
@@ -67,7 +67,7 @@ public class TextureManager {
         Object spawnerTileType;
         try {
             spawnerTileType = FuzzyUtil.findDeclaredFieldsReferredBy(TileEntityTypes,
-                                                                     TileEntityMobSpawner.getDeclaredConstructors()[0])
+                            TileEntityMobSpawner.getDeclaredConstructors()[0])
                     .get(0)
                     .get(TileEntityTypes);
         } catch (Exception e) {
@@ -91,8 +91,8 @@ public class TextureManager {
         NbtCompound entityCompound = NbtFactory.ofCompound(null);
         entityCompound.put("id", "minecraft:item");
         entityCompound.put("Item",
-                           NbtFactory.fromNMS(ShadowManager.shadowUnpack(CraftItemStack.asNMSCopy(item)
-                                                                                 .save(new NBTTagCompound())), null));
+                NbtFactory.fromNMS(ShadowManager.shadowUnpack(CraftItemStack.asNMSCopy(item)
+                        .save(new NBTTagCompound())), null));
         spawnDataCompound.put("entity", entityCompound);
         compound.put("SpawnData", spawnDataCompound);
         packet.getNbtModifier().write(0, compound);
@@ -126,12 +126,12 @@ public class TextureManager {
     public static class PacketListener extends PacketAdapter {
         public PacketListener() {
             super(PacketAdapter.params()
-                          .serverSide()
-                          .plugin(WheelCore.instance)
-                          .listenerPriority(ListenerPriority.LOW)
-                          .types(PacketType.Play.Server.BLOCK_CHANGE,
-                                 PacketType.Play.Server.MULTI_BLOCK_CHANGE,
-                                 PacketType.Play.Server.MAP_CHUNK));
+                    .serverSide()
+                    .plugin(WheelCore.instance)
+                    .listenerPriority(ListenerPriority.LOW)
+                    .types(PacketType.Play.Server.BLOCK_CHANGE,
+                            PacketType.Play.Server.MULTI_BLOCK_CHANGE,
+                            PacketType.Play.Server.MAP_CHUNK));
         }
 
         @Override
@@ -140,32 +140,37 @@ public class TextureManager {
             Player player = event.getPlayer();
             if (packet.getType() == PacketType.Play.Server.BLOCK_CHANGE) {
                 BlockPosition pos = packet.getBlockPositionModifier().read(0);
-                if (MainManager.getBlockInstance(pos.toLocation(player.getWorld())) instanceof TexturedBlock)
+                if (MainManager.getBlockInstance(pos.toLocation(player.getWorld())) instanceof TexturedBlock) {
                     packet.getBlockData().write(0, WrappedBlockData.createData(Material.SPAWNER));
-                Bukkit.getScheduler().runTask(WheelCore.instance,
-                                              () -> updateTexture(pos.toLocation(player.getWorld()), player, false));
+                    Bukkit.getScheduler().runTask(WheelCore.instance,
+                            () -> updateTexture(pos.toLocation(player.getWorld()), player, false));
+                }
                 event.setPacket(packet);
             } else if (packet.getType() == PacketType.Play.Server.MULTI_BLOCK_CHANGE) {
                 Location basePos = packet.getSectionPositions().read(0).toLocation(player.getWorld());
+                basePos.setX(basePos.getBlockX() << 4);
+                basePos.setY(basePos.getBlockY() << 4);
+                basePos.setZ(basePos.getBlockZ() << 4);
                 WrappedBlockData[] blockData = packet.getBlockDataArrays().read(0);
                 short[] blockPos = packet.getShortArrays().read(0);
                 for (int i = 0; i < blockPos.length; i++) {
                     Location pos = basePos.clone().add(blockPos[i] >>> 8 & 15,
-                                                       blockPos[i] & 15,
-                                                       blockPos[i] >>> 4 & 15);
-                    if (MainManager.getBlockInstance(pos) instanceof TexturedBlock)
+                            blockPos[i] & 15,
+                            blockPos[i] >>> 4 & 15);
+                    if (MainManager.getBlockInstance(pos) instanceof TexturedBlock) {
                         blockData[i] = WrappedBlockData.createData(Material.SPAWNER);
-                    Bukkit.getScheduler().runTask(WheelCore.instance, () -> updateTexture(pos, player, false));
+                        Bukkit.getScheduler().runTask(WheelCore.instance, () -> updateTexture(pos, player, false));
+                    }
                 }
                 packet.getBlockDataArrays().write(0, blockData);
                 event.setPacket(packet);
             } else if (packet.getType() == PacketType.Play.Server.MAP_CHUNK) {
                 Chunk chunk = player.getWorld().getChunkAt(packet.getIntegers().read(0), packet.getIntegers().read(1));
                 Bukkit.getScheduler().runTask(WheelCore.instance,
-                                              () -> MainManager.blockDataProvider.blockInChunk(chunk).forEach(pos -> {
-                                                  if (MainManager.getBlockInstance(pos) instanceof TexturedBlock)
-                                                      updateTexture(pos, player);
-                                              }));
+                        () -> MainManager.blockDataProvider.blockInChunk(chunk).forEach(pos -> {
+                            if (MainManager.getBlockInstance(pos) instanceof TexturedBlock)
+                                updateTexture(pos, player);
+                        }));
             }
         }
     }

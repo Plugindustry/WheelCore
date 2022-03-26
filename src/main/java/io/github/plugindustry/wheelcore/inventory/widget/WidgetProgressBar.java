@@ -8,11 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class WidgetProgressBar implements WidgetBase {
     private final SlotSize size = new SlotSize(1, 1);
@@ -29,10 +25,10 @@ public class WidgetProgressBar implements WidgetBase {
     public WidgetProgressBar(String id) {
         this.id = id;
         materialList = Arrays.asList(Material.GRAY_STAINED_GLASS_PANE,
-                                     Material.RED_STAINED_GLASS_PANE,
-                                     Material.ORANGE_STAINED_GLASS_PANE,
-                                     Material.YELLOW_STAINED_GLASS_PANE,
-                                     Material.LIME_STAINED_GLASS_PANE);
+                Material.RED_STAINED_GLASS_PANE,
+                Material.ORANGE_STAINED_GLASS_PANE,
+                Material.YELLOW_STAINED_GLASS_PANE,
+                Material.LIME_STAINED_GLASS_PANE);
     }
 
     @Nonnull

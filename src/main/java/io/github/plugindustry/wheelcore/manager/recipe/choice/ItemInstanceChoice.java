@@ -31,7 +31,7 @@ public class ItemInstanceChoice implements RecipeChoice {
     @Override
     public org.bukkit.inventory.RecipeChoice.MaterialChoice getPlaceholderChoice() {
         return new org.bukkit.inventory.RecipeChoice.MaterialChoice(instances.stream()
-                                                                            .map(ItemBase::getMaterial)
-                                                                            .collect(Collectors.toList()));
+                .map(ItemBase::getMaterial)
+                .collect(Collectors.toList()));
     }
 }

@@ -17,9 +17,9 @@ public class AfterLoadTask implements Runnable {
             for (World world : Bukkit.getWorlds())
                 world.setAutoSave(false);
             Bukkit.getScheduler().runTaskTimer(WheelCore.instance,
-                                               MainManager::save,
-                                               ConfigManager.autoSaveDelay * 20L,
-                                               ConfigManager.autoSaveDelay * 20L);
+                    MainManager::save,
+                    ConfigManager.autoSaveDelay * 20L,
+                    ConfigManager.autoSaveDelay * 20L);
         }
     }
 }

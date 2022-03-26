@@ -98,9 +98,9 @@ public class ShapedRecipe implements CraftingRecipe {
 
     public org.bukkit.inventory.RecipeChoice.MaterialChoice getChoiceAt(int slot) {
         if (matrix.size() <= slot / 3 ||
-            matrix.get(slot / 3) == null ||
-            matrix.get(slot / 3).size() <= slot % 3 ||
-            matrix.get(slot / 3).get(slot % 3) == null)
+                matrix.get(slot / 3) == null ||
+                matrix.get(slot / 3).size() <= slot % 3 ||
+                matrix.get(slot / 3).get(slot % 3) == null)
             return null;
         return matrix.get(slot / 3).get(slot % 3).getPlaceholderChoice();
     }

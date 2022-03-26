@@ -37,10 +37,10 @@ public class TagBasedProvider implements EntityDataProvider {
                 .ifPresent(tag -> {
                     entity.removeScoreboardTag(tag);
                     EntityDescription description = gson.fromJson(tag.substring("<WheelCoreData>".length()),
-                                                                  EntityDescription.class);
+                            EntityDescription.class);
                     if (MainManager.getEntityMapping().containsKey(description.id))
                         entityData.put(entity.getUniqueId(),
-                                       Pair.of(MainManager.getEntityMapping().get(description.id), description.data));
+                                Pair.of(MainManager.getEntityMapping().get(description.id), description.data));
                 });
     }
 
@@ -51,9 +51,9 @@ public class TagBasedProvider implements EntityDataProvider {
             return;
         Pair<EntityBase, EntityData> pair = entityData.get(uuid);
         entity.addScoreboardTag("<WheelCoreData>" +
-                                gson.toJson(new EntityDescription(MainManager.getEntityMapping()
-                                                                          .inverse()
-                                                                          .get(pair.first), pair.second)));
+                gson.toJson(new EntityDescription(MainManager.getEntityMapping()
+                        .inverse()
+                        .get(pair.first), pair.second)));
         entityData.remove(uuid);
     }
 
@@ -62,8 +62,8 @@ public class TagBasedProvider implements EntityDataProvider {
         entityData.keySet().removeIf(uuid -> Bukkit.getEntity(uuid) == null);
         entityData.forEach((uuid, data) -> Objects.requireNonNull(Bukkit.getEntity(uuid))
                 .addScoreboardTag("<WheelCoreData>" +
-                                  gson.toJson(new EntityDescription(MainManager.getIdFromInstance(data.first),
-                                                                    data.second))));
+                        gson.toJson(new EntityDescription(MainManager.getIdFromInstance(data.first),
+                                data.second))));
     }
 
     @Override
@@ -100,7 +100,8 @@ public class TagBasedProvider implements EntityDataProvider {
         String id;
         EntityData data;
 
-        EntityDescription() {}
+        EntityDescription() {
+        }
 
         EntityDescription(String id, EntityData data) {
             this.id = id;

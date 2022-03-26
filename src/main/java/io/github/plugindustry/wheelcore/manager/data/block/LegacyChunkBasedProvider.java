@@ -11,24 +11,14 @@ import io.github.plugindustry.wheelcore.utils.CollectionUtil;
 import io.github.plugindustry.wheelcore.utils.DebuggingLogger;
 import io.github.plugindustry.wheelcore.utils.GsonHelper;
 import io.github.plugindustry.wheelcore.utils.Pair;
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Jukebox;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 public class LegacyChunkBasedProvider implements BlockDataProvider {
     private static final Gson gson;
@@ -143,8 +133,8 @@ public class LegacyChunkBasedProvider implements BlockDataProvider {
         for (BlockDescription desc : blockList)
             if (MainManager.getBlockInstanceFromId(desc.id) != null)
                 addBlock(new Location(world, desc.x, desc.y, desc.z),
-                         Objects.requireNonNull(MainManager.getBlockInstanceFromId(desc.id)),
-                         desc.data);
+                        Objects.requireNonNull(MainManager.getBlockInstanceFromId(desc.id)),
+                        desc.data);
 
         dataBlock.setType(Material.BEDROCK);
     }
@@ -165,8 +155,8 @@ public class LegacyChunkBasedProvider implements BlockDataProvider {
         if (locations != null) {
             LinkedList<BlockDescription> descriptions = new LinkedList<>();
             locations.forEach(loc -> descriptions.add(new BlockDescription(loc,
-                                                                           MainManager.getIdFromInstance(blocks.get(loc).first),
-                                                                           blocks.get(loc).second)));
+                    MainManager.getIdFromInstance(blocks.get(loc).first),
+                    blocks.get(loc).second)));
             if (remove) {
                 ((HashSet<Location>) locations.clone()).forEach(this::removeBlock);
                 blockInChunks.get(chunk.getWorld()).remove(chunkDesc);
@@ -215,8 +205,8 @@ public class LegacyChunkBasedProvider implements BlockDataProvider {
         if (blockInChunks.containsKey(chunk.getWorld()))
             if (blockInChunks.get(chunk.getWorld()).containsKey(compress(chunk.getX(), chunk.getZ())))
                 return CollectionUtil.unmodifiableCopyOnReadSet(blockInChunks.get(chunk.getWorld())
-                                                                        .get(compress(chunk.getX(), chunk.getZ())),
-                                                                Location::clone);
+                                .get(compress(chunk.getX(), chunk.getZ())),
+                        Location::clone);
             else
                 return Collections.emptySet();
         else
@@ -227,9 +217,9 @@ public class LegacyChunkBasedProvider implements BlockDataProvider {
     @Override
     public Set<Location> blocksOf(@Nonnull BlockBase base) {
         return baseBlocks.containsKey(base) ?
-               CollectionUtil.unmodifiableCopyOnReadSet(baseBlocks.get(base),
-                                                        Location::clone) :
-               Collections.emptySet();
+                CollectionUtil.unmodifiableCopyOnReadSet(baseBlocks.get(base),
+                        Location::clone) :
+                Collections.emptySet();
     }
 
     private static class BlockDescription {
@@ -239,7 +229,8 @@ public class LegacyChunkBasedProvider implements BlockDataProvider {
         String id;
         BlockData data;
 
-        BlockDescription() {}
+        BlockDescription() {
+        }
 
         BlockDescription(Location loc, String id, BlockData data) {
             this.x = loc.getBlockX();
@@ -253,7 +244,8 @@ public class LegacyChunkBasedProvider implements BlockDataProvider {
     public static class SimpleStringItemData implements ItemData {
         String data;
 
-        SimpleStringItemData() {}
+        SimpleStringItemData() {
+        }
 
         SimpleStringItemData(String data) {
             this.data = data;

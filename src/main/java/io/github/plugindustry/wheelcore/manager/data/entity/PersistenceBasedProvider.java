@@ -40,7 +40,7 @@ public class PersistenceBasedProvider implements EntityDataProvider {
         EntityDescription description = gson.fromJson(data, EntityDescription.class);
         if (MainManager.getEntityMapping().containsKey(description.id))
             entityData.put(entity.getUniqueId(),
-                           Pair.of(MainManager.getEntityMapping().get(description.id), description.data));
+                    Pair.of(MainManager.getEntityMapping().get(description.id), description.data));
     }
 
     @Override
@@ -50,11 +50,11 @@ public class PersistenceBasedProvider implements EntityDataProvider {
             return;
         Pair<EntityBase, EntityData> pair = entityData.get(uuid);
         entity.getPersistentDataContainer().set(ENTITY_DATA_KEY,
-                                                PersistentDataType.STRING,
-                                                gson.toJson(new EntityDescription(MainManager.getEntityMapping()
-                                                                                          .inverse()
-                                                                                          .get(pair.first),
-                                                                                  pair.second)));
+                PersistentDataType.STRING,
+                gson.toJson(new EntityDescription(MainManager.getEntityMapping()
+                        .inverse()
+                        .get(pair.first),
+                        pair.second)));
         entityData.remove(uuid);
     }
 
@@ -64,12 +64,13 @@ public class PersistenceBasedProvider implements EntityDataProvider {
         entityData.forEach((uuid, data) -> Objects.requireNonNull(Bukkit.getEntity(uuid))
                 .getPersistentDataContainer()
                 .set(ENTITY_DATA_KEY,
-                     PersistentDataType.STRING,
-                     gson.toJson(new EntityDescription(MainManager.getIdFromInstance(data.first), data.second))));
+                        PersistentDataType.STRING,
+                        gson.toJson(new EntityDescription(MainManager.getIdFromInstance(data.first), data.second))));
     }
 
     @Override
-    public void afterSave() {}
+    public void afterSave() {
+    }
 
     @Nullable
     @Override
@@ -93,7 +94,8 @@ public class PersistenceBasedProvider implements EntityDataProvider {
         String id;
         EntityData data;
 
-        EntityDescription() {}
+        EntityDescription() {
+        }
 
         EntityDescription(String id, EntityData data) {
             this.id = id;

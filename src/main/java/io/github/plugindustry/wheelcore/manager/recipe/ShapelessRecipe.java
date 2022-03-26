@@ -7,13 +7,7 @@ import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -24,9 +18,9 @@ public class ShapelessRecipe implements CraftingRecipe {
 
     public ShapelessRecipe(ItemStack result, ItemStack... items) {
         this(Stream.of(items)
-                     .filter(item -> item != null && item.getType() != Material.AIR)
-                     .map(ItemStackChoice::new)
-                     .collect(Collectors.toList()), result);
+                .filter(item -> item != null && item.getType() != Material.AIR)
+                .map(ItemStackChoice::new)
+                .collect(Collectors.toList()), result);
     }
 
     public ShapelessRecipe(List<RecipeChoice> choices, ItemStack result) {

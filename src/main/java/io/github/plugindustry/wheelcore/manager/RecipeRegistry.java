@@ -1,13 +1,7 @@
 package io.github.plugindustry.wheelcore.manager;
 
 import io.github.plugindustry.wheelcore.WheelCore;
-import io.github.plugindustry.wheelcore.manager.recipe.CraftingRecipe;
-import io.github.plugindustry.wheelcore.manager.recipe.MatrixInputRecipe;
-import io.github.plugindustry.wheelcore.manager.recipe.RecipeBase;
-import io.github.plugindustry.wheelcore.manager.recipe.ShapedRecipe;
-import io.github.plugindustry.wheelcore.manager.recipe.ShapelessRecipe;
-import io.github.plugindustry.wheelcore.manager.recipe.SingleInputRecipe;
-import io.github.plugindustry.wheelcore.manager.recipe.SmeltingRecipe;
+import io.github.plugindustry.wheelcore.manager.recipe.*;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -18,11 +12,7 @@ import org.bukkit.inventory.RecipeChoice;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class RecipeRegistry {
     private static final List<RecipeBase> recipes = new LinkedList<>();
@@ -38,7 +28,7 @@ public class RecipeRegistry {
         if (needPlaceholder)
             if (recipeBase instanceof SmeltingRecipe) {
                 Bukkit.addRecipe(getPlaceholder(recipeBase,
-                                                new NamespacedKey(WheelCore.instance, "furnace_recipe_" + id)));
+                        new NamespacedKey(WheelCore.instance, "furnace_recipe_" + id)));
             } else if (recipeBase instanceof ShapedRecipe) {
                 placeholders.put(new NamespacedKey(WheelCore.instance, "shaped_recipe_" + id), recipeBase);
             } else if (recipeBase instanceof ShapelessRecipe) {
@@ -50,10 +40,10 @@ public class RecipeRegistry {
         if (recipeBase instanceof SmeltingRecipe) {
             SmeltingRecipe smelting = (SmeltingRecipe) recipeBase;
             return new FurnaceRecipe(key,
-                                     recipeBase.getResult(),
-                                     new RecipeChoice.ExactChoice(smelting.getAllMatches()),
-                                     smelting.getExperience(),
-                                     smelting.getCookingTime());
+                    recipeBase.getResult(),
+                    new RecipeChoice.ExactChoice(smelting.getAllMatches()),
+                    smelting.getExperience(),
+                    smelting.getCookingTime());
         } else if (recipeBase instanceof ShapedRecipe) {
             ShapedRecipe shaped = (ShapedRecipe) recipeBase;
             ArrayList<String> shape = new ArrayList<>();
@@ -84,7 +74,7 @@ public class RecipeRegistry {
             }
 
             org.bukkit.inventory.ShapedRecipe recipe = new org.bukkit.inventory.ShapedRecipe(key,
-                                                                                             recipeBase.getResult()).shape(
+                    recipeBase.getResult()).shape(
                     shape.toArray(String[]::new));
             setShapedIfExist(recipe, shaped, 'a', 0);
             setShapedIfExist(recipe, shaped, 'b', 1);
@@ -99,7 +89,7 @@ public class RecipeRegistry {
         } else if (recipeBase instanceof ShapelessRecipe) {
             ShapelessRecipe shapeless = (ShapelessRecipe) recipeBase;
             org.bukkit.inventory.ShapelessRecipe recipe = new org.bukkit.inventory.ShapelessRecipe(key,
-                                                                                                   recipeBase.getResult());
+                    recipeBase.getResult());
             shapeless.getChoices().forEach(recipe::addIngredient);
             return recipe;
         }

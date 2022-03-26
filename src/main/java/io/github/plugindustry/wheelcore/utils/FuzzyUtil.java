@@ -3,14 +3,7 @@ package io.github.plugindustry.wheelcore.utils;
 import com.comphenix.protocol.reflect.MethodInfo;
 import com.comphenix.protocol.reflect.fuzzy.FuzzyFieldContract;
 import com.comphenix.protocol.reflect.fuzzy.FuzzyMethodContract;
-import javassist.CannotCompileException;
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtConstructor;
-import javassist.CtField;
-import javassist.CtMethod;
-import javassist.LoaderClassPath;
-import javassist.NotFoundException;
+import javassist.*;
 import javassist.expr.ExprEditor;
 import javassist.expr.FieldAccess;
 import javassist.expr.MethodCall;
@@ -45,15 +38,15 @@ public class FuzzyUtil {
     public static CtMethod getDeclaredCtMethod(@Nonnull ClassPool cp, @Nonnull CtClass ctClass, @Nonnull Method method) {
         try {
             return ctClass.getDeclaredMethod(method.getName(),
-                                             Arrays.stream(method.getParameterTypes())
-                                                     .map(Class::getName)
-                                                     .map((String classname) -> {
-                                                         try {
-                                                             return cp.getCtClass(classname);
-                                                         } catch (NotFoundException e) {
-                                                             throw new IllegalArgumentException(e);
-                                                         }
-                                                     }).toArray(CtClass[]::new));
+                    Arrays.stream(method.getParameterTypes())
+                            .map(Class::getName)
+                            .map((String classname) -> {
+                                try {
+                                    return cp.getCtClass(classname);
+                                } catch (NotFoundException e) {
+                                    throw new IllegalArgumentException(e);
+                                }
+                            }).toArray(CtClass[]::new));
         } catch (NotFoundException e) {
             throw new IllegalArgumentException(e);
         }
@@ -63,15 +56,15 @@ public class FuzzyUtil {
     public static CtConstructor getDeclaredCtConstructor(@Nonnull ClassPool cp, @Nonnull CtClass ctClass, @Nonnull Constructor<?> method) {
         try {
             return ctClass.getDeclaredConstructor(Arrays.stream(method.getParameterTypes())
-                                                          .map(Class::getName)
-                                                          .map((String classname) -> {
-                                                              try {
-                                                                  return cp.getCtClass(classname);
-                                                              } catch (NotFoundException e) {
-                                                                  throw new IllegalArgumentException(e);
-                                                              }
-                                                          })
-                                                          .toArray(CtClass[]::new));
+                    .map(Class::getName)
+                    .map((String classname) -> {
+                        try {
+                            return cp.getCtClass(classname);
+                        } catch (NotFoundException e) {
+                            throw new IllegalArgumentException(e);
+                        }
+                    })
+                    .toArray(CtClass[]::new));
         } catch (NotFoundException e) {
             throw new IllegalArgumentException(e);
         }
@@ -81,9 +74,9 @@ public class FuzzyUtil {
     public static Method getDeclaredMethod(@Nonnull Class<?> clazz, @Nonnull CtMethod ctMethod) {
         try {
             return clazz.getDeclaredMethod(ctMethod.getName(),
-                                           Arrays.stream(ctMethod.getParameterTypes())
-                                                   .map(CtClass::getClass)
-                                                   .toArray(Class[]::new));
+                    Arrays.stream(ctMethod.getParameterTypes())
+                            .map(CtClass::getClass)
+                            .toArray(Class[]::new));
         } catch (NoSuchMethodException | NotFoundException e) {
             throw new IllegalArgumentException(e);
         }

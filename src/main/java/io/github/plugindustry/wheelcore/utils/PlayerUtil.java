@@ -116,8 +116,8 @@ public class PlayerUtil {
         return new CraftPlayer(player).getHandle()
                 .getInteractManager()
                 .breakBlock(new io.github.plugindustry.wheelcore.internal.shadow.BlockPosition(BlockPosition.getConverter()
-                                                                                                       .getGeneric(new BlockPosition(
-                                                                                                               block.getLocation()
-                                                                                                                       .toVector()))));
+                        .getGeneric(new BlockPosition(
+                                block.getLocation()
+                                        .toVector()))));
     }
 }

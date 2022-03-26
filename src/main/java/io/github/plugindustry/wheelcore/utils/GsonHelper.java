@@ -23,7 +23,7 @@ public class GsonHelper {
         JsonObject jsonObject = jsonElement.getAsJsonObject();
         try {
             return jsonDeserializationContext.deserialize(jsonObject.get("data"),
-                                                          Class.forName(jsonObject.get("type").getAsString()));
+                    Class.forName(jsonObject.get("type").getAsString()));
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             return null;

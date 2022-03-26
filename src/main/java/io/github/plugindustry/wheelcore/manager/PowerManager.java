@@ -7,14 +7,7 @@ import io.github.plugindustry.wheelcore.utils.BlockUtil;
 import io.github.plugindustry.wheelcore.utils.StreamUtil;
 import org.bukkit.Location;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -76,11 +69,11 @@ public class PowerManager {
                     }
 
                     HashSet<Location> inputs = Stream.of(location.clone().add(1, 0, 0),
-                                                         location.clone().add(-1, 0, 0),
-                                                         location.clone().add(0, 1, 0),
-                                                         location.clone().add(0, -1, 0),
-                                                         location.clone().add(0, 0, 1),
-                                                         location.clone().add(0, 0, -1))
+                                    location.clone().add(-1, 0, 0),
+                                    location.clone().add(0, 1, 0),
+                                    location.clone().add(0, -1, 0),
+                                    location.clone().add(0, 0, 1),
+                                    location.clone().add(0, 0, -1))
                             .filter(inputMap::containsKey)
                             .collect(Collectors.toCollection(HashSet::new));
 
@@ -88,12 +81,12 @@ public class PowerManager {
                     while (iterator.hasNext()) {
                         Wire.PowerPacket packet = iterator.next();
                         if (MainManager.getBlockInstance(packet.src) instanceof EnergyOutputable &&
-                            packet.amount > energyLoss) {
+                                packet.amount > energyLoss) {
                             // Input
                             if (!inputs.isEmpty() && r.nextBoolean()) {
                                 Location availableInput = StreamUtil.randomPick(inputs.stream()
-                                                                                        .filter(loc -> !loc.equals(
-                                                                                                packet.from))).orElse(
+                                        .filter(loc -> !loc.equals(
+                                                packet.from))).orElse(
                                         null);
                                 if (availableInput != null) {
                                     InputRequest inputRequest = inputMap.get(availableInput);
@@ -133,26 +126,26 @@ public class PowerManager {
 
                             // Spread
                             Optional<Location> optional = StreamUtil.randomPick(BlockUtil.findWireAround(location)
-                                                                                        .filter(loc -> !loc.equals(
-                                                                                                packet.from))
-                                                                                        .filter(loc -> {
-                                                                                            Wire.WireData data1 = (Wire.WireData) MainManager.getBlockData(
-                                                                                                    loc);
-                                                                                            Wire instance = (Wire) MainManager.getBlockInstance(
-                                                                                                    loc);
-                                                                                            if (data1 == null) {
-                                                                                                data1 = new Wire.WireData();
-                                                                                                MainManager.setBlockData(
-                                                                                                        loc,
-                                                                                                        data1);
-                                                                                                return true;
-                                                                                            }
+                                    .filter(loc -> !loc.equals(
+                                            packet.from))
+                                    .filter(loc -> {
+                                        Wire.WireData data1 = (Wire.WireData) MainManager.getBlockData(
+                                                loc);
+                                        Wire instance = (Wire) MainManager.getBlockInstance(
+                                                loc);
+                                        if (data1 == null) {
+                                            data1 = new Wire.WireData();
+                                            MainManager.setBlockData(
+                                                    loc,
+                                                    data1);
+                                            return true;
+                                        }
 
-                                                                                            return Objects.requireNonNull(
-                                                                                                            instance)
-                                                                                                           .getMaxTransmissionEnergy() >
-                                                                                                   data1.statNext;
-                                                                                        }));
+                                        return Objects.requireNonNull(
+                                                        instance)
+                                                .getMaxTransmissionEnergy() >
+                                                data1.statNext;
+                                    }));
 
                             if (optional.isPresent()) {
                                 Wire.PowerPacket packetClone = packet.clone();
@@ -162,8 +155,8 @@ public class PowerManager {
                                 double current = Objects.requireNonNull(data2).stat;
                                 double max = ((Wire) Objects.requireNonNull(MainManager.getBlockInstance(optional.get()))).getMaxTransmissionEnergy();
                                 packetClone.amount = max < current + packetClone.amount ?
-                                                     max - current :
-                                                     packetClone.amount;
+                                        max - current :
+                                        packetClone.amount;
                                 data2.nextPackets.add(packetClone);
                                 data2.statNext += packetClone.amount;
                             }

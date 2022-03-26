@@ -12,12 +12,7 @@ import org.bukkit.plugin.Plugin;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public class EnchantmentUtil {
     private static final LinkedHashMap<Integer, String> lookup = new LinkedHashMap<>();
@@ -44,10 +39,10 @@ public class EnchantmentUtil {
 
     public static String getLoreOfEnchant(CustomEnchantment enchantment, int level) {
         return ChatColor.RESET.toString() +
-               (enchantment.isTreasure() ? ChatColor.GOLD : (enchantment.isCursed() ? ChatColor.RED : ChatColor.GRAY)) +
-               I18n.getLocalePlaceholder(enchantment.getLocalizedNameKey()) +
-               " " +
-               getLevelStr(level);
+                (enchantment.isTreasure() ? ChatColor.GOLD : (enchantment.isCursed() ? ChatColor.RED : ChatColor.GRAY)) +
+                I18n.getLocalePlaceholder(enchantment.getLocalizedNameKey()) +
+                " " +
+                getLevelStr(level);
     }
 
     private static String getLevelStr(int level) {

@@ -14,10 +14,10 @@ public class DummyBlockItem extends DummyItem implements Placeable {
         // We do nothing by default, so you should do this job in your implementation too.
         BlockBase blockBase = getBlock();
         return blockBase instanceof io.github.plugindustry.wheelcore.interfaces.block.Placeable &&
-               ((io.github.plugindustry.wheelcore.interfaces.block.Placeable) blockBase).onBlockPlace(item,
-                                                                                                      block,
-                                                                                                      blockAgainst,
-                                                                                                      player);
+                ((io.github.plugindustry.wheelcore.interfaces.block.Placeable) blockBase).onBlockPlace(item,
+                        block,
+                        blockAgainst,
+                        player);
     }
 
     public BlockBase getBlock() {

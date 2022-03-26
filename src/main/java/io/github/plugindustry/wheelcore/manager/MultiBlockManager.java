@@ -6,13 +6,7 @@ import io.github.plugindustry.wheelcore.interfaces.world.multiblock.Environment;
 import io.github.plugindustry.wheelcore.utils.Pair;
 import org.bukkit.Location;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -68,8 +62,8 @@ public class MultiBlockManager {
 
     public static Set<Location> getAvailableStructures(BlockBase matchBase) {
         return structuresMap.containsKey(matchBase) ?
-               Collections.unmodifiableSet(structuresMap.get(matchBase)) :
-               Collections.emptySet();
+                Collections.unmodifiableSet(structuresMap.get(matchBase)) :
+                Collections.emptySet();
     }
 
     public static Environment getStructureData(Location loc) {
@@ -79,7 +73,8 @@ public class MultiBlockManager {
     public static class Conditions {
         private final LinkedList<Object> ops = new LinkedList<>();
 
-        private Conditions() {}
+        private Conditions() {
+        }
 
         public static Conditions create() {
             return new Conditions();

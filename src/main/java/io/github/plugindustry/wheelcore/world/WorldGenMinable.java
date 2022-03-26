@@ -44,13 +44,13 @@ public class WorldGenMinable implements WorldGenerator {
                 currentBlock.setType(this.ore.getMaterial(), false);
                 MainManager.addBlock(currentBlock.getLocation(), this.ore, null);
                 DebuggingLogger.debug("Gen in " +
-                                      (currentBlock.getLocation().getWorld() == null ?
-                                       null :
-                                       currentBlock.getLocation().getWorld().getName()) +
-                                      " at " +
-                                      (chunk.getX() << 4) +
-                                      ", " +
-                                      (chunk.getZ() << 4));
+                        (currentBlock.getLocation().getWorld() == null ?
+                                null :
+                                currentBlock.getLocation().getWorld().getName()) +
+                        " at " +
+                        (chunk.getX() << 4) +
+                        ", " +
+                        (chunk.getZ() << 4));
             } else {
                 continue;
             }

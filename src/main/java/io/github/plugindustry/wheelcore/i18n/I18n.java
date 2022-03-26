@@ -7,12 +7,7 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.comphenix.protocol.wrappers.WrappedChatComponent;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
+import com.google.gson.*;
 import io.github.plugindustry.wheelcore.WheelCore;
 import io.github.plugindustry.wheelcore.interfaces.item.ItemData;
 import io.github.plugindustry.wheelcore.manager.ConfigManager;
@@ -23,19 +18,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.PropertyResourceBundle;
-import java.util.ResourceBundle;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -175,9 +158,9 @@ public class I18n {
                 meta.setDisplayName(replaceAll(locale, meta.getDisplayName()));
             if (meta.hasLore())
                 meta.setLore(Objects.requireNonNull(meta.getLore())
-                                     .stream()
-                                     .flatMap(str -> replaceAllList(locale, str).stream())
-                                     .collect(Collectors.toList()));
+                        .stream()
+                        .flatMap(str -> replaceAllList(locale, str).stream())
+                        .collect(Collectors.toList()));
             newItem.setItemMeta(meta);
             if (!(MainManager.getItemData(item) instanceof TranslatedItemData))
                 MainManager.setItemData(newItem, new TranslatedItemData(item));
@@ -199,7 +182,8 @@ public class I18n {
     public static class TranslatedItemData implements ItemData {
         public ItemStack originalItem;
 
-        public TranslatedItemData() {}
+        public TranslatedItemData() {
+        }
 
         public TranslatedItemData(ItemStack originalItem) {
             this.originalItem = originalItem.clone();
@@ -228,11 +212,11 @@ public class I18n {
 
         public PacketListener() {
             super(PacketAdapter.params()
-                          .clientSide()
-                          .serverSide()
-                          .plugin(WheelCore.instance)
-                          .listenerPriority(ListenerPriority.LOW)
-                          .types(outTypes));
+                    .clientSide()
+                    .serverSide()
+                    .plugin(WheelCore.instance)
+                    .listenerPriority(ListenerPriority.LOW)
+                    .types(outTypes));
         }
 
         @Override
@@ -251,9 +235,9 @@ public class I18n {
             StructureModifier<String[]> stringArrays = packet.getStringArrays();
             for (int i = 0; i < stringArrays.size(); ++i)
                 stringArrays.modify(i,
-                                    strArr -> Arrays.stream(strArr)
-                                            .map(str -> replaceAll(locale, str))
-                                            .toArray(String[]::new));
+                        strArr -> Arrays.stream(strArr)
+                                .map(str -> replaceAll(locale, str))
+                                .toArray(String[]::new));
 
             StructureModifier<WrappedChatComponent> chatComponents = packet.getChatComponents();
             for (int i = 0; i < chatComponents.size(); ++i)
@@ -276,15 +260,15 @@ public class I18n {
                 StructureModifier<ItemStack[]> itemStacksArrays = packet.getItemArrayModifier();
                 for (int i = 0; i < itemStacksArrays.size(); ++i)
                     itemStacksArrays.modify(i,
-                                            itemArr -> Arrays.stream(itemArr)
-                                                    .map(item -> translateItem(locale, item))
-                                                    .toArray(ItemStack[]::new));
+                            itemArr -> Arrays.stream(itemArr)
+                                    .map(item -> translateItem(locale, item))
+                                    .toArray(ItemStack[]::new));
                 StructureModifier<List<ItemStack>> itemStacksLists = packet.getItemListModifier();
                 for (int i = 0; i < itemStacksLists.size(); ++i)
                     itemStacksLists.modify(i,
-                                           itemList -> itemList.stream()
-                                                   .map(item -> translateItem(locale, item))
-                                                   .collect(Collectors.toList()));
+                            itemList -> itemList.stream()
+                                    .map(item -> translateItem(locale, item))
+                                    .collect(Collectors.toList()));
             } catch (Exception ignored) {
             }
 

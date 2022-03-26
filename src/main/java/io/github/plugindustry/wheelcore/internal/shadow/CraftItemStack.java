@@ -7,7 +7,8 @@ import javax.annotation.Nonnull;
 
 @Shadow("cb/CraftItemStack")
 public class CraftItemStack {
-    public CraftItemStack(Object o) {}
+    public CraftItemStack(Object o) {
+    }
 
     @Shadow("cb/CraftItemStack.asNMSCopy")
     @Nonnull

@@ -28,20 +28,20 @@ public class DebugCommand extends SubCommandBase {
 
         if (args[0].equals("blocks"))
             MainManager.blockDataProvider.blocks().forEach(b -> commandSender.sendMessage("World:" +
-                                                                                          Objects.requireNonNull(b.getWorld())
-                                                                                                  .getName() +
-                                                                                          " X:" +
-                                                                                          b.getX() +
-                                                                                          " Y:" +
-                                                                                          b.getY() +
-                                                                                          " Z:" +
-                                                                                          b.getZ() +
-                                                                                          " ID:" +
-                                                                                          MainManager.getIdFromInstance(
-                                                                                                  MainManager.getBlockInstance(
-                                                                                                          b)) +
-                                                                                          " Instance:" +
-                                                                                          MainManager.getBlockInstance(b)));
+                    Objects.requireNonNull(b.getWorld())
+                            .getName() +
+                    " X:" +
+                    b.getX() +
+                    " Y:" +
+                    b.getY() +
+                    " Z:" +
+                    b.getZ() +
+                    " ID:" +
+                    MainManager.getIdFromInstance(
+                            MainManager.getBlockInstance(
+                                    b)) +
+                    " Instance:" +
+                    MainManager.getBlockInstance(b)));
         else if (args[0].equals("instances")) {
             commandSender.sendMessage("Block:");
             MainManager.getBlockMapping().forEach((s, i) -> commandSender.sendMessage(s + " -- " + i));

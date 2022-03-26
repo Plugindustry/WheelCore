@@ -1,20 +1,11 @@
 package io.github.plugindustry.wheelcore.inventory;
 
-import io.github.plugindustry.wheelcore.interfaces.inventory.InventoryClickInfo;
-import io.github.plugindustry.wheelcore.interfaces.inventory.Position;
-import io.github.plugindustry.wheelcore.interfaces.inventory.SlotSize;
-import io.github.plugindustry.wheelcore.interfaces.inventory.WidgetBase;
-import io.github.plugindustry.wheelcore.interfaces.inventory.WidgetClickable;
-import io.github.plugindustry.wheelcore.interfaces.inventory.WindowInteractor;
+import io.github.plugindustry.wheelcore.interfaces.inventory.*;
 import io.github.plugindustry.wheelcore.utils.InventoryUtil;
 import io.github.plugindustry.wheelcore.utils.Pair;
 import org.bukkit.entity.HumanEntity;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-import java.util.WeakHashMap;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class Window {
@@ -62,7 +53,7 @@ public class Window {
         sync();
         getWidgetMap().values().forEach(we -> we.second.getChangeMap(true)
                 .forEach((pos, item) -> interactor.onWindowContentChange(InventoryUtil.getAbsolutePos(we.first, pos),
-                                                                         item)));
+                        item)));
         linkedInteractors.add(interactor);
     }
 
