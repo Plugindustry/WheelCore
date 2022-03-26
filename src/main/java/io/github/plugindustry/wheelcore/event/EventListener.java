@@ -3,7 +3,12 @@ package io.github.plugindustry.wheelcore.event;
 import io.github.plugindustry.wheelcore.WheelCore;
 import io.github.plugindustry.wheelcore.interfaces.Interactive;
 import io.github.plugindustry.wheelcore.interfaces.block.BlockBase;
+import io.github.plugindustry.wheelcore.interfaces.block.BlockData;
 import io.github.plugindustry.wheelcore.interfaces.block.Destroyable;
+import io.github.plugindustry.wheelcore.interfaces.block.Ignitable;
+import io.github.plugindustry.wheelcore.interfaces.block.PistonPullable;
+import io.github.plugindustry.wheelcore.interfaces.block.PistonPushable;
+import io.github.plugindustry.wheelcore.interfaces.block.RedstoneChargeable;
 import io.github.plugindustry.wheelcore.interfaces.entity.EntityBase;
 import io.github.plugindustry.wheelcore.interfaces.inventory.InventoryClickInfo;
 import io.github.plugindustry.wheelcore.interfaces.item.Breakable;
@@ -22,8 +27,10 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Chunk;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -35,8 +42,13 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDamageEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
+import org.bukkit.event.block.BlockFadeEvent;
+import org.bukkit.event.block.BlockIgniteEvent;
+import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
+import org.bukkit.event.block.BlockPistonRetractEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.BlockRedstoneEvent;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
@@ -62,6 +74,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -99,14 +112,13 @@ public class EventListener implements Listener {
     public void onBlockBreak(BlockBreakEvent event) {
         ItemStack toolItem = event.getPlayer().getInventory().getItemInMainHand();
         ItemBase itemInstance = MainManager.getItemInstance(toolItem);
+        Block block = event.getBlock();
         if (itemInstance instanceof Tool) {
-            ((Tool) itemInstance).getOverrideItemDrop(event.getBlock(), toolItem).ifPresent(items -> {
+            ((Tool) itemInstance).getOverrideItemDrop(block, toolItem).ifPresent(items -> {
                 event.setDropItems(false);
-                items.forEach(item -> event.getBlock()
-                        .getWorld()
-                        .dropItemNaturally(event.getBlock().getLocation(), item));
+                items.forEach(item -> block.getWorld().dropItemNaturally(block.getLocation(), item));
             });
-            ((Tool) itemInstance).getOverrideExpDrop(event.getBlock(), toolItem).ifPresent(event::setExpToDrop);
+            ((Tool) itemInstance).getOverrideExpDrop(block, toolItem).ifPresent(event::setExpToDrop);
         }
 
         if (MainManager.hasBlock(event.getBlock().getLocation())) {
@@ -126,11 +138,112 @@ public class EventListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPistonExtend(BlockPistonExtendEvent event) {
-        for (Block block : event.getBlocks())
-            if (MainManager.hasBlock(block.getLocation())) {
-                event.setCancelled(true);
-                return;
-            }
+        Block piston = event.getBlock();
+        BlockFace direction = event.getDirection();
+        List<Block> blocks = event.getBlocks();
+        if (!blocks.stream().filter(block -> MainManager.hasBlock(block.getLocation())).allMatch(block -> {
+            BlockBase instance = MainManager.getBlockInstance(block.getLocation());
+            return instance instanceof PistonPushable && ((PistonPushable) instance).onPistonPush(block,
+                                                                                                  piston,
+                                                                                                  direction,
+                                                                                                  blocks);
+        })) {
+            event.setCancelled(true);
+            return;
+        }
+
+        Location pistonLoc = piston.getLocation();
+        blocks.stream()
+                .filter(block -> MainManager.hasBlock(block.getLocation()))
+                .sorted(Comparator.<Block>comparingDouble(block -> block.getLocation().distanceSquared(pistonLoc))
+                                .reversed())
+                .forEachOrdered(block -> {
+                    Location loc = block.getLocation();
+                    BlockBase instance = MainManager.getBlockInstance(loc);
+                    BlockData data = MainManager.getBlockData(loc);
+                    MainManager.removeBlock(loc);
+                    MainManager.addBlock(block.getRelative(direction).getLocation(), instance, data);
+                });
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onPistonRetract(BlockPistonRetractEvent event) {
+        Block piston = event.getBlock();
+        BlockFace direction = event.getDirection();
+        List<Block> blocks = event.getBlocks();
+        if (!blocks.stream().filter(block -> MainManager.hasBlock(block.getLocation())).allMatch(block -> {
+            BlockBase instance = MainManager.getBlockInstance(block.getLocation());
+            return instance instanceof PistonPullable && ((PistonPullable) instance).onPistonPull(block,
+                                                                                                  piston,
+                                                                                                  direction,
+                                                                                                  blocks);
+        })) {
+            event.setCancelled(true);
+            return;
+        }
+
+        Location pistonLoc = piston.getLocation();
+        blocks.stream().filter(block -> MainManager.hasBlock(block.getLocation())).sorted(Comparator.comparingDouble(
+                block -> block.getLocation().distanceSquared(pistonLoc))).forEachOrdered(block -> {
+            Location loc = block.getLocation();
+            BlockBase instance = MainManager.getBlockInstance(loc);
+            BlockData data = MainManager.getBlockData(loc);
+            MainManager.removeBlock(loc);
+            MainManager.addBlock(block.getRelative(direction.getOppositeFace()).getLocation(), instance, data);
+        });
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onBlockPhysics(BlockPhysicsEvent event) {
+        Block block = event.getBlock();
+        if (MainManager.hasBlock(block.getLocation())) {
+            BlockBase instance = MainManager.getBlockInstance(block.getLocation());
+            event.setCancelled(true);
+            if (event.getChangedType() == Material.AIR &&
+                !(instance instanceof Destroyable && ((Destroyable) instance).onBlockDestroy(block,
+                                                                                             Destroyable.DestroyMethod.PHYSICS,
+                                                                                             null,
+                                                                                             null)))
+                block.setType(Material.AIR);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onBlockFade(BlockFadeEvent event) {
+        Block block = event.getBlock();
+        if (MainManager.hasBlock(block.getLocation())) {
+            BlockBase instance = MainManager.getBlockInstance(block.getLocation());
+            event.setCancelled(true);
+            if (event.getNewState().getType() == Material.AIR &&
+                !(instance instanceof Destroyable && ((Destroyable) instance).onBlockDestroy(block,
+                                                                                             Destroyable.DestroyMethod.FADE,
+                                                                                             null,
+                                                                                             null)))
+                block.setType(Material.AIR);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onBlockIgnite(BlockIgniteEvent event) {
+        Block block = event.getBlock();
+        if (MainManager.hasBlock(block.getLocation())) {
+            BlockBase instance = MainManager.getBlockInstance(block.getLocation());
+            event.setCancelled(!(instance instanceof Ignitable &&
+                                 ((Ignitable) instance).onIgnite(block,
+                                                                 event.getCause(),
+                                                                 event.getBlock(),
+                                                                 event.getIgnitingEntity())));
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onRedstone(BlockRedstoneEvent event) {
+        Block block = event.getBlock();
+        if (MainManager.hasBlock(block.getLocation())) {
+            BlockBase instance = MainManager.getBlockInstance(block.getLocation());
+            if (instance instanceof RedstoneChargeable)
+                ((RedstoneChargeable) instance).onRedstone(block, event.getOldCurrent(), event.getNewCurrent());
+        }
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -343,7 +456,8 @@ public class EventListener implements Listener {
             event.setCancelled(!(instance instanceof Interactive &&
                                  ((Interactive) instance).onInteract(event.getPlayer(),
                                                                      Action.RIGHT_CLICK_AIR,
-                                                                     event.getPlayer().getInventory()
+                                                                     event.getPlayer()
+                                                                             .getInventory()
                                                                              .getItemInMainHand(),
                                                                      null,
                                                                      event.getRightClicked())));
