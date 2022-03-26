@@ -189,7 +189,7 @@ public class EventListener implements Listener {
             BlockBase instance = MainManager.getBlockInstance(loc);
             BlockData data = MainManager.getBlockData(loc);
             MainManager.removeBlock(loc);
-            MainManager.addBlock(block.getRelative(direction.getOppositeFace()).getLocation(), instance, data);
+            MainManager.addBlock(block.getRelative(direction).getLocation(), instance, data);
         });
     }
 

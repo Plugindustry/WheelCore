@@ -10,7 +10,7 @@ public interface PistonPushable {
     /**
      * @param block        The pushed block
      * @param piston       The piston that is pushing the block
-     * @param direction    The direction the piston
+     * @param direction    The direction in which the piston is pushing the block
      * @param pushedBlocks The list of blocks that are being pushed
      * @return Whether the block should be pushed
      */

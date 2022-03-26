@@ -10,7 +10,7 @@ public interface PistonPullable {
     /**
      * @param block        The pulled block
      * @param piston       The piston that is pulling the block
-     * @param direction    The direction the piston
+     * @param direction    The direction in which the piston is pulling the block
      * @param pulledBlocks The list of blocks that are being pulled
      * @return Whether the block should be pulled
      */
