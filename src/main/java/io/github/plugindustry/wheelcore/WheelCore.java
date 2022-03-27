@@ -54,6 +54,7 @@ public final class WheelCore extends JavaPlugin {
 
         // Register EventListener
         Bukkit.getPluginManager().registerEvents(new EventListener(), WheelCore.instance);
+        Bukkit.getPluginManager().registerEvents(new I18n.EventListener(), WheelCore.instance);
 
         // Register PacketListener
         protocolManager.addPacketListener(new PlayerDigHandler.PacketListener());

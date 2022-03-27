@@ -12,6 +12,13 @@ import io.github.plugindustry.wheelcore.WheelCore;
 import io.github.plugindustry.wheelcore.interfaces.item.ItemData;
 import io.github.plugindustry.wheelcore.manager.ConfigManager;
 import io.github.plugindustry.wheelcore.manager.MainManager;
+import io.github.plugindustry.wheelcore.utils.Pair;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -19,6 +26,7 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,6 +38,8 @@ public class I18n {
     private static final Pattern patternList = Pattern.compile("\\{\\{(\\S*?)\\[]}}");
     private static final JsonParser parser = new JsonParser();
     private static final Gson gson = new Gson();
+    private static final ConcurrentHashMap<UUID, Pair<Map<UUID, ItemStack>, Queue<UUID>>> orgItemMapping = new ConcurrentHashMap<>();
+    private static final int ITEM_LIMIT = 512;
 
     /**
      * @param reader Lang reader to load
@@ -150,7 +160,7 @@ public class I18n {
     }
 
     @Nonnull
-    private static ItemStack translateItem(@Nonnull Locale locale, @Nonnull ItemStack item) {
+    private static ItemStack translateItem(@Nonnull Player player, @Nonnull Locale locale, @Nonnull ItemStack item) {
         ItemStack newItem = item.clone();
         if (newItem.hasItemMeta()) {
             ItemMeta meta = Objects.requireNonNull(newItem.getItemMeta());
@@ -162,31 +172,25 @@ public class I18n {
                         .flatMap(str -> replaceAllList(locale, str).stream())
                         .collect(Collectors.toList()));
             newItem.setItemMeta(meta);
-            if (!(MainManager.getItemData(item) instanceof TranslatedItemData))
-                MainManager.setItemData(newItem, new TranslatedItemData(item));
+            if (!(MainManager.getItemData(item) instanceof TranslatedItemData)) {
+                UUID uuid = UUID.randomUUID();
+                MainManager.setItemData(newItem, new TranslatedItemData(uuid));
+                if(!orgItemMapping.containsKey(player.getUniqueId())) orgItemMapping.put(player.getUniqueId(), Pair.of(new HashMap<>(), new ArrayDeque<>(ITEM_LIMIT)));
+                Pair<Map<UUID, ItemStack>, Queue<UUID>> pair = orgItemMapping.get(player.getUniqueId());
+                while(pair.second.size() >= ITEM_LIMIT)
+                    pair.first.remove(pair.second.poll());
+                pair.first.put(uuid, item.clone());
+                pair.second.add(uuid);
+            }
         }
         return newItem;
     }
 
-    @Nonnull
-    private static ItemStack getOriginalItem(@Nonnull ItemStack item) {
-        ItemData itemData = MainManager.getItemData(item);
-        if (itemData instanceof TranslatedItemData) {
-            ItemStack orgItem = Optional.ofNullable(((TranslatedItemData) itemData).originalItem).orElse(item);
-            orgItem.setAmount(item.getAmount());
-            return orgItem;
-        } else
-            return item;
-    }
-
     public static class TranslatedItemData implements ItemData {
-        public ItemStack originalItem;
+        public UUID uuid;
 
-        public TranslatedItemData() {
-        }
-
-        public TranslatedItemData(ItemStack originalItem) {
-            this.originalItem = originalItem.clone();
+        public TranslatedItemData(UUID uuid) {
+            this.uuid = uuid;
         }
     }
 
@@ -222,9 +226,10 @@ public class I18n {
         @Override
         public void onPacketSending(PacketEvent event) {
             PacketContainer packet = event.getPacket();
+            Player player = event.getPlayer();
             Locale locale;
             try {
-                locale = Locale.forLanguageTag(event.getPlayer().getLocale().replace('_', '-'));
+                locale = Locale.forLanguageTag(player.getLocale().replace('_', '-'));
             } catch (Exception exception) {
                 return;
             }
@@ -256,18 +261,18 @@ public class I18n {
             try {
                 StructureModifier<ItemStack> itemStacks = packet.getItemModifier();
                 for (int i = 0; i < itemStacks.size(); ++i)
-                    itemStacks.modify(i, item -> translateItem(locale, item));
+                    itemStacks.modify(i, item -> translateItem(player, locale, item));
                 StructureModifier<ItemStack[]> itemStacksArrays = packet.getItemArrayModifier();
                 for (int i = 0; i < itemStacksArrays.size(); ++i)
                     itemStacksArrays.modify(i,
                             itemArr -> Arrays.stream(itemArr)
-                                    .map(item -> translateItem(locale, item))
+                                    .map(item -> translateItem(player, locale, item))
                                     .toArray(ItemStack[]::new));
                 StructureModifier<List<ItemStack>> itemStacksLists = packet.getItemListModifier();
                 for (int i = 0; i < itemStacksLists.size(); ++i)
                     itemStacksLists.modify(i,
                             itemList -> itemList.stream()
-                                    .map(item -> translateItem(locale, item))
+                                    .map(item -> translateItem(player, locale, item))
                                     .collect(Collectors.toList()));
             } catch (Exception ignored) {
             }
@@ -278,8 +283,27 @@ public class I18n {
         @Override
         public void onPacketReceiving(PacketEvent event) {
             PacketContainer packet = event.getPacket();
-            packet.getItemModifier().modify(0, I18n::getOriginalItem);
-            event.setPacket(packet);
+            int slot = packet.getIntegers().read(0);
+            ItemStack item = packet.getItemModifier().read(0);
+            UUID uuid = event.getPlayer().getUniqueId();
+            if (item.getType() != Material.AIR) {
+                ItemData data = MainManager.getItemData(item);
+                if (data instanceof TranslatedItemData) {
+                    if (orgItemMapping.containsKey(uuid) && orgItemMapping.get(uuid).first.containsKey(((TranslatedItemData) data).uuid)) {
+                        ItemStack orgItem = orgItemMapping.get(uuid).first.get(((TranslatedItemData) data).uuid).clone();
+                        orgItem.setAmount(item.getAmount());
+                        packet.getItemModifier().write(0, orgItem);
+                    } else packet.getItemModifier().write(0, new ItemStack(Material.AIR));
+                    event.setPacket(packet);
+                }
+            }
+        }
+    }
+
+    public static class EventListener implements Listener {
+        @EventHandler(priority = EventPriority.MONITOR)
+        public void onPlayerQuit(PlayerQuitEvent event) {
+            orgItemMapping.remove(event.getPlayer().getUniqueId());
         }
     }
 }

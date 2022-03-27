@@ -219,7 +219,7 @@ public class EventListener implements Listener {
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPrepareAnvil(PrepareAnvilEvent event) {
         ItemStack srcItem = event.getInventory().getItem(0);
         ItemStack result = event.getResult();
@@ -251,7 +251,7 @@ public class EventListener implements Listener {
         event.setResult(result);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onPrepareItemCraft(PrepareItemCraftEvent event) {
         CraftingInventory craftingInv = event.getInventory();
         if (Stream.of(craftingInv.getMatrix()).anyMatch(item -> MainManager.getItemInstance(item) != null) ||
@@ -332,12 +332,12 @@ public class EventListener implements Listener {
             ((ClassicInventoryInteractor) inv.getHolder()).processClose(event.getPlayer());
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onWorldInit(WorldInitEvent event) {
         MainManager.onWorldInit(event);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onChunkLoad(ChunkLoadEvent event) {
         Chunk chunk = event.getChunk();
         for (Entity entity : chunk.getEntities())
@@ -346,13 +346,12 @@ public class EventListener implements Listener {
 
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     public void onChunkUnLoad(ChunkUnloadEvent event) {
         Chunk chunk = event.getChunk();
         for (Entity entity : chunk.getEntities())
             MainManager.entityDataProvider.unloadEntity(entity);
         MainManager.blockDataProvider.unloadChunk(chunk);
-
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
