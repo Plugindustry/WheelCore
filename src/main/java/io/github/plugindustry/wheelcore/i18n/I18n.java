@@ -175,9 +175,10 @@ public class I18n {
             if (!(MainManager.getItemData(item) instanceof TranslatedItemData)) {
                 UUID uuid = UUID.randomUUID();
                 MainManager.setItemData(newItem, new TranslatedItemData(uuid));
-                if(!orgItemMapping.containsKey(player.getUniqueId())) orgItemMapping.put(player.getUniqueId(), Pair.of(new HashMap<>(), new ArrayDeque<>(ITEM_LIMIT)));
+                if (!orgItemMapping.containsKey(player.getUniqueId()))
+                    orgItemMapping.put(player.getUniqueId(), Pair.of(new HashMap<>(), new ArrayDeque<>(ITEM_LIMIT)));
                 Pair<Map<UUID, ItemStack>, Queue<UUID>> pair = orgItemMapping.get(player.getUniqueId());
-                while(pair.second.size() >= ITEM_LIMIT)
+                while (pair.second.size() >= ITEM_LIMIT)
                     pair.first.remove(pair.second.poll());
                 pair.first.put(uuid, item.clone());
                 pair.second.add(uuid);
