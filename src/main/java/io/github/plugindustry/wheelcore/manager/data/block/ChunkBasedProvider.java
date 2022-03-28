@@ -22,7 +22,7 @@ public class ChunkBasedProvider implements BlockDataProvider {
     private final static NamespacedKey CHUNK_DATA_KEY = new NamespacedKey(WheelCore.instance, "chunk_data");
 
     static {
-        GsonBuilder gbs = GsonHelper.bukkitCompact();
+        GsonBuilder gbs = GsonHelper.bukkitCompat();
         gbs.registerTypeAdapter(BlockData.class, GsonHelper.POLYMORPHISM_SERIALIZER);
         gbs.registerTypeAdapter(BlockData.class, GsonHelper.POLYMORPHISM_DESERIALIZER);
         gson = gbs.create();

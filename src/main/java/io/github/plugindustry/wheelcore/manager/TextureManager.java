@@ -130,6 +130,7 @@ public class TextureManager {
                     .plugin(WheelCore.instance)
                     .listenerPriority(ListenerPriority.LOW)
                     .types(PacketType.Play.Server.BLOCK_CHANGE,
+                            PacketType.Play.Server.BLOCK_BREAK,
                             PacketType.Play.Server.MULTI_BLOCK_CHANGE,
                             PacketType.Play.Server.MAP_CHUNK));
         }
@@ -138,7 +139,7 @@ public class TextureManager {
         public void onPacketSending(PacketEvent event) {
             PacketContainer packet = event.getPacket();
             Player player = event.getPlayer();
-            if (packet.getType() == PacketType.Play.Server.BLOCK_CHANGE) {
+            if (packet.getType() == PacketType.Play.Server.BLOCK_CHANGE || packet.getType() == PacketType.Play.Server.BLOCK_BREAK) {
                 BlockPosition pos = packet.getBlockPositionModifier().read(0);
                 if (MainManager.getBlockInstance(pos.toLocation(player.getWorld())) instanceof TexturedBlock) {
                     packet.getBlockData().write(0, WrappedBlockData.createData(Material.SPAWNER));

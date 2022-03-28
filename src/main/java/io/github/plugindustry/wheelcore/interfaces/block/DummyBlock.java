@@ -3,8 +3,8 @@ package io.github.plugindustry.wheelcore.interfaces.block;
 import io.github.plugindustry.wheelcore.interfaces.Interactive;
 import io.github.plugindustry.wheelcore.manager.ItemMapping;
 import io.github.plugindustry.wheelcore.manager.MainManager;
-import io.github.plugindustry.wheelcore.manager.TextureManager;
 import io.github.plugindustry.wheelcore.utils.BlockUtil;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -25,11 +25,9 @@ public class DummyBlock implements BlockBase, Placeable, Destroyable, Interactiv
     @Override
     public boolean onBlockPlace(@Nullable ItemStack item, @Nonnull Block block, @Nullable Block blockAgainst, @Nullable Player player) {
         // We do nothing by default, so you should do this job in your implementation too.
-        MainManager.addBlock(block.getLocation(), this, null);
+        MainManager.addBlock(block.getLocation(), this, getInitialData(item, block, blockAgainst, player));
         if (item == null || getMaterial() != item.getType())
             block.setType(getMaterial());
-        if (this instanceof TexturedBlock)
-            TextureManager.updateTexture(block.getLocation());
         return true;
     }
 
@@ -41,7 +39,8 @@ public class DummyBlock implements BlockBase, Placeable, Destroyable, Interactiv
 
         MainManager.removeBlock(block.getLocation());
         block.setType(Material.AIR);
-        block.getWorld().dropItem(block.getLocation(), getItemStack());
+        if (player == null || player.getGameMode() != GameMode.CREATIVE)
+            block.getWorld().dropItem(block.getLocation(), getItemStack());
         return true;
     }
 
@@ -69,5 +68,10 @@ public class DummyBlock implements BlockBase, Placeable, Destroyable, Interactiv
     @Nonnull
     public Material getMaterial() {
         return getItemStack().getType();
+    }
+
+    @Nullable
+    public BlockData getInitialData(@Nullable ItemStack item, @Nonnull Block block, @Nullable Block blockAgainst, @Nullable Player player) {
+        return null;
     }
 }

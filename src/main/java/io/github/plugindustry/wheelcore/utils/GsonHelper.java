@@ -63,7 +63,7 @@ public class GsonHelper {
         return ConfigurationSerialization.deserializeObject(map);
     }
 
-    public static GsonBuilder bukkitCompact() {
+    public static GsonBuilder bukkitCompat() {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeHierarchyAdapter(ConfigurationSerializable.class, CONFIGURATION_SERIALIZABLE_SERIALIZER);
         builder.registerTypeHierarchyAdapter(ConfigurationSerializable.class, CONFIGURATION_SERIALIZABLE_DESERIALIZER);

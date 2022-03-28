@@ -30,7 +30,7 @@ public class PersistenceBasedProvider implements ItemDataProvider {
     private static final Gson gson;
 
     static {
-        GsonBuilder gbs = GsonHelper.bukkitCompact();
+        GsonBuilder gbs = GsonHelper.bukkitCompat();
         gbs.registerTypeAdapter(ItemData.class, GsonHelper.POLYMORPHISM_SERIALIZER);
         gbs.registerTypeAdapter(ItemData.class, GsonHelper.POLYMORPHISM_DESERIALIZER);
         gson = gbs.create();

@@ -20,7 +20,7 @@ public class TagBasedProvider implements EntityDataProvider {
     private static final Gson gson;
 
     static {
-        GsonBuilder gbs = GsonHelper.bukkitCompact();
+        GsonBuilder gbs = GsonHelper.bukkitCompat();
         gbs.registerTypeAdapter(EntityData.class, GsonHelper.POLYMORPHISM_SERIALIZER);
         gbs.registerTypeAdapter(EntityData.class, GsonHelper.POLYMORPHISM_DESERIALIZER);
         gson = gbs.create();

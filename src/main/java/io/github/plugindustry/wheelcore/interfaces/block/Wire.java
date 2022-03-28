@@ -1,6 +1,5 @@
 package io.github.plugindustry.wheelcore.interfaces.block;
 
-import io.github.plugindustry.wheelcore.manager.MainManager;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -22,13 +21,10 @@ public abstract class Wire extends DummyBlock {
      */
     public abstract double getEnergyLoss();
 
+    @Nullable
     @Override
-    public boolean onBlockPlace(@Nullable ItemStack item, @Nonnull Block block, @Nullable Block blockAgainst, @Nullable Player player) {
-        if (super.onBlockPlace(item, block, blockAgainst, player)) {
-            MainManager.setBlockData(block.getLocation(), new WireData());
-            return true;
-        }
-        return false;
+    public BlockData getInitialData(@Nullable ItemStack item, @Nonnull Block block, @Nullable Block blockAgainst, @Nullable Player player) {
+        return new WireData();
     }
 
     public static class WireData extends BlockData {
