@@ -87,8 +87,8 @@ public class EventListener implements Listener {
                     ((Destroyable) blockBase).onBlockDestroy(target,
                             Destroyable.DestroyMethod.PLAYER_DESTROY,
                             event.getPlayer()
-                                    .getInventory()
-                                    .getItemInMainHand(),
+                                 .getInventory()
+                                 .getItemInMainHand(),
                             event.getPlayer())));
         }
     }
@@ -111,16 +111,16 @@ public class EventListener implements Listener {
 
         Location pistonLoc = piston.getLocation();
         blocks.stream()
-                .filter(block -> MainManager.hasBlock(block.getLocation()))
-                .sorted(Comparator.<Block>comparingDouble(block -> block.getLocation().distanceSquared(pistonLoc))
-                        .reversed())
-                .forEachOrdered(block -> {
-                    Location loc = block.getLocation();
-                    BlockBase instance = MainManager.getBlockInstance(loc);
-                    BlockData data = MainManager.getBlockData(loc);
-                    MainManager.removeBlock(loc);
-                    MainManager.addBlock(block.getRelative(direction).getLocation(), instance, data);
-                });
+              .filter(block -> MainManager.hasBlock(block.getLocation()))
+              .sorted(Comparator.<Block>comparingDouble(block -> block.getLocation().distanceSquared(pistonLoc))
+                                .reversed())
+              .forEachOrdered(block -> {
+                  Location loc = block.getLocation();
+                  BlockBase instance = MainManager.getBlockInstance(loc);
+                  BlockData data = MainManager.getBlockData(loc);
+                  MainManager.removeBlock(loc);
+                  MainManager.addBlock(block.getRelative(direction).getLocation(), instance, data);
+              });
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -227,18 +227,20 @@ public class EventListener implements Listener {
             return;
 
         Map<Enchantment, Integer> src = srcItem.getEnchantments()
-                .entrySet()
-                .stream()
-                .filter(entry -> entry.getKey() instanceof EnchantmentUtil.CustomEnchantment)
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                                               .entrySet()
+                                               .stream()
+                                               .filter(entry -> entry.getKey() instanceof EnchantmentUtil.CustomEnchantment)
+                                               .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         Map<Enchantment, Integer> conflicts = src.entrySet()
-                .stream()
-                .filter(entry -> result.getEnchantments()
-                        .keySet()
-                        .stream()
-                        .anyMatch(enchantment -> entry.getKey().conflictsWith(enchantment)))
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                                                 .stream()
+                                                 .filter(entry -> result.getEnchantments()
+                                                                        .keySet()
+                                                                        .stream()
+                                                                        .anyMatch(enchantment -> entry.getKey()
+                                                                                                      .conflictsWith(
+                                                                                                              enchantment)))
+                                                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
         if (conflicts.size() == src.size())
             return;
@@ -321,7 +323,8 @@ public class EventListener implements Listener {
         Inventory inv = event.getClickedInventory();
         if (inv != null && inv.getHolder() instanceof ClassicInventoryInteractor)
             // Detected InventoryWindow click event
-            event.setCancelled(((ClassicInventoryInteractor) inv.getHolder()).processClick(new InventoryClickInfo(event)));
+            event.setCancelled(
+                    ((ClassicInventoryInteractor) inv.getHolder()).processClick(new InventoryClickInfo(event)));
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -413,8 +416,8 @@ public class EventListener implements Listener {
                     ((Interactive) instance).onInteract(event.getPlayer(),
                             Action.RIGHT_CLICK_AIR,
                             event.getPlayer()
-                                    .getInventory()
-                                    .getItemInMainHand(),
+                                 .getInventory()
+                                 .getItemInMainHand(),
                             null,
                             event.getRightClicked())));
     }

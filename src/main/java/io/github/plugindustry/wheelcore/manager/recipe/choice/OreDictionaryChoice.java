@@ -39,9 +39,9 @@ public class OreDictionaryChoice implements RecipeChoice {
     @Override
     public org.bukkit.inventory.RecipeChoice.MaterialChoice getPlaceholderChoice() {
         return new org.bukkit.inventory.RecipeChoice.MaterialChoice(dictionaryKeys.stream()
-                .map(ItemMapping.dictMaterial::get)
-                .flatMap(Collection::stream)
-                .distinct()
-                .collect(Collectors.toList()));
+                                                                                  .map(ItemMapping.dictMaterial::get)
+                                                                                  .flatMap(Collection::stream)
+                                                                                  .distinct()
+                                                                                  .collect(Collectors.toList()));
     }
 }

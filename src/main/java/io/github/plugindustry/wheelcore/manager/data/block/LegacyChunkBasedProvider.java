@@ -205,7 +205,7 @@ public class LegacyChunkBasedProvider implements BlockDataProvider {
         if (blockInChunks.containsKey(chunk.getWorld()))
             if (blockInChunks.get(chunk.getWorld()).containsKey(compress(chunk.getX(), chunk.getZ())))
                 return CollectionUtil.unmodifiableCopyOnReadSet(blockInChunks.get(chunk.getWorld())
-                                .get(compress(chunk.getX(), chunk.getZ())),
+                                                                             .get(compress(chunk.getX(), chunk.getZ())),
                         Location::clone);
             else
                 return Collections.emptySet();

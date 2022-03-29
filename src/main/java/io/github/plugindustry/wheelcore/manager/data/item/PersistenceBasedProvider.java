@@ -42,8 +42,8 @@ public class PersistenceBasedProvider implements ItemDataProvider {
         if (itemStack == null || !itemStack.hasItemMeta())
             return null;
         return MainManager.getItemInstanceFromId(Objects.requireNonNull(itemStack.getItemMeta())
-                .getPersistentDataContainer()
-                .get(ITEM_TYPE_KEY, PersistentDataType.STRING));
+                                                        .getPersistentDataContainer()
+                                                        .get(ITEM_TYPE_KEY, PersistentDataType.STRING));
     }
 
     @Nullable
@@ -121,9 +121,9 @@ public class PersistenceBasedProvider implements ItemDataProvider {
         Objects.requireNonNull(meta).getPersistentDataContainer().set(ITEM_ORE_DICTIONARY_KEY,
                 PersistentDataType.BYTE_ARRAY,
                 gson.toJson(oreDictionary,
-                                new TypeToken<Set<String>>() {
-                                }.getType())
-                        .getBytes(StandardCharsets.UTF_8));
+                            new TypeToken<Set<String>>() {
+                            }.getType())
+                    .getBytes(StandardCharsets.UTF_8));
         itemStack.setItemMeta(meta);
     }
 }

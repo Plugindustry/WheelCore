@@ -93,15 +93,15 @@ public class PlayerDigHandler {
 
     public static void onTick() {
         Bukkit.getOnlinePlayers()
-                .stream()
-                .filter(p -> (p.getGameMode() == GameMode.SURVIVAL ||
-                        p.getGameMode() == GameMode.ADVENTURE) &&
-                        !p.hasPotionEffect(PotionEffectType.SLOW_DIGGING))
-                .forEach(player -> PlayerUtil.sendPotionEffect(player,
-                        PotionEffectType.SLOW_DIGGING,
-                        (byte) -1,
-                        Integer.MAX_VALUE,
-                        (byte) 0));
+              .stream()
+              .filter(p -> (p.getGameMode() == GameMode.SURVIVAL ||
+                      p.getGameMode() == GameMode.ADVENTURE) &&
+                      !p.hasPotionEffect(PotionEffectType.SLOW_DIGGING))
+              .forEach(player -> PlayerUtil.sendPotionEffect(player,
+                      PotionEffectType.SLOW_DIGGING,
+                      (byte) -1,
+                      Integer.MAX_VALUE,
+                      (byte) 0));
 
         for (Iterator<Map.Entry<UUID, Location>> iterator = playerDig.entrySet().iterator(); iterator.hasNext(); ) {
             Map.Entry<UUID, Location> entry = iterator.next();
@@ -137,7 +137,7 @@ public class PlayerDigHandler {
             }
         });
         for (Iterator<Map.Entry<Location, Pair<Float, Pair<Material, BlockBase>>>> iterator1 = digProcess.entrySet()
-                .iterator(); iterator1.hasNext(); ) {
+                                                                                                         .iterator(); iterator1.hasNext(); ) {
             Map.Entry<Location, Pair<Float, Pair<Material, BlockBase>>> entry = iterator1.next();
             if (!playerDig.containsValue(entry.getKey())) {
                 PlayerUtil.broadcastBlockCrack(entry.getKey(), -1);
@@ -147,7 +147,7 @@ public class PlayerDigHandler {
             if (entry.getValue().first >= 1) {
                 UUID uuid = null;
                 for (Iterator<Map.Entry<UUID, Location>> iterator2 = playerDig.entrySet()
-                        .iterator(); iterator2.hasNext(); ) {
+                                                                              .iterator(); iterator2.hasNext(); ) {
                     Map.Entry<UUID, Location> p = iterator2.next();
                     if (p.getValue().equals(entry.getKey())) {
                         uuid = p.getKey();
@@ -173,10 +173,10 @@ public class PlayerDigHandler {
     public static class PacketListener extends PacketAdapter {
         public PacketListener() {
             super(PacketAdapter.params()
-                    .clientSide()
-                    .plugin(WheelCore.instance)
-                    .listenerPriority(ListenerPriority.LOW)
-                    .types(PacketType.Play.Client.BLOCK_DIG));
+                               .clientSide()
+                               .plugin(WheelCore.instance)
+                               .listenerPriority(ListenerPriority.LOW)
+                               .types(PacketType.Play.Client.BLOCK_DIG));
         }
 
         private static void ackDigAction(Player player, PacketContainer packet) {
@@ -186,8 +186,8 @@ public class PlayerDigHandler {
                 ack.getBlockPositionModifier().write(0, pos);
                 ack.getBlockData().write(0,
                         WrappedBlockData.createData(pos.toLocation(player.getWorld())
-                                .getBlock()
-                                .getBlockData()));
+                                                       .getBlock()
+                                                       .getBlockData()));
                 ack.getPlayerDigTypes().write(0, packet.getPlayerDigTypes().read(0));
                 ack.getBooleans().write(0, true);
                 try {
@@ -211,11 +211,11 @@ public class PlayerDigHandler {
                     byte flags = 0;
                     if (player.hasPotionEffect(PotionEffectType.SLOW_DIGGING)) {
                         PotionEffect effect = player.getActivePotionEffects()
-                                .stream()
-                                .filter(eff -> eff.getType()
-                                        .equals(PotionEffectType.SLOW_DIGGING))
-                                .findFirst()
-                                .orElseThrow(() -> new IllegalStateException("Impossible null"));
+                                                    .stream()
+                                                    .filter(eff -> eff.getType()
+                                                                      .equals(PotionEffectType.SLOW_DIGGING))
+                                                    .findFirst()
+                                                    .orElseThrow(() -> new IllegalStateException("Impossible null"));
                         flags = (byte) ((effect.isAmbient() ? 1 : 0) |
                                 (effect.hasParticles() ? 2 : 0) |
                                 (effect.hasIcon() ? 4 : 0));
@@ -234,11 +234,11 @@ public class PlayerDigHandler {
                     if (player.hasPotionEffect(PotionEffectType.SLOW_DIGGING)) {
                         PlayerUtil.sendRemovePotionEffect(player, PotionEffectType.SLOW_DIGGING);
                         PotionEffect effect = player.getActivePotionEffects()
-                                .stream()
-                                .filter(eff -> eff.getType()
-                                        .equals(PotionEffectType.SLOW_DIGGING))
-                                .findFirst()
-                                .orElseThrow(() -> new IllegalStateException("Impossible null"));
+                                                    .stream()
+                                                    .filter(eff -> eff.getType()
+                                                                      .equals(PotionEffectType.SLOW_DIGGING))
+                                                    .findFirst()
+                                                    .orElseThrow(() -> new IllegalStateException("Impossible null"));
                         PlayerUtil.sendPotionEffect(player,
                                 PotionEffectType.SLOW_DIGGING,
                                 (byte) effect.getAmplifier(),

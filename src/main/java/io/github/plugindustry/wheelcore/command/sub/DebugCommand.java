@@ -29,7 +29,7 @@ public class DebugCommand extends SubCommandBase {
         if (args[0].equals("blocks"))
             MainManager.blockDataProvider.blocks().forEach(b -> commandSender.sendMessage("World:" +
                     Objects.requireNonNull(b.getWorld())
-                            .getName() +
+                           .getName() +
                     " X:" +
                     b.getX() +
                     " Y:" +

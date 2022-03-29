@@ -13,6 +13,7 @@ import io.github.plugindustry.wheelcore.interfaces.item.ItemData;
 import io.github.plugindustry.wheelcore.manager.ConfigManager;
 import io.github.plugindustry.wheelcore.manager.MainManager;
 import io.github.plugindustry.wheelcore.utils.Pair;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -165,12 +166,13 @@ public class I18n {
         if (newItem.hasItemMeta()) {
             ItemMeta meta = Objects.requireNonNull(newItem.getItemMeta());
             if (meta.hasDisplayName())
-                meta.setDisplayName(replaceAll(locale, meta.getDisplayName()));
+                meta.setDisplayName(ChatColor.RESET + replaceAll(locale, meta.getDisplayName()));
             if (meta.hasLore())
                 meta.setLore(Objects.requireNonNull(meta.getLore())
-                        .stream()
-                        .flatMap(str -> replaceAllList(locale, str).stream())
-                        .collect(Collectors.toList()));
+                                    .stream()
+                                    .flatMap(str -> replaceAllList(locale, str).stream())
+                                    .map(str -> ChatColor.RESET + str)
+                                    .collect(Collectors.toList()));
             newItem.setItemMeta(meta);
             if (!(MainManager.getItemData(item) instanceof TranslatedItemData)) {
                 UUID uuid = UUID.randomUUID();
@@ -217,11 +219,11 @@ public class I18n {
 
         public PacketListener() {
             super(PacketAdapter.params()
-                    .clientSide()
-                    .serverSide()
-                    .plugin(WheelCore.instance)
-                    .listenerPriority(ListenerPriority.LOW)
-                    .types(outTypes));
+                               .clientSide()
+                               .serverSide()
+                               .plugin(WheelCore.instance)
+                               .listenerPriority(ListenerPriority.LOW)
+                               .types(outTypes));
         }
 
         @Override
@@ -242,8 +244,8 @@ public class I18n {
             for (int i = 0; i < stringArrays.size(); ++i)
                 stringArrays.modify(i,
                         strArr -> Arrays.stream(strArr)
-                                .map(str -> replaceAll(locale, str))
-                                .toArray(String[]::new));
+                                        .map(str -> replaceAll(locale, str))
+                                        .toArray(String[]::new));
 
             StructureModifier<WrappedChatComponent> chatComponents = packet.getChatComponents();
             for (int i = 0; i < chatComponents.size(); ++i)
@@ -267,14 +269,14 @@ public class I18n {
                 for (int i = 0; i < itemStacksArrays.size(); ++i)
                     itemStacksArrays.modify(i,
                             itemArr -> Arrays.stream(itemArr)
-                                    .map(item -> translateItem(player, locale, item))
-                                    .toArray(ItemStack[]::new));
+                                             .map(item -> translateItem(player, locale, item))
+                                             .toArray(ItemStack[]::new));
                 StructureModifier<List<ItemStack>> itemStacksLists = packet.getItemListModifier();
                 for (int i = 0; i < itemStacksLists.size(); ++i)
                     itemStacksLists.modify(i,
                             itemList -> itemList.stream()
-                                    .map(item -> translateItem(player, locale, item))
-                                    .collect(Collectors.toList()));
+                                                .map(item -> translateItem(player, locale, item))
+                                                .collect(Collectors.toList()));
             } catch (Exception ignored) {
             }
 
@@ -290,8 +292,10 @@ public class I18n {
             if (item.getType() != Material.AIR) {
                 ItemData data = MainManager.getItemData(item);
                 if (data instanceof TranslatedItemData) {
-                    if (orgItemMapping.containsKey(uuid) && orgItemMapping.get(uuid).first.containsKey(((TranslatedItemData) data).uuid)) {
-                        ItemStack orgItem = orgItemMapping.get(uuid).first.get(((TranslatedItemData) data).uuid).clone();
+                    if (orgItemMapping.containsKey(uuid) && orgItemMapping.get(uuid).first.containsKey(
+                            ((TranslatedItemData) data).uuid)) {
+                        ItemStack orgItem = orgItemMapping.get(uuid).first.get(((TranslatedItemData) data).uuid)
+                                                                          .clone();
                         orgItem.setAmount(item.getAmount());
                         packet.getItemModifier().write(0, orgItem);
                     } else packet.getItemModifier().write(0, new ItemStack(Material.AIR));

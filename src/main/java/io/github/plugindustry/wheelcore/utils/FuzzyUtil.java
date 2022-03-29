@@ -21,17 +21,18 @@ public class FuzzyUtil {
     @Nonnull
     public static Method findDeclaredFirstMatch(@Nonnull FuzzyMethodContract contract, @Nonnull Class<?> clazz) {
         return Arrays.stream(clazz.getDeclaredMethods())
-                .filter(method -> contract.isMatch(MethodInfo.fromMethod(method), null))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Can't find method matches in " + clazz.getName()));
+                     .filter(method -> contract.isMatch(MethodInfo.fromMethod(method), null))
+                     .findFirst()
+                     .orElseThrow(
+                             () -> new IllegalArgumentException("Can't find method matches in " + clazz.getName()));
     }
 
     @Nonnull
     public static Field findDeclaredFirstMatch(@Nonnull FuzzyFieldContract contract, @Nonnull Class<?> clazz) {
         return Arrays.stream(clazz.getDeclaredFields())
-                .filter(field -> contract.isMatch(field, null))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Can't find field matches in " + clazz.getName()));
+                     .filter(field -> contract.isMatch(field, null))
+                     .findFirst()
+                     .orElseThrow(() -> new IllegalArgumentException("Can't find field matches in " + clazz.getName()));
     }
 
     @Nonnull
@@ -39,14 +40,14 @@ public class FuzzyUtil {
         try {
             return ctClass.getDeclaredMethod(method.getName(),
                     Arrays.stream(method.getParameterTypes())
-                            .map(Class::getName)
-                            .map((String classname) -> {
-                                try {
-                                    return cp.getCtClass(classname);
-                                } catch (NotFoundException e) {
-                                    throw new IllegalArgumentException(e);
-                                }
-                            }).toArray(CtClass[]::new));
+                          .map(Class::getName)
+                          .map((String classname) -> {
+                              try {
+                                  return cp.getCtClass(classname);
+                              } catch (NotFoundException e) {
+                                  throw new IllegalArgumentException(e);
+                              }
+                          }).toArray(CtClass[]::new));
         } catch (NotFoundException e) {
             throw new IllegalArgumentException(e);
         }
@@ -56,15 +57,15 @@ public class FuzzyUtil {
     public static CtConstructor getDeclaredCtConstructor(@Nonnull ClassPool cp, @Nonnull CtClass ctClass, @Nonnull Constructor<?> method) {
         try {
             return ctClass.getDeclaredConstructor(Arrays.stream(method.getParameterTypes())
-                    .map(Class::getName)
-                    .map((String classname) -> {
-                        try {
-                            return cp.getCtClass(classname);
-                        } catch (NotFoundException e) {
-                            throw new IllegalArgumentException(e);
-                        }
-                    })
-                    .toArray(CtClass[]::new));
+                                                        .map(Class::getName)
+                                                        .map((String classname) -> {
+                                                            try {
+                                                                return cp.getCtClass(classname);
+                                                            } catch (NotFoundException e) {
+                                                                throw new IllegalArgumentException(e);
+                                                            }
+                                                        })
+                                                        .toArray(CtClass[]::new));
         } catch (NotFoundException e) {
             throw new IllegalArgumentException(e);
         }
@@ -75,8 +76,8 @@ public class FuzzyUtil {
         try {
             return clazz.getDeclaredMethod(ctMethod.getName(),
                     Arrays.stream(ctMethod.getParameterTypes())
-                            .map(CtClass::getClass)
-                            .toArray(Class[]::new));
+                          .map(CtClass::getClass)
+                          .toArray(Class[]::new));
         } catch (NoSuchMethodException | NotFoundException e) {
             throw new IllegalArgumentException(e);
         }

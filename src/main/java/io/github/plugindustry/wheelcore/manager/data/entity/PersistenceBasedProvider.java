@@ -52,8 +52,8 @@ public class PersistenceBasedProvider implements EntityDataProvider {
         entity.getPersistentDataContainer().set(ENTITY_DATA_KEY,
                 PersistentDataType.STRING,
                 gson.toJson(new EntityDescription(MainManager.getEntityMapping()
-                        .inverse()
-                        .get(pair.first),
+                                                             .inverse()
+                                                             .get(pair.first),
                         pair.second)));
         entityData.remove(uuid);
     }
@@ -62,10 +62,12 @@ public class PersistenceBasedProvider implements EntityDataProvider {
     public void beforeSave() {
         entityData.keySet().removeIf(uuid -> Bukkit.getEntity(uuid) == null);
         entityData.forEach((uuid, data) -> Objects.requireNonNull(Bukkit.getEntity(uuid))
-                .getPersistentDataContainer()
-                .set(ENTITY_DATA_KEY,
-                        PersistentDataType.STRING,
-                        gson.toJson(new EntityDescription(MainManager.getIdFromInstance(data.first), data.second))));
+                                                  .getPersistentDataContainer()
+                                                  .set(ENTITY_DATA_KEY,
+                                                          PersistentDataType.STRING,
+                                                          gson.toJson(new EntityDescription(
+                                                                  MainManager.getIdFromInstance(data.first),
+                                                                  data.second))));
     }
 
     @Override

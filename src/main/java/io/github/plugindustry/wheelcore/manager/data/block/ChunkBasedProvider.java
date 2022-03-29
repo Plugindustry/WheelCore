@@ -117,9 +117,9 @@ public class ChunkBasedProvider implements BlockDataProvider {
         //DebuggingLogger.debug("Load chunk " + chunk.getX() + " " + chunk.getZ());
         World world = chunk.getWorld();
         List<BlockDescription> blockList = gson.fromJson(chunk.getPersistentDataContainer()
-                        .getOrDefault(CHUNK_DATA_KEY,
-                                PersistentDataType.STRING,
-                                "[]"),
+                                                              .getOrDefault(CHUNK_DATA_KEY,
+                                                                      PersistentDataType.STRING,
+                                                                      "[]"),
                 new TypeToken<List<BlockDescription>>() {
                 }.getType());
         for (BlockDescription desc : blockList)
@@ -183,7 +183,7 @@ public class ChunkBasedProvider implements BlockDataProvider {
         if (blockInChunks.containsKey(chunk.getWorld()))
             if (blockInChunks.get(chunk.getWorld()).containsKey(compress(chunk.getX(), chunk.getZ())))
                 return CollectionUtil.unmodifiableCopyOnReadSet(blockInChunks.get(chunk.getWorld())
-                                .get(compress(chunk.getX(), chunk.getZ())),
+                                                                             .get(compress(chunk.getX(), chunk.getZ())),
                         Location::clone);
             else
                 return Collections.emptySet();

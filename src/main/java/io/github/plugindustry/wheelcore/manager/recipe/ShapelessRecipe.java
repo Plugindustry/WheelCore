@@ -18,9 +18,9 @@ public class ShapelessRecipe implements CraftingRecipe {
 
     public ShapelessRecipe(ItemStack result, ItemStack... items) {
         this(Stream.of(items)
-                .filter(item -> item != null && item.getType() != Material.AIR)
-                .map(ItemStackChoice::new)
-                .collect(Collectors.toList()), result);
+                   .filter(item -> item != null && item.getType() != Material.AIR)
+                   .map(ItemStackChoice::new)
+                   .collect(Collectors.toList()), result);
     }
 
     public ShapelessRecipe(List<RecipeChoice> choices, ItemStack result) {
