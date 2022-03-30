@@ -62,6 +62,12 @@ public class ItemStackUtil {
         }
     }
 
+    public static ItemStack clone(ItemStack item, int amount) {
+        ItemStack temp = item.clone();
+        temp.setAmount(amount);
+        return temp;
+    }
+
     public static class ItemStackFactory {
         private final Material material;
         private int amount = 1;

@@ -297,6 +297,7 @@ public class EventListener implements Listener {
             if (!(itemBase == null ||
                     itemBase instanceof Interactive && ((Interactive) itemBase).onInteract(event.getPlayer(),
                             event.getAction(),
+                            event.getHand(),
                             tool,
                             event.getClickedBlock(),
                             null)))
@@ -307,6 +308,7 @@ public class EventListener implements Listener {
             if (!(blockBase == null ||
                     blockBase instanceof Interactive && ((Interactive) blockBase).onInteract(event.getPlayer(),
                             event.getAction(),
+                            event.getHand(),
                             event.getItem(),
                             block,
                             null)))
@@ -415,6 +417,7 @@ public class EventListener implements Listener {
             event.setCancelled(!(instance instanceof Interactive &&
                     ((Interactive) instance).onInteract(event.getPlayer(),
                             Action.RIGHT_CLICK_AIR,
+                            event.getHand(),
                             event.getPlayer()
                                  .getInventory()
                                  .getItemInMainHand(),

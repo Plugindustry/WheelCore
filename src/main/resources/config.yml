@@ -2,5 +2,3 @@ autosave-delay: 120
 debug: false
 
 fallback-lang: en-US
-
-forced-resource-pack: false

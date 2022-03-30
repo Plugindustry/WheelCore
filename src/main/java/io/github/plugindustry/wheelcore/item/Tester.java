@@ -12,9 +12,11 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.Action;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class Tester extends DummyItem {
     final Window window;
@@ -28,7 +30,7 @@ public class Tester extends DummyItem {
     }
 
     @Override
-    public boolean onInteract(@Nonnull Player player, @Nonnull Action action, ItemStack tool, Block block, Entity entity) {
+    public boolean onInteract(@Nonnull Player player, @Nonnull Action action, @Nullable EquipmentSlot hand, @Nullable ItemStack tool, @Nullable Block block, @Nullable Entity entity) {
         if (block != null && action == Action.RIGHT_CLICK_BLOCK) {
             player.openInventory(windowInteractor.getInventory());
             ((WidgetProgressBar) window.getWidgetMap().get("process_1").second).setProgress(0.6);
