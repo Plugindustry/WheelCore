@@ -31,7 +31,7 @@ public class ShapelessRecipe implements CraftingRecipe {
     }
 
     @Override
-    public CraftingRecipe addItemCost(RecipeChoice choice, int durability) {
+    public ShapelessRecipe addItemCost(RecipeChoice choice, int durability) {
         this.damages.put(choice, durability);
         return this;
     }

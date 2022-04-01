@@ -15,9 +15,7 @@ import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
-import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 
 public class BlockUtil {
@@ -27,30 +25,6 @@ public class BlockUtil {
             Material.ANDESITE,
             Material.NETHERRACK,
             Material.END_STONE);
-    private static final Map<Material, Float> commonToolBonus = new EnumMap<>(Material.class);
-
-    static {
-        commonToolBonus.put(Material.WOODEN_AXE, 2.0f);
-        commonToolBonus.put(Material.WOODEN_PICKAXE, 2.0f);
-        commonToolBonus.put(Material.WOODEN_SHOVEL, 2.0f);
-        commonToolBonus.put(Material.STONE_AXE, 4.0f);
-        commonToolBonus.put(Material.STONE_PICKAXE, 4.0f);
-        commonToolBonus.put(Material.STONE_SHOVEL, 4.0f);
-        commonToolBonus.put(Material.IRON_AXE, 6.0f);
-        commonToolBonus.put(Material.IRON_PICKAXE, 6.0f);
-        commonToolBonus.put(Material.IRON_SHOVEL, 6.0f);
-        commonToolBonus.put(Material.DIAMOND_AXE, 8.0f);
-        commonToolBonus.put(Material.DIAMOND_PICKAXE, 8.0f);
-        commonToolBonus.put(Material.DIAMOND_SHOVEL, 8.0f);
-        commonToolBonus.put(Material.GOLDEN_AXE, 12.0f);
-        commonToolBonus.put(Material.GOLDEN_PICKAXE, 12.0f);
-        commonToolBonus.put(Material.GOLDEN_SHOVEL, 12.0f);
-        if (Material.getMaterial("NETHERITE_AXE") != null) {
-            commonToolBonus.put(Material.NETHERITE_AXE, 9.0f);
-            commonToolBonus.put(Material.NETHERITE_PICKAXE, 9.0f);
-            commonToolBonus.put(Material.NETHERITE_SHOVEL, 9.0f);
-        }
-    }
 
     public static Stream<Location> findWireAround(@Nonnull Location src) {
         return Stream.of(src.clone().add(1, 0, 0),

@@ -91,7 +91,7 @@ public class ShapedRecipe implements CraftingRecipe {
     }
 
     @Override
-    public CraftingRecipe addItemCost(RecipeChoice choice, int durability) {
+    public ShapedRecipe addItemCost(RecipeChoice choice, int durability) {
         this.damages.put(choice, durability);
         return this;
     }
