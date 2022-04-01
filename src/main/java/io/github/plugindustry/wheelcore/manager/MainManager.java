@@ -46,21 +46,17 @@ public class MainManager {
         MultiBlockManager.onTick();
 
         for (BlockBase base : blockMapping.values())
-            if (base instanceof Tickable)
-                ((Tickable) base).onTick();
+            if (base instanceof Tickable) ((Tickable) base).onTick();
 
         for (EntityBase base : entityMapping.values())
-            if (base instanceof Tickable)
-                ((Tickable) base).onTick();
+            if (base instanceof Tickable) ((Tickable) base).onTick();
 
         for (ItemBase base : itemMapping.values())
-            if (base instanceof Tickable)
-                ((Tickable) base).onTick();
+            if (base instanceof Tickable) ((Tickable) base).onTick();
 
         PowerManager.onTick();
 
-        while (!postTickTasks.isEmpty())
-            postTickTasks.poll().run();
+        while (!postTickTasks.isEmpty()) postTickTasks.poll().run();
     }
 
     /**
@@ -82,34 +78,27 @@ public class MainManager {
 
     @Nullable
     public static String getIdFromInstance(@Nullable Base instance) {
-        if (instance instanceof BlockBase)
-            return blockMapping.inverse().getOrDefault(instance, null);
-        else if (instance instanceof ItemBase)
-            return itemMapping.inverse().getOrDefault(instance, null);
-        else if (instance instanceof EntityBase)
-            return entityMapping.inverse().getOrDefault(instance, null);
-        else
-            return null;
+        if (instance instanceof BlockBase) return blockMapping.inverse().getOrDefault(instance, null);
+        else if (instance instanceof ItemBase) return itemMapping.inverse().getOrDefault(instance, null);
+        else if (instance instanceof EntityBase) return entityMapping.inverse().getOrDefault(instance, null);
+        else return null;
     }
 
     @Nullable
     public static BlockBase getBlockInstanceFromId(@Nullable String id) {
-        if (id == null)
-            return null;
+        if (id == null) return null;
         return blockMapping.getOrDefault(id, null);
     }
 
     @Nullable
     public static ItemBase getItemInstanceFromId(@Nullable String id) {
-        if (id == null)
-            return null;
+        if (id == null) return null;
         return itemMapping.getOrDefault(id, null);
     }
 
     @Nullable
     public static EntityBase getEntityInstanceFromId(@Nullable String id) {
-        if (id == null)
-            return null;
+        if (id == null) return null;
         return entityMapping.getOrDefault(id, null);
     }
 

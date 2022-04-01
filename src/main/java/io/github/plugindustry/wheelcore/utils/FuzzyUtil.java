@@ -19,72 +19,76 @@ import java.util.Objects;
 
 public class FuzzyUtil {
     @Nonnull
-    public static Method findDeclaredFirstMatch(@Nonnull FuzzyMethodContract contract, @Nonnull Class<?> clazz) {
+    public static Method findDeclaredFirstMatch(@Nonnull FuzzyMethodContract contract,
+                                                @Nonnull Class<?> clazz) {
         return Arrays.stream(clazz.getDeclaredMethods())
-                     .filter(method -> contract.isMatch(MethodInfo.fromMethod(method), null))
-                     .findFirst()
-                     .orElseThrow(
-                             () -> new IllegalArgumentException("Can't find method matches in " + clazz.getName()));
+                     .filter(method -> contract.isMatch(MethodInfo.fromMethod(method), null)).findFirst()
+                     .orElseThrow(() -> new IllegalArgumentException(
+                             "Can't find method matches in " + clazz.getName()));
     }
 
     @Nonnull
-    public static Field findDeclaredFirstMatch(@Nonnull FuzzyFieldContract contract, @Nonnull Class<?> clazz) {
-        return Arrays.stream(clazz.getDeclaredFields())
-                     .filter(field -> contract.isMatch(field, null))
-                     .findFirst()
-                     .orElseThrow(() -> new IllegalArgumentException("Can't find field matches in " + clazz.getName()));
+    public static Field findDeclaredFirstMatch(@Nonnull FuzzyFieldContract contract,
+                                               @Nonnull Class<?> clazz) {
+        return Arrays.stream(clazz.getDeclaredFields()).filter(field -> contract.isMatch(field, null))
+                     .findFirst().orElseThrow(
+                        () -> new IllegalArgumentException("Can't find field matches in " + clazz.getName()));
     }
 
     @Nonnull
-    public static CtMethod getDeclaredCtMethod(@Nonnull ClassPool cp, @Nonnull CtClass ctClass, @Nonnull Method method) {
+    public static CtMethod getDeclaredCtMethod(@Nonnull ClassPool cp, @Nonnull CtClass ctClass,
+                                               @Nonnull Method method) {
         try {
             return ctClass.getDeclaredMethod(method.getName(),
-                    Arrays.stream(method.getParameterTypes())
-                          .map(Class::getName)
-                          .map((String classname) -> {
+                    Arrays.stream(method.getParameterTypes()).map(Class::getName).map((String classname) -> {
+                        try {
+                            return cp.getCtClass(classname);
+                        } catch (NotFoundException e) {
+                            throw new IllegalArgumentException(e);
+                        }
+                    }).toArray(CtClass[]::new));
+        } catch (NotFoundException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    @Nonnull
+    public static CtConstructor getDeclaredCtConstructor(@Nonnull ClassPool cp, @Nonnull CtClass ctClass,
+                                                         @Nonnull Constructor<?> method) {
+        try {
+            return ctClass.getDeclaredConstructor(
+                    Arrays.stream(method.getParameterTypes()).map(Class::getName).map((String classname) -> {
+                        try {
+                            return cp.getCtClass(classname);
+                        } catch (NotFoundException e) {
+                            throw new IllegalArgumentException(e);
+                        }
+                    }).toArray(CtClass[]::new));
+        } catch (NotFoundException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    @Nonnull
+    public static Method getDeclaredMethod(@Nonnull CtMethod ctMethod) {
+        try {
+            return Class.forName(ctMethod.getDeclaringClass().getName()).getDeclaredMethod(ctMethod.getName(),
+                    Arrays.stream(ctMethod.getParameterTypes()).map(CtClass::getName)
+                          .map((String className) -> {
                               try {
-                                  return cp.getCtClass(classname);
-                              } catch (NotFoundException e) {
+                                  return Class.forName(className);
+                              } catch (ClassNotFoundException e) {
                                   throw new IllegalArgumentException(e);
                               }
-                          }).toArray(CtClass[]::new));
-        } catch (NotFoundException e) {
+                          }).toArray(Class[]::new));
+        } catch (NoSuchMethodException | NotFoundException | ClassNotFoundException e) {
             throw new IllegalArgumentException(e);
         }
     }
 
     @Nonnull
-    public static CtConstructor getDeclaredCtConstructor(@Nonnull ClassPool cp, @Nonnull CtClass ctClass, @Nonnull Constructor<?> method) {
-        try {
-            return ctClass.getDeclaredConstructor(Arrays.stream(method.getParameterTypes())
-                                                        .map(Class::getName)
-                                                        .map((String classname) -> {
-                                                            try {
-                                                                return cp.getCtClass(classname);
-                                                            } catch (NotFoundException e) {
-                                                                throw new IllegalArgumentException(e);
-                                                            }
-                                                        })
-                                                        .toArray(CtClass[]::new));
-        } catch (NotFoundException e) {
-            throw new IllegalArgumentException(e);
-        }
-    }
-
-    @Nonnull
-    public static Method getDeclaredMethod(@Nonnull Class<?> clazz, @Nonnull CtMethod ctMethod) {
-        try {
-            return clazz.getDeclaredMethod(ctMethod.getName(),
-                    Arrays.stream(ctMethod.getParameterTypes())
-                          .map(CtClass::getClass)
-                          .toArray(Class[]::new));
-        } catch (NoSuchMethodException | NotFoundException e) {
-            throw new IllegalArgumentException(e);
-        }
-    }
-
-    @Nonnull
-    public static List<Method> findDeclaredMethodsCalledBy(@Nonnull Class<?> declarer, @Nonnull Method caller) {
+    public static List<Method> findDeclaredMethodsCalledBy(@Nonnull Class<?> declarer,
+                                                           @Nonnull Method caller) {
         ArrayList<Method> methods = new ArrayList<>();
         ClassPool cp = new ClassPool();
         Class<?> callerClass = caller.getDeclaringClass();
@@ -100,7 +104,7 @@ public class FuzzyUtil {
                     try {
                         CtMethod method = m.getMethod();
                         if (Objects.equals(method.getDeclaringClass(), declarerCtClass))
-                            methods.add(getDeclaredMethod(declarer, method));
+                            methods.add(getDeclaredMethod(method));
                     } catch (NotFoundException ignored) {
                     }
                 }
@@ -112,16 +116,17 @@ public class FuzzyUtil {
     }
 
     @Nonnull
-    public static Field getDeclaredField(@Nonnull Class<?> clazz, @Nonnull CtField ctField) {
+    public static Field getDeclaredField(@Nonnull CtField ctField) {
         try {
-            return clazz.getDeclaredField(ctField.getName());
-        } catch (NoSuchFieldException e) {
+            return Class.forName(ctField.getDeclaringClass().getName()).getDeclaredField(ctField.getName());
+        } catch (NoSuchFieldException | ClassNotFoundException e) {
             throw new IllegalArgumentException(e);
         }
     }
 
     @Nonnull
-    public static List<Field> findDeclaredFieldsReferredBy(@Nonnull Class<?> declarer, @Nonnull Method caller) {
+    public static List<Field> findDeclaredFieldsReferredBy(@Nonnull Class<?> declarer,
+                                                           @Nonnull Method caller) {
         ArrayList<Field> fields = new ArrayList<>();
         ClassPool cp = new ClassPool();
         Class<?> callerClass = caller.getDeclaringClass();
@@ -137,7 +142,7 @@ public class FuzzyUtil {
                     try {
                         CtField field = m.getField();
                         if (Objects.equals(field.getDeclaringClass(), declarerCtClass))
-                            fields.add(getDeclaredField(declarer, field));
+                            fields.add(getDeclaredField(field));
                     } catch (NotFoundException ignored) {
                     }
                 }
@@ -149,7 +154,8 @@ public class FuzzyUtil {
     }
 
     @Nonnull
-    public static List<Field> findDeclaredFieldsReferredBy(@Nonnull Class<?> declarer, @Nonnull Constructor<?> caller) {
+    public static List<Field> findDeclaredFieldsReferredBy(@Nonnull Class<?> declarer,
+                                                           @Nonnull Constructor<?> caller) {
         ArrayList<Field> fields = new ArrayList<>();
         ClassPool cp = new ClassPool();
         Class<?> callerClass = caller.getDeclaringClass();
@@ -165,7 +171,7 @@ public class FuzzyUtil {
                     try {
                         CtField field = m.getField();
                         if (Objects.equals(field.getDeclaringClass(), declarerCtClass))
-                            fields.add(getDeclaredField(declarer, field));
+                            fields.add(getDeclaredField(field));
                     } catch (NotFoundException ignored) {
                     }
                 }

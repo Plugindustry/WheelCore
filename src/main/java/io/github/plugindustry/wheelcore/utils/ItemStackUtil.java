@@ -44,7 +44,8 @@ public class ItemStackUtil {
     }
 
     public static int getDurability(ItemStack itemStack) {
-        return itemStack.getItemMeta() instanceof Damageable ? ((Damageable) itemStack.getItemMeta()).getDamage() : 0;
+        return itemStack.getItemMeta() instanceof Damageable ?
+                ((Damageable) itemStack.getItemMeta()).getDamage() : 0;
     }
 
     public static void setDurability(ItemStack itemStack, int damage) {
@@ -122,20 +123,15 @@ public class ItemStackUtil {
 
         public ItemStack getItemStack() {
             ItemStack tmp = new ItemStack(material, amount);
-            if (instance != null)
-                MainManager.setItemInstance(tmp, instance);
-            if (oreDictionary != null)
-                MainManager.setItemOreDictionary(tmp, oreDictionary);
+            if (instance != null) MainManager.setItemInstance(tmp, instance);
+            if (oreDictionary != null) MainManager.setItemOreDictionary(tmp, oreDictionary);
             ItemMeta meta = tmp.getItemMeta();
             if (meta == null) {
                 meta = Bukkit.getItemFactory().getItemMeta(material);
-                if (meta == null)
-                    throw new IllegalStateException("¿");
+                if (meta == null) throw new IllegalStateException("¿");
             }
-            if (displayName != null)
-                meta.setDisplayName(displayName);
-            if (customModelData != null)
-                meta.setCustomModelData(customModelData);
+            if (displayName != null) meta.setDisplayName(displayName);
+            if (customModelData != null) meta.setCustomModelData(customModelData);
             meta.setLore(lore);
             tmp.setItemMeta(meta);
             return tmp.clone();

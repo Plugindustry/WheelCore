@@ -25,24 +25,21 @@ public class RecipeRegistry {
      */
     public static void register(RecipeBase recipeBase, String id, boolean needPlaceholder) {
         recipes.add(recipeBase);
-        if (needPlaceholder)
-            if (recipeBase instanceof SmeltingRecipe) {
-                Bukkit.addRecipe(getPlaceholder(recipeBase,
-                        new NamespacedKey(WheelCore.instance, "furnace_recipe_" + id)));
-            } else if (recipeBase instanceof ShapedRecipe) {
-                placeholders.put(new NamespacedKey(WheelCore.instance, "shaped_recipe_" + id), recipeBase);
-            } else if (recipeBase instanceof ShapelessRecipe) {
-                placeholders.put(new NamespacedKey(WheelCore.instance, "shapeless_recipe_" + id), recipeBase);
-            }
+        if (needPlaceholder) if (recipeBase instanceof SmeltingRecipe) {
+            Bukkit.addRecipe(getPlaceholder(recipeBase,
+                    new NamespacedKey(WheelCore.instance, "furnace_recipe_" + id)));
+        } else if (recipeBase instanceof ShapedRecipe) {
+            placeholders.put(new NamespacedKey(WheelCore.instance, "shaped_recipe_" + id), recipeBase);
+        } else if (recipeBase instanceof ShapelessRecipe) {
+            placeholders.put(new NamespacedKey(WheelCore.instance, "shapeless_recipe_" + id), recipeBase);
+        }
     }
 
     private static Recipe getPlaceholder(RecipeBase recipeBase, NamespacedKey key) {
         if (recipeBase instanceof SmeltingRecipe) {
             SmeltingRecipe smelting = (SmeltingRecipe) recipeBase;
-            return new FurnaceRecipe(key,
-                    recipeBase.getResult(),
-                    new RecipeChoice.ExactChoice(smelting.getAllMatches()),
-                    smelting.getExperience(),
+            return new FurnaceRecipe(key, recipeBase.getResult(),
+                    new RecipeChoice.ExactChoice(smelting.getAllMatches()), smelting.getExperience(),
                     smelting.getCookingTime());
         } else if (recipeBase instanceof ShapedRecipe) {
             ShapedRecipe shaped = (ShapedRecipe) recipeBase;
@@ -73,9 +70,9 @@ public class RecipeRegistry {
                 }
             }
 
-            org.bukkit.inventory.ShapedRecipe recipe = new org.bukkit.inventory.ShapedRecipe(key,
-                    recipeBase.getResult()).shape(
-                    shape.toArray(String[]::new));
+            org.bukkit.inventory.ShapedRecipe recipe =
+                    new org.bukkit.inventory.ShapedRecipe(key, recipeBase.getResult()).shape(
+                            shape.toArray(String[]::new));
             setShapedIfExist(recipe, shaped, 'a', 0);
             setShapedIfExist(recipe, shaped, 'b', 1);
             setShapedIfExist(recipe, shaped, 'c', 2);
@@ -88,8 +85,8 @@ public class RecipeRegistry {
             return recipe;
         } else if (recipeBase instanceof ShapelessRecipe) {
             ShapelessRecipe shapeless = (ShapelessRecipe) recipeBase;
-            org.bukkit.inventory.ShapelessRecipe recipe = new org.bukkit.inventory.ShapelessRecipe(key,
-                    recipeBase.getResult());
+            org.bukkit.inventory.ShapelessRecipe recipe =
+                    new org.bukkit.inventory.ShapelessRecipe(key, recipeBase.getResult());
             shapeless.getChoices().forEach(recipe::addIngredient);
             return recipe;
         }
@@ -112,10 +109,10 @@ public class RecipeRegistry {
         register(recipe, id, false);
     }
 
-    private static void setShapedIfExist(org.bukkit.inventory.ShapedRecipe recipe, ShapedRecipe shaped, char key, int slot) {
+    private static void setShapedIfExist(org.bukkit.inventory.ShapedRecipe recipe, ShapedRecipe shaped,
+                                         char key, int slot) {
         RecipeChoice.MaterialChoice choice = shaped.getChoiceAt(slot);
-        if (choice != null)
-            recipe.setIngredient(key, choice);
+        if (choice != null) recipe.setIngredient(key, choice);
     }
 
     public static void updatePlaceholders() {
@@ -130,11 +127,11 @@ public class RecipeRegistry {
             return placeholders.containsKey(((org.bukkit.inventory.ShapedRecipe) recipe).getKey());
         else if (recipe instanceof org.bukkit.inventory.ShapelessRecipe)
             return placeholders.containsKey(((org.bukkit.inventory.ShapelessRecipe) recipe).getKey());
-        else
-            return false;
+        else return false;
     }
 
-    public static CraftingRecipe matchCraftingRecipe(@Nonnull List<ItemStack> items, @Nullable Map<Integer, ItemStack> damageResult) {
+    public static CraftingRecipe matchCraftingRecipe(@Nonnull List<ItemStack> items,
+                                                     @Nullable Map<Integer, ItemStack> damageResult) {
         // tidy up the matrix
         List<List<ItemStack>> matrix = new LinkedList<>();
         List<ItemStack> current = new LinkedList<>();
@@ -153,7 +150,8 @@ public class RecipeRegistry {
 
         // then match the recipe
         for (RecipeBase recipeBase : recipes) {
-            if (recipeBase instanceof CraftingRecipe && ((CraftingRecipe) recipeBase).matches(matrix, damageResult)) {
+            if (recipeBase instanceof CraftingRecipe && ((CraftingRecipe) recipeBase).matches(matrix,
+                    damageResult)) {
                 return (CraftingRecipe) recipeBase;
             }
         }
@@ -171,7 +169,8 @@ public class RecipeRegistry {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends SingleInputRecipe> T matchSpecificRecipe(@Nonnull Class<T> recipeType, @Nonnull ItemStack origin) {
+    public static <T extends SingleInputRecipe> T matchSpecificRecipe(@Nonnull Class<T> recipeType,
+                                                                      @Nonnull ItemStack origin) {
         for (RecipeBase recipeBase : recipes) {
             if (recipeType.isInstance(recipeBase) && ((SingleInputRecipe) recipeBase).matches(origin)) {
                 return (T) recipeBase;
@@ -181,7 +180,8 @@ public class RecipeRegistry {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T extends MatrixInputRecipe> T matchSpecificRecipe(@Nonnull Class<T> recipeType, @Nonnull List<List<ItemStack>> matrix) {
+    public static <T extends MatrixInputRecipe> T matchSpecificRecipe(@Nonnull Class<T> recipeType,
+                                                                      @Nonnull List<List<ItemStack>> matrix) {
         for (RecipeBase recipeBase : recipes) {
             if (recipeType.isInstance(recipeBase) && ((MatrixInputRecipe) recipeBase).matches(matrix)) {
                 return (T) recipeBase;

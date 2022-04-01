@@ -51,10 +51,9 @@ public class Window {
     public void link(WindowInteractor interactor) {
         interactor.onWindowTitleChange(title);
         sync();
-        getWidgetMap().values().forEach(we -> we.second.getChangeMap(true)
-                                                       .forEach((pos, item) -> interactor.onWindowContentChange(
-                                                               InventoryUtil.getAbsolutePos(we.first, pos),
-                                                               item)));
+        getWidgetMap().values().forEach(we -> we.second.getChangeMap(true).forEach(
+                (pos, item) -> interactor.onWindowContentChange(InventoryUtil.getAbsolutePos(we.first, pos),
+                        item)));
         linkedInteractors.add(interactor);
     }
 
@@ -66,27 +65,23 @@ public class Window {
      * Call this manually after changing the content of the window to sync changes with interactors
      */
     public void sync() {
-        getWidgetMap().values().forEach(we -> we.second.getChangeMap(false)
-                                                       .forEach((pos, item) -> linkedInteractors.forEach(
-                                                               interactor -> interactor.onWindowContentChange(
-                                                                       InventoryUtil.getAbsolutePos(we.first, pos),
-                                                                       item))));
+        getWidgetMap().values().forEach(we -> we.second.getChangeMap(false).forEach(
+                (pos, item) -> linkedInteractors.forEach(interactor -> interactor.onWindowContentChange(
+                        InventoryUtil.getAbsolutePos(we.first, pos), item))));
     }
 
     public boolean onClick(Position pos, InventoryClickInfo info) {
         Pair<Position, WidgetBase> widgetPair = getWidgetAt(pos);
-        if (widgetPair == null)
-            return true;
+        if (widgetPair == null) return true;
         WidgetBase widget = widgetPair.second;
         if (widget instanceof WidgetClickable && ((WidgetClickable) widget).isClickable())
-            return ((WidgetClickable) widget).onClick(InventoryUtil.getRelativePos(widgetPair.first, pos), info);
-        else
-            return true;
+            return ((WidgetClickable) widget).onClick(InventoryUtil.getRelativePos(widgetPair.first, pos),
+                    info);
+        else return true;
     }
 
     public void onClose(HumanEntity whoClosed) {
-        if (closeHandler != null)
-            closeHandler.accept(whoClosed);
+        if (closeHandler != null) closeHandler.accept(whoClosed);
     }
 
     public Consumer<HumanEntity> getCloseHandler() {

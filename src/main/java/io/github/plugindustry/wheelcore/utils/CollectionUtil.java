@@ -11,19 +11,21 @@ import java.util.stream.StreamSupport;
 
 public class CollectionUtil {
     @Nonnull
-    public static <T> Collection<T> unmodifiableCopyOnReadCollection(@Nonnull Collection<? extends T> c, @Nonnull Function<T, T> cloner) {
+    public static <T> Collection<T> unmodifiableCopyOnReadCollection(@Nonnull Collection<? extends T> c,
+                                                                     @Nonnull Function<T, T> cloner) {
         return new UnmodifiableCopyOnReadCollection<>(c, cloner);
     }
 
     @Nonnull
-    public static <T> Set<T> unmodifiableCopyOnReadSet(@Nonnull Set<? extends T> s, @Nonnull Function<T, T> cloner) {
+    public static <T> Set<T> unmodifiableCopyOnReadSet(@Nonnull Set<? extends T> s,
+                                                       @Nonnull Function<T, T> cloner) {
         return new UnmodifiableCopyOnReadSet<>(s, cloner);
     }
 
     @Nonnull
-    public static <T> List<T> unmodifiableCopyOnReadList(@Nonnull List<? extends T> list, @Nonnull Function<T, T> cloner) {
-        return (list instanceof RandomAccess ?
-                new UnmodifiableCopyOnReadRandomAccessList<>(list, cloner) :
+    public static <T> List<T> unmodifiableCopyOnReadList(@Nonnull List<? extends T> list,
+                                                         @Nonnull Function<T, T> cloner) {
+        return (list instanceof RandomAccess ? new UnmodifiableCopyOnReadRandomAccessList<>(list, cloner) :
                 new UnmodifiableCopyOnReadList<>(list, cloner));
     }
 
@@ -349,7 +351,8 @@ public class CollectionUtil {
     }
 
     static class UnmodifiableCopyOnReadRandomAccessList<E> extends UnmodifiableCopyOnReadList<E> implements RandomAccess {
-        UnmodifiableCopyOnReadRandomAccessList(@Nonnull List<? extends E> list, @Nonnull Function<E, E> cloner) {
+        UnmodifiableCopyOnReadRandomAccessList(@Nonnull List<? extends E> list,
+                                               @Nonnull Function<E, E> cloner) {
             super(list, cloner);
         }
 

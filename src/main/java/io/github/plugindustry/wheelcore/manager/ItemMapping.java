@@ -14,8 +14,7 @@ public class ItemMapping {
     public static void set(@Nonnull String id, @Nonnull ItemStack itemStack) {
         itemMap.put(id, itemStack);
         MainManager.getItemOreDictionary(itemStack).forEach(dict -> {
-            if (!dictMaterial.containsKey(dict))
-                dictMaterial.put(dict, EnumSet.noneOf(Material.class));
+            if (!dictMaterial.containsKey(dict)) dictMaterial.put(dict, EnumSet.noneOf(Material.class));
             dictMaterial.get(dict).add(itemStack.getType());
         });
     }
@@ -34,10 +33,8 @@ public class ItemMapping {
                 dictMaterial.put(dictName, EnumSet.noneOf(Material.class));
             dictMaterial.get(dictName).add(type);
         });
-        if (vanillaOreDict.containsKey(type))
-            vanillaOreDict.get(type).addAll(dict);
-        else
-            vanillaOreDict.put(type, new HashSet<>(dict));
+        if (vanillaOreDict.containsKey(type)) vanillaOreDict.get(type).addAll(dict);
+        else vanillaOreDict.put(type, new HashSet<>(dict));
     }
 
     @Nonnull

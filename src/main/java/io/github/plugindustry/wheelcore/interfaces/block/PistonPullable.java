@@ -14,5 +14,6 @@ public interface PistonPullable {
      * @param pulledBlocks The list of blocks that are being pulled
      * @return Whether the block should be pulled
      */
-    boolean onPistonPull(@Nonnull Block block, @Nonnull Block piston, @Nonnull BlockFace direction, @Nonnull List<Block> pulledBlocks);
+    boolean onPistonPull(@Nonnull Block block, @Nonnull Block piston, @Nonnull BlockFace direction,
+                         @Nonnull List<Block> pulledBlocks);
 }

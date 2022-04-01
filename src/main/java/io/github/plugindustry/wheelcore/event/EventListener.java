@@ -46,23 +46,18 @@ public class EventListener implements Listener {
     // methods return true if the event doesn't need to be cancelled
 
     private static List<ItemStack> fillMatrix(ItemStack[] matrix) {
-        if (matrix.length == 9)
-            return Arrays.asList(matrix);
+        if (matrix.length == 9) return Arrays.asList(matrix);
         else if (matrix.length == 4)
             return Arrays.asList(matrix[0], matrix[1], null, matrix[2], matrix[3], null, null, null, null);
-        else
-            throw new IllegalArgumentException("Illegal matrix size");
+        else throw new IllegalArgumentException("Illegal matrix size");
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
         ItemBase instance = MainManager.getItemInstance(event.getItemInHand());
-        if (instance != null)
-            event.setCancelled(!(instance instanceof Placeable &&
-                    ((Placeable) instance).onItemPlace(event.getItemInHand(),
-                            event.getBlockPlaced(),
-                            event.getBlockAgainst(),
-                            event.getPlayer())));
+        if (instance != null) event.setCancelled(
+                !(instance instanceof Placeable && ((Placeable) instance).onItemPlace(event.getItemInHand(),
+                        event.getBlockPlaced(), event.getBlockAgainst(), event.getPlayer())));
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -83,13 +78,10 @@ public class EventListener implements Listener {
             event.setDropItems(false);
             Block target = event.getBlock();
             BlockBase blockBase = MainManager.getBlockInstance(target.getLocation());
-            event.setCancelled(!(blockBase instanceof Destroyable &&
-                    ((Destroyable) blockBase).onBlockDestroy(target,
+            event.setCancelled(
+                    !(blockBase instanceof Destroyable && ((Destroyable) blockBase).onBlockDestroy(target,
                             Destroyable.DestroyMethod.PLAYER_DESTROY,
-                            event.getPlayer()
-                                 .getInventory()
-                                 .getItemInMainHand(),
-                            event.getPlayer())));
+                            event.getPlayer().getInventory().getItemInMainHand(), event.getPlayer())));
         }
     }
 
@@ -101,19 +93,16 @@ public class EventListener implements Listener {
         if (!blocks.stream().filter(block -> MainManager.hasBlock(block.getLocation())).allMatch(block -> {
             BlockBase instance = MainManager.getBlockInstance(block.getLocation());
             return instance instanceof PistonPushable && ((PistonPushable) instance).onPistonPush(block,
-                    piston,
-                    direction,
-                    blocks);
+                    piston, direction, blocks);
         })) {
             event.setCancelled(true);
             return;
         }
 
         Location pistonLoc = piston.getLocation();
-        blocks.stream()
-              .filter(block -> MainManager.hasBlock(block.getLocation()))
-              .sorted(Comparator.<Block>comparingDouble(block -> block.getLocation().distanceSquared(pistonLoc))
-                                .reversed())
+        blocks.stream().filter(block -> MainManager.hasBlock(block.getLocation()))
+              .sorted(Comparator.<Block>comparingDouble(
+                      block -> block.getLocation().distanceSquared(pistonLoc)).reversed())
               .forEachOrdered(block -> {
                   Location loc = block.getLocation();
                   BlockBase instance = MainManager.getBlockInstance(loc);
@@ -131,23 +120,22 @@ public class EventListener implements Listener {
         if (!blocks.stream().filter(block -> MainManager.hasBlock(block.getLocation())).allMatch(block -> {
             BlockBase instance = MainManager.getBlockInstance(block.getLocation());
             return instance instanceof PistonPullable && ((PistonPullable) instance).onPistonPull(block,
-                    piston,
-                    direction,
-                    blocks);
+                    piston, direction, blocks);
         })) {
             event.setCancelled(true);
             return;
         }
 
         Location pistonLoc = piston.getLocation();
-        blocks.stream().filter(block -> MainManager.hasBlock(block.getLocation())).sorted(Comparator.comparingDouble(
-                block -> block.getLocation().distanceSquared(pistonLoc))).forEachOrdered(block -> {
-            Location loc = block.getLocation();
-            BlockBase instance = MainManager.getBlockInstance(loc);
-            BlockData data = MainManager.getBlockData(loc);
-            MainManager.removeBlock(loc);
-            MainManager.addBlock(block.getRelative(direction).getLocation(), instance, data);
-        });
+        blocks.stream().filter(block -> MainManager.hasBlock(block.getLocation()))
+              .sorted(Comparator.comparingDouble(block -> block.getLocation().distanceSquared(pistonLoc)))
+              .forEachOrdered(block -> {
+                  Location loc = block.getLocation();
+                  BlockBase instance = MainManager.getBlockInstance(loc);
+                  BlockData data = MainManager.getBlockData(loc);
+                  MainManager.removeBlock(loc);
+                  MainManager.addBlock(block.getRelative(direction).getLocation(), instance, data);
+              });
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -156,12 +144,8 @@ public class EventListener implements Listener {
         if (MainManager.hasBlock(block.getLocation())) {
             BlockBase instance = MainManager.getBlockInstance(block.getLocation());
             event.setCancelled(true);
-            if (event.getChangedType() == Material.AIR &&
-                    !(instance instanceof Destroyable && ((Destroyable) instance).onBlockDestroy(block,
-                            Destroyable.DestroyMethod.PHYSICS,
-                            null,
-                            null)))
-                block.setType(Material.AIR);
+            if (event.getChangedType() == Material.AIR && !(instance instanceof Destroyable && ((Destroyable) instance).onBlockDestroy(
+                    block, Destroyable.DestroyMethod.PHYSICS, null, null))) block.setType(Material.AIR);
         }
     }
 
@@ -171,12 +155,9 @@ public class EventListener implements Listener {
         if (MainManager.hasBlock(block.getLocation())) {
             BlockBase instance = MainManager.getBlockInstance(block.getLocation());
             event.setCancelled(true);
-            if (event.getNewState().getType() == Material.AIR &&
-                    !(instance instanceof Destroyable && ((Destroyable) instance).onBlockDestroy(block,
-                            Destroyable.DestroyMethod.FADE,
-                            null,
-                            null)))
-                block.setType(Material.AIR);
+            if (event.getNewState()
+                     .getType() == Material.AIR && !(instance instanceof Destroyable && ((Destroyable) instance).onBlockDestroy(
+                    block, Destroyable.DestroyMethod.FADE, null, null))) block.setType(Material.AIR);
         }
     }
 
@@ -185,11 +166,8 @@ public class EventListener implements Listener {
         Block block = event.getBlock();
         if (MainManager.hasBlock(block.getLocation())) {
             BlockBase instance = MainManager.getBlockInstance(block.getLocation());
-            event.setCancelled(!(instance instanceof Ignitable &&
-                    ((Ignitable) instance).onIgnite(block,
-                            event.getCause(),
-                            event.getBlock(),
-                            event.getIgnitingEntity())));
+            event.setCancelled(!(instance instanceof Ignitable && ((Ignitable) instance).onIgnite(block,
+                    event.getCause(), event.getBlock(), event.getIgnitingEntity())));
         }
     }
 
@@ -199,7 +177,8 @@ public class EventListener implements Listener {
         if (MainManager.hasBlock(block.getLocation())) {
             BlockBase instance = MainManager.getBlockInstance(block.getLocation());
             if (instance instanceof RedstoneChargeable)
-                ((RedstoneChargeable) instance).onRedstone(block, event.getOldCurrent(), event.getNewCurrent());
+                ((RedstoneChargeable) instance).onRedstone(block, event.getOldCurrent(),
+                        event.getNewCurrent());
         }
     }
 
@@ -211,10 +190,7 @@ public class EventListener implements Listener {
                 iterator.remove();
                 BlockBase blockBase = MainManager.getBlockInstance(block.getLocation());
                 if (blockBase instanceof Destroyable && ((Destroyable) blockBase).onBlockDestroy(block,
-                        Destroyable.DestroyMethod.EXPLOSION,
-                        null,
-                        null))
-                    block.setType(Material.AIR);
+                        Destroyable.DestroyMethod.EXPLOSION, null, null)) block.setType(Material.AIR);
             }
         }
     }
@@ -223,32 +199,27 @@ public class EventListener implements Listener {
     public void onPrepareAnvil(PrepareAnvilEvent event) {
         ItemStack srcItem = event.getInventory().getItem(0);
         ItemStack result = event.getResult();
-        if (srcItem == null || result == null)
-            return;
+        if (srcItem == null || result == null) return;
 
-        Map<Enchantment, Integer> src = srcItem.getEnchantments()
-                                               .entrySet()
-                                               .stream()
+        Map<Enchantment, Integer> src = srcItem.getEnchantments().entrySet().stream()
                                                .filter(entry -> entry.getKey() instanceof EnchantmentUtil.CustomEnchantment)
-                                               .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+                                               .collect(Collectors.toMap(Map.Entry::getKey,
+                                                       Map.Entry::getValue));
 
-        Map<Enchantment, Integer> conflicts = src.entrySet()
-                                                 .stream()
-                                                 .filter(entry -> result.getEnchantments()
-                                                                        .keySet()
-                                                                        .stream()
-                                                                        .anyMatch(enchantment -> entry.getKey()
-                                                                                                      .conflictsWith(
-                                                                                                              enchantment)))
-                                                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+        Map<Enchantment, Integer> conflicts = src.entrySet().stream()
+                                                 .filter(entry -> result.getEnchantments().keySet().stream()
+                                                                        .anyMatch(
+                                                                                enchantment -> entry.getKey()
+                                                                                                    .conflictsWith(
+                                                                                                            enchantment)))
+                                                 .collect(Collectors.toMap(Map.Entry::getKey,
+                                                         Map.Entry::getValue));
 
-        if (conflicts.size() == src.size())
-            return;
+        if (conflicts.size() == src.size()) return;
 
         result.addUnsafeEnchantments(src);
         conflicts.forEach((enchantment, level) -> EnchantmentUtil.removeFromItem(result,
-                (EnchantmentUtil.CustomEnchantment) enchantment,
-                level));
+                (EnchantmentUtil.CustomEnchantment) enchantment, level));
 
         event.setResult(result);
     }
@@ -256,8 +227,9 @@ public class EventListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPrepareItemCraft(PrepareItemCraftEvent event) {
         CraftingInventory craftingInv = event.getInventory();
-        if (Stream.of(craftingInv.getMatrix()).anyMatch(item -> MainManager.getItemInstance(item) != null) ||
-                RecipeRegistry.isPlaceholder(event.getRecipe())) {
+        if (Stream.of(craftingInv.getMatrix()).anyMatch(
+                item -> MainManager.getItemInstance(item) != null) || RecipeRegistry.isPlaceholder(
+                event.getRecipe())) {
             RecipeBase result = RecipeRegistry.matchCraftingRecipe(fillMatrix(craftingInv.getMatrix()), null);
             craftingInv.setResult(result == null ? null : result.getResult());
         }
@@ -267,9 +239,10 @@ public class EventListener implements Listener {
     public void onCraftItem(CraftItemEvent event) {
         CraftingInventory craftingInv = event.getInventory();
         HashMap<Integer, ItemStack> map = new HashMap<>();
-        if ((Stream.of(craftingInv.getMatrix()).anyMatch(item -> MainManager.getItemInstance(item) != null) ||
-                RecipeRegistry.isPlaceholder(event.getRecipe())) && RecipeRegistry.matchCraftingRecipe(fillMatrix(
-                craftingInv.getMatrix()), map) != null) {
+        if ((Stream.of(craftingInv.getMatrix()).anyMatch(
+                item -> MainManager.getItemInstance(item) != null) || RecipeRegistry.isPlaceholder(
+                event.getRecipe())) && RecipeRegistry.matchCraftingRecipe(fillMatrix(craftingInv.getMatrix()),
+                map) != null) {
             ItemStack[] contents = craftingInv.getStorageContents();
             map.forEach((key, value) -> contents[key] = value);
             Bukkit.getScheduler().runTask(WheelCore.instance, () -> craftingInv.setStorageContents(contents));
@@ -294,24 +267,14 @@ public class EventListener implements Listener {
         if (event.hasItem() && event.useItemInHand() != Event.Result.DENY) {
             ItemStack tool = Objects.requireNonNull(event.getItem());
             ItemBase itemBase = MainManager.getItemInstance(tool);
-            if (!(itemBase == null ||
-                    itemBase instanceof Interactive && ((Interactive) itemBase).onInteract(event.getPlayer(),
-                            event.getAction(),
-                            event.getHand(),
-                            tool,
-                            event.getClickedBlock(),
-                            null)))
-                event.setUseItemInHand(Event.Result.DENY);
+            if (!(itemBase == null || itemBase instanceof Interactive && ((Interactive) itemBase).onInteract(
+                    event.getPlayer(), event.getAction(), event.getHand(), tool, event.getClickedBlock(),
+                    null))) event.setUseItemInHand(Event.Result.DENY);
         } else if (event.hasBlock() && event.useInteractedBlock() != Event.Result.DENY) {
             Block block = Objects.requireNonNull(event.getClickedBlock());
             BlockBase blockBase = MainManager.getBlockInstance(block.getLocation());
-            if (!(blockBase == null ||
-                    blockBase instanceof Interactive && ((Interactive) blockBase).onInteract(event.getPlayer(),
-                            event.getAction(),
-                            event.getHand(),
-                            event.getItem(),
-                            block,
-                            null)))
+            if (!(blockBase == null || blockBase instanceof Interactive && ((Interactive) blockBase).onInteract(
+                    event.getPlayer(), event.getAction(), event.getHand(), event.getItem(), block, null)))
                 event.setUseInteractedBlock(Event.Result.DENY);
         }
     }
@@ -325,8 +288,8 @@ public class EventListener implements Listener {
         Inventory inv = event.getClickedInventory();
         if (inv != null && inv.getHolder() instanceof ClassicInventoryInteractor)
             // Detected InventoryWindow click event
-            event.setCancelled(
-                    ((ClassicInventoryInteractor) inv.getHolder()).processClick(new InventoryClickInfo(event)));
+            event.setCancelled(((ClassicInventoryInteractor) inv.getHolder()).processClick(
+                    new InventoryClickInfo(event)));
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -372,8 +335,8 @@ public class EventListener implements Listener {
     public void prePlayerCommand(PlayerCommandPreprocessEvent event) {
         if (event.getMessage().equals("/reload") || event.getMessage().equals("/bukkit:reload")) {
             event.setCancelled(true);
-            event.getPlayer().sendMessage(ChatColor.DARK_RED +
-                    "With WheelCore installed, you cannot perform this operation which will cause severe problems. Restart your server to reload plugins instead.");
+            event.getPlayer().sendMessage(
+                    ChatColor.DARK_RED + "With WheelCore installed, you cannot perform this operation which will cause severe problems. Restart your server to reload plugins instead.");
         }
     }
 
@@ -384,8 +347,9 @@ public class EventListener implements Listener {
             return;
         }
 
-        event.setCancelled(!(itemBase instanceof Consumable &&
-                ((Consumable) itemBase).onItemConsume(event.getPlayer(), event.getItem())));
+        event.setCancelled(
+                !(itemBase instanceof Consumable && ((Consumable) itemBase).onItemConsume(event.getPlayer(),
+                        event.getItem())));
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
@@ -399,36 +363,27 @@ public class EventListener implements Listener {
     public void onItemDamage(PlayerItemDamageEvent event) {
         ItemBase itemBase = MainManager.getItemInstance(event.getItem());
         if (itemBase instanceof Damageable) {
-            Optional<Integer> result = ((Damageable) itemBase).onItemDamage(event.getPlayer(),
-                    event.getItem(),
-                    event.getDamage());
-            if (result.isPresent())
-                event.setDamage(result.get());
-            else
-                event.setCancelled(true);
-        } else if (itemBase != null)
-            event.setCancelled(true);
+            Optional<Integer> result =
+                    ((Damageable) itemBase).onItemDamage(event.getPlayer(), event.getItem(),
+                            event.getDamage());
+            if (result.isPresent()) event.setDamage(result.get());
+            else event.setCancelled(true);
+        } else if (itemBase != null) event.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
         EntityBase instance = MainManager.getEntityInstance(event.getRightClicked());
-        if (instance != null)
-            event.setCancelled(!(instance instanceof Interactive &&
-                    ((Interactive) instance).onInteract(event.getPlayer(),
-                            Action.RIGHT_CLICK_AIR,
-                            event.getHand(),
-                            event.getPlayer()
-                                 .getInventory()
-                                 .getItemInMainHand(),
-                            null,
-                            event.getRightClicked())));
+        if (instance != null) event.setCancelled(
+                !(instance instanceof Interactive && ((Interactive) instance).onInteract(event.getPlayer(),
+                        Action.RIGHT_CLICK_AIR, event.getHand(),
+                        event.getPlayer().getInventory().getItemInMainHand(), null,
+                        event.getRightClicked())));
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onEntitySpawn(EntitySpawnEvent event) {
-        if (event instanceof CreatureSpawnEvent &&
-                ((CreatureSpawnEvent) event).getSpawnReason() == CreatureSpawnEvent.SpawnReason.CHUNK_GEN)
+        if (event instanceof CreatureSpawnEvent && ((CreatureSpawnEvent) event).getSpawnReason() == CreatureSpawnEvent.SpawnReason.CHUNK_GEN)
             return;
         MainManager.entityDataProvider.loadEntity(event.getEntity());
     }
@@ -440,8 +395,8 @@ public class EventListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockDamage(BlockDamageEvent event) {
-        if (event.getPlayer().getGameMode() == GameMode.SURVIVAL ||
-                event.getPlayer().getGameMode() == GameMode.ADVENTURE)
+        if (event.getPlayer().getGameMode() == GameMode.SURVIVAL || event.getPlayer()
+                                                                         .getGameMode() == GameMode.ADVENTURE)
             event.setCancelled(true);
     }
 

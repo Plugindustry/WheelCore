@@ -7,5 +7,6 @@ import org.bukkit.inventory.ItemStack;
 import javax.annotation.Nonnull;
 
 public interface Placeable {
-    boolean onItemPlace(@Nonnull ItemStack item, @Nonnull Block block, @Nonnull Block blockAgainst, @Nonnull Player player);
+    boolean onItemPlace(@Nonnull ItemStack item, @Nonnull Block block, @Nonnull Block blockAgainst,
+                        @Nonnull Player player);
 }

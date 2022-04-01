@@ -41,8 +41,7 @@ public class WidgetFixedItem implements WidgetBase {
             retMap.put(new Position(1, 1), slotItemStack);
             changed = false;
             return retMap;
-        } else
-            return Collections.emptyMap();
+        } else return Collections.emptyMap();
     }
 
     public ItemStack getItem() {

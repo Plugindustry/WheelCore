@@ -23,7 +23,8 @@ public abstract class Wire extends DummyBlock {
 
     @Nullable
     @Override
-    public BlockData getInitialData(@Nullable ItemStack item, @Nonnull Block block, @Nullable Block blockAgainst, @Nullable Player player) {
+    public BlockData getInitialData(@Nullable ItemStack item, @Nonnull Block block,
+                                    @Nullable Block blockAgainst, @Nullable Player player) {
         return new WireData();
     }
 

@@ -14,5 +14,6 @@ public interface PistonPushable {
      * @param pushedBlocks The list of blocks that are being pushed
      * @return Whether the block should be pushed
      */
-    boolean onPistonPush(@Nonnull Block block, @Nonnull Block piston, @Nonnull BlockFace direction, @Nonnull List<Block> pushedBlocks);
+    boolean onPistonPush(@Nonnull Block block, @Nonnull Block piston, @Nonnull BlockFace direction,
+                         @Nonnull List<Block> pushedBlocks);
 }

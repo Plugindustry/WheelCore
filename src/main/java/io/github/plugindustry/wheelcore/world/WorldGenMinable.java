@@ -19,7 +19,8 @@ public class WorldGenMinable implements WorldGenerator {
     private final int minHeight;
     private final int maxHeight;
 
-    public WorldGenMinable(BlockBase ore, int numberOfClusters, int numberOfBlocks, int minHeight, int maxHeight) {
+    public WorldGenMinable(BlockBase ore, int numberOfClusters, int numberOfBlocks, int minHeight,
+                           int maxHeight) {
         this.ore = ore;
         this.numberOfBlocks = numberOfBlocks;
         this.numberOfClusters = numberOfClusters;
@@ -43,14 +44,9 @@ public class WorldGenMinable implements WorldGenerator {
                 ++clustersGen;
                 currentBlock.setType(this.ore.getMaterial(), false);
                 MainManager.addBlock(currentBlock.getLocation(), this.ore, null);
-                DebuggingLogger.debug("Gen in " +
-                        (currentBlock.getLocation().getWorld() == null ?
-                                null :
-                                currentBlock.getLocation().getWorld().getName()) +
-                        " at " +
-                        (chunk.getX() << 4) +
-                        ", " +
-                        (chunk.getZ() << 4));
+                DebuggingLogger.debug("Gen in " + (currentBlock.getLocation().getWorld() == null ? null :
+                        currentBlock.getLocation().getWorld()
+                                    .getName()) + " at " + (chunk.getX() << 4) + ", " + (chunk.getZ() << 4));
             } else {
                 continue;
             }
@@ -77,8 +73,7 @@ public class WorldGenMinable implements WorldGenerator {
                         break;
                 }
 
-                if (x < 1 || z < 1 || x >= 15 || z >= 15)
-                    continue;
+                if (x < 1 || z < 1 || x >= 15 || z >= 15) continue;
                 currentBlock = chunk.getBlock(x, y, z);
 
                 if (BlockUtil.isReplaceableOreGen(currentBlock)) {

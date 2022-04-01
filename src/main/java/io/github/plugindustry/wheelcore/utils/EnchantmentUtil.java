@@ -33,21 +33,19 @@ public class EnchantmentUtil {
         lookup.put(1, "I");
     }
 
-    public static CustomEnchantment create(@Nonnull Plugin instance, @Nonnull String name, @Nonnull String localizedNameKey) {
+    public static CustomEnchantment create(@Nonnull Plugin instance, @Nonnull String name,
+                                           @Nonnull String localizedNameKey) {
         return new CustomEnchantment(instance, name, localizedNameKey);
     }
 
     public static String getLoreOfEnchant(CustomEnchantment enchantment, int level) {
-        return ChatColor.RESET.toString() +
-                (enchantment.isTreasure() ? ChatColor.GOLD : (enchantment.isCursed() ? ChatColor.RED : ChatColor.GRAY)) +
-                I18n.getLocalePlaceholder(enchantment.getLocalizedNameKey()) +
-                " " +
-                getLevelStr(level);
+        return ChatColor.RESET.toString() + (enchantment.isTreasure() ? ChatColor.GOLD :
+                (enchantment.isCursed() ? ChatColor.RED : ChatColor.GRAY)) + I18n.getLocalePlaceholder(
+                enchantment.getLocalizedNameKey()) + " " + getLevelStr(level);
     }
 
     private static String getLevelStr(int level) {
-        if (level >= 32767)
-            return level + "L";
+        if (level >= 32767) return level + "L";
 
         StringBuilder res = new StringBuilder();
         int temp = level;
@@ -55,8 +53,7 @@ public class EnchantmentUtil {
             Integer k = entry.getKey();
             res.append(StringUtils.repeat(entry.getValue(), temp / k));
             temp %= k;
-            if (temp == 0)
-                break;
+            if (temp == 0) break;
         }
         return res.toString();
     }
@@ -115,7 +112,8 @@ public class EnchantmentUtil {
         private List<Enchantment> conflictEnchantments = Collections.emptyList();
         private List<ItemStack> otherItems = Collections.emptyList();
 
-        public CustomEnchantment(@Nonnull Plugin instance, @Nonnull String name, @Nonnull String localizedNameKey) {
+        public CustomEnchantment(@Nonnull Plugin instance, @Nonnull String name,
+                                 @Nonnull String localizedNameKey) {
             super(new NamespacedKey(instance, "enchantment." + name));
             this.name = name;
             this.localizedNameKey = localizedNameKey;
@@ -204,14 +202,13 @@ public class EnchantmentUtil {
         }
 
         public CustomEnchantment register() {
-            if (!Enchantment.isAcceptingRegistrations())
-                try {
-                    Field field = Enchantment.class.getDeclaredField("acceptingNew");
-                    field.setAccessible(true);
-                    field.set(Enchantment.class, true);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            if (!Enchantment.isAcceptingRegistrations()) try {
+                Field field = Enchantment.class.getDeclaredField("acceptingNew");
+                field.setAccessible(true);
+                field.set(Enchantment.class, true);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
             Enchantment.registerEnchantment(this);
             return this;

@@ -39,7 +39,8 @@ public class I18n {
     private static final Pattern patternList = Pattern.compile("\\{\\{(\\S*?)\\[]}}");
     private static final JsonParser parser = new JsonParser();
     private static final Gson gson = new Gson();
-    private static final ConcurrentHashMap<UUID, Pair<Map<UUID, ItemStack>, Queue<UUID>>> orgItemMapping = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<UUID, Pair<Map<UUID, ItemStack>, Queue<UUID>>> orgItemMapping =
+            new ConcurrentHashMap<>();
     private static final int ITEM_LIMIT = 512;
 
     /**
@@ -48,8 +49,7 @@ public class I18n {
     public static void load(@Nonnull Locale locale, @Nonnull Reader reader) {
         try {
             Map<String, String> kvMap;
-            if (locales.containsKey(locale))
-                kvMap = locales.get(locale);
+            if (locales.containsKey(locale)) kvMap = locales.get(locale);
             else {
                 kvMap = new HashMap<>();
                 locales.put(locale, kvMap);
@@ -70,12 +70,10 @@ public class I18n {
     @Nonnull
     public static String getLocaleString(@Nonnull Locale locale, @Nonnull String key) {
         Map<String, String> kvMap = locales.getOrDefault(locale, Collections.emptyMap());
-        if (kvMap.containsKey(key))
-            return kvMap.getOrDefault(key, key);
+        if (kvMap.containsKey(key)) return kvMap.getOrDefault(key, key);
         else if (!ConfigManager.fallbackLang.equals(locale))
             return getLocaleString(ConfigManager.fallbackLang, key);
-        else
-            return key;
+        else return key;
     }
 
     /**
@@ -109,8 +107,7 @@ public class I18n {
             return list;
         } else if (!ConfigManager.fallbackLang.equals(locale))
             return getLocaleStringList(ConfigManager.fallbackLang, key);
-        else
-            return Collections.singletonList(getLocaleString(locale, key));
+        else return Collections.singletonList(getLocaleString(locale, key));
     }
 
     /**
@@ -136,10 +133,8 @@ public class I18n {
     @Nonnull
     public static List<String> replaceAllList(@Nonnull Locale locale, @Nonnull String str) {
         Matcher matcher = patternList.matcher(str);
-        if (matcher.matches())
-            return getLocaleStringList(locale, matcher.group(1));
-        else
-            return Collections.singletonList(replaceAll(locale, str));
+        if (matcher.matches()) return getLocaleStringList(locale, matcher.group(1));
+        else return Collections.singletonList(replaceAll(locale, str));
     }
 
     @Nonnull
@@ -147,7 +142,8 @@ public class I18n {
         if (element.isJsonObject()) {
             JsonObject jsonObject = element.getAsJsonObject();
             JsonObject newJsonObject = new JsonObject();
-            jsonObject.entrySet().forEach(e -> newJsonObject.add(e.getKey(), replaceAll(locale, e.getValue())));
+            jsonObject.entrySet()
+                      .forEach(e -> newJsonObject.add(e.getKey(), replaceAll(locale, e.getValue())));
             element = newJsonObject;
         } else if (element.isJsonArray()) {
             JsonArray jsonArray = element.getAsJsonArray();
@@ -161,27 +157,26 @@ public class I18n {
     }
 
     @Nonnull
-    private static ItemStack translateItem(@Nonnull Player player, @Nonnull Locale locale, @Nonnull ItemStack item) {
+    private static ItemStack translateItem(@Nonnull Player player, @Nonnull Locale locale,
+                                           @Nonnull ItemStack item) {
         ItemStack newItem = item.clone();
         if (newItem.hasItemMeta()) {
             ItemMeta meta = Objects.requireNonNull(newItem.getItemMeta());
             if (meta.hasDisplayName())
                 meta.setDisplayName(ChatColor.RESET + replaceAll(locale, meta.getDisplayName()));
-            if (meta.hasLore())
-                meta.setLore(Objects.requireNonNull(meta.getLore())
-                                    .stream()
-                                    .flatMap(str -> replaceAllList(locale, str).stream())
-                                    .map(str -> ChatColor.RESET + str)
-                                    .collect(Collectors.toList()));
+            if (meta.hasLore()) meta.setLore(Objects.requireNonNull(meta.getLore()).stream()
+                                                    .flatMap(str -> replaceAllList(locale, str).stream())
+                                                    .map(str -> ChatColor.RESET + str)
+                                                    .collect(Collectors.toList()));
             newItem.setItemMeta(meta);
             if (!(MainManager.getItemData(item) instanceof TranslatedItemData)) {
                 UUID uuid = UUID.randomUUID();
                 MainManager.setItemData(newItem, new TranslatedItemData(uuid));
                 if (!orgItemMapping.containsKey(player.getUniqueId()))
-                    orgItemMapping.put(player.getUniqueId(), Pair.of(new HashMap<>(), new ArrayDeque<>(ITEM_LIMIT)));
+                    orgItemMapping.put(player.getUniqueId(),
+                            Pair.of(new HashMap<>(), new ArrayDeque<>(ITEM_LIMIT)));
                 Pair<Map<UUID, ItemStack>, Queue<UUID>> pair = orgItemMapping.get(player.getUniqueId());
-                while (pair.second.size() >= ITEM_LIMIT)
-                    pair.first.remove(pair.second.poll());
+                while (pair.second.size() >= ITEM_LIMIT) pair.first.remove(pair.second.poll());
                 pair.first.put(uuid, item.clone());
                 pair.second.add(uuid);
             }
@@ -218,12 +213,8 @@ public class I18n {
         }
 
         public PacketListener() {
-            super(PacketAdapter.params()
-                               .clientSide()
-                               .serverSide()
-                               .plugin(WheelCore.instance)
-                               .listenerPriority(ListenerPriority.LOW)
-                               .types(outTypes));
+            super(PacketAdapter.params().clientSide().serverSide().plugin(WheelCore.instance)
+                               .listenerPriority(ListenerPriority.LOW).types(outTypes));
         }
 
         @Override
@@ -242,22 +233,22 @@ public class I18n {
                 strings.modify(i, str -> replaceAll(locale, str));
             StructureModifier<String[]> stringArrays = packet.getStringArrays();
             for (int i = 0; i < stringArrays.size(); ++i)
-                stringArrays.modify(i,
-                        strArr -> Arrays.stream(strArr)
-                                        .map(str -> replaceAll(locale, str))
-                                        .toArray(String[]::new));
+                stringArrays.modify(i, strArr -> Arrays.stream(strArr).map(str -> replaceAll(locale, str))
+                                                       .toArray(String[]::new));
 
             StructureModifier<WrappedChatComponent> chatComponents = packet.getChatComponents();
             for (int i = 0; i < chatComponents.size(); ++i)
                 chatComponents.modify(i, chatComponent -> {
-                    chatComponent.setJson(gson.toJson(replaceAll(locale, parser.parse(chatComponent.getJson()))));
+                    chatComponent.setJson(
+                            gson.toJson(replaceAll(locale, parser.parse(chatComponent.getJson()))));
                     return chatComponent;
                 });
             StructureModifier<WrappedChatComponent[]> chatComponentArrays = packet.getChatComponentArrays();
             for (int i = 0; i < chatComponentArrays.size(); ++i)
                 chatComponentArrays.modify(i, chatComponentArr -> {
                     for (WrappedChatComponent chatComponent : chatComponentArr)
-                        chatComponent.setJson(gson.toJson(replaceAll(locale, parser.parse(chatComponent.getJson()))));
+                        chatComponent.setJson(
+                                gson.toJson(replaceAll(locale, parser.parse(chatComponent.getJson()))));
                     return chatComponentArr;
                 });
 
@@ -268,14 +259,12 @@ public class I18n {
                 StructureModifier<ItemStack[]> itemStacksArrays = packet.getItemArrayModifier();
                 for (int i = 0; i < itemStacksArrays.size(); ++i)
                     itemStacksArrays.modify(i,
-                            itemArr -> Arrays.stream(itemArr)
-                                             .map(item -> translateItem(player, locale, item))
+                            itemArr -> Arrays.stream(itemArr).map(item -> translateItem(player, locale, item))
                                              .toArray(ItemStack[]::new));
                 StructureModifier<List<ItemStack>> itemStacksLists = packet.getItemListModifier();
                 for (int i = 0; i < itemStacksLists.size(); ++i)
                     itemStacksLists.modify(i,
-                            itemList -> itemList.stream()
-                                                .map(item -> translateItem(player, locale, item))
+                            itemList -> itemList.stream().map(item -> translateItem(player, locale, item))
                                                 .collect(Collectors.toList()));
             } catch (Exception ignored) {
             }
@@ -294,8 +283,8 @@ public class I18n {
                 if (data instanceof TranslatedItemData) {
                     if (orgItemMapping.containsKey(uuid) && orgItemMapping.get(uuid).first.containsKey(
                             ((TranslatedItemData) data).uuid)) {
-                        ItemStack orgItem = orgItemMapping.get(uuid).first.get(((TranslatedItemData) data).uuid)
-                                                                          .clone();
+                        ItemStack orgItem =
+                                orgItemMapping.get(uuid).first.get(((TranslatedItemData) data).uuid).clone();
                         orgItem.setAmount(item.getAmount());
                         packet.getItemModifier().write(0, orgItem);
                     } else packet.getItemModifier().write(0, new ItemStack(Material.AIR));

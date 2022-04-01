@@ -13,11 +13,13 @@ public class InventoryUtil {
     }
 
     public static Position getAbsolutePos(Position widgetPos, Position relativePos) {
-        return new Position(relativePos.xCoord + widgetPos.xCoord - 1, relativePos.yCoord + widgetPos.yCoord - 1);
+        return new Position(relativePos.xCoord + widgetPos.xCoord - 1,
+                relativePos.yCoord + widgetPos.yCoord - 1);
     }
 
     public static Position getRelativePos(Position widgetPos, Position absolutePos) {
-        return new Position(absolutePos.xCoord - widgetPos.xCoord + 1, absolutePos.yCoord - widgetPos.yCoord + 1);
+        return new Position(absolutePos.xCoord - widgetPos.xCoord + 1,
+                absolutePos.yCoord - widgetPos.yCoord + 1);
     }
 
     public static int toBukkitSlot(int nmsSlot) {

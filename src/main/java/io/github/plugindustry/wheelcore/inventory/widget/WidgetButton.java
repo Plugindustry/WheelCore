@@ -19,7 +19,8 @@ public class WidgetButton implements WidgetClickable {
     private ItemStack slotItemStack;
     private boolean changed = true;
 
-    public WidgetButton(String id, ItemStack slotItemStack, BiConsumer<Position, InventoryClickInfo> onClickFunc) {
+    public WidgetButton(String id, ItemStack slotItemStack,
+                        BiConsumer<Position, InventoryClickInfo> onClickFunc) {
         this.id = id;
         this.slotItemStack = slotItemStack;
         this.onClickFunc = onClickFunc;
@@ -45,8 +46,7 @@ public class WidgetButton implements WidgetClickable {
             retMap.put(new Position(1, 1), slotItemStack);
             changed = false;
             return retMap;
-        } else
-            return Collections.emptyMap();
+        } else return Collections.emptyMap();
     }
 
     @Override

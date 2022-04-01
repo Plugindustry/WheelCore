@@ -31,8 +31,7 @@ public class MultiBlockManager {
                     }
 
                     Pair<Boolean, Environment> result = conditions.match(l);
-                    if (result.first)
-                        structureDataMap.put(l, result.second);
+                    if (result.first) structureDataMap.put(l, result.second);
                     else {
                         iterator.remove();
                         structureDataMap.remove(l);
@@ -62,8 +61,7 @@ public class MultiBlockManager {
 
     public static Set<Location> getAvailableStructures(BlockBase matchBase) {
         return structuresMap.containsKey(matchBase) ?
-                Collections.unmodifiableSet(structuresMap.get(matchBase)) :
-                Collections.emptySet();
+                Collections.unmodifiableSet(structuresMap.get(matchBase)) : Collections.emptySet();
     }
 
     public static Environment getStructureData(Location loc) {
@@ -98,8 +96,7 @@ public class MultiBlockManager {
                 if (op instanceof Function) {
                     if (!((Function<Environment, Boolean>) op).apply(environment))
                         return Pair.of(false, environment);
-                } else if (op instanceof Consumer)
-                    ((Consumer<Environment>) op).accept(environment);
+                } else if (op instanceof Consumer) ((Consumer<Environment>) op).accept(environment);
             }
 
             return Pair.of(true, environment);

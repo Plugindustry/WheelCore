@@ -19,24 +19,25 @@ import java.util.Objects;
 
 public class DummyBlock implements BlockBase, Placeable, Destroyable, Interactive {
     @Override
-    public boolean onInteract(@Nonnull Player player, @Nonnull Action action, @Nullable EquipmentSlot hand, @Nullable ItemStack tool, @Nullable Block block, @Nullable Entity entity) {
+    public boolean onInteract(@Nonnull Player player, @Nonnull Action action, @Nullable EquipmentSlot hand,
+                              @Nullable ItemStack tool, @Nullable Block block, @Nullable Entity entity) {
         return true;
     }
 
     @Override
-    public boolean onBlockPlace(@Nullable ItemStack item, @Nonnull Block block, @Nullable Block blockAgainst, @Nullable Player player) {
+    public boolean onBlockPlace(@Nullable ItemStack item, @Nonnull Block block, @Nullable Block blockAgainst,
+                                @Nullable Player player) {
         // We do nothing by default, so you should do this job in your implementation too.
         MainManager.addBlock(block.getLocation(), this, getInitialData(item, block, blockAgainst, player));
-        if (item == null || getMaterial() != item.getType())
-            block.setType(getMaterial());
+        if (item == null || getMaterial() != item.getType()) block.setType(getMaterial());
         return true;
     }
 
     @Override
-    public boolean onBlockDestroy(@Nonnull Block block, @Nonnull DestroyMethod method, ItemStack tool, @Nullable Player player) {
+    public boolean onBlockDestroy(@Nonnull Block block, @Nonnull DestroyMethod method, ItemStack tool,
+                                  @Nullable Player player) {
         // We do nothing by default, so you should do this job in your implementation too.
-        if (method == DestroyMethod.PHYSICS || method == DestroyMethod.FADE)
-            return false;
+        if (method == DestroyMethod.PHYSICS || method == DestroyMethod.FADE) return false;
 
         MainManager.removeBlock(block.getLocation());
         block.setType(Material.AIR);
@@ -72,7 +73,8 @@ public class DummyBlock implements BlockBase, Placeable, Destroyable, Interactiv
     }
 
     @Nullable
-    public BlockData getInitialData(@Nullable ItemStack item, @Nonnull Block block, @Nullable Block blockAgainst, @Nullable Player player) {
+    public BlockData getInitialData(@Nullable ItemStack item, @Nonnull Block block,
+                                    @Nullable Block blockAgainst, @Nullable Player player) {
         return null;
     }
 }

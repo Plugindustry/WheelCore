@@ -18,8 +18,7 @@ public class CRC24 {
         crc ^= b << 16;
         for (int i = 0; i < 8; i++) {
             crc <<= 1;
-            if ((crc & 0x1000000) != 0)
-                crc ^= CRC24_POLY;
+            if ((crc & 0x1000000) != 0) crc ^= CRC24_POLY;
         }
     }
 

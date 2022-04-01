@@ -3,8 +3,9 @@ package io.github.plugindustry.wheelcore.internal.shadow;
 import io.github.czm23333.transparentreflect.annotations.Shadow;
 
 @Shadow("nms/IBlockData")
-public class IBlockData {
+public class IBlockData extends NMSBlockData {
     public IBlockData(Object o) {
+        super(o);
     }
 
     @Shadow("nms/IBlockData.needCorrectTool")

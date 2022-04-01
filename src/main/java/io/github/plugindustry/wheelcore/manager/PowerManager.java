@@ -30,8 +30,10 @@ public class PowerManager {
 
     public static void onTick() {
         // Filter
-        inputMap.keySet().removeIf(location -> !(MainManager.getBlockInstance(location) instanceof EnergyInputable));
-        outputMap.keySet().removeIf(location -> !(MainManager.getBlockInstance(location) instanceof EnergyOutputable));
+        inputMap.keySet()
+                .removeIf(location -> !(MainManager.getBlockInstance(location) instanceof EnergyInputable));
+        outputMap.keySet()
+                 .removeIf(location -> !(MainManager.getBlockInstance(location) instanceof EnergyOutputable));
 
         // Output
         outputMap.forEach((key, value) -> BlockUtil.findWireAround(key).forEach(location -> {
@@ -52,12 +54,8 @@ public class PowerManager {
         }));
 
         // Input and spread
-        MainManager.getBlockMapping()
-                   .values()
-                   .stream()
-                   .filter(base -> base instanceof Wire)
-                   .map(MainManager.blockDataProvider::blocksOf)
-                   .flatMap(Collection::stream)
+        MainManager.getBlockMapping().values().stream().filter(base -> base instanceof Wire)
+                   .map(MainManager.blockDataProvider::blocksOf).flatMap(Collection::stream)
                    .forEach(location -> {
                        Wire instanceOri = ((Wire) MainManager.getBlockInstance(location));
                        double energyLoss = Objects.requireNonNull(instanceOri).getEnergyLoss();
@@ -69,26 +67,23 @@ public class PowerManager {
                            return;
                        }
 
-                       HashSet<Location> inputs = Stream.of(location.clone().add(1, 0, 0),
-                                                                location.clone().add(-1, 0, 0),
-                                                                location.clone().add(0, 1, 0),
-                                                                location.clone().add(0, -1, 0),
-                                                                location.clone().add(0, 0, 1),
-                                                                location.clone().add(0, 0, -1))
-                                                        .filter(inputMap::containsKey)
-                                                        .collect(Collectors.toCollection(HashSet::new));
+                       HashSet<Location> inputs =
+                               Stream.of(location.clone().add(1, 0, 0), location.clone().add(-1, 0, 0),
+                                             location.clone().add(0, 1, 0), location.clone().add(0, -1, 0),
+                                             location.clone().add(0, 0, 1), location.clone().add(0, 0, -1))
+                                     .filter(inputMap::containsKey)
+                                     .collect(Collectors.toCollection(HashSet::new));
 
                        Iterator<Wire.PowerPacket> iterator = data.packets.iterator();
                        while (iterator.hasNext()) {
                            Wire.PowerPacket packet = iterator.next();
-                           if (MainManager.getBlockInstance(packet.src) instanceof EnergyOutputable &&
-                                   packet.amount > energyLoss) {
+                           if (MainManager.getBlockInstance(
+                                   packet.src) instanceof EnergyOutputable && packet.amount > energyLoss) {
                                // Input
                                if (!inputs.isEmpty() && r.nextBoolean()) {
-                                   Location availableInput = StreamUtil.randomPick(inputs.stream()
-                                                                                         .filter(loc -> !loc.equals(
-                                                                                                 packet.from))).orElse(
-                                           null);
+                                   Location availableInput = StreamUtil.randomPick(
+                                                                               inputs.stream().filter(loc -> !loc.equals(packet.from)))
+                                                                       .orElse(null);
                                    if (availableInput != null) {
                                        InputRequest inputRequest = inputMap.get(availableInput);
                                        Wire.PowerPacket packetClone = packet.clone();
@@ -96,25 +91,24 @@ public class PowerManager {
                                        double powerNeed = inputRequest.power - inputRequest.result;
 
                                        // Cut
-                                       if (packetClone.amount > powerNeed)
-                                           packetClone.amount = powerNeed;
+                                       if (packetClone.amount > powerNeed) packetClone.amount = powerNeed;
 
                                        // I/O
                                        if (((EnergyOutputable) Objects.requireNonNull(
                                                MainManager.getBlockInstance(packet.src))).finishOutput(
-                                               packet.src,
-                                               packetClone))
-                                           ((EnergyInputable) Objects.requireNonNull(MainManager.getBlockInstance(
-                                                   availableInput))).finishInput(availableInput, packetClone);
+                                               packet.src, packetClone))
+                                           ((EnergyInputable) Objects.requireNonNull(
+                                                   MainManager.getBlockInstance(availableInput))).finishInput(
+                                                   availableInput, packetClone);
 
                                        if (packetClone.amount == powerNeed) {
                                            inputs.remove(availableInput);
                                            inputMap.remove(availableInput);
-                                       } else
-                                           inputRequest.result += packetClone.amount;
+                                       } else inputRequest.result += packetClone.amount;
 
                                        if (packetClone.amount < packet.amount - energyLoss) {
-                                           packetClone.amount = packet.amount - energyLoss - packetClone.amount;
+                                           packetClone.amount =
+                                                   packet.amount - energyLoss - packetClone.amount;
                                            if (maxTrans >= data.statNext + packetClone.amount) {
                                                data.nextPackets.add(packetClone);
                                                data.statNext += packetClone.amount;
@@ -127,38 +121,32 @@ public class PowerManager {
                                }
 
                                // Spread
-                               Optional<Location> optional = StreamUtil.randomPick(BlockUtil.findWireAround(location)
-                                                                                            .filter(loc -> !loc.equals(
-                                                                                                    packet.from))
-                                                                                            .filter(loc -> {
-                                                                                                Wire.WireData data1 = (Wire.WireData) MainManager.getBlockData(
-                                                                                                        loc);
-                                                                                                Wire instance = (Wire) MainManager.getBlockInstance(
-                                                                                                        loc);
-                                                                                                if (data1 == null) {
-                                                                                                    data1 = new Wire.WireData();
-                                                                                                    MainManager.setBlockData(
-                                                                                                            loc,
-                                                                                                            data1);
-                                                                                                    return true;
-                                                                                                }
+                               Optional<Location> optional = StreamUtil.randomPick(
+                                       BlockUtil.findWireAround(location)
+                                                .filter(loc -> !loc.equals(packet.from)).filter(loc -> {
+                                                    Wire.WireData data1 =
+                                                            (Wire.WireData) MainManager.getBlockData(loc);
+                                                    Wire instance = (Wire) MainManager.getBlockInstance(loc);
+                                                    if (data1 == null) {
+                                                        data1 = new Wire.WireData();
+                                                        MainManager.setBlockData(loc, data1);
+                                                        return true;
+                                                    }
 
-                                                                                                return Objects.requireNonNull(
-                                                                                                                      instance)
-                                                                                                              .getMaxTransmissionEnergy() >
-                                                                                                        data1.statNext;
-                                                                                            }));
+                                                    return Objects.requireNonNull(instance)
+                                                                  .getMaxTransmissionEnergy() > data1.statNext;
+                                                }));
 
                                if (optional.isPresent()) {
                                    Wire.PowerPacket packetClone = packet.clone();
                                    packetClone.amount -= energyLoss;
                                    packetClone.from = location;
-                                   Wire.WireData data2 = ((Wire.WireData) MainManager.getBlockData(optional.get()));
+                                   Wire.WireData data2 =
+                                           ((Wire.WireData) MainManager.getBlockData(optional.get()));
                                    double current = Objects.requireNonNull(data2).stat;
-                                   double max = ((Wire) Objects.requireNonNull(
-                                           MainManager.getBlockInstance(optional.get()))).getMaxTransmissionEnergy();
-                                   packetClone.amount = max < current + packetClone.amount ?
-                                           max - current :
+                                   double max = ((Wire) Objects.requireNonNull(MainManager.getBlockInstance(
+                                           optional.get()))).getMaxTransmissionEnergy();
+                                   packetClone.amount = max < current + packetClone.amount ? max - current :
                                            packetClone.amount;
                                    data2.nextPackets.add(packetClone);
                                    data2.statNext += packetClone.amount;
@@ -170,14 +158,9 @@ public class PowerManager {
                    });
 
         // Swap
-        MainManager.getBlockMapping()
-                   .values()
-                   .stream()
-                   .filter(base -> base instanceof Wire)
-                   .map(MainManager.blockDataProvider::blocksOf)
-                   .flatMap(Collection::stream)
-                   .map(MainManager::getBlockData)
-                   .forEach(data -> {
+        MainManager.getBlockMapping().values().stream().filter(base -> base instanceof Wire)
+                   .map(MainManager.blockDataProvider::blocksOf).flatMap(Collection::stream)
+                   .map(MainManager::getBlockData).forEach(data -> {
                        Wire.WireData temp = (Wire.WireData) data;
                        List<Wire.PowerPacket> packets = Objects.requireNonNull(temp).packets;
                        double stat = temp.stat;
@@ -208,15 +191,11 @@ public class PowerManager {
         }
 
         public boolean equals(final Object o) {
-            if (o == this)
-                return true;
-            if (!(o instanceof InputRequest))
-                return false;
+            if (o == this) return true;
+            if (!(o instanceof InputRequest)) return false;
             final InputRequest other = (InputRequest) o;
-            if (!other.canEqual(this))
-                return false;
-            if (Double.compare(this.power, other.power) != 0)
-                return false;
+            if (!other.canEqual(this)) return false;
+            if (Double.compare(this.power, other.power) != 0) return false;
             return Double.compare(this.result, other.result) == 0;
         }
 
@@ -249,15 +228,11 @@ public class PowerManager {
         }
 
         public boolean equals(final Object o) {
-            if (o == this)
-                return true;
-            if (!(o instanceof OutputRequest))
-                return false;
+            if (o == this) return true;
+            if (!(o instanceof OutputRequest)) return false;
             final OutputRequest other = (OutputRequest) o;
-            if (!other.canEqual(this))
-                return false;
-            if (Double.compare(this.power, other.power) != 0)
-                return false;
+            if (!other.canEqual(this)) return false;
+            if (Double.compare(this.power, other.power) != 0) return false;
             return Double.compare(this.result, other.result) == 0;
         }
 

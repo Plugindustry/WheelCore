@@ -32,18 +32,14 @@ public class NBTBasedProvider implements ItemDataProvider {
     @Nullable
     @Override
     public ItemBase getInstance(@Nullable ItemStack itemStack) {
-        if (itemStack == null)
-            return null;
-        Optional<NbtWrapper<?>> nbtWrapperOptional = NbtFactory.fromItemOptional((ItemStack) ShadowManager.shadowUnpack(
-                CraftItemStack.asCraftCopy(itemStack)));
-        if (nbtWrapperOptional.isEmpty())
-            return null;
+        if (itemStack == null) return null;
+        Optional<NbtWrapper<?>> nbtWrapperOptional = NbtFactory.fromItemOptional(
+                (ItemStack) ShadowManager.shadowUnpack(CraftItemStack.asCraftCopy(itemStack)));
+        if (nbtWrapperOptional.isEmpty()) return null;
         NbtWrapper<?> nbtWrapper = nbtWrapperOptional.get();
-        if (nbtWrapper.getType() != NbtType.TAG_COMPOUND)
-            return null;
+        if (nbtWrapper.getType() != NbtType.TAG_COMPOUND) return null;
         NbtCompound compound = NbtFactory.asCompound(nbtWrapper);
-        if (!compound.containsKey("wheel_core_item_type"))
-            return null;
+        if (!compound.containsKey("wheel_core_item_type")) return null;
         Object type = compound.getObject("wheel_core_item_type");
         return type instanceof String ? MainManager.getItemInstanceFromId((String) type) : null;
     }
@@ -51,18 +47,14 @@ public class NBTBasedProvider implements ItemDataProvider {
     @Nullable
     @Override
     public ItemData getData(@Nullable ItemStack itemStack) {
-        if (itemStack == null)
-            return null;
-        Optional<NbtWrapper<?>> nbtWrapperOptional = NbtFactory.fromItemOptional((ItemStack) ShadowManager.shadowUnpack(
-                CraftItemStack.asCraftCopy(itemStack)));
-        if (nbtWrapperOptional.isEmpty())
-            return null;
+        if (itemStack == null) return null;
+        Optional<NbtWrapper<?>> nbtWrapperOptional = NbtFactory.fromItemOptional(
+                (ItemStack) ShadowManager.shadowUnpack(CraftItemStack.asCraftCopy(itemStack)));
+        if (nbtWrapperOptional.isEmpty()) return null;
         NbtWrapper<?> nbtWrapper = nbtWrapperOptional.get();
-        if (nbtWrapper.getType() != NbtType.TAG_COMPOUND)
-            return null;
+        if (nbtWrapper.getType() != NbtType.TAG_COMPOUND) return null;
         NbtCompound compound = NbtFactory.asCompound(nbtWrapper);
-        if (!compound.containsKey("wheel_core_item_data"))
-            return null;
+        if (!compound.containsKey("wheel_core_item_data")) return null;
         Object data = compound.getObject("wheel_core_item_data");
         return data instanceof String ? gson.fromJson((String) data, ItemData.class) : null;
     }
@@ -71,64 +63,60 @@ public class NBTBasedProvider implements ItemDataProvider {
     @Override
     @SuppressWarnings("unchecked")
     public Set<String> getOreDictionary(@Nullable ItemStack itemStack) {
-        if (itemStack == null)
-            return Collections.emptySet();
-        Set<String> defaultOreDict = getInstance(itemStack) == null ?
-                ItemMapping.getVanillaOreDict(itemStack.getType()) :
-                Collections.emptySet();
-        Optional<NbtWrapper<?>> nbtWrapperOptional = NbtFactory.fromItemOptional((ItemStack) ShadowManager.shadowUnpack(
-                CraftItemStack.asCraftCopy(itemStack)));
-        if (nbtWrapperOptional.isEmpty())
-            return defaultOreDict;
+        if (itemStack == null) return Collections.emptySet();
+        Set<String> defaultOreDict =
+                getInstance(itemStack) == null ? ItemMapping.getVanillaOreDict(itemStack.getType()) :
+                        Collections.emptySet();
+        Optional<NbtWrapper<?>> nbtWrapperOptional = NbtFactory.fromItemOptional(
+                (ItemStack) ShadowManager.shadowUnpack(CraftItemStack.asCraftCopy(itemStack)));
+        if (nbtWrapperOptional.isEmpty()) return defaultOreDict;
         NbtWrapper<?> nbtWrapper = nbtWrapperOptional.get();
-        if (nbtWrapper.getType() != NbtType.TAG_COMPOUND)
-            return defaultOreDict;
+        if (nbtWrapper.getType() != NbtType.TAG_COMPOUND) return defaultOreDict;
         NbtCompound compound = NbtFactory.asCompound(nbtWrapper);
-        if (!compound.containsKey("wheel_core_item_ore_dictionary"))
-            return defaultOreDict;
+        if (!compound.containsKey("wheel_core_item_ore_dictionary")) return defaultOreDict;
         Object data = compound.getObject("wheel_core_item_ore_dictionary");
         if ((!(data instanceof NbtList)) || ((NbtList<?>) data).getElementType() != NbtType.TAG_STRING)
             return defaultOreDict;
-        return ((NbtList<String>) data).asCollection().stream().map(NbtBase::getValue).collect(Collectors.toSet());
+        return ((NbtList<String>) data).asCollection().stream().map(NbtBase::getValue)
+                                       .collect(Collectors.toSet());
     }
 
     @Override
     public void setInstance(@Nonnull ItemStack itemStack, @Nullable ItemBase instance) {
-        ItemStack newItemStack = (ItemStack) ShadowManager.shadowUnpack(CraftItemStack.asCraftCopy(itemStack));
+        ItemStack newItemStack =
+                (ItemStack) ShadowManager.shadowUnpack(CraftItemStack.asCraftCopy(itemStack));
         NbtWrapper<?> nbtWrapper = NbtFactory.fromItemTag(newItemStack);
-        NbtCompound compound = nbtWrapper.getType() == NbtType.TAG_COMPOUND ?
-                NbtFactory.asCompound(nbtWrapper) :
-                NbtFactory.ofCompound("tag");
-        if (instance == null)
-            compound.remove("wheel_core_item_type");
-        else
-            compound.put("wheel_core_item_type", MainManager.getIdFromInstance(instance));
+        NbtCompound compound =
+                nbtWrapper.getType() == NbtType.TAG_COMPOUND ? NbtFactory.asCompound(nbtWrapper) :
+                        NbtFactory.ofCompound("tag");
+        if (instance == null) compound.remove("wheel_core_item_type");
+        else compound.put("wheel_core_item_type", MainManager.getIdFromInstance(instance));
         NbtFactory.setItemTag(newItemStack, compound);
         itemStack.setItemMeta(newItemStack.getItemMeta());
     }
 
     @Override
     public void setData(@Nonnull ItemStack itemStack, @Nullable ItemData data) {
-        ItemStack newItemStack = (ItemStack) ShadowManager.shadowUnpack(CraftItemStack.asCraftCopy(itemStack));
+        ItemStack newItemStack =
+                (ItemStack) ShadowManager.shadowUnpack(CraftItemStack.asCraftCopy(itemStack));
         NbtWrapper<?> nbtWrapper = NbtFactory.fromItemTag(newItemStack);
-        NbtCompound compound = nbtWrapper.getType() == NbtType.TAG_COMPOUND ?
-                NbtFactory.asCompound(nbtWrapper) :
-                NbtFactory.ofCompound("tag");
-        if (data == null)
-            compound.remove("wheel_core_item_data");
-        else
-            compound.put("wheel_core_item_data", gson.toJson(data, ItemData.class));
+        NbtCompound compound =
+                nbtWrapper.getType() == NbtType.TAG_COMPOUND ? NbtFactory.asCompound(nbtWrapper) :
+                        NbtFactory.ofCompound("tag");
+        if (data == null) compound.remove("wheel_core_item_data");
+        else compound.put("wheel_core_item_data", gson.toJson(data, ItemData.class));
         NbtFactory.setItemTag(newItemStack, compound);
         itemStack.setItemMeta(newItemStack.getItemMeta());
     }
 
     @Override
     public void setOreDictionary(@Nonnull ItemStack itemStack, @Nonnull Set<String> oreDictionary) {
-        ItemStack newItemStack = (ItemStack) ShadowManager.shadowUnpack(CraftItemStack.asCraftCopy(itemStack));
+        ItemStack newItemStack =
+                (ItemStack) ShadowManager.shadowUnpack(CraftItemStack.asCraftCopy(itemStack));
         NbtWrapper<?> nbtWrapper = NbtFactory.fromItemTag(newItemStack);
-        NbtCompound compound = nbtWrapper.getType() == NbtType.TAG_COMPOUND ?
-                NbtFactory.asCompound(nbtWrapper) :
-                NbtFactory.ofCompound("tag");
+        NbtCompound compound =
+                nbtWrapper.getType() == NbtType.TAG_COMPOUND ? NbtFactory.asCompound(nbtWrapper) :
+                        NbtFactory.ofCompound("tag");
         compound.put("wheel_core_item_ore_dictionary",
                 NbtFactory.ofList("wheel_core_item_ore_dictionary", oreDictionary));
         NbtFactory.setItemTag(newItemStack, compound);

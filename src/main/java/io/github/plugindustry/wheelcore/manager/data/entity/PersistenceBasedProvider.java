@@ -35,25 +35,19 @@ public class PersistenceBasedProvider implements EntityDataProvider {
     @Override
     public void loadEntity(@Nonnull Entity entity) {
         String data = entity.getPersistentDataContainer().get(ENTITY_DATA_KEY, PersistentDataType.STRING);
-        if (data == null)
-            return;
+        if (data == null) return;
         EntityDescription description = gson.fromJson(data, EntityDescription.class);
-        if (MainManager.getEntityMapping().containsKey(description.id))
-            entityData.put(entity.getUniqueId(),
-                    Pair.of(MainManager.getEntityMapping().get(description.id), description.data));
+        if (MainManager.getEntityMapping().containsKey(description.id)) entityData.put(entity.getUniqueId(),
+                Pair.of(MainManager.getEntityMapping().get(description.id), description.data));
     }
 
     @Override
     public void unloadEntity(@Nonnull Entity entity) {
         UUID uuid = entity.getUniqueId();
-        if (!entityData.containsKey(uuid))
-            return;
+        if (!entityData.containsKey(uuid)) return;
         Pair<EntityBase, EntityData> pair = entityData.get(uuid);
-        entity.getPersistentDataContainer().set(ENTITY_DATA_KEY,
-                PersistentDataType.STRING,
-                gson.toJson(new EntityDescription(MainManager.getEntityMapping()
-                                                             .inverse()
-                                                             .get(pair.first),
+        entity.getPersistentDataContainer().set(ENTITY_DATA_KEY, PersistentDataType.STRING, gson.toJson(
+                new EntityDescription(MainManager.getEntityMapping().inverse().get(pair.first),
                         pair.second)));
         entityData.remove(uuid);
     }
@@ -61,13 +55,12 @@ public class PersistenceBasedProvider implements EntityDataProvider {
     @Override
     public void beforeSave() {
         entityData.keySet().removeIf(uuid -> Bukkit.getEntity(uuid) == null);
-        entityData.forEach((uuid, data) -> Objects.requireNonNull(Bukkit.getEntity(uuid))
-                                                  .getPersistentDataContainer()
-                                                  .set(ENTITY_DATA_KEY,
-                                                          PersistentDataType.STRING,
-                                                          gson.toJson(new EntityDescription(
-                                                                  MainManager.getIdFromInstance(data.first),
-                                                                  data.second))));
+        entityData.forEach(
+                (uuid, data) -> Objects.requireNonNull(Bukkit.getEntity(uuid)).getPersistentDataContainer()
+                                       .set(ENTITY_DATA_KEY, PersistentDataType.STRING, gson.toJson(
+                                               new EntityDescription(
+                                                       MainManager.getIdFromInstance(data.first),
+                                                       data.second))));
     }
 
     @Override
@@ -77,19 +70,20 @@ public class PersistenceBasedProvider implements EntityDataProvider {
     @Nullable
     @Override
     public EntityBase instanceOf(@Nonnull Entity entity) {
-        return entityData.containsKey(entity.getUniqueId()) ? entityData.get(entity.getUniqueId()).first : null;
+        return entityData.containsKey(entity.getUniqueId()) ? entityData.get(entity.getUniqueId()).first :
+                null;
     }
 
     @Nullable
     @Override
     public EntityData getData(@Nonnull Entity entity) {
-        return entityData.containsKey(entity.getUniqueId()) ? entityData.get(entity.getUniqueId()).second : null;
+        return entityData.containsKey(entity.getUniqueId()) ? entityData.get(entity.getUniqueId()).second :
+                null;
     }
 
     @Override
     public void setData(@Nonnull Entity entity, @Nullable EntityData data) {
-        if (entityData.containsKey(entity.getUniqueId()))
-            entityData.get(entity.getUniqueId()).second = data;
+        if (entityData.containsKey(entity.getUniqueId())) entityData.get(entity.getUniqueId()).second = data;
     }
 
     public static class EntityDescription {

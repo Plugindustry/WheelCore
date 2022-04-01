@@ -24,8 +24,7 @@ public class ClassicInventoryInteractor implements WindowInteractor, InventoryHo
 
     @Override
     public boolean processClick(InventoryClickInfo info) {
-        if (info.slotType == InventoryType.SlotType.OUTSIDE)
-            return false;
+        if (info.slotType == InventoryType.SlotType.OUTSIDE) return false;
         return window.onClick(InventoryUtil.convertToPos(info.slot, window.windowSize), info);
     }
 

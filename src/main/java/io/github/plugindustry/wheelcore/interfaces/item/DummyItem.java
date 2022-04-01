@@ -18,7 +18,8 @@ import java.util.Optional;
 
 public class DummyItem implements ItemBase, Interactive, Damageable {
     @Override
-    public boolean onInteract(@Nonnull Player player, @Nonnull Action action, @Nullable EquipmentSlot hand, @Nullable ItemStack tool, @Nullable Block block, @Nullable Entity entity) {
+    public boolean onInteract(@Nonnull Player player, @Nonnull Action action, @Nullable EquipmentSlot hand,
+                              @Nullable ItemStack tool, @Nullable Block block, @Nullable Entity entity) {
         return true;
     }
 

@@ -9,6 +9,7 @@ import io.github.plugindustry.wheelcore.WheelCore;
 import io.github.plugindustry.wheelcore.internal.shadow.CraftBlock;
 import io.github.plugindustry.wheelcore.internal.shadow.CraftPlayer;
 import io.github.plugindustry.wheelcore.internal.shadow.NMSBlock;
+import io.github.plugindustry.wheelcore.internal.shadow.Tag;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -50,7 +51,8 @@ public class PlayerUtil {
         WheelCore.protocolManager.broadcastServerPacket(packet);
     }
 
-    public static void sendPotionEffect(@Nonnull Player player, @Nonnull PotionEffectType type, byte amplifier, int duration, byte flag) {
+    public static void sendPotionEffect(@Nonnull Player player, @Nonnull PotionEffectType type,
+                                        byte amplifier, int duration, byte flag) {
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.ENTITY_EFFECT);
         packet.getIntegers().write(0, player.getEntityId());
         packet.getBytes().write(0, (byte) type.getId());
@@ -75,9 +77,8 @@ public class PlayerUtil {
         }
     }
 
-    // TODO: Compact API
     public static boolean isInWater(@Nonnull Player player) {
-        return player.isInWater();
+        return new CraftPlayer(player).getHandle().isInFluid(Tag.WATER_TAG);
     }
 
     public static void sendBlockBreak(@Nonnull Player player, @Nonnull Block block) {
@@ -113,12 +114,9 @@ public class PlayerUtil {
 
     public static boolean breakBlock(@Nonnull Player player, @Nonnull Block block) {
         sendBlockBreak(player, block);
-        return new CraftPlayer(player).getHandle()
-                                      .getInteractManager()
-                                      .breakBlock(new io.github.plugindustry.wheelcore.internal.shadow.BlockPosition(
-                                              BlockPosition.getConverter()
-                                                           .getGeneric(new BlockPosition(
-                                                                   block.getLocation()
-                                                                        .toVector()))));
+        return new CraftPlayer(player).getHandle().getInteractManager().breakBlock(
+                new io.github.plugindustry.wheelcore.internal.shadow.BlockPosition(
+                        BlockPosition.getConverter()
+                                     .getGeneric(new BlockPosition(block.getLocation().toVector()))));
     }
 }
