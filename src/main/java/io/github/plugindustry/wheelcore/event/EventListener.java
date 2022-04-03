@@ -52,6 +52,16 @@ public class EventListener implements Listener {
         else throw new IllegalArgumentException("Illegal matrix size");
     }
 
+    private static Comparator<Block> getSuitableComparator(BlockFace direction) {
+        if (direction.getModX() == 1) return Comparator.comparingDouble(Block::getX).reversed();
+        else if (direction.getModX() == -1) return Comparator.comparingDouble(Block::getX);
+        else if (direction.getModY() == 1) return Comparator.comparingDouble(Block::getY).reversed();
+        else if (direction.getModY() == -1) return Comparator.comparingDouble(Block::getY);
+        else if (direction.getModZ() == 1) return Comparator.comparingDouble(Block::getZ).reversed();
+        else if (direction.getModZ() == -1) return Comparator.comparingDouble(Block::getZ);
+        else throw new IllegalArgumentException("Invalid direction");
+    }
+
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onBlockPlace(BlockPlaceEvent event) {
         ItemBase instance = MainManager.getItemInstance(event.getItemInHand());
@@ -101,9 +111,7 @@ public class EventListener implements Listener {
 
         Location pistonLoc = piston.getLocation();
         blocks.stream().filter(block -> MainManager.hasBlock(block.getLocation()))
-              .sorted(Comparator.<Block>comparingDouble(
-                      block -> block.getLocation().distanceSquared(pistonLoc)).reversed())
-              .forEachOrdered(block -> {
+              .sorted(getSuitableComparator(direction)).forEachOrdered(block -> {
                   Location loc = block.getLocation();
                   BlockBase instance = MainManager.getBlockInstance(loc);
                   BlockData data = MainManager.getBlockData(loc);
@@ -128,8 +136,7 @@ public class EventListener implements Listener {
 
         Location pistonLoc = piston.getLocation();
         blocks.stream().filter(block -> MainManager.hasBlock(block.getLocation()))
-              .sorted(Comparator.comparingDouble(block -> block.getLocation().distanceSquared(pistonLoc)))
-              .forEachOrdered(block -> {
+              .sorted(getSuitableComparator(direction)).forEachOrdered(block -> {
                   Location loc = block.getLocation();
                   BlockBase instance = MainManager.getBlockInstance(loc);
                   BlockData data = MainManager.getBlockData(loc);
