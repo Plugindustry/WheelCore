@@ -21,5 +21,5 @@ public interface Interactive {
      * @return Whether this operation shouldn't be cancelled
      */
     boolean onInteract(@Nonnull Player player, @Nonnull Action action, @Nullable EquipmentSlot hand,
-                       @Nullable ItemStack tool, @Nullable Block block, @Nullable Entity entity);
+            @Nullable ItemStack tool, @Nullable Block block, @Nullable Entity entity);
 }

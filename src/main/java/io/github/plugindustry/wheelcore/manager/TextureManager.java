@@ -41,19 +41,18 @@ public class TextureManager {
         templatePacket.getModifier().writeDefaults();
 
         Class<?> PacketPlayOutTileEntityData = PacketType.Play.Server.TILE_ENTITY_DATA.getPacketClass();
-        Class TileEntityTypes = Arrays.stream(PacketPlayOutTileEntityData.getDeclaredFields())
-                                      .filter(field -> field.getType() != MinecraftReflection.getBlockPositionClass() && field.getType() != MinecraftReflection.getNBTCompoundClass())
-                                      .findFirst().orElseThrow(
-                        () -> new IllegalStateException("Can't find TileEntityTypes field")).getType();
+        @SuppressWarnings("rawtypes") Class TileEntityTypes = Arrays.stream(
+                        PacketPlayOutTileEntityData.getDeclaredFields())
+                .filter(field -> field.getType() != MinecraftReflection.getBlockPositionClass() &&
+                        field.getType() != MinecraftReflection.getNBTCompoundClass()).findFirst()
+                .orElseThrow(() -> new IllegalStateException("Can't find TileEntityTypes field")).getType();
 
         Reflections reflections = new Reflections(
-                new ConfigurationBuilder().forPackages(MinecraftReflection.getCraftBukkitPackage())
-                                          .setInputsFilter(new FilterBuilder().includePackage(
-                                                  MinecraftReflection.getCraftBukkitPackage()))
-                                          .setExpandSuperTypes(false));
+                new ConfigurationBuilder().forPackages(MinecraftReflection.getCraftBukkitPackage()).setInputsFilter(
+                                new FilterBuilder().includePackage(MinecraftReflection.getCraftBukkitPackage()))
+                        .setExpandSuperTypes(false));
         Class<?> CraftCreatureSpawner = reflections.getSubTypesOf(CreatureSpawner.class).stream().findFirst()
-                                                   .orElseThrow(() -> new IllegalStateException(
-                                                           "Can't find CraftCreatureSpawner"));
+                .orElseThrow(() -> new IllegalStateException("Can't find CraftCreatureSpawner"));
         if (!(CraftCreatureSpawner.getGenericSuperclass() instanceof ParameterizedType))
             throw new IllegalStateException("Can't find TileEntityMobSpawner");
         Class<?> TileEntityMobSpawner;
@@ -70,6 +69,7 @@ public class TextureManager {
         } catch (Exception e) {
             throw new IllegalStateException("Can't find spawner tile type", e);
         }
+        //noinspection unchecked
         templatePacket.getSpecificModifier(TileEntityTypes).write(0, spawnerTileType);
     }
 
@@ -100,8 +100,7 @@ public class TextureManager {
         if (!(instance instanceof TexturedBlock)) return;
         ItemStack textureItem = ((TexturedBlock) instance).getTextureItem(loc, player);
 
-        if (blockChange)
-            PlayerUtil.sendBlockChange(player, loc, WrappedBlockData.createData(Material.SPAWNER));
+        if (blockChange) PlayerUtil.sendBlockChange(player, loc, WrappedBlockData.createData(Material.SPAWNER));
         try {
             WheelCore.protocolManager.sendServerPacket(player, generatePacket(loc, textureItem));
         } catch (InvocationTargetException e) {
@@ -120,21 +119,19 @@ public class TextureManager {
 
     public static class PacketListener extends PacketAdapter {
         public PacketListener() {
-            super(PacketAdapter.params().serverSide().plugin(WheelCore.instance)
-                               .listenerPriority(ListenerPriority.LOW)
-                               .types(PacketType.Play.Server.BLOCK_CHANGE, PacketType.Play.Server.BLOCK_BREAK,
-                                       PacketType.Play.Server.MULTI_BLOCK_CHANGE,
-                                       PacketType.Play.Server.MAP_CHUNK));
+            super(PacketAdapter.params().serverSide().plugin(WheelCore.instance).listenerPriority(ListenerPriority.LOW)
+                    .types(PacketType.Play.Server.BLOCK_CHANGE, PacketType.Play.Server.BLOCK_BREAK,
+                            PacketType.Play.Server.MULTI_BLOCK_CHANGE, PacketType.Play.Server.MAP_CHUNK));
         }
 
         @Override
         public void onPacketSending(PacketEvent event) {
             PacketContainer packet = event.getPacket();
             Player player = event.getPlayer();
-            if (packet.getType() == PacketType.Play.Server.BLOCK_CHANGE || packet.getType() == PacketType.Play.Server.BLOCK_BREAK) {
+            if (packet.getType() == PacketType.Play.Server.BLOCK_CHANGE ||
+                    packet.getType() == PacketType.Play.Server.BLOCK_BREAK) {
                 BlockPosition pos = packet.getBlockPositionModifier().read(0);
-                if (MainManager.getBlockInstance(
-                        pos.toLocation(player.getWorld())) instanceof TexturedBlock) {
+                if (MainManager.getBlockInstance(pos.toLocation(player.getWorld())) instanceof TexturedBlock) {
                     packet.getBlockData().write(0, WrappedBlockData.createData(Material.SPAWNER));
                     Bukkit.getScheduler().runTask(WheelCore.instance,
                             () -> updateTexture(pos.toLocation(player.getWorld()), player, false));
@@ -148,23 +145,20 @@ public class TextureManager {
                 WrappedBlockData[] blockData = packet.getBlockDataArrays().read(0);
                 short[] blockPos = packet.getShortArrays().read(0);
                 for (int i = 0; i < blockPos.length; i++) {
-                    Location pos = basePos.clone().add(blockPos[i] >>> 8 & 15, blockPos[i] & 15,
-                            blockPos[i] >>> 4 & 15);
+                    Location pos = basePos.clone()
+                            .add(blockPos[i] >>> 8 & 15, blockPos[i] & 15, blockPos[i] >>> 4 & 15);
                     if (MainManager.getBlockInstance(pos) instanceof TexturedBlock) {
                         blockData[i] = WrappedBlockData.createData(Material.SPAWNER);
-                        Bukkit.getScheduler()
-                              .runTask(WheelCore.instance, () -> updateTexture(pos, player, false));
+                        Bukkit.getScheduler().runTask(WheelCore.instance, () -> updateTexture(pos, player, false));
                     }
                 }
                 packet.getBlockDataArrays().write(0, blockData);
                 event.setPacket(packet);
             } else if (packet.getType() == PacketType.Play.Server.MAP_CHUNK) {
-                Chunk chunk = player.getWorld()
-                                    .getChunkAt(packet.getIntegers().read(0), packet.getIntegers().read(1));
+                Chunk chunk = player.getWorld().getChunkAt(packet.getIntegers().read(0), packet.getIntegers().read(1));
                 Bukkit.getScheduler().runTask(WheelCore.instance,
                         () -> MainManager.blockDataProvider.blockInChunk(chunk).forEach(pos -> {
-                            if (MainManager.getBlockInstance(pos) instanceof TexturedBlock)
-                                updateTexture(pos, player);
+                            if (MainManager.getBlockInstance(pos) instanceof TexturedBlock) updateTexture(pos, player);
                         }));
             }
         }

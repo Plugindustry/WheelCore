@@ -21,8 +21,7 @@ public class ShapedRecipe implements CraftingRecipe {
     private final Map<RecipeChoice, Integer> damages = new HashMap<>();
 
     protected ShapedRecipe(List<List<RecipeChoice>> matrix, ItemStack result) {
-        if (matrix.size() <= 0 || matrix.size() > 3 || matrix.get(0).size() <= 0 || matrix.get(0)
-                                                                                          .size() > 3) {
+        if (matrix.size() <= 0 || matrix.size() > 3 || matrix.get(0).size() <= 0 || matrix.get(0).size() > 3) {
             throw new IllegalArgumentException("Incorrect size of recipe");
         }
         this.matrix = matrix;
@@ -30,7 +29,7 @@ public class ShapedRecipe implements CraftingRecipe {
     }
 
     static void checkItemDamage(List<List<ItemStack>> matrix, Map<Integer, ItemStack> damage,
-                                Map<RecipeChoice, Integer> damages) {
+            Map<RecipeChoice, Integer> damages) {
         for (int i = 0; i < matrix.size(); ++i) {
             List<ItemStack> row = matrix.get(i);
             for (int j = 0; j < row.size(); ++j) {
@@ -51,8 +50,7 @@ public class ShapedRecipe implements CraftingRecipe {
                             else flag = false;
                         } else if (itemBase != null) flag = false;
 
-                        if (flag)
-                            ItemStackUtil.setDurability(newIs, ItemStackUtil.getDurability(newIs) + realDmg);
+                        if (flag) ItemStackUtil.setDurability(newIs, ItemStackUtil.getDurability(newIs) + realDmg);
                         if (ItemStackUtil.getDurability(newIs) > newIs.getType().getMaxDurability())
                             newIs = new ItemStack(Material.AIR);
                         if (damage != null) damage.put(finalI * 3 + finalJ + 1, newIs);
@@ -69,8 +67,7 @@ public class ShapedRecipe implements CraftingRecipe {
         for (int i = 0; i < matrix.size(); i++) {
             List<ItemStack> row = matrix.get(i);
             for (int j = 0; j < row.size(); j++) {
-                if (this.matrix.size() > i && this.matrix.get(i).size() > j && this.matrix.get(i)
-                                                                                          .get(j) != null) {
+                if (this.matrix.size() > i && this.matrix.get(i).size() > j && this.matrix.get(i).get(j) != null) {
                     if (row.get(j) == null || !this.matrix.get(i).get(j).matches(row.get(j))) return false;
                 } else {
                     if (row.get(j) != null) return false;
@@ -91,9 +88,8 @@ public class ShapedRecipe implements CraftingRecipe {
     }
 
     public org.bukkit.inventory.RecipeChoice.MaterialChoice getChoiceAt(int slot) {
-        if (matrix.size() <= slot / 3 || matrix.get(slot / 3) == null || matrix.get(slot / 3)
-                                                                               .size() <= slot % 3 || matrix.get(
-                slot / 3).get(slot % 3) == null) return null;
+        if (matrix.size() <= slot / 3 || matrix.get(slot / 3) == null || matrix.get(slot / 3).size() <= slot % 3 ||
+                matrix.get(slot / 3).get(slot % 3) == null) return null;
         return matrix.get(slot / 3).get(slot % 3).getPlaceholderChoice();
     }
 

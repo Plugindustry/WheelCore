@@ -60,8 +60,8 @@ public class MultiBlockManager {
     }
 
     public static Set<Location> getAvailableStructures(BlockBase matchBase) {
-        return structuresMap.containsKey(matchBase) ?
-                Collections.unmodifiableSet(structuresMap.get(matchBase)) : Collections.emptySet();
+        return structuresMap.containsKey(matchBase) ? Collections.unmodifiableSet(structuresMap.get(matchBase)) :
+                Collections.emptySet();
     }
 
     public static Environment getStructureData(Location loc) {
@@ -94,8 +94,7 @@ public class MultiBlockManager {
             environment.setEnvironmentArg("location", orgLoc);
             for (Object op : ops) {
                 if (op instanceof Function) {
-                    if (!((Function<Environment, Boolean>) op).apply(environment))
-                        return Pair.of(false, environment);
+                    if (!((Function<Environment, Boolean>) op).apply(environment)) return Pair.of(false, environment);
                 } else if (op instanceof Consumer) ((Consumer<Environment>) op).accept(environment);
             }
 

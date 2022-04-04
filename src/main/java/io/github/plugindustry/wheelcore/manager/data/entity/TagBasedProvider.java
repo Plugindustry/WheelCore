@@ -31,14 +31,13 @@ public class TagBasedProvider implements EntityDataProvider {
     @Override
     public void loadEntity(@Nonnull Entity entity) {
         entity.getScoreboardTags().stream().filter(str -> str.startsWith("<WheelCoreData>")).findFirst()
-              .ifPresent(tag -> {
-                  entity.removeScoreboardTag(tag);
-                  EntityDescription description =
-                          gson.fromJson(tag.substring("<WheelCoreData>".length()), EntityDescription.class);
-                  if (MainManager.getEntityMapping().containsKey(description.id))
-                      entityData.put(entity.getUniqueId(),
-                              Pair.of(MainManager.getEntityMapping().get(description.id), description.data));
-              });
+                .ifPresent(tag -> {
+                    entity.removeScoreboardTag(tag);
+                    EntityDescription description = gson.fromJson(tag.substring("<WheelCoreData>".length()),
+                            EntityDescription.class);
+                    if (MainManager.getEntityMapping().containsKey(description.id)) entityData.put(entity.getUniqueId(),
+                            Pair.of(MainManager.getEntityMapping().get(description.id), description.data));
+                });
     }
 
     @Override
@@ -47,8 +46,7 @@ public class TagBasedProvider implements EntityDataProvider {
         if (!entityData.containsKey(uuid)) return;
         Pair<EntityBase, EntityData> pair = entityData.get(uuid);
         entity.addScoreboardTag("<WheelCoreData>" + gson.toJson(
-                new EntityDescription(MainManager.getEntityMapping().inverse().get(pair.first),
-                        pair.second)));
+                new EntityDescription(MainManager.getEntityMapping().inverse().get(pair.first), pair.second)));
         entityData.remove(uuid);
     }
 
@@ -56,29 +54,27 @@ public class TagBasedProvider implements EntityDataProvider {
     public void beforeSave() {
         entityData.keySet().removeIf(uuid -> Bukkit.getEntity(uuid) == null);
         entityData.forEach((uuid, data) -> Objects.requireNonNull(Bukkit.getEntity(uuid)).addScoreboardTag(
-                "<WheelCoreData>" + gson.toJson(
-                        new EntityDescription(MainManager.getIdFromInstance(data.first), data.second))));
+                "<WheelCoreData>" +
+                        gson.toJson(new EntityDescription(MainManager.getIdFromInstance(data.first), data.second))));
     }
 
     @Override
     public void afterSave() {
         entityData.keySet().stream().map(Bukkit::getEntity).filter(Objects::nonNull).forEach(
                 entity -> entity.getScoreboardTags().stream().filter(str -> str.startsWith("<WheelCoreData>"))
-                                .forEach(entity::removeScoreboardTag));
+                        .forEach(entity::removeScoreboardTag));
     }
 
     @Nullable
     @Override
     public EntityBase instanceOf(@Nonnull Entity entity) {
-        return entityData.containsKey(entity.getUniqueId()) ? entityData.get(entity.getUniqueId()).first :
-                null;
+        return entityData.containsKey(entity.getUniqueId()) ? entityData.get(entity.getUniqueId()).first : null;
     }
 
     @Nullable
     @Override
     public EntityData getData(@Nonnull Entity entity) {
-        return entityData.containsKey(entity.getUniqueId()) ? entityData.get(entity.getUniqueId()).second :
-                null;
+        return entityData.containsKey(entity.getUniqueId()) ? entityData.get(entity.getUniqueId()).second : null;
     }
 
     @Override

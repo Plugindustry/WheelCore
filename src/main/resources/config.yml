@@ -1,4 +1,4 @@
-autosave-delay: 120
+auto-save-delay: 120
 debug: false
 
 fallback-lang: en-US

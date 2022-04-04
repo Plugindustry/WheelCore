@@ -29,8 +29,7 @@ public class ItemMapping {
 
     public static void registerVanillaOreDict(@Nonnull Material type, @Nonnull Set<String> dict) {
         dict.forEach(dictName -> {
-            if (!dictMaterial.containsKey(dictName))
-                dictMaterial.put(dictName, EnumSet.noneOf(Material.class));
+            if (!dictMaterial.containsKey(dictName)) dictMaterial.put(dictName, EnumSet.noneOf(Material.class));
             dictMaterial.get(dictName).add(type);
         });
         if (vanillaOreDict.containsKey(type)) vanillaOreDict.get(type).addAll(dict);

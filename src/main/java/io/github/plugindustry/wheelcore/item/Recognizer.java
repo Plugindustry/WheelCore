@@ -16,14 +16,13 @@ import javax.annotation.Nullable;
 public class Recognizer extends DummyItem {
     @Override
     public boolean onInteract(@Nonnull Player player, @Nonnull Action action, @Nullable EquipmentSlot hand,
-                              @Nullable ItemStack tool, @Nullable Block block, @Nullable Entity entity) {
+            @Nullable ItemStack tool, @Nullable Block block, @Nullable Entity entity) {
         if (block != null && action == Action.RIGHT_CLICK_BLOCK) {
             StringBuilder builder = new StringBuilder();
             builder.append(block.getType().name());
             if (MainManager.hasBlock(block.getLocation())) {
                 builder.append(' ');
-                builder.append(
-                        MainManager.getIdFromInstance(MainManager.getBlockInstance(block.getLocation())));
+                builder.append(MainManager.getIdFromInstance(MainManager.getBlockInstance(block.getLocation())));
                 builder.append(' ');
                 builder.append(MainManager.getBlockData(block.getLocation()));
             }

@@ -10,8 +10,10 @@
 ![GitHub issues](https://img.shields.io/github/issues/czm23333/IndustrialWorld)
 ![Spigot 1.15.1](https://img.shields.io/badge/spigot-1.16.5-blue)
 
-WheelCore is a plugin developed for Bukkit/Spigot Minecraft server, which can be used as the backend of plugins like IndustrialWorld to generate Mod-like effects on Minecraft servers.  
-The plugin can be used to offer more ores, machines, cool weapons and strong armors, creating a brand new way to play Minecraft.   
+WheelCore is a plugin developed for Bukkit/Spigot Minecraft server, which can be used as the backend of plugins like
+IndustrialWorld to generate Mod-like effects on Minecraft servers.  
+The plugin can be used to offer more ores, machines, cool weapons and strong armors, creating a brand-new way to play
+Minecraft.   
 Moreover, no server mods needed to work.
 
 ## Under Development (Almost finished) :D  

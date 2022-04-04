@@ -16,5 +16,5 @@ public interface Ignitable {
      * @return Whether the block should be ignited
      */
     boolean onIgnite(@Nonnull Block block, BlockIgniteEvent.IgniteCause cause, @Nullable Block ignitingBlock,
-                     @Nullable Entity ignitingEntity);
+            @Nullable Entity ignitingEntity);
 }

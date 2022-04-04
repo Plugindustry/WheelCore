@@ -3,6 +3,7 @@ package io.github.plugindustry.wheelcore.internal.shadow;
 import io.github.czm23333.transparentreflect.annotations.Shadow;
 
 @Shadow("nms/PlayerInteractManager")
+@SuppressWarnings("all")
 public class PlayerInteractManager {
     public PlayerInteractManager(Object o) {
     }

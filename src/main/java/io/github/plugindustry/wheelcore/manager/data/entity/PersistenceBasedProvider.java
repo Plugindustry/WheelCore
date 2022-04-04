@@ -47,20 +47,16 @@ public class PersistenceBasedProvider implements EntityDataProvider {
         if (!entityData.containsKey(uuid)) return;
         Pair<EntityBase, EntityData> pair = entityData.get(uuid);
         entity.getPersistentDataContainer().set(ENTITY_DATA_KEY, PersistentDataType.STRING, gson.toJson(
-                new EntityDescription(MainManager.getEntityMapping().inverse().get(pair.first),
-                        pair.second)));
+                new EntityDescription(MainManager.getEntityMapping().inverse().get(pair.first), pair.second)));
         entityData.remove(uuid);
     }
 
     @Override
     public void beforeSave() {
         entityData.keySet().removeIf(uuid -> Bukkit.getEntity(uuid) == null);
-        entityData.forEach(
-                (uuid, data) -> Objects.requireNonNull(Bukkit.getEntity(uuid)).getPersistentDataContainer()
-                                       .set(ENTITY_DATA_KEY, PersistentDataType.STRING, gson.toJson(
-                                               new EntityDescription(
-                                                       MainManager.getIdFromInstance(data.first),
-                                                       data.second))));
+        entityData.forEach((uuid, data) -> Objects.requireNonNull(Bukkit.getEntity(uuid)).getPersistentDataContainer()
+                .set(ENTITY_DATA_KEY, PersistentDataType.STRING,
+                        gson.toJson(new EntityDescription(MainManager.getIdFromInstance(data.first), data.second))));
     }
 
     @Override
@@ -70,15 +66,13 @@ public class PersistenceBasedProvider implements EntityDataProvider {
     @Nullable
     @Override
     public EntityBase instanceOf(@Nonnull Entity entity) {
-        return entityData.containsKey(entity.getUniqueId()) ? entityData.get(entity.getUniqueId()).first :
-                null;
+        return entityData.containsKey(entity.getUniqueId()) ? entityData.get(entity.getUniqueId()).first : null;
     }
 
     @Nullable
     @Override
     public EntityData getData(@Nonnull Entity entity) {
-        return entityData.containsKey(entity.getUniqueId()) ? entityData.get(entity.getUniqueId()).second :
-                null;
+        return entityData.containsKey(entity.getUniqueId()) ? entityData.get(entity.getUniqueId()).second : null;
     }
 
     @Override

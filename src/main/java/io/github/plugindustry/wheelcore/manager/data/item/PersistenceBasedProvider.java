@@ -25,8 +25,8 @@ import java.util.Set;
 public class PersistenceBasedProvider implements ItemDataProvider {
     private static final NamespacedKey ITEM_TYPE_KEY = new NamespacedKey(WheelCore.instance, "item_type");
     private static final NamespacedKey ITEM_DATA_KEY = new NamespacedKey(WheelCore.instance, "item_data");
-    private static final NamespacedKey ITEM_ORE_DICTIONARY_KEY =
-            new NamespacedKey(WheelCore.instance, "item_ore_dictionary");
+    private static final NamespacedKey ITEM_ORE_DICTIONARY_KEY = new NamespacedKey(WheelCore.instance,
+            "item_ore_dictionary");
     private static final Gson gson;
 
     static {
@@ -42,7 +42,7 @@ public class PersistenceBasedProvider implements ItemDataProvider {
         if (itemStack == null || !itemStack.hasItemMeta()) return null;
         return MainManager.getItemInstanceFromId(
                 Objects.requireNonNull(itemStack.getItemMeta()).getPersistentDataContainer()
-                       .get(ITEM_TYPE_KEY, PersistentDataType.STRING));
+                        .get(ITEM_TYPE_KEY, PersistentDataType.STRING));
     }
 
     @Nullable
@@ -50,7 +50,7 @@ public class PersistenceBasedProvider implements ItemDataProvider {
     public ItemData getData(@Nullable ItemStack itemStack) {
         if (itemStack == null || !itemStack.hasItemMeta()) return null;
         String data = Objects.requireNonNull(itemStack.getItemMeta()).getPersistentDataContainer()
-                             .get(ITEM_DATA_KEY, PersistentDataType.STRING);
+                .get(ITEM_DATA_KEY, PersistentDataType.STRING);
         return data == null ? null : gson.fromJson(data, ItemData.class);
     }
 
@@ -63,7 +63,7 @@ public class PersistenceBasedProvider implements ItemDataProvider {
                         Collections.emptySet();
         if (!itemStack.hasItemMeta()) return defaultOreDict;
         byte[] bytes = Objects.requireNonNull(itemStack.getItemMeta()).getPersistentDataContainer()
-                              .get(ITEM_ORE_DICTIONARY_KEY, PersistentDataType.BYTE_ARRAY);
+                .get(ITEM_ORE_DICTIONARY_KEY, PersistentDataType.BYTE_ARRAY);
         String oreDict = bytes == null ? null : new String(bytes, StandardCharsets.UTF_8);
         return oreDict == null ? defaultOreDict : gson.fromJson(oreDict, new TypeToken<Set<String>>() {
         }.getType());
@@ -80,9 +80,8 @@ public class PersistenceBasedProvider implements ItemDataProvider {
         } else {
             ItemMeta meta = itemStack.hasItemMeta() ? Objects.requireNonNull(itemStack.getItemMeta()) :
                     Bukkit.getItemFactory().getItemMeta(itemStack.getType());
-            Objects.requireNonNull(meta).getPersistentDataContainer()
-                   .set(ITEM_TYPE_KEY, PersistentDataType.STRING,
-                           Objects.requireNonNull(MainManager.getIdFromInstance(instance)));
+            Objects.requireNonNull(meta).getPersistentDataContainer().set(ITEM_TYPE_KEY, PersistentDataType.STRING,
+                    Objects.requireNonNull(MainManager.getIdFromInstance(instance)));
             itemStack.setItemMeta(meta);
         }
     }
@@ -99,7 +98,7 @@ public class PersistenceBasedProvider implements ItemDataProvider {
             ItemMeta meta = itemStack.hasItemMeta() ? Objects.requireNonNull(itemStack.getItemMeta()) :
                     Bukkit.getItemFactory().getItemMeta(itemStack.getType());
             Objects.requireNonNull(meta).getPersistentDataContainer()
-                   .set(ITEM_DATA_KEY, PersistentDataType.STRING, gson.toJson(data, ItemData.class));
+                    .set(ITEM_DATA_KEY, PersistentDataType.STRING, gson.toJson(data, ItemData.class));
             itemStack.setItemMeta(meta);
         }
     }
@@ -109,9 +108,9 @@ public class PersistenceBasedProvider implements ItemDataProvider {
         ItemMeta meta = itemStack.hasItemMeta() ? Objects.requireNonNull(itemStack.getItemMeta()) :
                 Bukkit.getItemFactory().getItemMeta(itemStack.getType());
         Objects.requireNonNull(meta).getPersistentDataContainer()
-               .set(ITEM_ORE_DICTIONARY_KEY, PersistentDataType.BYTE_ARRAY,
-                       gson.toJson(oreDictionary, new TypeToken<Set<String>>() {
-                       }.getType()).getBytes(StandardCharsets.UTF_8));
+                .set(ITEM_ORE_DICTIONARY_KEY, PersistentDataType.BYTE_ARRAY,
+                        gson.toJson(oreDictionary, new TypeToken<Set<String>>() {
+                        }.getType()).getBytes(StandardCharsets.UTF_8));
         itemStack.setItemMeta(meta);
     }
 }

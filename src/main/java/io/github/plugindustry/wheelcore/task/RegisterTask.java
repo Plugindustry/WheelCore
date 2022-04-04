@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import java.util.EnumSet;
 import java.util.HashSet;
 
+@SuppressWarnings("EmptyMethod")
 public class RegisterTask {
     public static void registerRecipes() {
         // Example:
@@ -26,15 +27,13 @@ public class RegisterTask {
     }
 
     public static void registerVanillaOreDict() {
-        EnumSet<Material> food =
-                EnumSet.of(Material.APPLE, Material.BREAD, Material.COOKED_BEEF, Material.COOKED_CHICKEN,
-                        Material.COOKED_COD, Material.COOKED_MUTTON, Material.COOKED_PORKCHOP,
-                        Material.COOKED_RABBIT, Material.COOKED_SALMON, Material.COOKIE,
-                        Material.GOLDEN_APPLE, Material.ENCHANTED_GOLDEN_APPLE, Material.GOLDEN_CARROT,
-                        Material.MUSHROOM_STEW, Material.MELON_SLICE, Material.POTATO, Material.PUMPKIN_PIE,
-                        Material.RABBIT_STEW, Material.BEEF, Material.CHICKEN, Material.COD, Material.MUTTON,
-                        Material.PORKCHOP, Material.RABBIT, Material.SALMON, Material.SPIDER_EYE,
-                        Material.ROTTEN_FLESH);
+        EnumSet<Material> food = EnumSet.of(Material.APPLE, Material.BREAD, Material.COOKED_BEEF,
+                Material.COOKED_CHICKEN, Material.COOKED_COD, Material.COOKED_MUTTON, Material.COOKED_PORKCHOP,
+                Material.COOKED_RABBIT, Material.COOKED_SALMON, Material.COOKIE, Material.GOLDEN_APPLE,
+                Material.ENCHANTED_GOLDEN_APPLE, Material.GOLDEN_CARROT, Material.MUSHROOM_STEW, Material.MELON_SLICE,
+                Material.POTATO, Material.PUMPKIN_PIE, Material.RABBIT_STEW, Material.BEEF, Material.CHICKEN,
+                Material.COD, Material.MUTTON, Material.PORKCHOP, Material.RABBIT, Material.SALMON, Material.SPIDER_EYE,
+                Material.ROTTEN_FLESH);
         for (Material type : Material.values()) {
             if (!type.isItem()) continue;
             HashSet<String> dict = new HashSet<>();

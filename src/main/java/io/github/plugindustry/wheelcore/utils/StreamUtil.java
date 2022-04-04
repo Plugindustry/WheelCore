@@ -9,7 +9,7 @@ public class StreamUtil {
     private static final Random r = new Random();
 
     public static <T> Optional<T> randomPick(Stream<T> stream) {
-        return stream.reduce(new BinaryOperator<T>() {
+        return stream.reduce(new BinaryOperator<>() {
             private int curSize = 0;
 
             @Override

@@ -3,6 +3,7 @@ package io.github.plugindustry.wheelcore.internal.shadow;
 import io.github.czm23333.transparentreflect.annotations.Shadow;
 
 @Shadow("nms/ItemStack")
+@SuppressWarnings("all")
 public class NMSItemStack {
     public NMSItemStack(Object o) {
     }

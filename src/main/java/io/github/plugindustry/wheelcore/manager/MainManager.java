@@ -36,8 +36,11 @@ public class MainManager {
     private static final BiMap<String, ItemBase> itemMapping = HashBiMap.create();
     private static final BiMap<String, EntityBase> entityMapping = HashBiMap.create();
     private static final Queue<Runnable> postTickTasks = new ArrayDeque<>();
+    @SuppressWarnings("CanBeFinal")
     public static BlockDataProvider blockDataProvider = BlockDataProvider.defaultProvider();
+    @SuppressWarnings("CanBeFinal")
     public static EntityDataProvider entityDataProvider = EntityDataProvider.defaultProvider();
+    @SuppressWarnings("CanBeFinal")
     public static ItemDataProvider itemDataProvider = ItemDataProvider.defaultProvider();
 
     public static void update() {

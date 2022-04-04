@@ -32,8 +32,16 @@ public final class WheelCore extends JavaPlugin {
     public void onEnable() {
         // Plugin startup logic
         // Startup logo
-        getLogger().info(
-                "\n __          ___               _  _____               \n" + " \\ \\        / / |             | |/ ____|              \n" + "  \\ \\  /\\  / /| |__   ___  ___| | |     ___  _ __ ___ \n" + "   \\ \\/  \\/ / | '_ \\ / _ \\/ _ \\ | |    / _ \\| '__/ _ \\\n" + "    \\  /\\  /  | | | |  __/  __/ | |___| (_) | | |  __/\n" + "     \\/  \\/   |_| |_|\\___|\\___|_|\\_____\\___/|_|  \\___|\n" + "                                                      \n" + "                                                      ");
+        getLogger().info("""
+
+                __          ___               _  _____              \s
+                \\ \\        / / |             | |/ ____|             \s
+                 \\ \\  /\\  / /| |__   ___  ___| | |     ___  _ __ ___\s
+                  \\ \\/  \\/ / | '_ \\ / _ \\/ _ \\ | |    / _ \\| '__/ _ \\
+                   \\  /\\  /  | | | |  __/  __/ | |___| (_) | | |  __/
+                    \\/  \\/   |_| |_|\\___|\\___|_|\\_____\\___/|_|  \\___|
+                                                                    \s
+                                                                    \s""".indent(1));
 
         instance = this;
 
@@ -81,9 +89,9 @@ public final class WheelCore extends JavaPlugin {
             @Override
             public boolean isLoggable(LogRecord record) {
                 return (old == null || old.isLoggable(record)) && !record.getMessage()
-                                                                         .equals("A manual (plugin-induced) save has been detected while server is configured to auto-save. This may affect performance.") && !record.getMessage()
-                                                                                                                                                                                                                     .endsWith(
-                                                                                                                                                                                                                             "Bukkit will attempt to fix this, but there may be additional damage that we cannot recover.");
+                        .equals("A manual (plugin-induced) save has been detected while server is configured to auto-save. This may affect performance.") &&
+                        !record.getMessage().endsWith(
+                                "Bukkit will attempt to fix this, but there may be additional damage that we cannot recover.");
             }
         });
     }

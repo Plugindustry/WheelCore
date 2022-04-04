@@ -25,14 +25,13 @@ public class Tester extends DummyItem {
     public Tester() {
         window = new Window(new SlotSize(9, 6), "Test");
         window.addWidget(new WidgetProgressBar("process_1"), new Position(2, 3));
-        window.addWidget(new WidgetFixedItem("f_1", new ItemStack(Material.IRON_INGOT, 1)),
-                new Position(3, 5));
+        window.addWidget(new WidgetFixedItem("f_1", new ItemStack(Material.IRON_INGOT, 1)), new Position(3, 5));
         windowInteractor = new ClassicInventoryInteractor(window);
     }
 
     @Override
     public boolean onInteract(@Nonnull Player player, @Nonnull Action action, @Nullable EquipmentSlot hand,
-                              @Nullable ItemStack tool, @Nullable Block block, @Nullable Entity entity) {
+            @Nullable ItemStack tool, @Nullable Block block, @Nullable Entity entity) {
         if (block != null && action == Action.RIGHT_CLICK_BLOCK) {
             player.openInventory(windowInteractor.getInventory());
             ((WidgetProgressBar) window.getWidgetMap().get("process_1").second).setProgress(0.6);

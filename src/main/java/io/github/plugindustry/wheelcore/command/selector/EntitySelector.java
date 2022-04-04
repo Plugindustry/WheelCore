@@ -59,7 +59,7 @@ public class EntitySelector {
 
         String args = selector.substring(2).trim();
 
-        // there is not arguments.
+        // there is no arguments.
         if (args.isEmpty()) {
             List<Entity> entities = getEntities(sortMethod);
             if (target == 'r' || target == 'p') {
@@ -77,7 +77,8 @@ public class EntitySelector {
             return;
         }
         if (!args.matches(
-                "^\\[(.+=[0-9a-zA-Z.\\-\\\\?!@#$%^&*()=+\\[\\];':\"|/>_<]*,?)*(.+=[0-9a-zA-Z.\\-\\\\?!@#$%^&*()" + "=+\\[\\];':\"|/>_<]*)+]$")) {
+                "^\\[(.+=[0-9a-zA-Z.\\-\\\\?!@#$%^&*()=+\\[\\];':\"|/>_<]*,?)*(.+=[0-9a-zA-Z.\\-\\\\?!@#$%^&*()" +
+                        "=+\\[\\];':\"|/>_<]*)+]$")) {
             sender.sendMessage(ChatColor.RED + "Wrong syntax for selector.");
             return;
         }
@@ -124,7 +125,7 @@ public class EntitySelector {
     }
 
     private void createPredicates(Map<String, String> predicateStringPair,
-                                  List<Predicate<Entity>> allPredicates) throws SelectorSyntaxException {
+            List<Predicate<Entity>> allPredicates) throws SelectorSyntaxException {
         if (predicateStringPair.containsKey("score")) {
             allPredicates.addAll(analyzeScorePredicate(predicateStringPair.get("score")));
         }
@@ -138,16 +139,16 @@ public class EntitySelector {
             baseLoc.setY(Double.parseDouble(predicateStringPair.get("z")));
         }
         if (predicateStringPair.containsKey("distance")) {
-            if (predicateStringPair.containsKey("dx") || predicateStringPair.containsKey(
-                    "dy") || predicateStringPair.containsKey("dz")) {
+            if (predicateStringPair.containsKey("dx") || predicateStringPair.containsKey("dy") ||
+                    predicateStringPair.containsKey("dz")) {
                 throw new SelectorSyntaxException();
             }
             // distance predicate
             double distance = Double.parseDouble(predicateStringPair.get("distance"));
             allPredicates.add((entity) -> entity.getLocation().distance(baseLoc) < distance);
         }
-        if (predicateStringPair.containsKey("dx") && predicateStringPair.containsKey(
-                "dy") && predicateStringPair.containsKey("dz")) {
+        if (predicateStringPair.containsKey("dx") && predicateStringPair.containsKey("dy") &&
+                predicateStringPair.containsKey("dz")) {
             if (predicateStringPair.containsKey("distance")) {
                 throw new SelectorSyntaxException();
             }
@@ -171,8 +172,8 @@ public class EntitySelector {
                     return false;
                 }
                 // check if it is in the abs val
-                return Math.abs(dx) > Math.abs(entityVec.getX()) && Math.abs(dy) > Math.abs(
-                        entityVec.getY()) && Math.abs(dz) > Math.abs(entityVec.getZ());
+                return Math.abs(dx) > Math.abs(entityVec.getX()) && Math.abs(dy) > Math.abs(entityVec.getY()) &&
+                        Math.abs(dz) > Math.abs(entityVec.getZ());
             });
         }
         if (predicateStringPair.containsKey("team")) {
@@ -224,10 +225,9 @@ public class EntitySelector {
             int finalLevelMin = levelMin;
             int finalLevelMax = levelMax;
             allPredicates.add((entity) -> {
-                if (!(entity instanceof Player)) {
+                if (!(entity instanceof Player p)) {
                     return false;
                 }
-                Player p = (Player) entity;
 
                 return p.getLevel() <= finalLevelMax && p.getLevel() >= finalLevelMin;
             });
@@ -286,9 +286,8 @@ public class EntitySelector {
             final int rotationXMin = rotationMin;
             final int rotationXMax = rotationMax;
 
-            allPredicates.add(
-                    (entity) -> entity.getLocation().getPitch() >= rotationXMin && entity.getLocation()
-                                                                                         .getPitch() <= rotationXMax);
+            allPredicates.add((entity) -> entity.getLocation().getPitch() >= rotationXMin &&
+                    entity.getLocation().getPitch() <= rotationXMax);
         }
         if (predicateStringPair.containsKey("y_rotation")) {
             int rotationMin;
@@ -344,8 +343,7 @@ public class EntitySelector {
         return Collections.unmodifiableList(selectedEntity);
     }
 
-    private List<Predicate<Entity>> analyzeScorePredicate(
-            String scorePredicateRaw) throws SelectorSyntaxException {
+    private List<Predicate<Entity>> analyzeScorePredicate(String scorePredicateRaw) throws SelectorSyntaxException {
         if (Bukkit.getScoreboardManager() == null) {
             return new LinkedList<>(); // not supported.
         }
@@ -405,8 +403,8 @@ public class EntitySelector {
                         return false;
                     }
 
-                    return o.getScore(getEntityName(entity)).getScore() > finalScoreMinVal && o.getScore(
-                            getEntityName(entity)).getScore() < finalScoreMaxVal;
+                    return o.getScore(getEntityName(entity)).getScore() > finalScoreMinVal &&
+                            o.getScore(getEntityName(entity)).getScore() < finalScoreMaxVal;
                 });
             }
         }
@@ -421,18 +419,12 @@ public class EntitySelector {
 
         List<Entity> e = new LinkedList<>(baseLoc.getWorld().getEntities());
         switch (sortMethod) {
-            case NEAREST:
-                e.sort(Comparator.comparingDouble(en -> baseLoc.distance(en.getLocation())));
-                break;
-            case FURTHEST:
-                e.sort((en1, en2) -> (int) Math.ceil(
-                        baseLoc.distance(en2.getLocation()) - baseLoc.distance(en1.getLocation())));
-                break;
-            case RANDOM:
-                Collections.shuffle(e);
-                break;
-            default:
-                break;
+            case NEAREST -> e.sort(Comparator.comparingDouble(en -> baseLoc.distance(en.getLocation())));
+            case FURTHEST -> e.sort((en1, en2) -> (int) Math.ceil(
+                    baseLoc.distance(en2.getLocation()) - baseLoc.distance(en1.getLocation())));
+            case RANDOM -> Collections.shuffle(e);
+            default -> {
+            }
         }
         return e;
     }

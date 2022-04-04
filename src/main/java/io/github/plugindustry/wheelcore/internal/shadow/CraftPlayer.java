@@ -3,6 +3,7 @@ package io.github.plugindustry.wheelcore.internal.shadow;
 import io.github.czm23333.transparentreflect.annotations.Shadow;
 
 @Shadow("cb/CraftPlayer")
+@SuppressWarnings("all")
 public class CraftPlayer {
     public CraftPlayer(Object o) {
     }

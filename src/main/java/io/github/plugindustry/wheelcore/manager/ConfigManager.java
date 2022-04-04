@@ -15,9 +15,8 @@ public class ConfigManager {
     public static void init() {
         File dataFolder = WheelCore.instance.getDataFolder();
 
-        if (!dataFolder.isDirectory()) {
-            dataFolder.mkdirs();
-        }
+        if (!(dataFolder.isDirectory() || dataFolder.mkdirs()))
+            throw new RuntimeException("Failed to create date folder");
 
         File config_yml = new File(dataFolder, "config.yml");
         if (!(config_yml.isFile())) {
@@ -25,7 +24,7 @@ public class ConfigManager {
         }
         config = YamlConfiguration.loadConfiguration(config_yml);
 
-        autoSaveDelay = config.getInt("autosave-delay", 0);
+        autoSaveDelay = config.getInt("auto-save-delay", 0);
         debug = config.getBoolean("debug", false);
         fallbackLang = Locale.forLanguageTag(config.getString("fallback-lang", "en-US"));
     }

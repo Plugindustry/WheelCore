@@ -103,8 +103,8 @@ public class ChunkBasedProvider implements BlockDataProvider {
 
         BlockBase base = instanceAt(block);
         if (baseBlocks.containsKey(base)) baseBlocks.get(base).remove(block);
-        if (blockInChunks.containsKey(block.getWorld()) && blockInChunks.get(block.getWorld())
-                                                                        .containsKey(chunkDescAt(block)))
+        if (blockInChunks.containsKey(block.getWorld()) &&
+                blockInChunks.get(block.getWorld()).containsKey(chunkDescAt(block)))
             blockInChunks.get(block.getWorld()).get(chunkDescAt(block)).remove(block);
         blocks.remove(block);
     }
@@ -113,9 +113,8 @@ public class ChunkBasedProvider implements BlockDataProvider {
     public void loadChunk(@Nonnull Chunk chunk) {
         //DebuggingLogger.debug("Load chunk " + chunk.getX() + " " + chunk.getZ());
         World world = chunk.getWorld();
-        List<BlockDescription> blockList = gson.fromJson(chunk.getPersistentDataContainer()
-                                                              .getOrDefault(CHUNK_DATA_KEY,
-                                                                      PersistentDataType.STRING, "[]"),
+        List<BlockDescription> blockList = gson.fromJson(
+                chunk.getPersistentDataContainer().getOrDefault(CHUNK_DATA_KEY, PersistentDataType.STRING, "[]"),
                 new TypeToken<List<BlockDescription>>() {
                 }.getType());
         for (BlockDescription desc : blockList)
@@ -147,7 +146,7 @@ public class ChunkBasedProvider implements BlockDataProvider {
             }
 
             chunk.getPersistentDataContainer()
-                 .set(CHUNK_DATA_KEY, PersistentDataType.STRING, gson.toJson(descriptions));
+                    .set(CHUNK_DATA_KEY, PersistentDataType.STRING, gson.toJson(descriptions));
         }
     }
 
@@ -176,8 +175,7 @@ public class ChunkBasedProvider implements BlockDataProvider {
         if (blockInChunks.containsKey(chunk.getWorld()))
             if (blockInChunks.get(chunk.getWorld()).containsKey(compress(chunk.getX(), chunk.getZ())))
                 return CollectionUtil.unmodifiableCopyOnReadSet(
-                        blockInChunks.get(chunk.getWorld()).get(compress(chunk.getX(), chunk.getZ())),
-                        Location::clone);
+                        blockInChunks.get(chunk.getWorld()).get(compress(chunk.getX(), chunk.getZ())), Location::clone);
             else return Collections.emptySet();
         else return Collections.emptySet();
     }

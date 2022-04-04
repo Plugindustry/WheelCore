@@ -34,14 +34,14 @@ public class EnchantmentUtil {
     }
 
     public static CustomEnchantment create(@Nonnull Plugin instance, @Nonnull String name,
-                                           @Nonnull String localizedNameKey) {
+            @Nonnull String localizedNameKey) {
         return new CustomEnchantment(instance, name, localizedNameKey);
     }
 
     public static String getLoreOfEnchant(CustomEnchantment enchantment, int level) {
         return ChatColor.RESET.toString() + (enchantment.isTreasure() ? ChatColor.GOLD :
-                (enchantment.isCursed() ? ChatColor.RED : ChatColor.GRAY)) + I18n.getLocalePlaceholder(
-                enchantment.getLocalizedNameKey()) + " " + getLevelStr(level);
+                (enchantment.isCursed() ? ChatColor.RED : ChatColor.GRAY)) +
+                I18n.getLocalePlaceholder(enchantment.getLocalizedNameKey()) + " " + getLevelStr(level);
     }
 
     private static String getLevelStr(int level) {
@@ -112,8 +112,7 @@ public class EnchantmentUtil {
         private List<Enchantment> conflictEnchantments = Collections.emptyList();
         private List<ItemStack> otherItems = Collections.emptyList();
 
-        public CustomEnchantment(@Nonnull Plugin instance, @Nonnull String name,
-                                 @Nonnull String localizedNameKey) {
+        public CustomEnchantment(@Nonnull Plugin instance, @Nonnull String name, @Nonnull String localizedNameKey) {
             super(new NamespacedKey(instance, "enchantment." + name));
             this.name = name;
             this.localizedNameKey = localizedNameKey;

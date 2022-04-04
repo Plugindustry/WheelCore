@@ -1,4 +1,4 @@
-REDAME in different languages:
+README in different languages:
 * 简体中文/zh-CN (Currently reading)
 * [English/en-US][1]
 

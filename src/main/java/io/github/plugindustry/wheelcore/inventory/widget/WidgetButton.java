@@ -19,8 +19,7 @@ public class WidgetButton implements WidgetClickable {
     private ItemStack slotItemStack;
     private boolean changed = true;
 
-    public WidgetButton(String id, ItemStack slotItemStack,
-                        BiConsumer<Position, InventoryClickInfo> onClickFunc) {
+    public WidgetButton(String id, ItemStack slotItemStack, BiConsumer<Position, InventoryClickInfo> onClickFunc) {
         this.id = id;
         this.slotItemStack = slotItemStack;
         this.onClickFunc = onClickFunc;

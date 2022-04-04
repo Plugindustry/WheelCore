@@ -12,19 +12,18 @@ import java.util.stream.StreamSupport;
 public class CollectionUtil {
     @Nonnull
     public static <T> Collection<T> unmodifiableCopyOnReadCollection(@Nonnull Collection<? extends T> c,
-                                                                     @Nonnull Function<T, T> cloner) {
+            @Nonnull Function<T, T> cloner) {
         return new UnmodifiableCopyOnReadCollection<>(c, cloner);
     }
 
     @Nonnull
-    public static <T> Set<T> unmodifiableCopyOnReadSet(@Nonnull Set<? extends T> s,
-                                                       @Nonnull Function<T, T> cloner) {
+    public static <T> Set<T> unmodifiableCopyOnReadSet(@Nonnull Set<? extends T> s, @Nonnull Function<T, T> cloner) {
         return new UnmodifiableCopyOnReadSet<>(s, cloner);
     }
 
     @Nonnull
     public static <T> List<T> unmodifiableCopyOnReadList(@Nonnull List<? extends T> list,
-                                                         @Nonnull Function<T, T> cloner) {
+            @Nonnull Function<T, T> cloner) {
         return (list instanceof RandomAccess ? new UnmodifiableCopyOnReadRandomAccessList<>(list, cloner) :
                 new UnmodifiableCopyOnReadList<>(list, cloner));
     }
@@ -69,7 +68,7 @@ public class CollectionUtil {
 
         @Override
         public Iterator<E> iterator() {
-            return new Iterator<E>() {
+            return new Iterator<>() {
                 private final Iterator<? extends E> i = c.iterator();
 
                 @Override
@@ -212,6 +211,7 @@ public class CollectionUtil {
             super(c, cloner);
         }
 
+        @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
         public boolean equals(Object o) {
             return o == this || c.equals(o);
         }
@@ -229,6 +229,7 @@ public class CollectionUtil {
             this.list = list;
         }
 
+        @SuppressWarnings("EqualsWhichDoesntCheckParameterClass")
         public boolean equals(Object o) {
             return o == this || list.equals(o);
         }
@@ -289,7 +290,7 @@ public class CollectionUtil {
 
         @Override
         public ListIterator<E> listIterator(final int index) {
-            return new ListIterator<E>() {
+            return new ListIterator<>() {
                 private final ListIterator<? extends E> i = list.listIterator(index);
 
                 @Override
@@ -350,9 +351,9 @@ public class CollectionUtil {
         }
     }
 
-    static class UnmodifiableCopyOnReadRandomAccessList<E> extends UnmodifiableCopyOnReadList<E> implements RandomAccess {
-        UnmodifiableCopyOnReadRandomAccessList(@Nonnull List<? extends E> list,
-                                               @Nonnull Function<E, E> cloner) {
+    static class UnmodifiableCopyOnReadRandomAccessList<E> extends UnmodifiableCopyOnReadList<E> implements
+            RandomAccess {
+        UnmodifiableCopyOnReadRandomAccessList(@Nonnull List<? extends E> list, @Nonnull Function<E, E> cloner) {
             super(list, cloner);
         }
 

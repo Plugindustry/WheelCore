@@ -20,8 +20,7 @@ public class Matchers {
     public static Function<Environment, Boolean> point(String typeKey) {
         return env -> {
             Object o = env.getEnvironmentArg(typeKey);
-            if (o instanceof Material)
-                return env.<Location>getEnvironmentArg("location").getBlock().getType() == o;
+            if (o instanceof Material) return env.<Location>getEnvironmentArg("location").getBlock().getType() == o;
             else if (o instanceof BlockBase)
                 return MainManager.getBlockInstance(env.getEnvironmentArg("location")) == o;
             else return false;
@@ -81,128 +80,119 @@ public class Matchers {
         else return false;
     }
 
-    public static Function<Environment, Boolean> cube(String xOffsetKey, int yOffset, int zOffset,
-                                                      Material type) {
-        return env -> cubeImpl(env.getEnvironmentArg("location"), env.getEnvironmentArg(xOffsetKey), yOffset,
+    public static Function<Environment, Boolean> cube(String xOffsetKey, int yOffset, int zOffset, Material type) {
+        return env -> cubeImpl(env.getEnvironmentArg("location"), env.getEnvironmentArg(xOffsetKey), yOffset, zOffset,
+                type);
+    }
+
+    public static Function<Environment, Boolean> cube(String xOffsetKey, int yOffset, int zOffset, BlockBase type) {
+        return env -> cubeImpl(env.getEnvironmentArg("location"), env.getEnvironmentArg(xOffsetKey), yOffset, zOffset,
+                type);
+    }
+
+    public static Function<Environment, Boolean> cube(String xOffsetKey, int yOffset, int zOffset, String typeKey) {
+        return env -> cubeImpl(env.getEnvironmentArg("location"), env.getEnvironmentArg(xOffsetKey), yOffset, zOffset,
+                env.<Object>getEnvironmentArg(typeKey));
+    }
+
+    public static Function<Environment, Boolean> cube(int xOffset, String yOffsetKey, int zOffset, Material type) {
+        return env -> cubeImpl(env.getEnvironmentArg("location"), xOffset, env.<Integer>getEnvironmentArg(yOffsetKey),
                 zOffset, type);
     }
 
-    public static Function<Environment, Boolean> cube(String xOffsetKey, int yOffset, int zOffset,
-                                                      BlockBase type) {
-        return env -> cubeImpl(env.getEnvironmentArg("location"), env.getEnvironmentArg(xOffsetKey), yOffset,
-                zOffset, type);
+    public static Function<Environment, Boolean> cube(int xOffset, String yOffsetKey, int zOffset, BlockBase type) {
+        return env -> cubeImpl(env.getEnvironmentArg("location"), xOffset, env.getEnvironmentArg(yOffsetKey), zOffset,
+                type);
     }
 
-    public static Function<Environment, Boolean> cube(String xOffsetKey, int yOffset, int zOffset,
-                                                      String typeKey) {
-        return env -> cubeImpl(env.getEnvironmentArg("location"), env.getEnvironmentArg(xOffsetKey), yOffset,
-                zOffset, env.<Object>getEnvironmentArg(typeKey));
+    public static Function<Environment, Boolean> cube(int xOffset, String yOffsetKey, int zOffset, String typeKey) {
+        return env -> cubeImpl(env.getEnvironmentArg("location"), xOffset, env.getEnvironmentArg(yOffsetKey), zOffset,
+                env.<Object>getEnvironmentArg(typeKey));
     }
 
-    public static Function<Environment, Boolean> cube(int xOffset, String yOffsetKey, int zOffset,
-                                                      Material type) {
-        return env -> cubeImpl(env.getEnvironmentArg("location"), xOffset,
-                env.<Integer>getEnvironmentArg(yOffsetKey), zOffset, type);
+    public static Function<Environment, Boolean> cube(int xOffset, int yOffset, String zOffsetKey, Material type) {
+        return env -> cubeImpl(env.getEnvironmentArg("location"), xOffset, yOffset, env.getEnvironmentArg(zOffsetKey),
+                type);
     }
 
-    public static Function<Environment, Boolean> cube(int xOffset, String yOffsetKey, int zOffset,
-                                                      BlockBase type) {
-        return env -> cubeImpl(env.getEnvironmentArg("location"), xOffset, env.getEnvironmentArg(yOffsetKey),
-                zOffset, type);
+    public static Function<Environment, Boolean> cube(int xOffset, int yOffset, String zOffsetKey, BlockBase type) {
+        return env -> cubeImpl(env.getEnvironmentArg("location"), xOffset, yOffset, env.getEnvironmentArg(zOffsetKey),
+                type);
     }
 
-    public static Function<Environment, Boolean> cube(int xOffset, String yOffsetKey, int zOffset,
-                                                      String typeKey) {
-        return env -> cubeImpl(env.getEnvironmentArg("location"), xOffset, env.getEnvironmentArg(yOffsetKey),
-                zOffset, env.<Object>getEnvironmentArg(typeKey));
-    }
-
-    public static Function<Environment, Boolean> cube(int xOffset, int yOffset, String zOffsetKey,
-                                                      Material type) {
-        return env -> cubeImpl(env.getEnvironmentArg("location"), xOffset, yOffset,
-                env.getEnvironmentArg(zOffsetKey), type);
-    }
-
-    public static Function<Environment, Boolean> cube(int xOffset, int yOffset, String zOffsetKey,
-                                                      BlockBase type) {
-        return env -> cubeImpl(env.getEnvironmentArg("location"), xOffset, yOffset,
-                env.getEnvironmentArg(zOffsetKey), type);
-    }
-
-    public static Function<Environment, Boolean> cube(int xOffset, int yOffset, String zOffsetKey,
-                                                      String typeKey) {
-        return env -> cubeImpl(env.getEnvironmentArg("location"), xOffset, yOffset,
-                env.getEnvironmentArg(zOffsetKey), env.<Object>getEnvironmentArg(typeKey));
+    public static Function<Environment, Boolean> cube(int xOffset, int yOffset, String zOffsetKey, String typeKey) {
+        return env -> cubeImpl(env.getEnvironmentArg("location"), xOffset, yOffset, env.getEnvironmentArg(zOffsetKey),
+                env.<Object>getEnvironmentArg(typeKey));
     }
 
     public static Function<Environment, Boolean> cube(int xOffset, String yOffsetKey, String zOffsetKey,
-                                                      Material type) {
+            Material type) {
         return env -> cubeImpl(env.getEnvironmentArg("location"), xOffset, env.getEnvironmentArg(yOffsetKey),
                 env.getEnvironmentArg(zOffsetKey), type);
     }
 
     public static Function<Environment, Boolean> cube(int xOffset, String yOffsetKey, String zOffsetKey,
-                                                      BlockBase type) {
+            BlockBase type) {
         return env -> cubeImpl(env.getEnvironmentArg("location"), xOffset, env.getEnvironmentArg(yOffsetKey),
                 env.getEnvironmentArg(zOffsetKey), type);
     }
 
     public static Function<Environment, Boolean> cube(int xOffset, String yOffsetKey, String zOffsetKey,
-                                                      String typeKey) {
+            String typeKey) {
         return env -> cubeImpl(env.getEnvironmentArg("location"), xOffset, env.getEnvironmentArg(yOffsetKey),
                 env.getEnvironmentArg(zOffsetKey), env.<Object>getEnvironmentArg(typeKey));
     }
 
     public static Function<Environment, Boolean> cube(String xOffsetKey, int yOffset, String zOffsetKey,
-                                                      Material type) {
+            Material type) {
         return env -> cubeImpl(env.getEnvironmentArg("location"), env.getEnvironmentArg(xOffsetKey), yOffset,
                 env.getEnvironmentArg(zOffsetKey), type);
     }
 
     public static Function<Environment, Boolean> cube(String xOffsetKey, int yOffset, String zOffsetKey,
-                                                      BlockBase type) {
+            BlockBase type) {
         return env -> cubeImpl(env.getEnvironmentArg("location"), env.getEnvironmentArg(xOffsetKey), yOffset,
                 env.getEnvironmentArg(zOffsetKey), type);
     }
 
     public static Function<Environment, Boolean> cube(String xOffsetKey, int yOffset, String zOffsetKey,
-                                                      String typeKey) {
+            String typeKey) {
         return env -> cubeImpl(env.getEnvironmentArg("location"), env.getEnvironmentArg(xOffsetKey), yOffset,
                 env.getEnvironmentArg(zOffsetKey), env.<Object>getEnvironmentArg(typeKey));
     }
 
     public static Function<Environment, Boolean> cube(String xOffsetKey, String yOffsetKey, int zOffset,
-                                                      Material type) {
+            Material type) {
         return env -> cubeImpl(env.getEnvironmentArg("location"), env.getEnvironmentArg(xOffsetKey),
                 env.getEnvironmentArg(yOffsetKey), zOffset, type);
     }
 
     public static Function<Environment, Boolean> cube(String xOffsetKey, String yOffsetKey, int zOffset,
-                                                      BlockBase type) {
+            BlockBase type) {
         return env -> cubeImpl(env.getEnvironmentArg("location"), env.getEnvironmentArg(xOffsetKey),
                 env.getEnvironmentArg(yOffsetKey), zOffset, type);
     }
 
     public static Function<Environment, Boolean> cube(String xOffsetKey, String yOffsetKey, int zOffset,
-                                                      String typeKey) {
+            String typeKey) {
         return env -> cubeImpl(env.getEnvironmentArg("location"), env.getEnvironmentArg(xOffsetKey),
                 env.getEnvironmentArg(yOffsetKey), zOffset, env.<Object>getEnvironmentArg(typeKey));
     }
 
     public static Function<Environment, Boolean> cube(String xOffsetKey, String yOffsetKey, String zOffsetKey,
-                                                      Material type) {
+            Material type) {
         return env -> cubeImpl(env.getEnvironmentArg("location"), env.getEnvironmentArg(xOffsetKey),
                 env.getEnvironmentArg(yOffsetKey), env.getEnvironmentArg(zOffsetKey), type);
     }
 
     public static Function<Environment, Boolean> cube(String xOffsetKey, String yOffsetKey, String zOffsetKey,
-                                                      BlockBase type) {
+            BlockBase type) {
         return env -> cubeImpl(env.getEnvironmentArg("location"), env.getEnvironmentArg(xOffsetKey),
                 env.getEnvironmentArg(yOffsetKey), env.getEnvironmentArg(zOffsetKey), type);
     }
 
     public static Function<Environment, Boolean> cube(String xOffsetKey, String yOffsetKey, String zOffsetKey,
-                                                      String typeKey) {
+            String typeKey) {
         return env -> cubeImpl(env.getEnvironmentArg("location"), env.getEnvironmentArg(xOffsetKey),
                 env.getEnvironmentArg(yOffsetKey), env.getEnvironmentArg(zOffsetKey),
                 env.<Object>getEnvironmentArg(typeKey));

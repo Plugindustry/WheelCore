@@ -44,8 +44,7 @@ public class ItemStackUtil {
     }
 
     public static int getDurability(ItemStack itemStack) {
-        return itemStack.getItemMeta() instanceof Damageable ?
-                ((Damageable) itemStack.getItemMeta()).getDamage() : 0;
+        return itemStack.getItemMeta() instanceof Damageable ? ((Damageable) itemStack.getItemMeta()).getDamage() : 0;
     }
 
     public static void setDurability(ItemStack itemStack, int damage) {

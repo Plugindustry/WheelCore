@@ -105,8 +105,8 @@ public class LegacyChunkBasedProvider implements BlockDataProvider {
 
         BlockBase base = instanceAt(block);
         if (baseBlocks.containsKey(base)) baseBlocks.get(base).remove(block);
-        if (blockInChunks.containsKey(block.getWorld()) && blockInChunks.get(block.getWorld())
-                                                                        .containsKey(chunkDescAt(block)))
+        if (blockInChunks.containsKey(block.getWorld()) &&
+                blockInChunks.get(block.getWorld()).containsKey(chunkDescAt(block)))
             blockInChunks.get(block.getWorld()).get(chunkDescAt(block)).remove(block);
         blocks.remove(block);
     }
@@ -198,8 +198,7 @@ public class LegacyChunkBasedProvider implements BlockDataProvider {
         if (blockInChunks.containsKey(chunk.getWorld()))
             if (blockInChunks.get(chunk.getWorld()).containsKey(compress(chunk.getX(), chunk.getZ())))
                 return CollectionUtil.unmodifiableCopyOnReadSet(
-                        blockInChunks.get(chunk.getWorld()).get(compress(chunk.getX(), chunk.getZ())),
-                        Location::clone);
+                        blockInChunks.get(chunk.getWorld()).get(compress(chunk.getX(), chunk.getZ())), Location::clone);
             else return Collections.emptySet();
         else return Collections.emptySet();
     }

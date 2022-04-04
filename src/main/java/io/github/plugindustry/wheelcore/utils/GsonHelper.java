@@ -19,44 +19,38 @@ public class GsonHelper {
         result.add("data", jsonSerializationContext.serialize(obj, obj.getClass()));
         return result;
     };
-    public static final JsonDeserializer<?> POLYMORPHISM_DESERIALIZER =
-            (jsonElement, type, jsonDeserializationContext) -> {
-                JsonObject jsonObject = jsonElement.getAsJsonObject();
-                try {
-                    return jsonDeserializationContext.deserialize(jsonObject.get("data"),
-                            Class.forName(jsonObject.get("type").getAsString()));
-                } catch (ClassNotFoundException e) {
-                    e.printStackTrace();
-                    return null;
-                }
-            };
+    public static final JsonDeserializer<?> POLYMORPHISM_DESERIALIZER = (jsonElement, type, jsonDeserializationContext) -> {
+        JsonObject jsonObject = jsonElement.getAsJsonObject();
+        try {
+            return jsonDeserializationContext.deserialize(jsonObject.get("data"),
+                    Class.forName(jsonObject.get("type").getAsString()));
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    };
 
-    private static final JsonSerializer<ConfigurationSerializable> CONFIGURATION_SERIALIZABLE_SERIALIZER =
-            (configurationSerializable, type, jsonSerializationContext) -> {
-                Map<String, Object> map = new LinkedHashMap<>();
-                map.put(ConfigurationSerialization.SERIALIZED_TYPE_KEY,
-                        ConfigurationSerialization.getAlias(configurationSerializable.getClass()));
-                map.putAll(configurationSerializable.serialize());
-                map.entrySet().forEach(entry -> {
-                    if (entry.getValue() instanceof Integer)
-                        entry.setValue(new TypedNumber((Integer) entry.getValue()));
-                    else if (entry.getValue() instanceof Double)
-                        entry.setValue(new TypedNumber((Double) entry.getValue()));
-                    else if (entry.getValue() instanceof Float)
-                        entry.setValue(new TypedNumber((Float) entry.getValue()));
-                });
-                return jsonSerializationContext.serialize(map, new TypeToken<Map<String, Object>>() {
-                }.getType());
-            };
-    private static final JsonDeserializer<ConfigurationSerializable> CONFIGURATION_SERIALIZABLE_DESERIALIZER =
-            (jsonElement, type, jsonDeserializationContext) -> deserializeMap(
-                    jsonDeserializationContext.deserialize(jsonElement, new TypeToken<Map<String, Object>>() {
-                    }.getType()));
+    private static final JsonSerializer<ConfigurationSerializable> CONFIGURATION_SERIALIZABLE_SERIALIZER = (configurationSerializable, type, jsonSerializationContext) -> {
+        Map<String, Object> map = new LinkedHashMap<>();
+        map.put(ConfigurationSerialization.SERIALIZED_TYPE_KEY,
+                ConfigurationSerialization.getAlias(configurationSerializable.getClass()));
+        map.putAll(configurationSerializable.serialize());
+        map.entrySet().forEach(entry -> {
+            if (entry.getValue() instanceof Integer) entry.setValue(new TypedNumber((Integer) entry.getValue()));
+            else if (entry.getValue() instanceof Double) entry.setValue(new TypedNumber((Double) entry.getValue()));
+            else if (entry.getValue() instanceof Float) entry.setValue(new TypedNumber((Float) entry.getValue()));
+        });
+        return jsonSerializationContext.serialize(map, new TypeToken<Map<String, Object>>() {
+        }.getType());
+    };
+    private static final JsonDeserializer<ConfigurationSerializable> CONFIGURATION_SERIALIZABLE_DESERIALIZER = (jsonElement, type, jsonDeserializationContext) -> deserializeMap(
+            jsonDeserializationContext.deserialize(jsonElement, new TypeToken<Map<String, Object>>() {
+            }.getType()));
 
+    @SuppressWarnings("unchecked")
     private static ConfigurationSerializable deserializeMap(Map<String, Object> map) {
         map.entrySet().forEach(entry -> {
-            if (entry.getValue() instanceof Map) {
-                Map<?, ?> subMap = (Map<?, ?>) entry.getValue();
+            if (entry.getValue() instanceof Map<?, ?> subMap) {
                 if (subMap.containsKey(ConfigurationSerialization.SERIALIZED_TYPE_KEY)) {
                     ConfigurationSerializable temp = deserializeMap((Map<String, Object>) subMap);
                     entry.setValue(temp instanceof TypedNumber ? ((TypedNumber) temp).getNumber() : temp);
@@ -68,10 +62,8 @@ public class GsonHelper {
 
     public static GsonBuilder bukkitCompat() {
         GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeHierarchyAdapter(ConfigurationSerializable.class,
-                CONFIGURATION_SERIALIZABLE_SERIALIZER);
-        builder.registerTypeHierarchyAdapter(ConfigurationSerializable.class,
-                CONFIGURATION_SERIALIZABLE_DESERIALIZER);
+        builder.registerTypeHierarchyAdapter(ConfigurationSerializable.class, CONFIGURATION_SERIALIZABLE_SERIALIZER);
+        builder.registerTypeHierarchyAdapter(ConfigurationSerializable.class, CONFIGURATION_SERIALIZABLE_DESERIALIZER);
 
         return builder;
     }
@@ -105,15 +97,11 @@ public class GsonHelper {
         }
 
         public Number getNumber() {
-            switch (type) {
-                case INTEGER:
-                    return Integer.valueOf(number);
-                case DOUBLE:
-                    return Double.valueOf(number);
-                case FLOAT:
-                    return Float.valueOf(number);
-            }
-            throw new IllegalStateException("Unknown number type");
+            return switch (type) {
+                case INTEGER -> Integer.valueOf(number);
+                case DOUBLE -> Double.valueOf(number);
+                case FLOAT -> Float.valueOf(number);
+            };
         }
 
         @Nonnull

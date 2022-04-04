@@ -52,8 +52,7 @@ public class Window {
         interactor.onWindowTitleChange(title);
         sync();
         getWidgetMap().values().forEach(we -> we.second.getChangeMap(true).forEach(
-                (pos, item) -> interactor.onWindowContentChange(InventoryUtil.getAbsolutePos(we.first, pos),
-                        item)));
+                (pos, item) -> interactor.onWindowContentChange(InventoryUtil.getAbsolutePos(we.first, pos), item)));
         linkedInteractors.add(interactor);
     }
 
@@ -66,8 +65,9 @@ public class Window {
      */
     public void sync() {
         getWidgetMap().values().forEach(we -> we.second.getChangeMap(false).forEach(
-                (pos, item) -> linkedInteractors.forEach(interactor -> interactor.onWindowContentChange(
-                        InventoryUtil.getAbsolutePos(we.first, pos), item))));
+                (pos, item) -> linkedInteractors.forEach(
+                        interactor -> interactor.onWindowContentChange(InventoryUtil.getAbsolutePos(we.first, pos),
+                                item))));
     }
 
     public boolean onClick(Position pos, InventoryClickInfo info) {
@@ -75,8 +75,7 @@ public class Window {
         if (widgetPair == null) return true;
         WidgetBase widget = widgetPair.second;
         if (widget instanceof WidgetClickable && ((WidgetClickable) widget).isClickable())
-            return ((WidgetClickable) widget).onClick(InventoryUtil.getRelativePos(widgetPair.first, pos),
-                    info);
+            return ((WidgetClickable) widget).onClick(InventoryUtil.getRelativePos(widgetPair.first, pos), info);
         else return true;
     }
 

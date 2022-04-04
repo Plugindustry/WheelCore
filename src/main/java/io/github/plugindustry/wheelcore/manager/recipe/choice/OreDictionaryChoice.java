@@ -31,16 +31,15 @@ public class OreDictionaryChoice implements RecipeChoice {
 
     @Override
     public boolean matches(@Nonnull ItemStack item) {
-        return ((!exact) || ItemStackUtil.getDurability(item) == 0) && MainManager.getItemOreDictionary(item)
-                                                                                  .stream().anyMatch(
-                        dictionaryKeys::contains);
+        return ((!exact) || ItemStackUtil.getDurability(item) == 0) &&
+                MainManager.getItemOreDictionary(item).stream().anyMatch(dictionaryKeys::contains);
     }
 
     @Nonnull
     @Override
     public org.bukkit.inventory.RecipeChoice.MaterialChoice getPlaceholderChoice() {
         return new org.bukkit.inventory.RecipeChoice.MaterialChoice(
-                dictionaryKeys.stream().map(ItemMapping.dictMaterial::get).flatMap(Collection::stream)
-                              .distinct().collect(Collectors.toList()));
+                dictionaryKeys.stream().map(ItemMapping.dictMaterial::get).flatMap(Collection::stream).distinct()
+                        .collect(Collectors.toList()));
     }
 }

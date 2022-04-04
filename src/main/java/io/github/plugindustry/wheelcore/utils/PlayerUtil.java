@@ -51,8 +51,8 @@ public class PlayerUtil {
         WheelCore.protocolManager.broadcastServerPacket(packet);
     }
 
-    public static void sendPotionEffect(@Nonnull Player player, @Nonnull PotionEffectType type,
-                                        byte amplifier, int duration, byte flag) {
+    public static void sendPotionEffect(@Nonnull Player player, @Nonnull PotionEffectType type, byte amplifier,
+            int duration, byte flag) {
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.ENTITY_EFFECT);
         packet.getIntegers().write(0, player.getEntityId());
         packet.getBytes().write(0, (byte) type.getId());
@@ -116,7 +116,6 @@ public class PlayerUtil {
         sendBlockBreak(player, block);
         return new CraftPlayer(player).getHandle().getInteractManager().breakBlock(
                 new io.github.plugindustry.wheelcore.internal.shadow.BlockPosition(
-                        BlockPosition.getConverter()
-                                     .getGeneric(new BlockPosition(block.getLocation().toVector()))));
+                        BlockPosition.getConverter().getGeneric(new BlockPosition(block.getLocation().toVector()))));
     }
 }

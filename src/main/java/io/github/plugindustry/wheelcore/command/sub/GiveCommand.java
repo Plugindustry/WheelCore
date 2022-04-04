@@ -42,10 +42,9 @@ public class GiveCommand extends SubCommandBase {
         }
 
         for (Entity e : selector.getSelectedEntity()) {
-            if (!(e instanceof Player)) {
+            if (!(e instanceof Player p)) {
                 continue; // not a player >_> how to give them item.
             }
-            Player p = (Player) e;
             p.getInventory().addItem(ItemMapping.get(itemName));
             commandSender.sendMessage("Given " + itemName + " to player " + p.getName());
         }

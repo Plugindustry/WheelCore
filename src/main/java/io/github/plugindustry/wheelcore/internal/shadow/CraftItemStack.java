@@ -6,6 +6,7 @@ import org.bukkit.inventory.ItemStack;
 import javax.annotation.Nonnull;
 
 @Shadow("cb/CraftItemStack")
+@SuppressWarnings("all")
 public class CraftItemStack {
     public CraftItemStack(Object o) {
     }

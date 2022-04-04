@@ -17,8 +17,8 @@ public class ShapelessRecipe implements CraftingRecipe {
     private final Map<RecipeChoice, Integer> damages = new HashMap<>();
 
     public ShapelessRecipe(ItemStack result, ItemStack... items) {
-        this(Stream.of(items).filter(item -> item != null && item.getType() != Material.AIR)
-                   .map(ItemStackChoice::new).collect(Collectors.toList()), result);
+        this(Stream.of(items).filter(item -> item != null && item.getType() != Material.AIR).map(ItemStackChoice::new)
+                .collect(Collectors.toList()), result);
     }
 
     public ShapelessRecipe(List<RecipeChoice> choices, ItemStack result) {
