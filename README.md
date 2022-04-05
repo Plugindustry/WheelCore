@@ -27,13 +27,21 @@ WheelCore是一个Bukkit/Spigot服务器前置插件，用于支持IndustrialWor
 (你也可以去config里改点设置)
 
 ## 开发进度 (Wheel构建期……好像这就是个wheel了)
-* InvGui (More widgets needed)
+
+* InvGui (更多控件将在之后加入)
 * 多方块系统 √
-* 矿物添加以及世界生成 √
+* 世界生成 √
 * 合成系统 √
 * 电力系统 √
 * 附魔 √
-* 自定义物品类型及材料 √
+* 自定义物品（包括模型以及工具挖掘速度等） √
+* 自定义方块（包括模型以及硬度） √
 * I18n支持 √
+
+## 赞助
+
+![JetBrains Logo (Main) logo](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg)
+
+感谢JetBrains对本项目提供的 [开发工具支持](https://jb.gg/OpenSourceSupport) 。
 
 [1]: https://github.com/czm23333/IndustrialWorld/blob/master/README-EN.md

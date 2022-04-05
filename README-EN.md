@@ -23,13 +23,20 @@ Simply download the plugin from (Not downloadable yet) and put it into the plugi
 You may change the language in config if needed.
 
 ## Development Progress  
-* Inventory GUI interface (More widgets needed)
+* Inventory GUI interface (More widgets will be added in further development)
 * Multi-block structure support √
-* Custom ores and world generation √
-* Custom (general) recipes √
+* World generation √
+* Custom recipes √
 * Electronic device system (Not tested yet)
 * Custom enchantments √
-* Custom items and materials √
+* Custom items (including custom item models and custom tool bonus etc.) √
+* Custom blocks (including custom block models and custom block hardness etc.) √
 * I18n support (Multi language) √
 
-[1]: https://github.com/czm23333/IndustrialWorld/
+## Sponsor
+
+![JetBrains Logo (Main) logo](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg)
+
+Sincere thanks for [developer tools support](https://jb.gg/OpenSourceSupport) from JetBrains.
+
+[1]: https://github.com/czm23333/IndustrialWorld/blob/master/README.md
