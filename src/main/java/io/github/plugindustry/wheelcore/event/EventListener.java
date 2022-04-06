@@ -4,10 +4,8 @@ import io.github.plugindustry.wheelcore.WheelCore;
 import io.github.plugindustry.wheelcore.interfaces.Interactive;
 import io.github.plugindustry.wheelcore.interfaces.block.*;
 import io.github.plugindustry.wheelcore.interfaces.entity.EntityBase;
-import io.github.plugindustry.wheelcore.interfaces.inventory.InventoryClickInfo;
 import io.github.plugindustry.wheelcore.interfaces.item.Placeable;
 import io.github.plugindustry.wheelcore.interfaces.item.*;
-import io.github.plugindustry.wheelcore.inventory.ClassicInventoryInteractor;
 import io.github.plugindustry.wheelcore.manager.MainManager;
 import io.github.plugindustry.wheelcore.manager.RecipeRegistry;
 import io.github.plugindustry.wheelcore.manager.recipe.RecipeBase;
@@ -18,7 +16,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -27,14 +24,16 @@ import org.bukkit.event.block.*;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
-import org.bukkit.event.inventory.*;
+import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.FurnaceSmeltEvent;
+import org.bukkit.event.inventory.PrepareAnvilEvent;
+import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.server.ServerCommandEvent;
 import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.event.world.WorldInitEvent;
 import org.bukkit.inventory.CraftingInventory;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -273,27 +272,6 @@ public class EventListener implements Listener {
                     ((Interactive) blockBase).onInteract(event.getPlayer(), event.getAction(), event.getHand(),
                             event.getItem(), block, null))) event.setUseInteractedBlock(Event.Result.DENY);
         }
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    public void onInventoryClick(InventoryClickEvent event) {
-        if (!(event.getWhoClicked() instanceof Player)) {
-            return;
-        }
-
-        Inventory inv = event.getClickedInventory();
-        if (inv != null && inv.getHolder() instanceof ClassicInventoryInteractor)
-            // Detected InventoryWindow click event
-            event.setCancelled(
-                    ((ClassicInventoryInteractor) inv.getHolder()).processClick(new InventoryClickInfo(event)));
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR)
-    public void onInventoryClose(InventoryCloseEvent event) {
-        Inventory inv = event.getInventory();
-        if (inv.getHolder() instanceof ClassicInventoryInteractor)
-            // Detected InventoryWindow close event
-            ((ClassicInventoryInteractor) inv.getHolder()).processClose(event.getPlayer());
     }
 
     @EventHandler(priority = EventPriority.MONITOR)

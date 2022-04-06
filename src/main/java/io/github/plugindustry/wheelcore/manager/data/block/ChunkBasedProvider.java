@@ -59,7 +59,9 @@ public class ChunkBasedProvider implements BlockDataProvider {
 
         if (!hasBlock(loc)) return;
 
-        blocks.get(loc).second = data;
+        Pair<BlockBase, BlockData> pair = blocks.get(loc);
+        if (pair.second != null) pair.second.unload();
+        pair.second = data;
     }
 
     @Override
@@ -106,6 +108,8 @@ public class ChunkBasedProvider implements BlockDataProvider {
         if (blockInChunks.containsKey(block.getWorld()) &&
                 blockInChunks.get(block.getWorld()).containsKey(chunkDescAt(block)))
             blockInChunks.get(block.getWorld()).get(chunkDescAt(block)).remove(block);
+        Pair<BlockBase, BlockData> pair = blocks.get(block);
+        if (pair.second != null) pair.second.unload();
         blocks.remove(block);
     }
 

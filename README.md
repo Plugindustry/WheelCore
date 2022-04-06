@@ -27,8 +27,7 @@ WheelCore是一个Bukkit/Spigot服务器前置插件，用于支持IndustrialWor
 (你也可以去config里改点设置)
 
 ## 开发进度 (Wheel构建期……好像这就是个wheel了)
-
-* InvGui (更多控件将在之后加入)
+* 来自 [Phoenix616的InventoryGui](https://github.com/Phoenix616/InventoryGui) 的物品栏GUI相关功能
 * 多方块系统 √
 * 世界生成 √
 * 合成系统 √
@@ -39,7 +38,6 @@ WheelCore是一个Bukkit/Spigot服务器前置插件，用于支持IndustrialWor
 * I18n支持 √
 
 ## 赞助
-
 ![JetBrains Logo (Main) logo](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg)
 
 感谢JetBrains对本项目提供的 [开发工具支持](https://jb.gg/OpenSourceSupport) 。

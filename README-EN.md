@@ -16,14 +16,16 @@ The plugin can be used to offer more ores, machines, cool weapons and strong arm
 Minecraft.   
 Moreover, no server mods needed to work.
 
-## Under Development (Almost finished) :D  
+## Under Development (Almost finished) :D
 
 ## Usage
-Simply download the plugin from (Not downloadable yet) and put it into the plugins/ folder.
-You may change the language in config if needed.
 
-## Development Progress  
-* Inventory GUI interface (More widgets will be added in further development)
+Simply download the plugin from (Not downloadable yet) and put it into the plugins/ folder. You may change the language
+in config if needed.
+
+## Development Progress
+
+* Inventory GUI interface from [InventoryGui by Phoenix616](https://github.com/Phoenix616/InventoryGui)
 * Multi-block structure support √
 * World generation √
 * Custom recipes √

@@ -37,6 +37,10 @@
             <name>Bukkit.RIP</name>
             <url>https://mvn.bukkit.rip/releases</url>
         </repository>
+        <repository>
+            <id>minebench-repo</id>
+            <url>https://repo.minebench.de/</url>
+        </repository>
     </repositories>
 
     <build>
@@ -107,6 +111,12 @@
             <groupId>io.github.czm23333</groupId>
             <artifactId>TransparentReflect</artifactId>
             <version>1.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>de.themoep</groupId>
+            <artifactId>inventorygui</artifactId>
+            <version>1.5.1-SNAPSHOT</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
