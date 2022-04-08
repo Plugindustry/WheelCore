@@ -18,6 +18,6 @@ public interface Destroyable {
     boolean needCorrectTool(@Nonnull Block block);
 
     enum DestroyMethod {
-        PLAYER_DESTROY, EXPLOSION, PHYSICS, FADE, OTHER
+        PLAYER_DESTROY, EXPLOSION, PHYSICS, FIRE, FADE, DECAY, OTHER
     }
 }

@@ -86,11 +86,16 @@ public class EventListener implements Listener {
         ItemBase itemInstance = MainManager.getItemInstance(toolItem);
         Block block = event.getBlock();
         if (itemInstance instanceof Tool) {
-            ((Tool) itemInstance).getOverrideItemDrop(block, toolItem).ifPresent(items -> {
-                event.setDropItems(false);
-                items.forEach(item -> block.getWorld().dropItemNaturally(block.getLocation(), item));
-            });
-            ((Tool) itemInstance).getOverrideExpDrop(block, toolItem).ifPresent(event::setExpToDrop);
+            try {
+                ((Tool) itemInstance).getOverrideItemDrop(block, toolItem).ifPresent(items -> {
+                    event.setDropItems(false);
+                    items.forEach(item -> block.getWorld().dropItemNaturally(block.getLocation(), item));
+                });
+                ((Tool) itemInstance).getOverrideExpDrop(block, toolItem).ifPresent(event::setExpToDrop);
+            } catch (Throwable t) {
+                WheelCore.instance.getLogger()
+                        .log(Level.SEVERE, t, () -> "Error while overriding block break behavior");
+            }
         }
 
         if (MainManager.hasBlock(event.getBlock().getLocation())) {
@@ -111,8 +116,13 @@ public class EventListener implements Listener {
         List<Block> blocks = event.getBlocks();
         if (!blocks.stream().filter(block -> MainManager.hasBlock(block.getLocation())).allMatch(block -> {
             BlockBase instance = MainManager.getBlockInstance(block.getLocation());
-            return instance instanceof PistonPushable &&
-                    ((PistonPushable) instance).onPistonPush(block, piston, direction, blocks);
+            try {
+                return instance instanceof PistonPushable &&
+                        ((PistonPushable) instance).onPistonPush(block, piston, direction, blocks);
+            } catch (Throwable t) {
+                WheelCore.instance.getLogger().log(Level.SEVERE, t, () -> "Error while processing piston extend event");
+                return false;
+            }
         })) {
             event.setCancelled(true);
             return;
@@ -128,8 +138,14 @@ public class EventListener implements Listener {
         List<Block> blocks = event.getBlocks();
         if (!blocks.stream().filter(block -> MainManager.hasBlock(block.getLocation())).allMatch(block -> {
             BlockBase instance = MainManager.getBlockInstance(block.getLocation());
-            return instance instanceof PistonPullable &&
-                    ((PistonPullable) instance).onPistonPull(block, piston, direction, blocks);
+            try {
+                return instance instanceof PistonPullable &&
+                        ((PistonPullable) instance).onPistonPull(block, piston, direction, blocks);
+            } catch (Throwable t) {
+                WheelCore.instance.getLogger()
+                        .log(Level.SEVERE, t, () -> "Error while processing piston retract event");
+                return false;
+            }
         })) {
             event.setCancelled(true);
             return;
@@ -146,6 +162,30 @@ public class EventListener implements Listener {
             event.setCancelled(true);
             if (event.getChangedType() == Material.AIR && !(instance instanceof Destroyable &&
                     ((Destroyable) instance).onBlockDestroy(block, Destroyable.DestroyMethod.PHYSICS, null, null)))
+                block.setType(Material.AIR);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onLeavesDecay(LeavesDecayEvent event) {
+        Block block = event.getBlock();
+        if (MainManager.hasBlock(block.getLocation())) {
+            BlockBase instance = MainManager.getBlockInstance(block.getLocation());
+            event.setCancelled(true);
+            if (!(instance instanceof Destroyable &&
+                    ((Destroyable) instance).onBlockDestroy(block, Destroyable.DestroyMethod.DECAY, null, null)))
+                block.setType(Material.AIR);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onBlockBurn(BlockBurnEvent event) {
+        Block block = event.getBlock();
+        if (MainManager.hasBlock(block.getLocation())) {
+            BlockBase instance = MainManager.getBlockInstance(block.getLocation());
+            event.setCancelled(true);
+            if (!(instance instanceof Destroyable &&
+                    ((Destroyable) instance).onBlockDestroy(block, Destroyable.DestroyMethod.FIRE, null, null)))
                 block.setType(Material.AIR);
         }
     }
@@ -190,9 +230,14 @@ public class EventListener implements Listener {
             if (MainManager.hasBlock(block.getLocation())) {
                 iterator.remove();
                 BlockBase blockBase = MainManager.getBlockInstance(block.getLocation());
-                if (blockBase instanceof Destroyable &&
-                        ((Destroyable) blockBase).onBlockDestroy(block, Destroyable.DestroyMethod.EXPLOSION, null,
-                                null)) block.setType(Material.AIR);
+                try {
+                    if (blockBase instanceof Destroyable &&
+                            ((Destroyable) blockBase).onBlockDestroy(block, Destroyable.DestroyMethod.EXPLOSION, null,
+                                    null)) block.setType(Material.AIR);
+                } catch (Throwable t) {
+                    WheelCore.instance.getLogger()
+                            .log(Level.SEVERE, t, () -> "Error while processing block explode event");
+                }
             }
         }
     }
@@ -226,8 +271,13 @@ public class EventListener implements Listener {
         CraftingInventory craftingInv = event.getInventory();
         if (Stream.of(craftingInv.getMatrix()).anyMatch(item -> MainManager.getItemInstance(item) != null) ||
                 RecipeRegistry.isPlaceholder(event.getRecipe())) {
-            RecipeBase result = RecipeRegistry.matchCraftingRecipe(fillMatrix(craftingInv.getMatrix()), null);
-            craftingInv.setResult(result == null ? null : result.getResult());
+            try {
+                RecipeBase result = RecipeRegistry.matchCraftingRecipe(fillMatrix(craftingInv.getMatrix()), null);
+                craftingInv.setResult(result == null ? null : result.getResult());
+            } catch (Throwable t) {
+                WheelCore.instance.getLogger().log(Level.SEVERE, t, () -> "Error while matching crafting recipe");
+                craftingInv.setResult(null);
+            }
         }
     }
 
@@ -247,10 +297,12 @@ public class EventListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onItemSmelt(FurnaceSmeltEvent event) {
         if (MainManager.getItemInstance(event.getSource()) != null) {
-            SmeltingRecipe recipe = RecipeRegistry.matchSmeltingRecipe(event.getSource());
-            if (recipe != null) {
-                event.setResult(recipe.getResult());
-            } else {
+            try {
+                SmeltingRecipe recipe = RecipeRegistry.matchSmeltingRecipe(event.getSource());
+                if (recipe != null) event.setResult(recipe.getResult());
+                else event.setCancelled(true);
+            } catch (Throwable t) {
+                WheelCore.instance.getLogger().log(Level.SEVERE, t, () -> "Error while matching smelting recipe");
                 event.setCancelled(true);
             }
         }
@@ -335,10 +387,14 @@ public class EventListener implements Listener {
     public void onItemDamage(PlayerItemDamageEvent event) {
         ItemBase itemBase = MainManager.getItemInstance(event.getItem());
         if (itemBase instanceof Damageable) {
-            Optional<Integer> result = ((Damageable) itemBase).onItemDamage(event.getPlayer(), event.getItem(),
-                    event.getDamage());
-            if (result.isPresent()) event.setDamage(result.get());
-            else event.setCancelled(true);
+            try {
+                Optional<Integer> result = ((Damageable) itemBase).onItemDamage(event.getPlayer(), event.getItem(),
+                        event.getDamage());
+                if (result.isPresent()) event.setDamage(result.get());
+                else event.setCancelled(true);
+            } catch (Throwable t) {
+                WheelCore.instance.getLogger().log(Level.SEVERE, t, () -> "Error while processing item damage event");
+            }
         } else if (itemBase != null) event.setCancelled(true);
     }
 

@@ -1,5 +1,6 @@
 package io.github.plugindustry.wheelcore.manager;
 
+import io.github.plugindustry.wheelcore.WheelCore;
 import io.github.plugindustry.wheelcore.interfaces.block.Wire;
 import io.github.plugindustry.wheelcore.interfaces.power.EnergyInputable;
 import io.github.plugindustry.wheelcore.interfaces.power.EnergyOutputable;
@@ -8,6 +9,7 @@ import io.github.plugindustry.wheelcore.utils.StreamUtil;
 import org.bukkit.Location;
 
 import java.util.*;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -88,11 +90,16 @@ public class PowerManager {
                                     if (packetClone.amount > powerNeed) packetClone.amount = powerNeed;
 
                                     // I/O
-                                    if (((EnergyOutputable) Objects.requireNonNull(
-                                            MainManager.getBlockInstance(packet.src))).finishOutput(packet.src, packetClone))
-                                        ((EnergyInputable) Objects.requireNonNull(
-                                                MainManager.getBlockInstance(availableInput))).finishInput(availableInput,
-                                                packetClone);
+                                    try {
+                                        if (((EnergyOutputable) Objects.requireNonNull(
+                                                MainManager.getBlockInstance(packet.src))).finishOutput(packet.src,
+                                                packetClone)) ((EnergyInputable) Objects.requireNonNull(
+                                                MainManager.getBlockInstance(availableInput))).finishInput(
+                                                availableInput, packetClone);
+                                    } catch (Throwable t) {
+                                        WheelCore.instance.getLogger()
+                                                .log(Level.SEVERE, t, () -> "Error while transferring energy");
+                                    }
 
                                     if (packetClone.amount == powerNeed) {
                                         inputs.remove(availableInput);

@@ -3,6 +3,7 @@ package io.github.plugindustry.wheelcore.manager;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Maps;
+import io.github.plugindustry.wheelcore.WheelCore;
 import io.github.plugindustry.wheelcore.interfaces.Base;
 import io.github.plugindustry.wheelcore.interfaces.Tickable;
 import io.github.plugindustry.wheelcore.interfaces.block.BlockBase;
@@ -30,6 +31,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayDeque;
 import java.util.Queue;
 import java.util.Set;
+import java.util.logging.Level;
 
 public class MainManager {
     private static final BiMap<String, BlockBase> blockMapping = HashBiMap.create();
@@ -49,17 +51,41 @@ public class MainManager {
         MultiBlockManager.onTick();
 
         for (BlockBase base : blockMapping.values())
-            if (base instanceof Tickable) ((Tickable) base).onTick();
+            if (base instanceof Tickable) {
+                try {
+                    ((Tickable) base).onTick();
+                } catch (Throwable t) {
+                    WheelCore.instance.getLogger().log(Level.SEVERE, t, () -> "Error while ticking blocks");
+                }
+            }
 
         for (EntityBase base : entityMapping.values())
-            if (base instanceof Tickable) ((Tickable) base).onTick();
+            if (base instanceof Tickable) {
+                try {
+                    ((Tickable) base).onTick();
+                } catch (Throwable t) {
+                    WheelCore.instance.getLogger().log(Level.SEVERE, t, () -> "Error while ticking entities");
+                }
+            }
 
         for (ItemBase base : itemMapping.values())
-            if (base instanceof Tickable) ((Tickable) base).onTick();
+            if (base instanceof Tickable) {
+                try {
+                    ((Tickable) base).onTick();
+                } catch (Throwable t) {
+                    WheelCore.instance.getLogger().log(Level.SEVERE, t, () -> "Error while ticking items");
+                }
+            }
 
         PowerManager.onTick();
 
-        while (!postTickTasks.isEmpty()) postTickTasks.poll().run();
+        while (!postTickTasks.isEmpty()) {
+            try {
+                postTickTasks.poll().run();
+            } catch (Throwable t) {
+                WheelCore.instance.getLogger().log(Level.SEVERE, t, () -> "Error while running post tick tasks");
+            }
+        }
     }
 
     /**

@@ -1,6 +1,7 @@
 package io.github.plugindustry.wheelcore.manager;
 
 import com.google.common.collect.Sets;
+import io.github.plugindustry.wheelcore.WheelCore;
 import io.github.plugindustry.wheelcore.interfaces.block.BlockBase;
 import io.github.plugindustry.wheelcore.interfaces.world.multiblock.Environment;
 import io.github.plugindustry.wheelcore.utils.Pair;
@@ -9,6 +10,7 @@ import org.bukkit.Location;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.logging.Level;
 
 public class MultiBlockManager {
     private final static HashMap<BlockBase, Conditions> conditionMap = new HashMap<>();
@@ -30,7 +32,14 @@ public class MultiBlockManager {
                         continue;
                     }
 
-                    Pair<Boolean, Environment> result = conditions.match(l);
+                    Pair<Boolean, Environment> result;
+                    try {
+                        result = conditions.match(l);
+                    } catch (Throwable t) {
+                        WheelCore.instance.getLogger()
+                                .log(Level.SEVERE, t, () -> "Error while matching multi-block structure at " + l);
+                        result = Pair.of(false, null);
+                    }
                     if (result.first) structureDataMap.put(l, result.second);
                     else {
                         iterator.remove();
@@ -41,11 +50,16 @@ public class MultiBlockManager {
             }
 
             updateSet.forEach(l -> {
-                Pair<Boolean, Environment> result = conditions.match(l);
-                if (result.first) {
-                    structuresMap.putIfAbsent(b, new HashSet<>());
-                    structuresMap.get(b).add(l);
-                    structureDataMap.put(l, result.second);
+                try {
+                    Pair<Boolean, Environment> result = conditions.match(l);
+                    if (result.first) {
+                        structuresMap.putIfAbsent(b, new HashSet<>());
+                        structuresMap.get(b).add(l);
+                        structureDataMap.put(l, result.second);
+                    }
+                } catch (Throwable t) {
+                    WheelCore.instance.getLogger().log(Level.SEVERE, t,
+                            () -> "Error while matching multi-block structure at " + l.toString());
                 }
             });
         });
