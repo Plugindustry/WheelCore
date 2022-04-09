@@ -37,7 +37,8 @@ public class DummyBlock implements BlockBase, Placeable, Destroyable, Interactiv
     public boolean onBlockDestroy(@Nonnull Block block, @Nonnull DestroyMethod method, ItemStack tool,
             @Nullable Player player) {
         // We do nothing by default, so you should do this job in your implementation too.
-        if (method == DestroyMethod.PHYSICS || method == DestroyMethod.FADE) return false;
+        if (method == DestroyMethod.PHYSICS || method == DestroyMethod.FIRE || method == DestroyMethod.FADE ||
+                method == DestroyMethod.DECAY) return false;
 
         MainManager.removeBlock(block.getLocation());
         block.setType(Material.AIR);
