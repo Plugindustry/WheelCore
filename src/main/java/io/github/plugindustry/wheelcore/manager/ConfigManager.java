@@ -13,14 +13,14 @@ public class ConfigManager {
     private static YamlConfiguration config;
 
     public static void init() {
-        File dataFolder = WheelCore.instance.getDataFolder();
+        File dataFolder = WheelCore.getInstance().getDataFolder();
 
         if (!(dataFolder.isDirectory() || dataFolder.mkdirs()))
             throw new RuntimeException("Failed to create date folder");
 
         File config_yml = new File(dataFolder, "config.yml");
         if (!(config_yml.isFile())) {
-            WheelCore.instance.saveDefaultConfig();
+            WheelCore.getInstance().saveDefaultConfig();
         }
         config = YamlConfiguration.loadConfiguration(config_yml);
 

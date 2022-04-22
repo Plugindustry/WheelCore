@@ -6,18 +6,18 @@ import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
 import java.util.Arrays;
-import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.Set;
 
 public class VanillaMaterialChoice implements RecipeChoice {
     private final Set<Material> materials;
 
     public VanillaMaterialChoice(Set<Material> materials) {
-        this.materials = EnumSet.copyOf(materials);
+        this.materials = new HashSet<>(materials);
     }
 
     public VanillaMaterialChoice(Material... materials) {
-        this.materials = EnumSet.copyOf(Arrays.asList(materials));
+        this.materials = new HashSet<>(Arrays.asList(materials));
     }
 
     @Override

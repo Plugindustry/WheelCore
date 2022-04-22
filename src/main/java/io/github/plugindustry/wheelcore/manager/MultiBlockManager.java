@@ -36,7 +36,7 @@ public class MultiBlockManager {
                     try {
                         result = conditions.match(l);
                     } catch (Throwable t) {
-                        WheelCore.instance.getLogger()
+                        WheelCore.getInstance().getLogger()
                                 .log(Level.SEVERE, t, () -> "Error while matching multi-block structure at " + l);
                         result = Pair.of(false, null);
                     }
@@ -58,8 +58,8 @@ public class MultiBlockManager {
                         structureDataMap.put(l, result.second);
                     }
                 } catch (Throwable t) {
-                    WheelCore.instance.getLogger().log(Level.SEVERE, t,
-                            () -> "Error while matching multi-block structure at " + l.toString());
+                    WheelCore.getInstance().getLogger()
+                            .log(Level.SEVERE, t, () -> "Error while matching multi-block structure at " + l.toString());
                 }
             });
         });

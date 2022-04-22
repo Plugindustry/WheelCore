@@ -19,7 +19,7 @@ import java.util.*;
 
 public class ChunkBasedProvider implements BlockDataProvider {
     private static final Gson gson;
-    private final static NamespacedKey CHUNK_DATA_KEY = new NamespacedKey(WheelCore.instance, "chunk_data");
+    private final static NamespacedKey CHUNK_DATA_KEY = new NamespacedKey(WheelCore.getInstance(), "chunk_data");
 
     static {
         GsonBuilder gbs = GsonHelper.bukkitCompat();

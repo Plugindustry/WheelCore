@@ -27,7 +27,6 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,7 +38,7 @@ public class I18n {
     private static final Pattern patternList = Pattern.compile("\\{\\{(\\S*?)\\[]}}");
     private static final JsonParser parser = new JsonParser();
     private static final Gson gson = new Gson();
-    private static final ConcurrentHashMap<UUID, Pair<Map<UUID, ItemStack>, Queue<UUID>>> orgItemMapping = new ConcurrentHashMap<>();
+    private static final HashMap<UUID, Pair<Map<UUID, ItemStack>, Queue<UUID>>> orgItemMapping = new HashMap<>();
     private static final int ITEM_LIMIT = 512;
 
     /**
@@ -58,7 +57,7 @@ public class I18n {
                 kvMap.put(key, bundle.getString(key));
         } catch (IOException e) {
             e.printStackTrace();
-            WheelCore.instance.getLogger().log(Level.SEVERE, "Error loading lang file");
+            WheelCore.getInstance().getLogger().log(Level.SEVERE, "Error loading lang file");
         }
     }
 
@@ -208,7 +207,7 @@ public class I18n {
         }
 
         public PacketListener() {
-            super(PacketAdapter.params().clientSide().serverSide().plugin(WheelCore.instance)
+            super(PacketAdapter.params().clientSide().serverSide().plugin(WheelCore.getInstance())
                     .listenerPriority(ListenerPriority.LOW).types(outTypes));
         }
 
@@ -268,7 +267,6 @@ public class I18n {
         @Override
         public void onPacketReceiving(PacketEvent event) {
             PacketContainer packet = event.getPacket();
-            int slot = packet.getIntegers().read(0);
             ItemStack item = packet.getItemModifier().read(0);
             UUID uuid = event.getPlayer().getUniqueId();
             if (item.getType() != Material.AIR) {

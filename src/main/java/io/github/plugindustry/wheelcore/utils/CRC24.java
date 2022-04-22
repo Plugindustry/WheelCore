@@ -1,6 +1,7 @@
 package io.github.plugindustry.wheelcore.utils;
 
 import javax.annotation.Nonnull;
+import java.nio.charset.StandardCharsets;
 
 public class CRC24 {
     private static final int CRC24_INIT = 0x0b704ce;
@@ -10,7 +11,7 @@ public class CRC24 {
 
     public static int calculateForString(@Nonnull String str) {
         instance.reset();
-        instance.update(str.getBytes());
+        instance.update(str.getBytes(StandardCharsets.UTF_8));
         return instance.getValue();
     }
 

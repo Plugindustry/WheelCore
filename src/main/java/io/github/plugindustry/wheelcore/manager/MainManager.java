@@ -38,12 +38,9 @@ public class MainManager {
     private static final BiMap<String, ItemBase> itemMapping = HashBiMap.create();
     private static final BiMap<String, EntityBase> entityMapping = HashBiMap.create();
     private static final Queue<Runnable> postTickTasks = new ArrayDeque<>();
-    @SuppressWarnings("CanBeFinal")
-    public static BlockDataProvider blockDataProvider = BlockDataProvider.defaultProvider();
-    @SuppressWarnings("CanBeFinal")
-    public static EntityDataProvider entityDataProvider = EntityDataProvider.defaultProvider();
-    @SuppressWarnings("CanBeFinal")
-    public static ItemDataProvider itemDataProvider = ItemDataProvider.defaultProvider();
+    public static final BlockDataProvider blockDataProvider = BlockDataProvider.defaultProvider();
+    public static final EntityDataProvider entityDataProvider = EntityDataProvider.defaultProvider();
+    public static final ItemDataProvider itemDataProvider = ItemDataProvider.defaultProvider();
 
     public static void update() {
         PlayerDigHandler.onTick();
@@ -55,7 +52,7 @@ public class MainManager {
                 try {
                     ((Tickable) base).onTick();
                 } catch (Throwable t) {
-                    WheelCore.instance.getLogger().log(Level.SEVERE, t, () -> "Error while ticking blocks");
+                    WheelCore.getInstance().getLogger().log(Level.SEVERE, t, () -> "Error while ticking blocks");
                 }
             }
 
@@ -64,7 +61,7 @@ public class MainManager {
                 try {
                     ((Tickable) base).onTick();
                 } catch (Throwable t) {
-                    WheelCore.instance.getLogger().log(Level.SEVERE, t, () -> "Error while ticking entities");
+                    WheelCore.getInstance().getLogger().log(Level.SEVERE, t, () -> "Error while ticking entities");
                 }
             }
 
@@ -73,7 +70,7 @@ public class MainManager {
                 try {
                     ((Tickable) base).onTick();
                 } catch (Throwable t) {
-                    WheelCore.instance.getLogger().log(Level.SEVERE, t, () -> "Error while ticking items");
+                    WheelCore.getInstance().getLogger().log(Level.SEVERE, t, () -> "Error while ticking items");
                 }
             }
 
@@ -83,7 +80,7 @@ public class MainManager {
             try {
                 postTickTasks.poll().run();
             } catch (Throwable t) {
-                WheelCore.instance.getLogger().log(Level.SEVERE, t, () -> "Error while running post tick tasks");
+                WheelCore.getInstance().getLogger().log(Level.SEVERE, t, () -> "Error while running post tick tasks");
             }
         }
     }

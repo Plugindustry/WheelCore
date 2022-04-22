@@ -5,6 +5,6 @@ import io.github.plugindustry.wheelcore.manager.ConfigManager;
 
 public class DebuggingLogger {
     public static void debug(String msg) {
-        if (ConfigManager.debug) WheelCore.instance.getLogger().info("DEBUG: " + msg);
+        if (ConfigManager.debug) WheelCore.getInstance().getLogger().info("DEBUG: " + msg);
     }
 }

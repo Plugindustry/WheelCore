@@ -93,7 +93,7 @@ public class EventListener implements Listener {
                 });
                 ((Tool) itemInstance).getOverrideExpDrop(block, toolItem).ifPresent(event::setExpToDrop);
             } catch (Throwable t) {
-                WheelCore.instance.getLogger()
+                WheelCore.getInstance().getLogger()
                         .log(Level.SEVERE, t, () -> "Error while overriding block break behavior");
             }
         }
@@ -120,7 +120,8 @@ public class EventListener implements Listener {
                 return instance instanceof PistonPushable &&
                         ((PistonPushable) instance).onPistonPush(block, piston, direction, blocks);
             } catch (Throwable t) {
-                WheelCore.instance.getLogger().log(Level.SEVERE, t, () -> "Error while processing piston extend event");
+                WheelCore.getInstance().getLogger()
+                        .log(Level.SEVERE, t, () -> "Error while processing piston extend event");
                 return false;
             }
         })) {
@@ -142,7 +143,7 @@ public class EventListener implements Listener {
                 return instance instanceof PistonPullable &&
                         ((PistonPullable) instance).onPistonPull(block, piston, direction, blocks);
             } catch (Throwable t) {
-                WheelCore.instance.getLogger()
+                WheelCore.getInstance().getLogger()
                         .log(Level.SEVERE, t, () -> "Error while processing piston retract event");
                 return false;
             }
@@ -235,7 +236,7 @@ public class EventListener implements Listener {
                             ((Destroyable) blockBase).onBlockDestroy(block, Destroyable.DestroyMethod.EXPLOSION, null,
                                     null)) block.setType(Material.AIR);
                 } catch (Throwable t) {
-                    WheelCore.instance.getLogger()
+                    WheelCore.getInstance().getLogger()
                             .log(Level.SEVERE, t, () -> "Error while processing block explode event");
                 }
             }
@@ -275,7 +276,7 @@ public class EventListener implements Listener {
                 RecipeBase result = RecipeRegistry.matchCraftingRecipe(fillMatrix(craftingInv.getMatrix()), null);
                 craftingInv.setResult(result == null ? null : result.getResult());
             } catch (Throwable t) {
-                WheelCore.instance.getLogger().log(Level.SEVERE, t, () -> "Error while matching crafting recipe");
+                WheelCore.getInstance().getLogger().log(Level.SEVERE, t, () -> "Error while matching crafting recipe");
                 craftingInv.setResult(null);
             }
         }
@@ -290,7 +291,7 @@ public class EventListener implements Listener {
                 RecipeRegistry.matchCraftingRecipe(fillMatrix(craftingInv.getMatrix()), map) != null) {
             ItemStack[] contents = craftingInv.getStorageContents();
             map.forEach((key, value) -> contents[key] = value);
-            Bukkit.getScheduler().runTask(WheelCore.instance, () -> craftingInv.setStorageContents(contents));
+            Bukkit.getScheduler().runTask(WheelCore.getInstance(), () -> craftingInv.setStorageContents(contents));
         }
     }
 
@@ -302,7 +303,7 @@ public class EventListener implements Listener {
                 if (recipe != null) event.setResult(recipe.getResult());
                 else event.setCancelled(true);
             } catch (Throwable t) {
-                WheelCore.instance.getLogger().log(Level.SEVERE, t, () -> "Error while matching smelting recipe");
+                WheelCore.getInstance().getLogger().log(Level.SEVERE, t, () -> "Error while matching smelting recipe");
                 event.setCancelled(true);
             }
         }
@@ -352,7 +353,7 @@ public class EventListener implements Listener {
     public void onServerCommand(ServerCommandEvent event) {
         if (event.getCommand().equals("reload")) {
             event.setCancelled(true);
-            WheelCore.instance.getLogger().log(Level.WARNING,
+            WheelCore.getInstance().getLogger().log(Level.WARNING,
                     "With WheelCore installed, you cannot perform this operation which will cause severe problems. Restart your server to reload plugins instead.");
         }
     }
@@ -393,7 +394,8 @@ public class EventListener implements Listener {
                 if (result.isPresent()) event.setDamage(result.get());
                 else event.setCancelled(true);
             } catch (Throwable t) {
-                WheelCore.instance.getLogger().log(Level.SEVERE, t, () -> "Error while processing item damage event");
+                WheelCore.getInstance().getLogger()
+                        .log(Level.SEVERE, t, () -> "Error while processing item damage event");
             }
         } else if (itemBase != null) event.setCancelled(true);
     }
@@ -426,6 +428,6 @@ public class EventListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerLocaleChange(PlayerLocaleChangeEvent event) {
-        Bukkit.getScheduler().runTask(WheelCore.instance, () -> event.getPlayer().updateInventory());
+        Bukkit.getScheduler().runTask(WheelCore.getInstance(), () -> event.getPlayer().updateInventory());
     }
 }

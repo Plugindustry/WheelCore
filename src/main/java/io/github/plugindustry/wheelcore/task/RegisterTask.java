@@ -1,9 +1,9 @@
 package io.github.plugindustry.wheelcore.task;
 
+import com.google.common.collect.Sets;
 import io.github.plugindustry.wheelcore.manager.ItemMapping;
 import org.bukkit.Material;
 
-import java.util.EnumSet;
 import java.util.HashSet;
 
 @SuppressWarnings("EmptyMethod")
@@ -27,7 +27,7 @@ public class RegisterTask {
     }
 
     public static void registerVanillaOreDict() {
-        EnumSet<Material> food = EnumSet.of(Material.APPLE, Material.BREAD, Material.COOKED_BEEF,
+        HashSet<Material> food = Sets.newHashSet(Material.APPLE, Material.BREAD, Material.COOKED_BEEF,
                 Material.COOKED_CHICKEN, Material.COOKED_COD, Material.COOKED_MUTTON, Material.COOKED_PORKCHOP,
                 Material.COOKED_RABBIT, Material.COOKED_SALMON, Material.COOKIE, Material.GOLDEN_APPLE,
                 Material.ENCHANTED_GOLDEN_APPLE, Material.GOLDEN_CARROT, Material.MUSHROOM_STEW, Material.MELON_SLICE,

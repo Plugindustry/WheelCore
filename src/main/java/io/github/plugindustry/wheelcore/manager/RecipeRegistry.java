@@ -26,11 +26,12 @@ public class RecipeRegistry {
     public static void register(RecipeBase recipeBase, String id, boolean needPlaceholder) {
         recipes.add(recipeBase);
         if (needPlaceholder) if (recipeBase instanceof SmeltingRecipe) {
-            Bukkit.addRecipe(getPlaceholder(recipeBase, new NamespacedKey(WheelCore.instance, "furnace_recipe_" + id)));
+            Bukkit.addRecipe(
+                    getPlaceholder(recipeBase, new NamespacedKey(WheelCore.getInstance(), "furnace_recipe_" + id)));
         } else if (recipeBase instanceof ShapedRecipe) {
-            placeholders.put(new NamespacedKey(WheelCore.instance, "shaped_recipe_" + id), recipeBase);
+            placeholders.put(new NamespacedKey(WheelCore.getInstance(), "shaped_recipe_" + id), recipeBase);
         } else if (recipeBase instanceof ShapelessRecipe) {
-            placeholders.put(new NamespacedKey(WheelCore.instance, "shapeless_recipe_" + id), recipeBase);
+            placeholders.put(new NamespacedKey(WheelCore.getInstance(), "shapeless_recipe_" + id), recipeBase);
         }
     }
 

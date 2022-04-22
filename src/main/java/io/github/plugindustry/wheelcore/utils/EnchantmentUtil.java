@@ -13,6 +13,7 @@ import org.bukkit.plugin.Plugin;
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class EnchantmentUtil {
     private static final LinkedHashMap<Integer, String> lookup = new LinkedHashMap<>();
@@ -191,12 +192,12 @@ public class EnchantmentUtil {
         }
 
         public CustomEnchantment conflictEnchantments(List<Enchantment> conflictEnchantment) {
-            this.conflictEnchantments = conflictEnchantment;
+            this.conflictEnchantments = new ArrayList<>(conflictEnchantment);
             return this;
         }
 
         public CustomEnchantment otherItems(List<ItemStack> otherItems) {
-            this.otherItems = otherItems;
+            this.otherItems = otherItems.stream().map(ItemStack::clone).collect(Collectors.toList());
             return this;
         }
 

@@ -97,7 +97,7 @@ public class PowerManager {
                                                 MainManager.getBlockInstance(availableInput))).finishInput(
                                                 availableInput, packetClone);
                                     } catch (Throwable t) {
-                                        WheelCore.instance.getLogger()
+                                        WheelCore.getInstance().getLogger()
                                                 .log(Level.SEVERE, t, () -> "Error while transferring energy");
                                     }
 

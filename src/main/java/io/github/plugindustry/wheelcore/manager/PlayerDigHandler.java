@@ -156,8 +156,8 @@ public class PlayerDigHandler {
 
     public static class PacketListener extends PacketAdapter {
         public PacketListener() {
-            super(PacketAdapter.params().clientSide().plugin(WheelCore.instance).listenerPriority(ListenerPriority.LOW)
-                    .types(PacketType.Play.Client.BLOCK_DIG));
+            super(PacketAdapter.params().clientSide().plugin(WheelCore.getInstance())
+                    .listenerPriority(ListenerPriority.LOW).types(PacketType.Play.Client.BLOCK_DIG));
         }
 
         private static void ackDigAction(Player player, PacketContainer packet) {
@@ -170,7 +170,7 @@ public class PlayerDigHandler {
                 ack.getPlayerDigTypes().write(0, packet.getPlayerDigTypes().read(0));
                 ack.getBooleans().write(0, true);
                 try {
-                    WheelCore.protocolManager.sendServerPacket(player, ack);
+                    WheelCore.getProtocolManager().sendServerPacket(player, ack);
                 } catch (InvocationTargetException e) {
                     e.printStackTrace();
                 }
@@ -184,7 +184,7 @@ public class PlayerDigHandler {
             Player player = event.getPlayer();
             if (player.getGameMode() != GameMode.SURVIVAL && player.getGameMode() != GameMode.ADVENTURE) return;
             event.setCancelled(true);
-            Bukkit.getScheduler().runTask(WheelCore.instance, () -> {
+            Bukkit.getScheduler().runTask(WheelCore.getInstance(), () -> {
                 if (type == EnumWrappers.PlayerDigType.START_DESTROY_BLOCK) {
                     byte flags = 0;
                     if (player.hasPotionEffect(PotionEffectType.SLOW_DIGGING)) {

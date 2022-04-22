@@ -18,9 +18,9 @@ import java.lang.reflect.Modifier;
 import java.util.function.Predicate;
 
 public class ShadowRegistry {
-    public static Class<?> BlockData;
-    public static Class<?> TagClass;
-    public static Class<?> CraftBlockClass;
+    static Class<?> BlockData;
+    static Class<?> TagClass;
+    static Class<?> CraftBlockClass;
 
     public static void init() {
         Reflections reflections = new Reflections(

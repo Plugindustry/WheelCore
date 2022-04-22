@@ -25,8 +25,16 @@ import java.util.logging.Filter;
 import java.util.logging.LogRecord;
 
 public final class WheelCore extends JavaPlugin {
-    public static WheelCore instance;
-    public static ProtocolManager protocolManager;
+    private static WheelCore instance;
+    private static ProtocolManager protocolManager;
+
+    public static ProtocolManager getProtocolManager() {
+        return protocolManager;
+    }
+
+    public static WheelCore getInstance() {
+        return instance;
+    }
 
     @Override
     public void onEnable() {
@@ -55,13 +63,13 @@ public final class WheelCore extends JavaPlugin {
         RegisterTask.registerGenerator();
 
         // Register EventListener
-        Bukkit.getPluginManager().registerEvents(new EventListener(), WheelCore.instance);
-        Bukkit.getPluginManager().registerEvents(new I18n.EventListener(), WheelCore.instance);
+        Bukkit.getPluginManager().registerEvents(new EventListener(), WheelCore.getInstance());
+        Bukkit.getPluginManager().registerEvents(new I18n.EventListener(), WheelCore.getInstance());
 
         // Register PacketListener
-        protocolManager.addPacketListener(new PlayerDigHandler.PacketListener());
-        protocolManager.addPacketListener(new I18n.PacketListener());
-        protocolManager.addPacketListener(new TextureManager.PacketListener());
+        getProtocolManager().addPacketListener(new PlayerDigHandler.PacketListener());
+        getProtocolManager().addPacketListener(new I18n.PacketListener());
+        getProtocolManager().addPacketListener(new TextureManager.PacketListener());
 
         // Register GsonHelper.TypedNumber
         ConfigurationSerialization.registerClass(GsonHelper.TypedNumber.class);

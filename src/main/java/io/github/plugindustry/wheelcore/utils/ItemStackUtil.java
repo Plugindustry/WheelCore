@@ -9,9 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class ItemStackUtil {
     public static ItemStackFactory create(Material material) {
@@ -92,7 +90,7 @@ public class ItemStackUtil {
         }
 
         public ItemStackFactory lore(List<String> lore) {
-            this.lore = lore;
+            this.lore = new ArrayList<>(lore);
             return this;
         }
 
@@ -102,11 +100,12 @@ public class ItemStackUtil {
         }
 
         public ItemStackFactory oreDictionary(String... dictionary) {
-            return oreDictionary(Sets.newHashSet(dictionary));
+            oreDictionary = Sets.newHashSet(dictionary);
+            return this;
         }
 
         public ItemStackFactory oreDictionary(Set<String> dictionary) {
-            oreDictionary = dictionary;
+            oreDictionary = new HashSet<>(dictionary);
             return this;
         }
 

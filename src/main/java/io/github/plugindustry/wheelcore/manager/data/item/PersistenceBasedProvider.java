@@ -23,9 +23,9 @@ import java.util.Objects;
 import java.util.Set;
 
 public class PersistenceBasedProvider implements ItemDataProvider {
-    private static final NamespacedKey ITEM_TYPE_KEY = new NamespacedKey(WheelCore.instance, "item_type");
-    private static final NamespacedKey ITEM_DATA_KEY = new NamespacedKey(WheelCore.instance, "item_data");
-    private static final NamespacedKey ITEM_ORE_DICTIONARY_KEY = new NamespacedKey(WheelCore.instance,
+    private static final NamespacedKey ITEM_TYPE_KEY = new NamespacedKey(WheelCore.getInstance(), "item_type");
+    private static final NamespacedKey ITEM_DATA_KEY = new NamespacedKey(WheelCore.getInstance(), "item_data");
+    private static final NamespacedKey ITEM_ORE_DICTIONARY_KEY = new NamespacedKey(WheelCore.getInstance(),
             "item_ore_dictionary");
     private static final Gson gson;
 

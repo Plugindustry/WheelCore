@@ -103,13 +103,14 @@ public class TextureManager {
         try {
             textureItem = ((TexturedBlock) instance).getTextureItem(loc, player);
         } catch (Throwable t) {
-            WheelCore.instance.getLogger().log(Level.SEVERE, t, () -> "Error while updating block texture for " + loc);
+            WheelCore.getInstance().getLogger()
+                    .log(Level.SEVERE, t, () -> "Error while updating block texture for " + loc);
             return;
         }
 
         if (blockChange) PlayerUtil.sendBlockChange(player, loc, WrappedBlockData.createData(Material.SPAWNER));
         try {
-            WheelCore.protocolManager.sendServerPacket(player, generatePacket(loc, textureItem));
+            WheelCore.getProtocolManager().sendServerPacket(player, generatePacket(loc, textureItem));
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
@@ -126,7 +127,8 @@ public class TextureManager {
 
     public static class PacketListener extends PacketAdapter {
         public PacketListener() {
-            super(PacketAdapter.params().serverSide().plugin(WheelCore.instance).listenerPriority(ListenerPriority.LOW)
+            super(PacketAdapter.params().serverSide().plugin(WheelCore.getInstance())
+                    .listenerPriority(ListenerPriority.LOW)
                     .types(PacketType.Play.Server.BLOCK_CHANGE, PacketType.Play.Server.BLOCK_BREAK,
                             PacketType.Play.Server.MULTI_BLOCK_CHANGE, PacketType.Play.Server.MAP_CHUNK));
         }
@@ -140,7 +142,7 @@ public class TextureManager {
                 BlockPosition pos = packet.getBlockPositionModifier().read(0);
                 if (MainManager.getBlockInstance(pos.toLocation(player.getWorld())) instanceof TexturedBlock) {
                     packet.getBlockData().write(0, WrappedBlockData.createData(Material.SPAWNER));
-                    Bukkit.getScheduler().runTask(WheelCore.instance,
+                    Bukkit.getScheduler().runTask(WheelCore.getInstance(),
                             () -> updateTexture(pos.toLocation(player.getWorld()), player, false));
                 }
                 event.setPacket(packet);
@@ -156,14 +158,14 @@ public class TextureManager {
                             .add(blockPos[i] >>> 8 & 15, blockPos[i] & 15, blockPos[i] >>> 4 & 15);
                     if (MainManager.getBlockInstance(pos) instanceof TexturedBlock) {
                         blockData[i] = WrappedBlockData.createData(Material.SPAWNER);
-                        Bukkit.getScheduler().runTask(WheelCore.instance, () -> updateTexture(pos, player, false));
+                        Bukkit.getScheduler().runTask(WheelCore.getInstance(), () -> updateTexture(pos, player, false));
                     }
                 }
                 packet.getBlockDataArrays().write(0, blockData);
                 event.setPacket(packet);
             } else if (packet.getType() == PacketType.Play.Server.MAP_CHUNK) {
                 Chunk chunk = player.getWorld().getChunkAt(packet.getIntegers().read(0), packet.getIntegers().read(1));
-                Bukkit.getScheduler().runTask(WheelCore.instance,
+                Bukkit.getScheduler().runTask(WheelCore.getInstance(),
                         () -> MainManager.blockDataProvider.blockInChunk(chunk).forEach(pos -> {
                             if (MainManager.getBlockInstance(pos) instanceof TexturedBlock) updateTexture(pos, player);
                         }));

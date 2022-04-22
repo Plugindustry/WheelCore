@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class PersistenceBasedProvider implements EntityDataProvider {
-    private final static NamespacedKey ENTITY_DATA_KEY = new NamespacedKey(WheelCore.instance, "entity_data");
+    private final static NamespacedKey ENTITY_DATA_KEY = new NamespacedKey(WheelCore.getInstance(), "entity_data");
     private static final Gson gson;
 
     static {

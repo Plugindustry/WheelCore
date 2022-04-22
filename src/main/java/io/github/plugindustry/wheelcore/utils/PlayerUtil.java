@@ -25,7 +25,7 @@ public class PlayerUtil {
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.SET_ACTION_BAR_TEXT);
         packet.getChatComponents().write(0, WrappedChatComponent.fromLegacyText(s));
         try {
-            WheelCore.protocolManager.sendServerPacket(p, packet);
+            WheelCore.getProtocolManager().sendServerPacket(p, packet);
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
@@ -37,7 +37,7 @@ public class PlayerUtil {
         packet.getBlockPositionModifier().write(0, new BlockPosition(location.toVector()));
         packet.getIntegers().write(1, level);
         try {
-            WheelCore.protocolManager.sendServerPacket(player, packet);
+            WheelCore.getProtocolManager().sendServerPacket(player, packet);
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
@@ -48,7 +48,7 @@ public class PlayerUtil {
         packet.getIntegers().write(0, 0);
         packet.getBlockPositionModifier().write(0, new BlockPosition(location.toVector()));
         packet.getIntegers().write(1, level);
-        WheelCore.protocolManager.broadcastServerPacket(packet);
+        WheelCore.getProtocolManager().broadcastServerPacket(packet);
     }
 
     public static void sendPotionEffect(@Nonnull Player player, @Nonnull PotionEffectType type, byte amplifier,
@@ -60,7 +60,7 @@ public class PlayerUtil {
         packet.getIntegers().write(1, duration);
         packet.getBytes().write(2, flag);
         try {
-            WheelCore.protocolManager.sendServerPacket(player, packet);
+            WheelCore.getProtocolManager().sendServerPacket(player, packet);
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
@@ -71,7 +71,7 @@ public class PlayerUtil {
         packet.getIntegers().write(0, player.getEntityId());
         packet.getEffectTypes().write(0, type);
         try {
-            WheelCore.protocolManager.sendServerPacket(player, packet);
+            WheelCore.getProtocolManager().sendServerPacket(player, packet);
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
@@ -88,7 +88,7 @@ public class PlayerUtil {
         packet.getIntegers().write(1, NMSBlock.getDataId(new CraftBlock(block).getHandle()));
         packet.getBooleans().write(0, false);
         try {
-            WheelCore.protocolManager.sendServerPacket(player, packet);
+            WheelCore.getProtocolManager().sendServerPacket(player, packet);
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
@@ -99,7 +99,7 @@ public class PlayerUtil {
         packet.getBlockPositionModifier().write(0, new BlockPosition(loc.toVector()));
         packet.getBlockData().write(0, data);
         try {
-            WheelCore.protocolManager.sendServerPacket(player, packet);
+            WheelCore.getProtocolManager().sendServerPacket(player, packet);
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
@@ -109,7 +109,7 @@ public class PlayerUtil {
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.BLOCK_CHANGE);
         packet.getBlockPositionModifier().write(0, new BlockPosition(loc.toVector()));
         packet.getBlockData().write(0, data);
-        WheelCore.protocolManager.broadcastServerPacket(packet);
+        WheelCore.getProtocolManager().broadcastServerPacket(packet);
     }
 
     public static boolean breakBlock(@Nonnull Player player, @Nonnull Block block) {

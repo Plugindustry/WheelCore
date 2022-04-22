@@ -4,17 +4,20 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ItemMapping {
     public static final HashMap<String, ItemStack> itemMap = new HashMap<>();
-    public static final HashMap<String, EnumSet<Material>> dictMaterial = new HashMap<>();
-    public static final EnumMap<Material, Set<String>> vanillaOreDict = new EnumMap<>(Material.class);
+    public static final HashMap<String, HashSet<Material>> dictMaterial = new HashMap<>();
+    public static final HashMap<Material, Set<String>> vanillaOreDict = new HashMap<>();
 
     public static void set(@Nonnull String id, @Nonnull ItemStack itemStack) {
         itemMap.put(id, itemStack);
         MainManager.getItemOreDictionary(itemStack).forEach(dict -> {
-            if (!dictMaterial.containsKey(dict)) dictMaterial.put(dict, EnumSet.noneOf(Material.class));
+            if (!dictMaterial.containsKey(dict)) dictMaterial.put(dict, new HashSet<>());
             dictMaterial.get(dict).add(itemStack.getType());
         });
     }
@@ -29,7 +32,7 @@ public class ItemMapping {
 
     public static void registerVanillaOreDict(@Nonnull Material type, @Nonnull Set<String> dict) {
         dict.forEach(dictName -> {
-            if (!dictMaterial.containsKey(dictName)) dictMaterial.put(dictName, EnumSet.noneOf(Material.class));
+            if (!dictMaterial.containsKey(dictName)) dictMaterial.put(dictName, new HashSet<>());
             dictMaterial.get(dictName).add(type);
         });
         if (vanillaOreDict.containsKey(type)) vanillaOreDict.get(type).addAll(dict);

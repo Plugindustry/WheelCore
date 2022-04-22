@@ -17,9 +17,10 @@ import java.util.ArrayList;
 @Shadow("nms/Tag")
 @SuppressWarnings("all")
 public class Tag {
-    public static Tag WATER_TAG;
+    public final static Tag WATER_TAG;
 
     static {
+        Object tag = null;
         try {
             ClassPool cp = new ClassPool();
             cp.appendClassPath(new LoaderClassPath(MinecraftReflection.getEntityHumanClass().getClassLoader()));
@@ -46,8 +47,7 @@ public class Tag {
                     Method method = FuzzyUtil.getDeclaredMethod(((MethodCall) tmp.get(i)).getMethod());
                     if (method.getDeclaringClass() == MinecraftReflection.getEntityClass() &&
                             contract.isMatch(MethodInfo.fromMethod(method), null)) {
-                        WATER_TAG = new Tag(
-                                FuzzyUtil.getDeclaredField(((FieldAccess) tmp.get(i - 1)).getField()).get(null));
+                        tag = FuzzyUtil.getDeclaredField(((FieldAccess) tmp.get(i - 1)).getField()).get(null);
                         break;
                     }
                 }
@@ -55,6 +55,8 @@ public class Tag {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+        if (tag == null) throw new RuntimeException("Cannot find water tag");
+        WATER_TAG = new Tag(tag);
     }
 
     public Tag(Object o) {
