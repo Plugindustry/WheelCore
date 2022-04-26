@@ -33,13 +33,8 @@
             <url>https://maven.aliyun.com/nexus/content/groups/public/</url>
         </repository>
         <repository>
-            <id>bukkit-rip-releases</id>
-            <name>Bukkit.RIP</name>
-            <url>https://mvn.bukkit.rip/releases</url>
-        </repository>
-        <repository>
-            <id>minebench-repo</id>
-            <url>https://repo.minebench.de/</url>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
 
@@ -98,33 +93,14 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.javassist</groupId>
-            <artifactId>javassist</artifactId>
-            <version>3.28.0-GA</version>
-        </dependency>
-        <dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
-            <version>0.10.2</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.czm23333</groupId>
+            <groupId>com.github.czm23333</groupId>
             <artifactId>TransparentReflect</artifactId>
-            <version>1.0.1</version>
+            <version>v1.0.1</version>
         </dependency>
         <dependency>
-            <groupId>de.themoep</groupId>
-            <artifactId>inventorygui</artifactId>
-            <version>1.5.1-SNAPSHOT</version>
-            <scope>compile</scope>
+            <groupId>com.github.Phoenix616</groupId>
+            <artifactId>InventoryGui</artifactId>
+            <version>master-SNAPSHOT</version>
         </dependency>
     </dependencies>
-
-    <distributionManagement>
-        <repository>
-            <id>cat-snapshot</id>
-            <name>Cat Snapshot</name>
-            <url>https://mvn.bukkit.rip/snapshots</url>
-        </repository>
-    </distributionManagement>
 </project>
