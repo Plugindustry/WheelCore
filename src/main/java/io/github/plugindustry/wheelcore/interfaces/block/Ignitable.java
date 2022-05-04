@@ -7,7 +7,7 @@ import org.bukkit.event.block.BlockIgniteEvent;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public interface Ignitable {
+public interface Ignitable extends BlockBase {
     /**
      * @param block          The ignited block
      * @param cause          The cause of the ignition

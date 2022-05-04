@@ -4,7 +4,7 @@ import org.bukkit.block.Block;
 
 import javax.annotation.Nonnull;
 
-public interface RedstoneChargeable {
+public interface RedstoneChargeable extends BlockBase {
     /**
      * @param block    The charged block
      * @param oldPower The old power level

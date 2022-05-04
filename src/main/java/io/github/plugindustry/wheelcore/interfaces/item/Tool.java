@@ -7,7 +7,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 import java.util.Optional;
 
-public interface Tool {
+public interface Tool extends ItemBase {
     /**
      * @param block The block being damaged
      * @param tool  The tool used to damage the block

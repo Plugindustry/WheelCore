@@ -7,7 +7,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public interface Damageable {
+public interface Damageable extends ItemBase {
     /**
      * @param player The player whose item is being damaged, or null if this damage is not caused by players' behaviors
      * @param item   The item being damaged

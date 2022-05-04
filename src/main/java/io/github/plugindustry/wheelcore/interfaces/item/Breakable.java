@@ -5,6 +5,6 @@ import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public interface Breakable {
+public interface Breakable extends ItemBase {
     void onItemBreak(@Nonnull Player player, @Nonnull ItemStack item);
 }

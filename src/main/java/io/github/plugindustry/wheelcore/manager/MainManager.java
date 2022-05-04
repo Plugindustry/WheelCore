@@ -15,7 +15,6 @@ import io.github.plugindustry.wheelcore.interfaces.item.ItemData;
 import io.github.plugindustry.wheelcore.manager.data.block.BlockDataProvider;
 import io.github.plugindustry.wheelcore.manager.data.entity.EntityDataProvider;
 import io.github.plugindustry.wheelcore.manager.data.item.ItemDataProvider;
-import io.github.plugindustry.wheelcore.utils.DebuggingLogger;
 import io.github.plugindustry.wheelcore.world.EndPopulator;
 import io.github.plugindustry.wheelcore.world.NetherPopulator;
 import io.github.plugindustry.wheelcore.world.OverworldPopulator;
@@ -137,7 +136,6 @@ public class MainManager {
     }
 
     public static void addBlock(Location block, BlockBase instance, BlockData data) {
-        DebuggingLogger.debug("Block at " + block.toString());
         blockDataProvider.addBlock(block, instance, data);
     }
 

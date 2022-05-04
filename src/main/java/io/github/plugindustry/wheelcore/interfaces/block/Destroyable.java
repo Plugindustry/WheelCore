@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public interface Destroyable {
+public interface Destroyable extends BlockBase {
     boolean onBlockDestroy(@Nonnull Block block, @Nonnull DestroyMethod method, @Nullable ItemStack tool,
             @Nullable Player player);
 

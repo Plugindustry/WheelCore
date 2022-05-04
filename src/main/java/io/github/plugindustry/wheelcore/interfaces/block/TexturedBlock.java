@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public interface TexturedBlock {
+public interface TexturedBlock extends BlockBase {
     @Nonnull
     ItemStack getTextureItem(@Nonnull Location location, @Nonnull Player player);
 }

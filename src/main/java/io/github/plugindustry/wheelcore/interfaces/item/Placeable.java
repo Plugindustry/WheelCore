@@ -6,7 +6,7 @@ import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public interface Placeable {
+public interface Placeable extends ItemBase {
     boolean onItemPlace(@Nonnull ItemStack item, @Nonnull Block block, @Nonnull Block blockAgainst,
             @Nonnull Player player);
 }

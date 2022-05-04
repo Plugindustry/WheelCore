@@ -5,6 +5,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.util.Locale;
+import java.util.logging.Level;
 
 public class ConfigManager {
     public static int autoSaveDelay;
@@ -26,6 +27,7 @@ public class ConfigManager {
 
         autoSaveDelay = config.getInt("auto-save-delay", 0);
         debug = config.getBoolean("debug", false);
+        if (debug) WheelCore.getInstance().getLogger().setLevel(Level.ALL);
         fallbackLang = Locale.forLanguageTag(config.getString("fallback-lang", "en-US"));
     }
 

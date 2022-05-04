@@ -6,7 +6,7 @@ import org.bukkit.block.BlockFace;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public interface PistonPushable {
+public interface PistonPushable extends BlockBase {
     /**
      * @param block        The pushed block
      * @param piston       The piston that is pushing the block

@@ -12,7 +12,6 @@ import io.github.plugindustry.wheelcore.manager.PlayerDigHandler;
 import io.github.plugindustry.wheelcore.manager.TextureManager;
 import io.github.plugindustry.wheelcore.task.AfterLoadTask;
 import io.github.plugindustry.wheelcore.task.RegisterTask;
-import io.github.plugindustry.wheelcore.utils.DebuggingLogger;
 import io.github.plugindustry.wheelcore.utils.GsonHelper;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -78,13 +77,9 @@ public final class WheelCore extends JavaPlugin {
         ConfigManager.init();
 
         // Register blocks, items, recipes
-        DebuggingLogger.debug("register blocks");
         RegisterTask.registerBlock();
-        DebuggingLogger.debug("register items");
         RegisterTask.registerItem();
-        DebuggingLogger.debug("register recipes");
         RegisterTask.registerRecipes();
-        DebuggingLogger.debug("register vanilla ore dict");
         RegisterTask.registerVanillaOreDict();
 
         // Schedule the task that starts on the post-load stage

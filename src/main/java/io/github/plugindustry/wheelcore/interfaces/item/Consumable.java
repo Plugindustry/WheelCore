@@ -5,6 +5,6 @@ import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
 
-public interface Consumable {
+public interface Consumable extends ItemBase {
     boolean onItemConsume(@Nonnull Player player, @Nonnull ItemStack item);
 }

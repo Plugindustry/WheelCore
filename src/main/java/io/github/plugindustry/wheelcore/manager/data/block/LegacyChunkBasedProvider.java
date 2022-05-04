@@ -8,7 +8,6 @@ import io.github.plugindustry.wheelcore.interfaces.block.BlockData;
 import io.github.plugindustry.wheelcore.interfaces.item.ItemData;
 import io.github.plugindustry.wheelcore.manager.MainManager;
 import io.github.plugindustry.wheelcore.utils.CollectionUtil;
-import io.github.plugindustry.wheelcore.utils.DebuggingLogger;
 import io.github.plugindustry.wheelcore.utils.GsonHelper;
 import io.github.plugindustry.wheelcore.utils.Pair;
 import org.bukkit.*;
@@ -126,7 +125,6 @@ public class LegacyChunkBasedProvider implements BlockDataProvider {
         ItemStack dataItem = ((Jukebox) dataBlock.getState()).getRecord();
         SimpleStringItemData data = (SimpleStringItemData) MainManager.getItemData(dataItem);
         if (data == null) return;
-        DebuggingLogger.debug(data.data);
         List<BlockDescription> blockList = gson.fromJson(data.data, new TypeToken<List<BlockDescription>>() {
         }.getType());
         for (BlockDescription desc : blockList)
@@ -162,7 +160,6 @@ public class LegacyChunkBasedProvider implements BlockDataProvider {
             Block dataBlock = chunk.getBlock(0, 0, 0);
             dataBlock.setType(Material.JUKEBOX);
             String json = gson.toJson(descriptions);
-            DebuggingLogger.debug(json);
 
             Jukebox bs = (Jukebox) dataBlock.getState();
             ItemStack dataItem = new ItemStack(Material.MUSIC_DISC_11);

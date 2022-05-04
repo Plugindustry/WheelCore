@@ -2,13 +2,9 @@ package io.github.plugindustry.wheelcore.manager.recipe;
 
 import io.github.plugindustry.wheelcore.manager.recipe.choice.ItemStackChoice;
 import io.github.plugindustry.wheelcore.manager.recipe.choice.RecipeChoice;
-import io.github.plugindustry.wheelcore.utils.DebuggingLogger;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ShapedRecipeFactory {
     private final Map<Character, RecipeChoice> patternMapping = new HashMap<>();
@@ -29,11 +25,7 @@ public class ShapedRecipeFactory {
     }
 
     public ShapedRecipeFactory pattern(String... patterns) {
-        List<String> lastPattern = new LinkedList<>();
-        for (String pattern : patterns) {
-            DebuggingLogger.debug("Adding pattern: " + pattern);
-            lastPattern.add(pattern);
-        }
+        List<String> lastPattern = new LinkedList<>(Arrays.asList(patterns));
 
         if (patterns.length > 3) {
             throw new IllegalArgumentException("long pattern");
@@ -76,7 +68,6 @@ public class ShapedRecipeFactory {
         ShapedRecipe craftingRecipe = new ShapedRecipe(recipe, result.clone());
 
         this.damageMapping.forEach(craftingRecipe::addItemCost);
-        DebuggingLogger.debug(craftingRecipe.toString());
         return craftingRecipe;
     }
 }
