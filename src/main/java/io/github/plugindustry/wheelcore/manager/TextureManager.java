@@ -45,7 +45,7 @@ public class TextureManager {
         @SuppressWarnings("rawtypes") Class TileEntityTypes = Arrays.stream(
                         PacketPlayOutTileEntityData.getDeclaredFields())
                 .filter(field -> field.getType() != MinecraftReflection.getBlockPositionClass() &&
-                        field.getType() != MinecraftReflection.getNBTCompoundClass()).findFirst()
+                                 field.getType() != MinecraftReflection.getNBTCompoundClass()).findFirst()
                 .orElseThrow(() -> new IllegalStateException("Can't find TileEntityTypes field")).getType();
 
         Reflections reflections = new Reflections(
@@ -87,9 +87,12 @@ public class TextureManager {
         compound.put("SpawnRange", (short) 0);
         NbtCompound spawnDataCompound = NbtFactory.ofCompound(null);
         NbtCompound entityCompound = NbtFactory.ofCompound(null);
-        entityCompound.put("id", "minecraft:item");
-        entityCompound.put("Item", NbtFactory.fromNMS(
-                ShadowManager.shadowUnpack(CraftItemStack.asNMSCopy(item).save(new NBTTagCompound())), null));
+        entityCompound.put("id", "minecraft:armor_stand");
+        entityCompound.put("ArmorItems",
+                NbtFactory.ofList("ArmorItems", NbtFactory.ofCompound(null), NbtFactory.ofCompound(null),
+                        NbtFactory.ofCompound(null), NbtFactory.fromNMS(
+                                ShadowManager.shadowUnpack(CraftItemStack.asNMSCopy(item).save(new NBTTagCompound())),
+                                null)));
         spawnDataCompound.put("entity", entityCompound);
         compound.put("SpawnData", spawnDataCompound);
         packet.getNbtModifier().write(0, compound);
@@ -138,7 +141,7 @@ public class TextureManager {
             PacketContainer packet = event.getPacket();
             Player player = event.getPlayer();
             if (packet.getType() == PacketType.Play.Server.BLOCK_CHANGE ||
-                    packet.getType() == PacketType.Play.Server.BLOCK_BREAK) {
+                packet.getType() == PacketType.Play.Server.BLOCK_BREAK) {
                 BlockPosition pos = packet.getBlockPositionModifier().read(0);
                 if (MainManager.getBlockInstance(pos.toLocation(player.getWorld())) instanceof TexturedBlock) {
                     packet.getBlockData().write(0, WrappedBlockData.createData(Material.SPAWNER));
