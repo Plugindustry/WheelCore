@@ -19,7 +19,6 @@ import io.github.plugindustry.wheelcore.internal.shadow.NBTTagCompound;
 import io.github.plugindustry.wheelcore.utils.FuzzyUtil;
 import io.github.plugindustry.wheelcore.utils.PlayerUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.CreatureSpawner;
@@ -85,14 +84,14 @@ public class TextureManager {
         compound.put("RequiredPlayerRange", (short) 0);
         compound.put("SpawnCount", (short) 0);
         compound.put("SpawnRange", (short) 0);
-        NbtCompound spawnDataCompound = NbtFactory.ofCompound(null);
-        NbtCompound entityCompound = NbtFactory.ofCompound(null);
+        NbtCompound spawnDataCompound = NbtFactory.ofCompound("");
+        NbtCompound entityCompound = NbtFactory.ofCompound("");
         entityCompound.put("id", "minecraft:armor_stand");
         entityCompound.put("ArmorItems",
-                NbtFactory.ofList("ArmorItems", NbtFactory.ofCompound(null), NbtFactory.ofCompound(null),
-                        NbtFactory.ofCompound(null), NbtFactory.fromNMS(
+                NbtFactory.ofList("ArmorItems", NbtFactory.ofCompound(""), NbtFactory.ofCompound(""),
+                        NbtFactory.ofCompound(""), NbtFactory.fromNMS(
                                 ShadowManager.shadowUnpack(CraftItemStack.asNMSCopy(item).save(new NBTTagCompound())),
-                                null)));
+                                "")));
         spawnDataCompound.put("entity", entityCompound);
         compound.put("SpawnData", spawnDataCompound);
         packet.getNbtModifier().write(0, compound);
@@ -111,7 +110,7 @@ public class TextureManager {
             return;
         }
 
-        if (blockChange) PlayerUtil.sendBlockChange(player, loc, WrappedBlockData.createData(Material.SPAWNER));
+        if (blockChange) PlayerUtil.sendBlockChange(player, loc, WrappedBlockData.createData(Material.SPAWNER), false);
         try {
             WheelCore.getProtocolManager().sendServerPacket(player, generatePacket(loc, textureItem));
         } catch (InvocationTargetException e) {
@@ -143,11 +142,9 @@ public class TextureManager {
             if (packet.getType() == PacketType.Play.Server.BLOCK_CHANGE ||
                 packet.getType() == PacketType.Play.Server.BLOCK_BREAK) {
                 BlockPosition pos = packet.getBlockPositionModifier().read(0);
-                if (MainManager.getBlockInstance(pos.toLocation(player.getWorld())) instanceof TexturedBlock) {
-                    packet.getBlockData().write(0, WrappedBlockData.createData(Material.SPAWNER));
+                if (MainManager.getBlockInstance(pos.toLocation(player.getWorld())) instanceof TexturedBlock)
                     Bukkit.getScheduler().runTask(WheelCore.getInstance(),
-                            () -> updateTexture(pos.toLocation(player.getWorld()), player, false));
-                }
+                            () -> updateTexture(pos.toLocation(player.getWorld()), player));
                 event.setPacket(packet);
             } else if (packet.getType() == PacketType.Play.Server.MULTI_BLOCK_CHANGE) {
                 Location basePos = packet.getSectionPositions().read(0).toLocation(player.getWorld());
@@ -159,19 +156,20 @@ public class TextureManager {
                 for (int i = 0; i < blockPos.length; i++) {
                     Location pos = basePos.clone()
                             .add(blockPos[i] >>> 8 & 15, blockPos[i] & 15, blockPos[i] >>> 4 & 15);
-                    if (MainManager.getBlockInstance(pos) instanceof TexturedBlock) {
-                        blockData[i] = WrappedBlockData.createData(Material.SPAWNER);
-                        Bukkit.getScheduler().runTask(WheelCore.getInstance(), () -> updateTexture(pos, player, false));
-                    }
+                    if (MainManager.getBlockInstance(pos) instanceof TexturedBlock)
+                        Bukkit.getScheduler().runTask(WheelCore.getInstance(), () -> updateTexture(pos, player));
                 }
                 packet.getBlockDataArrays().write(0, blockData);
                 event.setPacket(packet);
             } else if (packet.getType() == PacketType.Play.Server.MAP_CHUNK) {
-                Chunk chunk = player.getWorld().getChunkAt(packet.getIntegers().read(0), packet.getIntegers().read(1));
+                int cX = packet.getIntegers().read(0);
+                int cZ = packet.getIntegers().read(1);
                 Bukkit.getScheduler().runTask(WheelCore.getInstance(),
-                        () -> MainManager.blockDataProvider.blockInChunk(chunk).forEach(pos -> {
-                            if (MainManager.getBlockInstance(pos) instanceof TexturedBlock) updateTexture(pos, player);
-                        }));
+                        () -> MainManager.blockDataProvider.blockInChunk(player.getWorld().getChunkAt(cX, cZ))
+                                .forEach(pos -> {
+                                    if (MainManager.getBlockInstance(pos) instanceof TexturedBlock)
+                                        updateTexture(pos, player);
+                                }));
             }
         }
     }

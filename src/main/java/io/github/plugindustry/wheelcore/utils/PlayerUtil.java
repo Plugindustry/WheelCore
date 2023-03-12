@@ -95,11 +95,16 @@ public class PlayerUtil {
     }
 
     public static void sendBlockChange(@Nonnull Player player, @Nonnull Location loc, WrappedBlockData data) {
+        sendBlockChange(player, loc, data, true);
+    }
+
+    public static void sendBlockChange(@Nonnull Player player, @Nonnull Location loc, WrappedBlockData data,
+            boolean invokeFilters) {
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.BLOCK_CHANGE);
         packet.getBlockPositionModifier().write(0, new BlockPosition(loc.toVector()));
         packet.getBlockData().write(0, data);
         try {
-            WheelCore.getProtocolManager().sendServerPacket(player, packet);
+            WheelCore.getProtocolManager().sendServerPacket(player, packet, invokeFilters);
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
