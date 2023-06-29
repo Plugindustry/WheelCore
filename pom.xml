@@ -36,6 +36,10 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
+        <repository>
+            <id>minebench-repo</id>
+            <url>https://repo.minebench.de/</url>
+        </repository>
     </repositories>
 
     <build>
@@ -98,9 +102,9 @@
             <version>v1.0.1</version>
         </dependency>
         <dependency>
-            <groupId>com.github.Phoenix616</groupId>
-            <artifactId>InventoryGui</artifactId>
-            <version>master-SNAPSHOT</version>
+            <groupId>de.themoep</groupId>
+            <artifactId>inventorygui</artifactId>
+            <version>1.6.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>
