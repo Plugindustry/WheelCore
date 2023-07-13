@@ -3,6 +3,7 @@ package io.github.plugindustry.wheelcore.manager.recipe;
 import io.github.plugindustry.wheelcore.manager.recipe.choice.ItemStackChoice;
 import io.github.plugindustry.wheelcore.manager.recipe.choice.RecipeChoice;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
@@ -35,7 +36,8 @@ public class ShapelessRecipe implements CraftingRecipe {
     }
 
     @Override
-    public boolean matches(@Nonnull List<List<ItemStack>> recipe, @Nullable Map<Integer, ItemStack> damage) {
+    public boolean matches(@Nullable Player player, @Nonnull List<List<ItemStack>> recipe,
+            @Nullable Map<Integer, ItemStack> damage) {
         List<ItemStack> shapeless = new LinkedList<>();
         List<RecipeChoice> checkList = new LinkedList<>(this.recipe);
         // convert everything to shapeless
@@ -56,10 +58,8 @@ public class ShapelessRecipe implements CraftingRecipe {
         }
 
         boolean result = checkList.isEmpty() && shapeless.isEmpty();
-        if (result && damage != null) {
-            // check for damage to items.
-            ShapedRecipe.checkItemDamage(recipe, damage, this.damages);
-        }
+        // check for damage.
+        if (result && damage != null) ShapedRecipe.checkItemDamage(player, recipe, damage, this.damages);
 
         return result;
     }

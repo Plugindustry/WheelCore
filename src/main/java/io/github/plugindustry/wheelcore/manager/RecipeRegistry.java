@@ -5,6 +5,7 @@ import io.github.plugindustry.wheelcore.manager.recipe.*;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
@@ -125,7 +126,7 @@ public class RecipeRegistry {
         else return false;
     }
 
-    public static CraftingRecipe matchCraftingRecipe(@Nonnull List<ItemStack> items,
+    public static CraftingRecipe matchCraftingRecipe(@Nullable Player player, @Nonnull List<ItemStack> items,
             @Nullable Map<Integer, ItemStack> damageResult) {
         // tidy up the matrix
         List<List<ItemStack>> matrix = new LinkedList<>();
@@ -145,9 +146,8 @@ public class RecipeRegistry {
 
         // then match the recipe
         for (RecipeBase recipeBase : recipes) {
-            if (recipeBase instanceof CraftingRecipe && ((CraftingRecipe) recipeBase).matches(matrix, damageResult)) {
-                return (CraftingRecipe) recipeBase;
-            }
+            if (recipeBase instanceof CraftingRecipe &&
+                ((CraftingRecipe) recipeBase).matches(player, matrix, damageResult)) return (CraftingRecipe) recipeBase;
         }
 
         return null;

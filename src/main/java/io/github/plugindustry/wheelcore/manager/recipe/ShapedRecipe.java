@@ -5,7 +5,10 @@ import io.github.plugindustry.wheelcore.interfaces.item.ItemBase;
 import io.github.plugindustry.wheelcore.manager.MainManager;
 import io.github.plugindustry.wheelcore.manager.recipe.choice.RecipeChoice;
 import io.github.plugindustry.wheelcore.utils.ItemStackUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
@@ -28,7 +31,7 @@ public class ShapedRecipe implements CraftingRecipe {
         this.result = result;
     }
 
-    static void checkItemDamage(List<List<ItemStack>> matrix, Map<Integer, ItemStack> damage,
+    static void checkItemDamage(Player player, List<List<ItemStack>> matrix, Map<Integer, ItemStack> damage,
             Map<RecipeChoice, Integer> damages) {
         for (int i = 0; i < matrix.size(); ++i) {
             List<ItemStack> row = matrix.get(i);
@@ -43,12 +46,19 @@ public class ShapedRecipe implements CraftingRecipe {
 
                         boolean flag = true;
                         int realDmg = dmg;
-                        ItemBase itemBase = MainManager.getItemInstance(newIs);
-                        if (itemBase instanceof Damageable) {
-                            Optional<Integer> result = ((Damageable) itemBase).onItemDamage(null, newIs, dmg);
-                            if (result.isPresent()) realDmg = result.get();
-                            else flag = false;
-                        } else if (itemBase != null) flag = false;
+                        if (player != null) {
+                            PlayerItemDamageEvent event = new PlayerItemDamageEvent(player, newIs, dmg);
+                            Bukkit.getPluginManager().callEvent(event);
+                            if (event.isCancelled()) flag = false;
+                            else realDmg = event.getDamage();
+                        } else {
+                            ItemBase itemBase = MainManager.getItemInstance(newIs);
+                            if (itemBase instanceof Damageable) {
+                                Optional<Integer> result = ((Damageable) itemBase).onItemDamage(null, newIs, dmg);
+                                if (result.isPresent()) realDmg = result.get();
+                                else flag = false;
+                            } else if (itemBase != null) flag = false;
+                        }
 
                         if (flag) ItemStackUtil.setDurability(newIs, ItemStackUtil.getDurability(newIs) + realDmg);
                         if (ItemStackUtil.getDurability(newIs) > newIs.getType().getMaxDurability())
@@ -61,7 +71,8 @@ public class ShapedRecipe implements CraftingRecipe {
     }
 
     @Override
-    public boolean matches(@Nonnull List<List<ItemStack>> matrix, @Nullable Map<Integer, ItemStack> damage) {
+    public boolean matches(@Nullable Player player, @Nonnull List<List<ItemStack>> matrix,
+            @Nullable Map<Integer, ItemStack> damage) {
         if (matrix.size() != 3) return false;
 
         for (int i = 0; i < matrix.size(); i++) {
@@ -76,7 +87,7 @@ public class ShapedRecipe implements CraftingRecipe {
         }
 
         // check for damage to items.
-        if (damage != null) checkItemDamage(matrix, damage, this.damages);
+        if (damage != null) checkItemDamage(player, matrix, damage, this.damages);
 
         return true;
     }

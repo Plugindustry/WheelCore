@@ -1,6 +1,7 @@
 package io.github.plugindustry.wheelcore.manager.recipe;
 
 import io.github.plugindustry.wheelcore.manager.recipe.choice.RecipeChoice;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
@@ -9,7 +10,8 @@ import java.util.List;
 import java.util.Map;
 
 public interface CraftingRecipe extends RecipeBase {
-    boolean matches(@Nonnull List<List<ItemStack>> recipe, @Nullable Map<Integer, ItemStack> damageResult);
+    boolean matches(@Nullable Player player, @Nonnull List<List<ItemStack>> recipe,
+            @Nullable Map<Integer, ItemStack> damageResult);
 
     CraftingRecipe addItemCost(RecipeChoice choice, int durability);
 }
