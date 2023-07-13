@@ -11,7 +11,6 @@ public class BipartiteGraph {
     private final boolean[] match;
     private final int[] dep;
 
-
     public BipartiteGraph(int U, int V) {
         this.U = U;
         this.V = V;
