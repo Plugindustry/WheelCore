@@ -73,9 +73,9 @@ public class BipartiteGraph {
             if (edge.used) continue;
             if ((cur < U && !edge.match) || (cur >= U && edge.match)) continue;
             if (dep[edge.to] != dep[cur] - 1) continue;
+            edge.used = edge.paired.used = true;
             if (dfs(edge.to)) {
                 flag = true;
-                edge.used = edge.paired.used = true;
                 edge.match = edge.paired.match = !edge.match;
                 match[cur] = true;
                 break;

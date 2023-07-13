@@ -49,10 +49,15 @@ public class ShapelessRecipe implements CraftingRecipe {
 
         for (int i = 0; i < size; ++i) {
             RecipeChoice choice = recipe.get(i);
+            boolean flag = false;
             for (int j = 0; j < size; ++j) {
                 ItemStack item = shapeless.get(j);
-                if (choice.matches(item)) graph.addEdge(i, size + j);
+                if (choice.matches(item)) {
+                    flag = true;
+                    graph.addEdge(i, size + j);
+                }
             }
+            if (!flag) return false;
         }
 
         boolean result = graph.maxMatch() == size;
