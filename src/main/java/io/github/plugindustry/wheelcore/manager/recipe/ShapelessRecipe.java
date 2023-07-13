@@ -2,6 +2,7 @@ package io.github.plugindustry.wheelcore.manager.recipe;
 
 import io.github.plugindustry.wheelcore.manager.recipe.choice.ItemStackChoice;
 import io.github.plugindustry.wheelcore.manager.recipe.choice.RecipeChoice;
+import io.github.plugindustry.wheelcore.utils.BipartiteGraph;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -36,30 +37,26 @@ public class ShapelessRecipe implements CraftingRecipe {
     }
 
     @Override
-    public boolean matches(@Nullable Player player, @Nonnull List<List<ItemStack>> recipe,
+    public boolean matches(@Nullable Player player, @Nonnull List<List<ItemStack>> matrix,
             @Nullable Map<Integer, ItemStack> damage) {
-        List<ItemStack> shapeless = new LinkedList<>();
-        List<RecipeChoice> checkList = new LinkedList<>(this.recipe);
-        // convert everything to shapeless
-        recipe.forEach(shapeless::addAll);
+        List<ItemStack> shapeless = new ArrayList<>();
+        matrix.forEach(shapeless::addAll);
 
-        for (Iterator<ItemStack> origin = shapeless.iterator(); origin.hasNext(); /*lol*/) {
-            ItemStack is = origin.next();
-            if (is == null || is.getType() == Material.AIR) {
-                origin.remove();
-                continue;
-            }
-            for (Iterator<RecipeChoice> check = checkList.iterator(); check.hasNext(); /*qwq*/) {
-                if (check.next().matches(is)) {
-                    check.remove();
-                    origin.remove();
-                }
+        if (shapeless.size() != recipe.size()) return false;
+
+        int size = recipe.size();
+        BipartiteGraph graph = new BipartiteGraph(size, size);
+
+        for (int i = 0; i < size; ++i) {
+            RecipeChoice choice = recipe.get(i);
+            for (int j = 0; j < size; ++j) {
+                ItemStack item = shapeless.get(j);
+                if (choice.matches(item)) graph.addEdge(i, size + j);
             }
         }
 
-        boolean result = checkList.isEmpty() && shapeless.isEmpty();
-        // check for damage.
-        if (result && damage != null) ShapedRecipe.checkItemDamage(player, recipe, damage, this.damages);
+        boolean result = graph.maxMatch() == size;
+        if (result && damage != null) ShapedRecipe.checkItemDamage(player, matrix, damage, this.damages);
 
         return result;
     }
