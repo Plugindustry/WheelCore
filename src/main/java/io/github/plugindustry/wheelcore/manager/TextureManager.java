@@ -153,9 +153,8 @@ public class TextureManager {
                 basePos.setZ(basePos.getBlockZ() << 4);
                 WrappedBlockData[] blockData = packet.getBlockDataArrays().read(0);
                 short[] blockPos = packet.getShortArrays().read(0);
-                for (int i = 0; i < blockPos.length; i++) {
-                    Location pos = basePos.clone()
-                            .add(blockPos[i] >>> 8 & 15, blockPos[i] & 15, blockPos[i] >>> 4 & 15);
+                for (short bp : blockPos) {
+                    Location pos = basePos.clone().add(bp >>> 8 & 15, bp & 15, bp >>> 4 & 15);
                     if (MainManager.getBlockInstance(pos) instanceof TexturedBlock)
                         Bukkit.getScheduler().runTask(WheelCore.getInstance(), () -> updateTexture(pos, player));
                 }

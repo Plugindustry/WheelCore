@@ -10,11 +10,13 @@ import io.github.plugindustry.wheelcore.internal.shadow.CraftItemStack;
 import io.github.plugindustry.wheelcore.manager.ItemMapping;
 import io.github.plugindustry.wheelcore.manager.MainManager;
 import io.github.plugindustry.wheelcore.utils.GsonHelper;
+import io.github.plugindustry.wheelcore.utils.StringUtil;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -41,7 +43,7 @@ public class NBTBasedProvider implements ItemDataProvider {
         NbtCompound compound = NbtFactory.asCompound(nbtWrapper);
         if (!compound.containsKey("wheel_core_item_type")) return null;
         Object type = compound.getObject("wheel_core_item_type");
-        return type instanceof String ? MainManager.getItemInstanceFromId((String) type) : null;
+        return type instanceof String ? MainManager.getItemInstanceFromId(StringUtil.str2Key((String) type)) : null;
     }
 
     @Nullable
@@ -87,7 +89,8 @@ public class NBTBasedProvider implements ItemDataProvider {
         NbtCompound compound = nbtWrapper.getType() == NbtType.TAG_COMPOUND ? NbtFactory.asCompound(nbtWrapper) :
                 NbtFactory.ofCompound("tag");
         if (instance == null) compound.remove("wheel_core_item_type");
-        else compound.put("wheel_core_item_type", MainManager.getIdFromInstance(instance));
+        else compound.put("wheel_core_item_type",
+                StringUtil.key2Str(Objects.requireNonNull(MainManager.getIdFromInstance(instance))));
         NbtFactory.setItemTag(newItemStack, compound);
         itemStack.setItemMeta(newItemStack.getItemMeta());
     }

@@ -3,7 +3,7 @@ version: ${project.version}
 main: io.github.plugindustry.wheelcore.WheelCore
 api-version: 1.16
 prefix: WheelCore
-authors: [ czm, Luchy-fish, timetraveler314 ]
+authors: [ czm, Lucky-fish, timetraveler314 ]
 description: WheelCore-LunXin
 depend: [ ProtocolLib ]
 load: STARTUP

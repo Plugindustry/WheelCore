@@ -11,6 +11,7 @@ public class BipartiteGraph {
     private final boolean[] match;
     private final int[] dep;
 
+    @SuppressWarnings("unchecked")
     public BipartiteGraph(int U, int V) {
         this.U = U;
         this.V = V;
@@ -103,7 +104,7 @@ public class BipartiteGraph {
     }
 
     public static class Edge {
-        public int to;
+        public final int to;
         public boolean match = false;
         public boolean used = false;
         public Edge paired;

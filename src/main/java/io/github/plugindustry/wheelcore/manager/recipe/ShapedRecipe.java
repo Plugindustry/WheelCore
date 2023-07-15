@@ -24,7 +24,7 @@ public class ShapedRecipe implements CraftingRecipe {
     private final Map<RecipeChoice, Integer> damages = new HashMap<>();
 
     protected ShapedRecipe(List<List<RecipeChoice>> matrix, ItemStack result) {
-        if (matrix.size() <= 0 || matrix.size() > 3 || matrix.get(0).size() <= 0 || matrix.get(0).size() > 3) {
+        if (matrix.size() == 0 || matrix.size() > 3 || matrix.get(0).size() == 0 || matrix.get(0).size() > 3) {
             throw new IllegalArgumentException("Incorrect size of recipe");
         }
         this.matrix = matrix;

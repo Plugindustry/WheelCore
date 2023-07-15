@@ -20,6 +20,7 @@ import io.github.plugindustry.wheelcore.world.NetherPopulator;
 import io.github.plugindustry.wheelcore.world.OverworldPopulator;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.world.WorldInitEvent;
@@ -33,9 +34,9 @@ import java.util.Set;
 import java.util.logging.Level;
 
 public class MainManager {
-    private static final BiMap<String, BlockBase> blockMapping = HashBiMap.create();
-    private static final BiMap<String, ItemBase> itemMapping = HashBiMap.create();
-    private static final BiMap<String, EntityBase> entityMapping = HashBiMap.create();
+    private static final BiMap<NamespacedKey, BlockBase> blockMapping = HashBiMap.create();
+    private static final BiMap<NamespacedKey, ItemBase> itemMapping = HashBiMap.create();
+    private static final BiMap<NamespacedKey, EntityBase> entityMapping = HashBiMap.create();
     private static final Queue<Runnable> postTickTasks = new ArrayDeque<>();
     public static final BlockDataProvider blockDataProvider = BlockDataProvider.defaultProvider();
     public static final EntityDataProvider entityDataProvider = EntityDataProvider.defaultProvider();
@@ -102,7 +103,7 @@ public class MainManager {
     }
 
     @Nullable
-    public static String getIdFromInstance(@Nullable Base instance) {
+    public static NamespacedKey getIdFromInstance(@Nullable Base instance) {
         if (instance instanceof BlockBase) return blockMapping.inverse().getOrDefault(instance, null);
         else if (instance instanceof ItemBase) return itemMapping.inverse().getOrDefault(instance, null);
         else if (instance instanceof EntityBase) return entityMapping.inverse().getOrDefault(instance, null);
@@ -110,19 +111,19 @@ public class MainManager {
     }
 
     @Nullable
-    public static BlockBase getBlockInstanceFromId(@Nullable String id) {
+    public static BlockBase getBlockInstanceFromId(@Nullable NamespacedKey id) {
         if (id == null) return null;
         return blockMapping.getOrDefault(id, null);
     }
 
     @Nullable
-    public static ItemBase getItemInstanceFromId(@Nullable String id) {
+    public static ItemBase getItemInstanceFromId(@Nullable NamespacedKey id) {
         if (id == null) return null;
         return itemMapping.getOrDefault(id, null);
     }
 
     @Nullable
-    public static EntityBase getEntityInstanceFromId(@Nullable String id) {
+    public static EntityBase getEntityInstanceFromId(@Nullable NamespacedKey id) {
         if (id == null) return null;
         return entityMapping.getOrDefault(id, null);
     }
@@ -202,30 +203,30 @@ public class MainManager {
         entityDataProvider.setData(entity, data);
     }
 
-    public static void registerBlock(@Nonnull String id, @Nonnull BlockBase b) {
+    public static void registerBlock(@Nonnull NamespacedKey id, @Nonnull BlockBase b) {
         blockMapping.put(id, b);
     }
 
-    public static void registerItem(@Nonnull String id, @Nonnull ItemBase b) {
+    public static void registerItem(@Nonnull NamespacedKey id, @Nonnull ItemBase b) {
         itemMapping.put(id, b);
     }
 
-    public static void registerEntity(@Nonnull String id, @Nonnull EntityBase b) {
+    public static void registerEntity(@Nonnull NamespacedKey id, @Nonnull EntityBase b) {
         entityMapping.put(id, b);
     }
 
     @Nonnull
-    public static BiMap<String, BlockBase> getBlockMapping() {
+    public static BiMap<NamespacedKey, BlockBase> getBlockMapping() {
         return Maps.unmodifiableBiMap(blockMapping);
     }
 
     @Nonnull
-    public static BiMap<String, ItemBase> getItemMapping() {
+    public static BiMap<NamespacedKey, ItemBase> getItemMapping() {
         return Maps.unmodifiableBiMap(itemMapping);
     }
 
     @Nonnull
-    public static BiMap<String, EntityBase> getEntityMapping() {
+    public static BiMap<NamespacedKey, EntityBase> getEntityMapping() {
         return Maps.unmodifiableBiMap(entityMapping);
     }
 }

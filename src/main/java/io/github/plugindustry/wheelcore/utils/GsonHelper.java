@@ -1,14 +1,15 @@
 package io.github.plugindustry.wheelcore.utils;
 
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSerializer;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 
 import javax.annotation.Nonnull;
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -60,10 +61,24 @@ public class GsonHelper {
         return ConfigurationSerialization.deserializeObject(map);
     }
 
+    private static final TypeAdapter<NamespacedKey> NAMESPACED_KEY_TYPE_ADAPTER = new TypeAdapter<>() {
+        @Override
+        public void write(JsonWriter jsonWriter, NamespacedKey namespacedKey) throws IOException {
+            jsonWriter.value(StringUtil.key2Str(namespacedKey));
+        }
+
+        @Override
+        public NamespacedKey read(JsonReader jsonReader) throws IOException {
+            String s = jsonReader.nextString();
+            return StringUtil.str2Key(s);
+        }
+    };
+
     public static GsonBuilder bukkitCompat() {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeHierarchyAdapter(ConfigurationSerializable.class, CONFIGURATION_SERIALIZABLE_SERIALIZER);
         builder.registerTypeHierarchyAdapter(ConfigurationSerializable.class, CONFIGURATION_SERIALIZABLE_DESERIALIZER);
+        builder.registerTypeAdapter(NamespacedKey.class, NAMESPACED_KEY_TYPE_ADAPTER);
 
         return builder;
     }

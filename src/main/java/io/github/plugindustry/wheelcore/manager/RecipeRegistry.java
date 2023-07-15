@@ -24,15 +24,17 @@ public class RecipeRegistry {
      * @param id              The id of the recipe
      * @param needPlaceholder Whether this recipe need a vanilla placeholder (that's to say, if there has already been a vanilla recipe sharing the same form with this recipe, set this to false, otherwise, set this to true)
      */
-    public static void register(RecipeBase recipeBase, String id, boolean needPlaceholder) {
+    public static void register(RecipeBase recipeBase, NamespacedKey id, boolean needPlaceholder) {
         recipes.add(recipeBase);
         if (needPlaceholder) if (recipeBase instanceof SmeltingRecipe) {
-            Bukkit.addRecipe(
-                    getPlaceholder(recipeBase, new NamespacedKey(WheelCore.getInstance(), "furnace_recipe_" + id)));
+            Bukkit.addRecipe(getPlaceholder(recipeBase, new NamespacedKey(WheelCore.getInstance(),
+                    "furnace_recipe_%s_%s".formatted(id.getNamespace(), id.getKey()))));
         } else if (recipeBase instanceof ShapedRecipe) {
-            placeholders.put(new NamespacedKey(WheelCore.getInstance(), "shaped_recipe_" + id), recipeBase);
+            placeholders.put(new NamespacedKey(WheelCore.getInstance(),
+                    "shaped_recipe_%s_%s".formatted(id.getNamespace(), id.getKey())), recipeBase);
         } else if (recipeBase instanceof ShapelessRecipe) {
-            placeholders.put(new NamespacedKey(WheelCore.getInstance(), "shapeless_recipe_" + id), recipeBase);
+            placeholders.put(new NamespacedKey(WheelCore.getInstance(),
+                    "shapeless_recipe_%s_%s".formatted(id.getNamespace(), id.getKey())), recipeBase);
         }
     }
 
@@ -89,19 +91,19 @@ public class RecipeRegistry {
         return null;
     }
 
-    public static void register(SmeltingRecipe recipe, String id) {
+    public static void register(SmeltingRecipe recipe, NamespacedKey id) {
         register(recipe, id, true);
     }
 
-    public static void register(ShapedRecipe recipe, String id) {
+    public static void register(ShapedRecipe recipe, NamespacedKey id) {
         register(recipe, id, true);
     }
 
-    public static void register(ShapelessRecipe recipe, String id) {
+    public static void register(ShapelessRecipe recipe, NamespacedKey id) {
         register(recipe, id, true);
     }
 
-    public static void register(RecipeBase recipe, String id) {
+    public static void register(RecipeBase recipe, NamespacedKey id) {
         register(recipe, id, false);
     }
 

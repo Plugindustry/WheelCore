@@ -213,16 +213,16 @@ public class LegacyChunkBasedProvider implements BlockDataProvider {
     }
 
     private static class BlockDescription {
-        int x;
-        int y;
-        int z;
-        String id;
-        BlockData data;
+        public int x;
+        public int y;
+        public int z;
+        public NamespacedKey id;
+        public BlockData data;
 
-        BlockDescription() {
+        public BlockDescription() {
         }
 
-        BlockDescription(Location loc, String id, BlockData data) {
+        public BlockDescription(Location loc, NamespacedKey id, BlockData data) {
             this.x = loc.getBlockX();
             this.y = loc.getBlockY();
             this.z = loc.getBlockZ();

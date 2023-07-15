@@ -80,14 +80,14 @@ public class PersistenceBasedProvider implements EntityDataProvider {
         if (entityData.containsKey(entity.getUniqueId())) entityData.get(entity.getUniqueId()).second = data;
     }
 
-    public static class EntityDescription {
-        String id;
-        EntityData data;
+    private static class EntityDescription {
+        public NamespacedKey id;
+        public EntityData data;
 
-        EntityDescription() {
+        public EntityDescription() {
         }
 
-        EntityDescription(String id, EntityData data) {
+        public EntityDescription(NamespacedKey id, EntityData data) {
             this.id = id;
             this.data = data;
         }
