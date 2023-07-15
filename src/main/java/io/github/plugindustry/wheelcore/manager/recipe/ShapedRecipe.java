@@ -86,7 +86,7 @@ public class ShapedRecipe implements CraftingRecipe {
             }
         }
 
-        // check for damage to items.
+        // check for damage
         if (damage != null) checkItemDamage(player, matrix, damage, this.damages);
 
         return true;

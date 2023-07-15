@@ -117,7 +117,7 @@ public class MultiBlockManager {
     }
 
     public static class SimpleEnvironment implements Environment {
-        private final TreeMap<String, Object> envMap = new TreeMap<>();
+        private final HashMap<String, Object> envMap = new HashMap<>();
 
         @Override
         @SuppressWarnings("unchecked")
