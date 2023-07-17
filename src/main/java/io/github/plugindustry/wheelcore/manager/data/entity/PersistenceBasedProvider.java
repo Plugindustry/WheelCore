@@ -1,7 +1,7 @@
 package io.github.plugindustry.wheelcore.manager.data.entity;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
+import com.google.gson.reflect.TypeToken;
 import io.github.plugindustry.wheelcore.WheelCore;
 import io.github.plugindustry.wheelcore.interfaces.entity.EntityBase;
 import io.github.plugindustry.wheelcore.interfaces.entity.EntityData;
@@ -16,6 +16,7 @@ import org.bukkit.persistence.PersistentDataType;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -23,38 +24,56 @@ public class PersistenceBasedProvider implements EntityDataProvider {
     private final static NamespacedKey ENTITY_DATA_KEY = new NamespacedKey(WheelCore.getInstance(), "entity_data");
     private static final Gson gson;
 
+    public static final JsonSerializer<EntityDescription> ENTITY_DESC_SERIALIZER = (obj, type, jsonSerializationContext) -> {
+        JsonObject result = new JsonObject();
+        result.add("id", jsonSerializationContext.serialize(obj.id));
+        result.add("data", jsonSerializationContext.serialize(obj.data));
+        return result;
+    };
+    public static final JsonDeserializer<EntityDescription> ENTITY_DESC_DESERIALIZER = (jsonElement, type, jsonDeserializationContext) -> {
+        JsonObject jsonObject = jsonElement.getAsJsonObject();
+        EntityDescription desc = new EntityDescription();
+        desc.id = jsonDeserializationContext.deserialize(jsonObject.get("id"), NamespacedKey.class);
+        desc.data = jsonDeserializationContext.deserialize(jsonObject.get("data"),
+                new TypeToken<Map<NamespacedKey, EntityData>>() {
+                }.getType());
+        return desc;
+    };
+
     static {
         GsonBuilder gbs = GsonHelper.bukkitCompat();
         gbs.registerTypeAdapter(EntityData.class, GsonHelper.POLYMORPHISM_SERIALIZER);
         gbs.registerTypeAdapter(EntityData.class, GsonHelper.POLYMORPHISM_DESERIALIZER);
+        gbs.registerTypeAdapter(EntityDescription.class, ENTITY_DESC_SERIALIZER);
+        gbs.registerTypeAdapter(EntityDescription.class, ENTITY_DESC_DESERIALIZER);
         gson = gbs.create();
     }
 
-    private final HashMap<UUID, Pair<EntityBase, EntityData>> entityData = new HashMap<>();
+    private final HashMap<UUID, Pair<EntityBase, Map<NamespacedKey, EntityData>>> entities = new HashMap<>();
 
     @Override
     public void loadEntity(@Nonnull Entity entity) {
         String data = entity.getPersistentDataContainer().get(ENTITY_DATA_KEY, PersistentDataType.STRING);
         if (data == null) return;
         EntityDescription description = gson.fromJson(data, EntityDescription.class);
-        if (MainManager.getEntityMapping().containsKey(description.id)) entityData.put(entity.getUniqueId(),
+        if (MainManager.getEntityMapping().containsKey(description.id)) entities.put(entity.getUniqueId(),
                 Pair.of(MainManager.getEntityMapping().get(description.id), description.data));
     }
 
     @Override
     public void unloadEntity(@Nonnull Entity entity) {
         UUID uuid = entity.getUniqueId();
-        if (!entityData.containsKey(uuid)) return;
-        Pair<EntityBase, EntityData> pair = entityData.get(uuid);
-        entity.getPersistentDataContainer().set(ENTITY_DATA_KEY, PersistentDataType.STRING, gson.toJson(
-                new EntityDescription(MainManager.getEntityMapping().inverse().get(pair.first), pair.second)));
-        entityData.remove(uuid);
+        if (!entities.containsKey(uuid)) return;
+        Pair<EntityBase, Map<NamespacedKey, EntityData>> pair = entities.get(uuid);
+        entity.getPersistentDataContainer().set(ENTITY_DATA_KEY, PersistentDataType.STRING,
+                gson.toJson(new EntityDescription(MainManager.getIdFromInstance(pair.first), pair.second)));
+        entities.remove(uuid);
     }
 
     @Override
     public void beforeSave() {
-        entityData.keySet().removeIf(uuid -> Bukkit.getEntity(uuid) == null);
-        entityData.forEach((uuid, data) -> Objects.requireNonNull(Bukkit.getEntity(uuid)).getPersistentDataContainer()
+        entities.keySet().removeIf(uuid -> Bukkit.getEntity(uuid) == null);
+        entities.forEach((uuid, data) -> Objects.requireNonNull(Bukkit.getEntity(uuid)).getPersistentDataContainer()
                 .set(ENTITY_DATA_KEY, PersistentDataType.STRING,
                         gson.toJson(new EntityDescription(MainManager.getIdFromInstance(data.first), data.second))));
     }
@@ -66,28 +85,60 @@ public class PersistenceBasedProvider implements EntityDataProvider {
     @Nullable
     @Override
     public EntityBase instanceOf(@Nonnull Entity entity) {
-        return entityData.containsKey(entity.getUniqueId()) ? entityData.get(entity.getUniqueId()).first : null;
+        return hasEntity(entity) ? entities.get(entity.getUniqueId()).first : null;
+    }
+
+    @Override
+    public boolean hasEntity(@Nonnull Entity entity) {
+        return entities.containsKey(entity.getUniqueId()) && entities.get(entity.getUniqueId()).first != null;
     }
 
     @Nullable
     @Override
     public EntityData getData(@Nonnull Entity entity) {
-        return entityData.containsKey(entity.getUniqueId()) ? entityData.get(entity.getUniqueId()).second : null;
+        return hasEntity(entity) ? entities.get(entity.getUniqueId()).second.get(null) : null;
     }
 
     @Override
     public void setData(@Nonnull Entity entity, @Nullable EntityData data) {
-        if (entityData.containsKey(entity.getUniqueId())) entityData.get(entity.getUniqueId()).second = data;
+        if (hasEntity(entity)) entities.get(entity.getUniqueId()).second.put(null, data);
+    }
+
+    @Nullable
+    @Override
+    public EntityData getAdditionalData(@Nonnull Entity entity, @Nonnull NamespacedKey key) {
+        Objects.requireNonNull(key);
+
+        return entities.containsKey(entity.getUniqueId()) ? entities.get(entity.getUniqueId()).second.get(key) : null;
+    }
+
+    @Override
+    public void setAdditionalData(@Nonnull Entity entity, @Nonnull NamespacedKey key, @Nullable EntityData data) {
+        UUID uuid = entity.getUniqueId();
+        if (!entities.containsKey(uuid)) entities.put(uuid, Pair.of(null, new HashMap<>()));
+
+        Pair<EntityBase, Map<NamespacedKey, EntityData>> pair = entities.get(uuid);
+
+        if (data == null) pair.second.remove(key);
+        else pair.second.put(key, data);
+    }
+
+    @Override
+    public void addEntity(@Nonnull Entity entity, @Nonnull EntityBase instance, @Nullable EntityData data) {
+        UUID uuid = entity.getUniqueId();
+        Map<NamespacedKey, EntityData> map = entities.containsKey(uuid) ? entities.get(uuid).second : new HashMap<>();
+        if (!(data == null)) map.put(null, data);
+        entities.put(uuid, Pair.of(instance, map));
     }
 
     private static class EntityDescription {
         public NamespacedKey id;
-        public EntityData data;
+        public Map<NamespacedKey, EntityData> data;
 
         public EntityDescription() {
         }
 
-        public EntityDescription(NamespacedKey id, EntityData data) {
+        public EntityDescription(NamespacedKey id, Map<NamespacedKey, EntityData> data) {
             this.id = id;
             this.data = data;
         }

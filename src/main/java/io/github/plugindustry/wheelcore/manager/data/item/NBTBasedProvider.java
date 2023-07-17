@@ -11,6 +11,7 @@ import io.github.plugindustry.wheelcore.manager.ItemMapping;
 import io.github.plugindustry.wheelcore.manager.MainManager;
 import io.github.plugindustry.wheelcore.utils.GsonHelper;
 import io.github.plugindustry.wheelcore.utils.StringUtil;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
@@ -61,6 +62,24 @@ public class NBTBasedProvider implements ItemDataProvider {
         return data instanceof String ? gson.fromJson((String) data, ItemData.class) : null;
     }
 
+    @Nullable
+    @Override
+    public ItemData getAdditionalData(@Nullable ItemStack itemStack, @Nonnull NamespacedKey key) {
+        if (itemStack == null) return null;
+        Optional<NbtWrapper<?>> nbtWrapperOptional = NbtFactory.fromItemOptional(
+                (ItemStack) ShadowManager.shadowUnpack(CraftItemStack.asCraftCopy(itemStack)));
+        if (nbtWrapperOptional.isEmpty()) return null;
+        NbtWrapper<?> nbtWrapper = nbtWrapperOptional.get();
+        if (nbtWrapper.getType() != NbtType.TAG_COMPOUND) return null;
+        NbtCompound compound = NbtFactory.asCompound(nbtWrapper);
+        if (!compound.containsKey("wheel_core_item_additional_data")) return null;
+        NbtCompound additional = compound.getCompound("wheel_core_item_additional_data");
+        String keyStr = StringUtil.key2Str(key);
+        if (!additional.containsKey(keyStr)) return null;
+        Object data = additional.getObject(keyStr);
+        return data instanceof String ? gson.fromJson((String) data, ItemData.class) : null;
+    }
+
     @Nonnull
     @Override
     @SuppressWarnings("unchecked")
@@ -103,6 +122,25 @@ public class NBTBasedProvider implements ItemDataProvider {
                 NbtFactory.ofCompound("tag");
         if (data == null) compound.remove("wheel_core_item_data");
         else compound.put("wheel_core_item_data", gson.toJson(data, ItemData.class));
+        NbtFactory.setItemTag(newItemStack, compound);
+        itemStack.setItemMeta(newItemStack.getItemMeta());
+    }
+
+    @Override
+    public void setAdditionalData(@Nonnull ItemStack itemStack, @Nonnull NamespacedKey key, @Nullable ItemData data) {
+        ItemStack newItemStack = (ItemStack) ShadowManager.shadowUnpack(CraftItemStack.asCraftCopy(itemStack));
+        NbtWrapper<?> nbtWrapper = NbtFactory.fromItemTag(newItemStack);
+        NbtCompound compound = nbtWrapper.getType() == NbtType.TAG_COMPOUND ? NbtFactory.asCompound(nbtWrapper) :
+                NbtFactory.ofCompound("tag");
+        NbtCompound additional;
+        if (compound.containsKey("wheel_core_item_additional_data"))
+            additional = compound.getCompound("wheel_core_item_additional_data");
+        else additional = NbtFactory.ofCompound("tag");
+        String keyStr = StringUtil.key2Str(key);
+        if (data == null) additional.remove(keyStr);
+        else additional.put(keyStr, gson.toJson(data, ItemData.class));
+        if (additional.getKeys().isEmpty()) compound.remove("wheel_core_item_additional_data");
+        else compound.put("wheel_core_item_additional_data", additional);
         NbtFactory.setItemTag(newItemStack, compound);
         itemStack.setItemMeta(newItemStack.getItemMeta());
     }

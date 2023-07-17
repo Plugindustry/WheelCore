@@ -1,7 +1,6 @@
 package io.github.plugindustry.wheelcore.manager.data.block;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import io.github.plugindustry.wheelcore.interfaces.block.BlockBase;
 import io.github.plugindustry.wheelcore.interfaces.block.BlockData;
@@ -22,15 +21,39 @@ import java.util.*;
 public class LegacyChunkBasedProvider implements BlockDataProvider {
     private static final Gson gson;
 
+    public static final JsonSerializer<BlockDescription> BLOCK_DESC_SERIALIZER = (obj, type, jsonSerializationContext) -> {
+        JsonObject result = new JsonObject();
+        result.addProperty("x", obj.x);
+        result.addProperty("y", obj.y);
+        result.addProperty("z", obj.z);
+        result.add("id", jsonSerializationContext.serialize(obj.id));
+        result.add("data", jsonSerializationContext.serialize(obj.data));
+        return result;
+    };
+    public static final JsonDeserializer<BlockDescription> BLOCK_DESC_DESERIALIZER = (jsonElement, type, jsonDeserializationContext) -> {
+        JsonObject jsonObject = jsonElement.getAsJsonObject();
+        BlockDescription desc = new BlockDescription();
+        desc.x = jsonObject.get("x").getAsInt();
+        desc.y = jsonObject.get("y").getAsInt();
+        desc.z = jsonObject.get("z").getAsInt();
+        desc.id = jsonDeserializationContext.deserialize(jsonObject.get("id"), NamespacedKey.class);
+        desc.data = jsonDeserializationContext.deserialize(jsonObject.get("data"),
+                new TypeToken<Map<NamespacedKey, BlockData>>() {
+                }.getType());
+        return desc;
+    };
+
     static {
         GsonBuilder gbs = GsonHelper.bukkitCompat();
         gbs.registerTypeAdapter(BlockData.class, GsonHelper.POLYMORPHISM_SERIALIZER);
         gbs.registerTypeAdapter(BlockData.class, GsonHelper.POLYMORPHISM_DESERIALIZER);
+        gbs.registerTypeAdapter(BlockDescription.class, BLOCK_DESC_SERIALIZER);
+        gbs.registerTypeAdapter(BlockDescription.class, BLOCK_DESC_DESERIALIZER);
         gson = gbs.create();
     }
 
     private final HashMap<BlockBase, Set<Location>> baseBlocks = new HashMap<>();
-    private final HashMap<Location, Pair<BlockBase, BlockData>> blocks = new HashMap<>();
+    private final HashMap<Location, Pair<BlockBase, Map<NamespacedKey, BlockData>>> blocks = new HashMap<>();
     private final HashMap<World, HashMap<Long, HashSet<Location>>> blockInChunks = new HashMap<>();
 
     private static long chunkDescAt(Location loc) {
@@ -49,20 +72,53 @@ public class LegacyChunkBasedProvider implements BlockDataProvider {
 
         if (!hasBlock(loc)) return null;
 
-        return blocks.get(loc).second;
+        return blocks.get(loc).second.get(null);
     }
 
     @Override
-    public void setDataAt(@Nonnull Location loc, BlockData data) {
+    public void setDataAt(@Nonnull Location loc, @Nullable BlockData data) {
         loc = loc.clone();
         loc.setPitch(0);
         loc.setYaw(0);
 
         if (!hasBlock(loc)) return;
 
-        Pair<BlockBase, BlockData> pair = blocks.get(loc);
-        if (pair.second != null) pair.second.unload();
-        pair.second = data;
+        Pair<BlockBase, Map<NamespacedKey, BlockData>> pair = blocks.get(loc);
+        if (pair.second.containsKey(null)) pair.second.get(null).unload();
+
+        if (data == null) pair.second.remove(null);
+        else pair.second.put(null, data);
+    }
+
+    @Nullable
+    @Override
+    public BlockData additionalDataAt(@Nonnull Location loc, @Nonnull NamespacedKey key) {
+        Objects.requireNonNull(key);
+
+        loc = loc.clone();
+        loc.setPitch(0);
+        loc.setYaw(0);
+
+        if (!blocks.containsKey(loc)) return null;
+
+        return blocks.get(loc).second.get(key);
+    }
+
+    @Override
+    public void setAdditionalDataAt(@Nonnull Location loc, @Nonnull NamespacedKey key, @Nullable BlockData data) {
+        Objects.requireNonNull(key);
+
+        loc = loc.clone();
+        loc.setPitch(0);
+        loc.setYaw(0);
+
+        if (!blocks.containsKey(loc)) blocks.put(loc, Pair.of(null, new HashMap<>()));
+
+        Pair<BlockBase, Map<NamespacedKey, BlockData>> pair = blocks.get(loc);
+        if (pair.second.containsKey(key)) pair.second.get(key).unload();
+
+        if (data == null) pair.second.remove(key);
+        else pair.second.put(key, data);
     }
 
     @Override
@@ -81,21 +137,27 @@ public class LegacyChunkBasedProvider implements BlockDataProvider {
         block.setPitch(0);
         block.setYaw(0);
 
-        return blocks.containsKey(block);
+        return blocks.containsKey(block) && blocks.get(block).first != null;
     }
 
     @Override
-    public void addBlock(@Nonnull Location block, @Nonnull BlockBase instance, BlockData data) {
+    public void addBlock(@Nonnull Location block, @Nonnull BlockBase instance, @Nullable BlockData data) {
         block = block.clone();
         block.setPitch(0);
         block.setYaw(0);
 
-        baseBlocks.putIfAbsent(instance, new HashSet<>());
+        if (!baseBlocks.containsKey(instance)) baseBlocks.put(instance, new HashSet<>());
         baseBlocks.get(instance).add(block);
-        blocks.put(block, Pair.of(instance, data));
-        blockInChunks.putIfAbsent(block.getWorld(), new HashMap<>());
-        blockInChunks.get(block.getWorld()).putIfAbsent(chunkDescAt(block), new HashSet<>());
-        blockInChunks.get(block.getWorld()).get(chunkDescAt(block)).add(block);
+        Map<NamespacedKey, BlockData> map = blocks.containsKey(block) ? blocks.get(block).second : new HashMap<>();
+        if (!(data == null)) map.put(null, data);
+        blocks.put(block, Pair.of(instance, map));
+        World world = block.getWorld();
+        HashMap<Long, HashSet<Location>> worldMap;
+        if (!blockInChunks.containsKey(world)) blockInChunks.put(world, worldMap = new HashMap<>());
+        else worldMap = blockInChunks.get(world);
+        long chunkDesc = chunkDescAt(block);
+        if (!worldMap.containsKey(chunkDesc)) worldMap.put(chunkDesc, new HashSet<>());
+        worldMap.get(chunkDesc).add(block);
     }
 
     @Override
@@ -107,10 +169,10 @@ public class LegacyChunkBasedProvider implements BlockDataProvider {
         BlockBase base = instanceAt(block);
         if (baseBlocks.containsKey(base)) baseBlocks.get(base).remove(block);
         if (blockInChunks.containsKey(block.getWorld()) &&
-                blockInChunks.get(block.getWorld()).containsKey(chunkDescAt(block)))
+            blockInChunks.get(block.getWorld()).containsKey(chunkDescAt(block)))
             blockInChunks.get(block.getWorld()).get(chunkDescAt(block)).remove(block);
-        Pair<BlockBase, BlockData> pair = blocks.get(block);
-        if (pair.second != null) pair.second.unload();
+        Pair<BlockBase, Map<NamespacedKey, BlockData>> pair = blocks.get(block);
+        pair.second.values().forEach(BlockData::unload);
         blocks.remove(block);
     }
 
@@ -128,9 +190,14 @@ public class LegacyChunkBasedProvider implements BlockDataProvider {
         List<BlockDescription> blockList = gson.fromJson(data.data, new TypeToken<List<BlockDescription>>() {
         }.getType());
         for (BlockDescription desc : blockList)
-            if (MainManager.getBlockInstanceFromId(desc.id) != null)
-                addBlock(new Location(world, desc.x, desc.y, desc.z),
-                        Objects.requireNonNull(MainManager.getBlockInstanceFromId(desc.id)), desc.data);
+            if (MainManager.getBlockInstanceFromId(desc.id) != null) {
+                Location loc = new Location(world, desc.x, desc.y, desc.z);
+                addBlock(loc, Objects.requireNonNull(MainManager.getBlockInstanceFromId(desc.id)), desc.data.get(null));
+                desc.data.forEach((k, v) -> {
+                    if (k == null) return;
+                    setAdditionalDataAt(loc, k, v);
+                });
+            }
 
         dataBlock.setType(Material.BEDROCK);
     }
@@ -148,7 +215,7 @@ public class LegacyChunkBasedProvider implements BlockDataProvider {
         if (!blockInChunks.containsKey(chunk.getWorld())) return;
         HashSet<Location> locations = blockInChunks.get(chunk.getWorld()).get(chunkDesc);
         if (locations != null) {
-            LinkedList<BlockDescription> descriptions = new LinkedList<>();
+            ArrayList<BlockDescription> descriptions = new ArrayList<>();
             locations.forEach(loc -> descriptions.add(
                     new BlockDescription(loc, MainManager.getIdFromInstance(blocks.get(loc).first),
                             blocks.get(loc).second)));
@@ -195,7 +262,7 @@ public class LegacyChunkBasedProvider implements BlockDataProvider {
 
     @Nonnull
     @Override
-    public Set<Location> blockInChunk(@Nonnull Chunk chunk) {
+    public Set<Location> blocksInChunk(@Nonnull Chunk chunk) {
         if (blockInChunks.containsKey(chunk.getWorld()))
             if (blockInChunks.get(chunk.getWorld()).containsKey(compress(chunk.getX(), chunk.getZ())))
                 return CollectionUtil.unmodifiableCopyOnReadSet(
@@ -217,12 +284,12 @@ public class LegacyChunkBasedProvider implements BlockDataProvider {
         public int y;
         public int z;
         public NamespacedKey id;
-        public BlockData data;
+        public Map<NamespacedKey, BlockData> data;
 
         public BlockDescription() {
         }
 
-        public BlockDescription(Location loc, NamespacedKey id, BlockData data) {
+        public BlockDescription(Location loc, NamespacedKey id, Map<NamespacedKey, BlockData> data) {
             this.x = loc.getBlockX();
             this.y = loc.getBlockY();
             this.z = loc.getBlockZ();

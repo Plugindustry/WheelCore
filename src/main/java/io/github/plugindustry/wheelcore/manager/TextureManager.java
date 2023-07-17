@@ -164,7 +164,7 @@ public class TextureManager {
                 int cX = packet.getIntegers().read(0);
                 int cZ = packet.getIntegers().read(1);
                 Bukkit.getScheduler().runTask(WheelCore.getInstance(),
-                        () -> MainManager.blockDataProvider.blockInChunk(player.getWorld().getChunkAt(cX, cZ))
+                        () -> MainManager.blockDataProvider.blocksInChunk(player.getWorld().getChunkAt(cX, cZ))
                                 .forEach(pos -> {
                                     if (MainManager.getBlockInstance(pos) instanceof TexturedBlock)
                                         updateTexture(pos, player);

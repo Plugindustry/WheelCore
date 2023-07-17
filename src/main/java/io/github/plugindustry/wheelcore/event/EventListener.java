@@ -322,11 +322,12 @@ public class EventListener implements Listener {
         if (event.hasItem() && event.useItemInHand() != Event.Result.DENY) {
             ItemStack tool = Objects.requireNonNull(event.getItem());
             ItemBase itemBase = MainManager.getItemInstance(tool);
-            if (!(itemBase == null || itemBase instanceof Interactive &&
-                                      ((Interactive) itemBase).onInteract(event.getPlayer(), event.getAction(),
-                                              event.getHand(), tool, event.getClickedBlock(), null)))
-                event.setUseItemInHand(Event.Result.DENY);
-        } else if (event.hasBlock() && event.useInteractedBlock() != Event.Result.DENY) {
+            if (itemBase == null || itemBase instanceof Interactive &&
+                                    ((Interactive) itemBase).onInteract(event.getPlayer(), event.getAction(),
+                                            event.getHand(), tool, event.getClickedBlock(), null)) return;
+            else event.setUseItemInHand(Event.Result.DENY);
+        }
+        if (event.hasBlock() && event.useInteractedBlock() != Event.Result.DENY) {
             Block block = Objects.requireNonNull(event.getClickedBlock());
             BlockBase blockBase = MainManager.getBlockInstance(block.getLocation());
             if (!(blockBase == null || blockBase instanceof Interactive &&
