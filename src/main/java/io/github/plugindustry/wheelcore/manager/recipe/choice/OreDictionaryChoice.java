@@ -32,7 +32,7 @@ public class OreDictionaryChoice implements RecipeChoice {
     @Override
     public boolean matches(@Nonnull ItemStack item) {
         return ((!exact) || ItemStackUtil.getDurability(item) == 0) &&
-                MainManager.getItemOreDictionary(item).stream().anyMatch(dictionaryKeys::contains);
+               MainManager.getItemOreDictionary(item).stream().anyMatch(dictionaryKeys::contains);
     }
 
     @Nonnull

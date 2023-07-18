@@ -75,7 +75,7 @@ public class PowerManager {
                     while (iterator.hasNext()) {
                         Wire.PowerPacket packet = iterator.next();
                         if (MainManager.getBlockInstance(packet.src) instanceof EnergyOutputable &&
-                                packet.amount > energyLoss) {
+                            packet.amount > energyLoss) {
                             // Input
                             if (!inputs.isEmpty() && r.nextBoolean()) {
                                 Location availableInput = StreamUtil.randomPick(

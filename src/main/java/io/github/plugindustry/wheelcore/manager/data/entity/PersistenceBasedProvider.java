@@ -21,9 +21,6 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class PersistenceBasedProvider implements EntityDataProvider {
-    private final static NamespacedKey ENTITY_DATA_KEY = new NamespacedKey(WheelCore.getInstance(), "entity_data");
-    private static final Gson gson;
-
     public static final JsonSerializer<EntityDescription> ENTITY_DESC_SERIALIZER = (obj, type, jsonSerializationContext) -> {
         JsonObject result = new JsonObject();
         result.add("id", jsonSerializationContext.serialize(obj.id));
@@ -39,6 +36,8 @@ public class PersistenceBasedProvider implements EntityDataProvider {
                 }.getType());
         return desc;
     };
+    private final static NamespacedKey ENTITY_DATA_KEY = new NamespacedKey(WheelCore.getInstance(), "entity_data");
+    private static final Gson gson;
 
     static {
         GsonBuilder gbs = GsonHelper.bukkitCompat();

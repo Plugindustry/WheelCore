@@ -48,6 +48,18 @@ public class GsonHelper {
     private static final JsonDeserializer<ConfigurationSerializable> CONFIGURATION_SERIALIZABLE_DESERIALIZER = (jsonElement, type, jsonDeserializationContext) -> deserializeMap(
             jsonDeserializationContext.deserialize(jsonElement, new TypeToken<Map<String, Object>>() {
             }.getType()));
+    private static final TypeAdapter<NamespacedKey> NAMESPACED_KEY_TYPE_ADAPTER = new TypeAdapter<>() {
+        @Override
+        public void write(JsonWriter jsonWriter, NamespacedKey namespacedKey) throws IOException {
+            jsonWriter.value(StringUtil.key2Str(namespacedKey));
+        }
+
+        @Override
+        public NamespacedKey read(JsonReader jsonReader) throws IOException {
+            String s = jsonReader.nextString();
+            return StringUtil.str2Key(s);
+        }
+    };
 
     @SuppressWarnings("unchecked")
     private static ConfigurationSerializable deserializeMap(Map<String, Object> map) {
@@ -61,19 +73,6 @@ public class GsonHelper {
         });
         return ConfigurationSerialization.deserializeObject(map);
     }
-
-    private static final TypeAdapter<NamespacedKey> NAMESPACED_KEY_TYPE_ADAPTER = new TypeAdapter<>() {
-        @Override
-        public void write(JsonWriter jsonWriter, NamespacedKey namespacedKey) throws IOException {
-            jsonWriter.value(StringUtil.key2Str(namespacedKey));
-        }
-
-        @Override
-        public NamespacedKey read(JsonReader jsonReader) throws IOException {
-            String s = jsonReader.nextString();
-            return StringUtil.str2Key(s);
-        }
-    };
 
     public static GsonBuilder bukkitCompat() {
         GsonBuilder builder = new GsonBuilder();

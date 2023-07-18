@@ -46,7 +46,7 @@ public class Tag {
                 if (tmp.get(i) instanceof MethodCall) {
                     Method method = FuzzyUtil.getDeclaredMethod(((MethodCall) tmp.get(i)).getMethod());
                     if (method.getDeclaringClass() == MinecraftReflection.getEntityClass() &&
-                            contract.isMatch(MethodInfo.fromMethod(method), null)) {
+                        contract.isMatch(MethodInfo.fromMethod(method), null)) {
                         tag = FuzzyUtil.getDeclaredField(((FieldAccess) tmp.get(i - 1)).getField()).get(null);
                         break;
                     }

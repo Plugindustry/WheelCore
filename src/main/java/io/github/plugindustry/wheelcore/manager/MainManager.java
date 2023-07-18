@@ -35,14 +35,14 @@ import java.util.Set;
 import java.util.logging.Level;
 
 public class MainManager {
+    public static final BlockDataProvider blockDataProvider = BlockDataProvider.defaultProvider();
+    public static final EntityDataProvider entityDataProvider = EntityDataProvider.defaultProvider();
+    public static final ItemDataProvider itemDataProvider = ItemDataProvider.defaultProvider();
     private static final BiMap<NamespacedKey, BlockBase> blockMapping = HashBiMap.create();
     private static final BiMap<NamespacedKey, ItemBase> itemMapping = HashBiMap.create();
     private static final BiMap<NamespacedKey, EntityBase> entityMapping = HashBiMap.create();
     private static final BiMap<NamespacedKey, FluidBase> fluidMapping = HashBiMap.create();
     private static final Queue<Runnable> postTickTasks = new ArrayDeque<>();
-    public static final BlockDataProvider blockDataProvider = BlockDataProvider.defaultProvider();
-    public static final EntityDataProvider entityDataProvider = EntityDataProvider.defaultProvider();
-    public static final ItemDataProvider itemDataProvider = ItemDataProvider.defaultProvider();
 
     public static void update() {
         PlayerDigHandler.onTick();

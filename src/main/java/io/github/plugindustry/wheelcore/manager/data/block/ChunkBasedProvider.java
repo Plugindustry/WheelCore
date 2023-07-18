@@ -18,9 +18,6 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ChunkBasedProvider implements BlockDataProvider {
-    private static final Gson gson;
-    private final static NamespacedKey CHUNK_DATA_KEY = new NamespacedKey(WheelCore.getInstance(), "chunk_data");
-
     public static final JsonSerializer<BlockDescription> BLOCK_DESC_SERIALIZER = (obj, type, jsonSerializationContext) -> {
         JsonObject result = new JsonObject();
         result.addProperty("x", obj.x);
@@ -42,6 +39,8 @@ public class ChunkBasedProvider implements BlockDataProvider {
                 }.getType());
         return desc;
     };
+    private static final Gson gson;
+    private final static NamespacedKey CHUNK_DATA_KEY = new NamespacedKey(WheelCore.getInstance(), "chunk_data");
 
     static {
         GsonBuilder gbs = GsonHelper.bukkitCompat();

@@ -20,8 +20,6 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class LegacyChunkBasedProvider implements BlockDataProvider {
-    private static final Gson gson;
-
     public static final JsonSerializer<BlockDescription> BLOCK_DESC_SERIALIZER = (obj, type, jsonSerializationContext) -> {
         JsonObject result = new JsonObject();
         result.addProperty("x", obj.x);
@@ -43,6 +41,7 @@ public class LegacyChunkBasedProvider implements BlockDataProvider {
                 }.getType());
         return desc;
     };
+    private static final Gson gson;
 
     static {
         GsonBuilder gbs = GsonHelper.bukkitCompat();

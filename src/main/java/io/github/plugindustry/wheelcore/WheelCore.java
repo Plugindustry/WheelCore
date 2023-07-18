@@ -93,8 +93,8 @@ public final class WheelCore extends JavaPlugin {
             public boolean isLoggable(LogRecord record) {
                 return (old == null || old.isLoggable(record)) && !record.getMessage()
                         .equals("A manual (plugin-induced) save has been detected while server is configured to auto-save. This may affect performance.") &&
-                        !record.getMessage().endsWith(
-                                "Bukkit will attempt to fix this, but there may be additional damage that we cannot recover.");
+                       !record.getMessage().endsWith(
+                               "Bukkit will attempt to fix this, but there may be additional damage that we cannot recover.");
             }
         });
     }

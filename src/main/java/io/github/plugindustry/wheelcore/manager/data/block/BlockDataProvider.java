@@ -74,6 +74,7 @@ public interface BlockDataProvider {
 
     /**
      * This method will load the chunk where the given block is if it has not been loaded yet.
+     *
      * @param key The key of desired additional data
      * @return The additional data with the given key at the given location (or null if the additional data doesn't exist)
      */
@@ -82,6 +83,7 @@ public interface BlockDataProvider {
 
     /**
      * This method will load the chunk where the given block is if it has not been loaded yet.
+     *
      * @param key The key of the additional data
      *            Set the additional data with the given key at the given location to the given value (the block is not required to be a custom block).
      */
@@ -89,6 +91,7 @@ public interface BlockDataProvider {
 
     /**
      * This method will load the chunk where the given block is if it has not been loaded yet.
+     *
      * @return The corresponding BlockBase instance at the given location, or null if there is no custom block
      */
     @Nullable
@@ -96,6 +99,7 @@ public interface BlockDataProvider {
 
     /**
      * This method will load the chunk where the given block is if it has not been loaded yet.
+     *
      * @return Whether the block is a custom block
      */
     boolean hasBlock(@Nonnull Location block);

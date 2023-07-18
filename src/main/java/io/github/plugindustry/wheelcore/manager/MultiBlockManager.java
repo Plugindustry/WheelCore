@@ -58,8 +58,8 @@ public class MultiBlockManager {
                         structureDataMap.put(l, result.second);
                     }
                 } catch (Throwable t) {
-                    WheelCore.getInstance().getLogger()
-                            .log(Level.SEVERE, t, () -> "Error while matching multi-block structure at " + l.toString());
+                    WheelCore.getInstance().getLogger().log(Level.SEVERE, t,
+                            () -> "Error while matching multi-block structure at " + l.toString());
                 }
             });
         });

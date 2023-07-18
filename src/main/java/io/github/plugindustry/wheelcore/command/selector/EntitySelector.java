@@ -78,7 +78,7 @@ public class EntitySelector {
         }
         if (!args.matches(
                 "^\\[(.+=[0-9a-zA-Z.\\-\\\\?!@#$%^&*()=+\\[\\];':\"|/>_<]*,?)*(.+=[0-9a-zA-Z.\\-\\\\?!@#$%^&*()" +
-                        "=+\\[\\];':\"|/>_<]*)+]$")) {
+                "=+\\[\\];':\"|/>_<]*)+]$")) {
             sender.sendMessage(ChatColor.RED + "Wrong syntax for selector.");
             return;
         }
@@ -140,7 +140,7 @@ public class EntitySelector {
         }
         if (predicateStringPair.containsKey("distance")) {
             if (predicateStringPair.containsKey("dx") || predicateStringPair.containsKey("dy") ||
-                    predicateStringPair.containsKey("dz")) {
+                predicateStringPair.containsKey("dz")) {
                 throw new SelectorSyntaxException();
             }
             // distance predicate
@@ -148,7 +148,7 @@ public class EntitySelector {
             allPredicates.add((entity) -> entity.getLocation().distance(baseLoc) < distance);
         }
         if (predicateStringPair.containsKey("dx") && predicateStringPair.containsKey("dy") &&
-                predicateStringPair.containsKey("dz")) {
+            predicateStringPair.containsKey("dz")) {
             if (predicateStringPair.containsKey("distance")) {
                 throw new SelectorSyntaxException();
             }
@@ -173,7 +173,7 @@ public class EntitySelector {
                 }
                 // check if it is in the abs val
                 return Math.abs(dx) > Math.abs(entityVec.getX()) && Math.abs(dy) > Math.abs(entityVec.getY()) &&
-                        Math.abs(dz) > Math.abs(entityVec.getZ());
+                       Math.abs(dz) > Math.abs(entityVec.getZ());
             });
         }
         if (predicateStringPair.containsKey("team")) {
@@ -287,7 +287,7 @@ public class EntitySelector {
             final int rotationXMax = rotationMax;
 
             allPredicates.add((entity) -> entity.getLocation().getPitch() >= rotationXMin &&
-                    entity.getLocation().getPitch() <= rotationXMax);
+                                          entity.getLocation().getPitch() <= rotationXMax);
         }
         if (predicateStringPair.containsKey("y_rotation")) {
             int rotationMin;
@@ -404,7 +404,7 @@ public class EntitySelector {
                     }
 
                     return o.getScore(getEntityName(entity)).getScore() > finalScoreMinVal &&
-                            o.getScore(getEntityName(entity)).getScore() < finalScoreMaxVal;
+                           o.getScore(getEntityName(entity)).getScore() < finalScoreMaxVal;
                 });
             }
         }

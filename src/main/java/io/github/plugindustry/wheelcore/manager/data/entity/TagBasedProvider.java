@@ -19,8 +19,6 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class TagBasedProvider implements EntityDataProvider {
-    private static final Gson gson;
-
     public static final JsonSerializer<EntityDescription> ENTITY_DESC_SERIALIZER = (obj, type, jsonSerializationContext) -> {
         JsonObject result = new JsonObject();
         result.add("id", jsonSerializationContext.serialize(obj.id));
@@ -36,6 +34,7 @@ public class TagBasedProvider implements EntityDataProvider {
                 }.getType());
         return desc;
     };
+    private static final Gson gson;
 
     static {
         GsonBuilder gbs = GsonHelper.bukkitCompat();

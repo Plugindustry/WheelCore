@@ -69,7 +69,7 @@ public class PlayerDigHandler {
 
     private static boolean isDigIllegal(Player player, Location block) {
         return (!(block.distance(player.getLocation()) <= 6) || !block.getChunk().isLoaded()) ||
-                block.getBlock().getType() == Material.AIR;
+               block.getBlock().getType() == Material.AIR;
     }
 
     public static void startDig(Player player, Location block) {
@@ -86,7 +86,7 @@ public class PlayerDigHandler {
     public static void onTick() {
         Bukkit.getOnlinePlayers().stream()
                 .filter(p -> (p.getGameMode() == GameMode.SURVIVAL || p.getGameMode() == GameMode.ADVENTURE) &&
-                        !p.hasPotionEffect(PotionEffectType.SLOW_DIGGING)).forEach(
+                             !p.hasPotionEffect(PotionEffectType.SLOW_DIGGING)).forEach(
                         player -> PlayerUtil.sendPotionEffect(player, PotionEffectType.SLOW_DIGGING, (byte) -1,
                                 Integer.MAX_VALUE, (byte) 0));
 
@@ -192,7 +192,7 @@ public class PlayerDigHandler {
                                 .filter(eff -> eff.getType().equals(PotionEffectType.SLOW_DIGGING)).findFirst()
                                 .orElseThrow(() -> new IllegalStateException("Impossible null"));
                         flags = (byte) ((effect.isAmbient() ? 1 : 0) | (effect.hasParticles() ? 2 : 0) |
-                                (effect.hasIcon() ? 4 : 0));
+                                        (effect.hasIcon() ? 4 : 0));
                         PlayerUtil.sendRemovePotionEffect(player, PotionEffectType.SLOW_DIGGING);
                     }
                     PlayerUtil.sendPotionEffect(player, PotionEffectType.SLOW_DIGGING, (byte) -1, Integer.MAX_VALUE,
@@ -201,7 +201,7 @@ public class PlayerDigHandler {
                     startDig(player, packet.getBlockPositionModifier().read(0).toLocation(player.getWorld()));
                     ackDigAction(player, packet);
                 } else if (type == EnumWrappers.PlayerDigType.ABORT_DESTROY_BLOCK ||
-                        type == EnumWrappers.PlayerDigType.STOP_DESTROY_BLOCK) {
+                           type == EnumWrappers.PlayerDigType.STOP_DESTROY_BLOCK) {
                     if (player.hasPotionEffect(PotionEffectType.SLOW_DIGGING)) {
                         PlayerUtil.sendRemovePotionEffect(player, PotionEffectType.SLOW_DIGGING);
                         PotionEffect effect = player.getActivePotionEffects().stream()

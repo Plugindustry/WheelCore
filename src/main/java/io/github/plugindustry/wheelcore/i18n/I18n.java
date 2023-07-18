@@ -273,7 +273,7 @@ public class I18n {
                 ItemData data = MainManager.getItemData(item);
                 if (data instanceof TranslatedItemData) {
                     if (orgItemMapping.containsKey(uuid) &&
-                            orgItemMapping.get(uuid).first.containsKey(((TranslatedItemData) data).uuid)) {
+                        orgItemMapping.get(uuid).first.containsKey(((TranslatedItemData) data).uuid)) {
                         ItemStack orgItem = orgItemMapping.get(uuid).first.get(((TranslatedItemData) data).uuid)
                                 .clone();
                         orgItem.setAmount(item.getAmount());
