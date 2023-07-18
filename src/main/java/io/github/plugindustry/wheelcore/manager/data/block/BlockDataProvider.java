@@ -23,29 +23,29 @@ public interface BlockDataProvider {
 
     /**
      * Load a chunk.
+     * <br>
      * For internal use only.
      */
     void loadChunk(@Nonnull Chunk chunk);
 
     /**
      * Unload a chunk.
+     * <br>
      * For internal use only.
      */
     void unloadChunk(@Nonnull Chunk chunk);
 
     /**
      * @return A set containing all custom blocks loaded
-     * Note that the returned set may be based on the internal container, so any modifications (adding/removing blocks etc.) mustn't be done when traversing this set.
-     * You can delay modifications by using {@link io.github.plugindustry.wheelcore.manager.MainManager#queuePostTickTask(Runnable)}.
      */
     @Nonnull
     Set<Location> blocks();
 
     /**
+     * This method will load the given chunk if it has not been loaded yet.
+     *
      * @param chunk The chunk of the blocks needed
      * @return A set containing all custom blocks loaded that belong to the given chunk
-     * Note that the returned set may be based on the internal container, so any modifications (adding/removing blocks etc.) mustn't be done when traversing this set.
-     * You can delay modifications by using {@link io.github.plugindustry.wheelcore.manager.MainManager#queuePostTickTask(Runnable)}.
      */
     @Nonnull
     Set<Location> blocksInChunk(@Nonnull Chunk chunk);
@@ -53,13 +53,13 @@ public interface BlockDataProvider {
     /**
      * @param base The base instance of the blocks needed
      * @return A set containing all custom blocks which are loaded and with the given instance
-     * Note that the returned set may be based on the internal container, so any modifications (adding/removing blocks etc.) mustn't be done when traversing this set.
-     * You can delay modifications by using {@link io.github.plugindustry.wheelcore.manager.MainManager#queuePostTickTask(Runnable)}.
      */
     @Nonnull
     Set<Location> blocksOf(@Nonnull BlockBase base);
 
     /**
+     * This method will load the chunk where the given block is if it has not been loaded yet.
+     *
      * @return The block data at the given location (or null if there isn't a custom block)
      */
     @Nullable
@@ -67,10 +67,13 @@ public interface BlockDataProvider {
 
     /**
      * Set the block data at the given location to the given value (or do nothing if there isn't a custom block).
+     * <br>
+     * This method will load the chunk where the given block is if it has not been loaded yet.
      */
     void setDataAt(@Nonnull Location loc, @Nullable BlockData data);
 
     /**
+     * This method will load the chunk where the given block is if it has not been loaded yet.
      * @param key The key of desired additional data
      * @return The additional data with the given key at the given location (or null if the additional data doesn't exist)
      */
@@ -78,30 +81,39 @@ public interface BlockDataProvider {
     BlockData additionalDataAt(@Nonnull Location loc, @Nonnull NamespacedKey key);
 
     /**
+     * This method will load the chunk where the given block is if it has not been loaded yet.
      * @param key The key of the additional data
      *            Set the additional data with the given key at the given location to the given value (the block is not required to be a custom block).
      */
     void setAdditionalDataAt(@Nonnull Location loc, @Nonnull NamespacedKey key, @Nullable BlockData data);
 
     /**
+     * This method will load the chunk where the given block is if it has not been loaded yet.
      * @return The corresponding BlockBase instance at the given location, or null if there is no custom block
      */
     @Nullable
     BlockBase instanceAt(@Nonnull Location loc);
 
     /**
+     * This method will load the chunk where the given block is if it has not been loaded yet.
      * @return Whether the block is a custom block
      */
     boolean hasBlock(@Nonnull Location block);
 
     /**
+     * This method will load the chunk where the given block is if it has not been loaded yet.
+     * <br>
      * Don't use this method unless you know exactly what you are doing.
+     * <br>
      * To place a block, use {@link io.github.plugindustry.wheelcore.interfaces.block.Placeable#onBlockPlace(ItemStack, Block, Block, Player)} instead
      */
     void addBlock(@Nonnull Location block, @Nonnull BlockBase instance, @Nullable BlockData data);
 
     /**
+     * This method will load the chunk where the given block is if it has not been loaded yet.
+     * <br>
      * This method is only used to simply remove a block without doing anything else.
+     * <br>
      * To simulate destroying a block, use {@link io.github.plugindustry.wheelcore.interfaces.block.Destroyable#onBlockDestroy(Block, Destroyable.DestroyMethod, ItemStack, Player)} instead
      */
     void removeBlock(@Nonnull Location block);

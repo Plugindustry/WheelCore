@@ -10,6 +10,7 @@ import io.github.plugindustry.wheelcore.interfaces.block.BlockBase;
 import io.github.plugindustry.wheelcore.interfaces.block.BlockData;
 import io.github.plugindustry.wheelcore.interfaces.entity.EntityBase;
 import io.github.plugindustry.wheelcore.interfaces.entity.EntityData;
+import io.github.plugindustry.wheelcore.interfaces.fluid.FluidBase;
 import io.github.plugindustry.wheelcore.interfaces.item.ItemBase;
 import io.github.plugindustry.wheelcore.interfaces.item.ItemData;
 import io.github.plugindustry.wheelcore.manager.data.block.BlockDataProvider;
@@ -37,6 +38,7 @@ public class MainManager {
     private static final BiMap<NamespacedKey, BlockBase> blockMapping = HashBiMap.create();
     private static final BiMap<NamespacedKey, ItemBase> itemMapping = HashBiMap.create();
     private static final BiMap<NamespacedKey, EntityBase> entityMapping = HashBiMap.create();
+    private static final BiMap<NamespacedKey, FluidBase> fluidMapping = HashBiMap.create();
     private static final Queue<Runnable> postTickTasks = new ArrayDeque<>();
     public static final BlockDataProvider blockDataProvider = BlockDataProvider.defaultProvider();
     public static final EntityDataProvider entityDataProvider = EntityDataProvider.defaultProvider();
@@ -74,6 +76,15 @@ public class MainManager {
                 }
             }
 
+        for (FluidBase base : fluidMapping.values())
+            if (base instanceof Tickable) {
+                try {
+                    ((Tickable) base).onTick();
+                } catch (Throwable t) {
+                    WheelCore.getInstance().getLogger().log(Level.SEVERE, t, () -> "Error while ticking fluids");
+                }
+            }
+
         PowerManager.onTick();
 
         while (!postTickTasks.isEmpty()) {
@@ -107,6 +118,7 @@ public class MainManager {
         if (instance instanceof BlockBase) return blockMapping.inverse().getOrDefault(instance, null);
         else if (instance instanceof ItemBase) return itemMapping.inverse().getOrDefault(instance, null);
         else if (instance instanceof EntityBase) return entityMapping.inverse().getOrDefault(instance, null);
+        else if (instance instanceof FluidBase) return fluidMapping.inverse().getOrDefault(instance, null);
         else return null;
     }
 
@@ -126,6 +138,12 @@ public class MainManager {
     public static EntityBase getEntityInstanceFromId(@Nullable NamespacedKey id) {
         if (id == null) return null;
         return entityMapping.getOrDefault(id, null);
+    }
+
+    @Nullable
+    public static FluidBase getFluidInstanceFromId(@Nullable NamespacedKey id) {
+        if (id == null) return null;
+        return fluidMapping.getOrDefault(id, null);
     }
 
     public static void save() {
@@ -215,6 +233,10 @@ public class MainManager {
         entityMapping.put(id, b);
     }
 
+    public static void registerFluid(@Nonnull NamespacedKey id, @Nonnull FluidBase b) {
+        fluidMapping.put(id, b);
+    }
+
     @Nonnull
     public static BiMap<NamespacedKey, BlockBase> getBlockMapping() {
         return Maps.unmodifiableBiMap(blockMapping);
@@ -228,5 +250,10 @@ public class MainManager {
     @Nonnull
     public static BiMap<NamespacedKey, EntityBase> getEntityMapping() {
         return Maps.unmodifiableBiMap(entityMapping);
+    }
+
+    @Nonnull
+    public static BiMap<NamespacedKey, FluidBase> getFluidMapping() {
+        return Maps.unmodifiableBiMap(fluidMapping);
     }
 }

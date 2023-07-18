@@ -345,8 +345,11 @@ public class EventListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onChunkLoad(ChunkLoadEvent event) {
         Chunk chunk = event.getChunk();
-        for (Entity entity : chunk.getEntities())
+        for (Entity entity : chunk.getEntities()) {
             MainManager.entityDataProvider.loadEntity(entity);
+            Optional.ofNullable(MainManager.entityDataProvider.instanceOf(entity))
+                    .ifPresent(base -> base.onLoad(entity));
+        }
         MainManager.blockDataProvider.loadChunk(chunk);
 
     }
@@ -354,8 +357,11 @@ public class EventListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onChunkUnLoad(ChunkUnloadEvent event) {
         Chunk chunk = event.getChunk();
-        for (Entity entity : chunk.getEntities())
+        for (Entity entity : chunk.getEntities()) {
+            Optional.ofNullable(MainManager.entityDataProvider.instanceOf(entity))
+                    .ifPresent(base -> base.onUnload(entity));
             MainManager.entityDataProvider.unloadEntity(entity);
+        }
         MainManager.blockDataProvider.unloadChunk(chunk);
     }
 
@@ -424,12 +430,16 @@ public class EventListener implements Listener {
     public void onEntitySpawn(EntitySpawnEvent event) {
         if (event instanceof CreatureSpawnEvent &&
             ((CreatureSpawnEvent) event).getSpawnReason() == CreatureSpawnEvent.SpawnReason.CHUNK_GEN) return;
-        MainManager.entityDataProvider.loadEntity(event.getEntity());
+        Entity entity = event.getEntity();
+        MainManager.entityDataProvider.loadEntity(entity);
+        Optional.ofNullable(MainManager.entityDataProvider.instanceOf(entity)).ifPresent(base -> base.onSpawn(entity));
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onEntityDeath(EntityDeathEvent event) {
-        MainManager.entityDataProvider.unloadEntity(event.getEntity());
+        Entity entity = event.getEntity();
+        Optional.ofNullable(MainManager.entityDataProvider.instanceOf(entity)).ifPresent(base -> base.onDeath(entity));
+        MainManager.entityDataProvider.unloadEntity(entity);
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)

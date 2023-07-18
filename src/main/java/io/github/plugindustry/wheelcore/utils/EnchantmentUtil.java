@@ -66,7 +66,7 @@ public class EnchantmentUtil {
         item.addUnsafeEnchantment(enchantment, level);
         if (item.hasItemMeta()) {
             ItemMeta meta = item.getItemMeta();
-            List<String> lore = Objects.requireNonNull(meta).hasLore() ? meta.getLore() : new LinkedList<>();
+            List<String> lore = Objects.requireNonNull(meta).hasLore() ? meta.getLore() : new ArrayList<>();
             Objects.requireNonNull(lore).add(getLoreOfEnchant(enchantment, level));
             meta.setLore(lore);
             item.setItemMeta(meta);

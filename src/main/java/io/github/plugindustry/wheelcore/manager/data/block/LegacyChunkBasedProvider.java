@@ -17,6 +17,7 @@ import org.bukkit.inventory.ItemStack;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class LegacyChunkBasedProvider implements BlockDataProvider {
     private static final Gson gson;
@@ -52,9 +53,9 @@ public class LegacyChunkBasedProvider implements BlockDataProvider {
         gson = gbs.create();
     }
 
-    private final HashMap<BlockBase, Set<Location>> baseBlocks = new HashMap<>();
-    private final HashMap<Location, Pair<BlockBase, Map<NamespacedKey, BlockData>>> blocks = new HashMap<>();
-    private final HashMap<World, HashMap<Long, HashSet<Location>>> blockInChunks = new HashMap<>();
+    private final ConcurrentHashMap<BlockBase, Set<Location>> baseBlocks = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Location, Pair<BlockBase, Map<NamespacedKey, BlockData>>> blocks = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<World, HashMap<Long, HashSet<Location>>> blockInChunks = new ConcurrentHashMap<>();
 
     private static long chunkDescAt(Location loc) {
         return compress(loc.getBlockX() >> 4, loc.getBlockZ() >> 4);
@@ -62,6 +63,14 @@ public class LegacyChunkBasedProvider implements BlockDataProvider {
 
     private static long compress(int i1, int i2) {
         return ((i1 & 0x00000000ffffffffL) << 32) | (i2 & 0x00000000ffffffffL);
+    }
+
+    private void ensureLoaded(@Nonnull Location loc) {
+        ensureLoaded(loc.getChunk());
+    }
+
+    private void ensureLoaded(@Nonnull Chunk chunk) {
+        if (!chunk.isLoaded()) chunk.load(false);
     }
 
     @Override
@@ -99,6 +108,7 @@ public class LegacyChunkBasedProvider implements BlockDataProvider {
         loc.setPitch(0);
         loc.setYaw(0);
 
+        ensureLoaded(loc);
         if (!blocks.containsKey(loc)) return null;
 
         return blocks.get(loc).second.get(key);
@@ -112,6 +122,7 @@ public class LegacyChunkBasedProvider implements BlockDataProvider {
         loc.setPitch(0);
         loc.setYaw(0);
 
+        ensureLoaded(loc);
         if (!blocks.containsKey(loc)) blocks.put(loc, Pair.of(null, new HashMap<>()));
 
         Pair<BlockBase, Map<NamespacedKey, BlockData>> pair = blocks.get(loc);
@@ -128,7 +139,7 @@ public class LegacyChunkBasedProvider implements BlockDataProvider {
         loc.setPitch(0);
         loc.setYaw(0);
 
-        return blocks.containsKey(loc) ? blocks.get(loc).first : null;
+        return hasBlock(loc) ? blocks.get(loc).first : null;
     }
 
     @Override
@@ -137,6 +148,7 @@ public class LegacyChunkBasedProvider implements BlockDataProvider {
         block.setPitch(0);
         block.setYaw(0);
 
+        ensureLoaded(block);
         return blocks.containsKey(block) && blocks.get(block).first != null;
     }
 
@@ -146,12 +158,13 @@ public class LegacyChunkBasedProvider implements BlockDataProvider {
         block.setPitch(0);
         block.setYaw(0);
 
+        ensureLoaded(block);
         if (!baseBlocks.containsKey(instance)) baseBlocks.put(instance, new HashSet<>());
         baseBlocks.get(instance).add(block);
         Map<NamespacedKey, BlockData> map = blocks.containsKey(block) ? blocks.get(block).second : new HashMap<>();
         if (!(data == null)) map.put(null, data);
         blocks.put(block, Pair.of(instance, map));
-        World world = block.getWorld();
+        World world = Objects.requireNonNull(block.getWorld());
         HashMap<Long, HashSet<Location>> worldMap;
         if (!blockInChunks.containsKey(world)) blockInChunks.put(world, worldMap = new HashMap<>());
         else worldMap = blockInChunks.get(world);
@@ -166,6 +179,7 @@ public class LegacyChunkBasedProvider implements BlockDataProvider {
         block.setPitch(0);
         block.setYaw(0);
 
+        ensureLoaded(block);
         BlockBase base = instanceAt(block);
         if (baseBlocks.containsKey(base)) baseBlocks.get(base).remove(block);
         if (blockInChunks.containsKey(block.getWorld()) &&
@@ -263,6 +277,7 @@ public class LegacyChunkBasedProvider implements BlockDataProvider {
     @Nonnull
     @Override
     public Set<Location> blocksInChunk(@Nonnull Chunk chunk) {
+        ensureLoaded(chunk);
         if (blockInChunks.containsKey(chunk.getWorld()))
             if (blockInChunks.get(chunk.getWorld()).containsKey(compress(chunk.getX(), chunk.getZ())))
                 return CollectionUtil.unmodifiableCopyOnReadSet(

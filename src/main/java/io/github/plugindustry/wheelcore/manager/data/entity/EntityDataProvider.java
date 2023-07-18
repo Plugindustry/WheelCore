@@ -3,10 +3,7 @@ package io.github.plugindustry.wheelcore.manager.data.entity;
 import io.github.plugindustry.wheelcore.interfaces.entity.EntityBase;
 import io.github.plugindustry.wheelcore.interfaces.entity.EntityData;
 import org.bukkit.NamespacedKey;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -20,12 +17,14 @@ public interface EntityDataProvider {
 
     /**
      * Load an entity.
+     * <br>
      * For internal use only.
      */
     void loadEntity(@Nonnull Entity entity);
 
     /**
      * Unload an entity.
+     * <br>
      * For internal use only.
      */
     void unloadEntity(@Nonnull Entity entity);
@@ -77,7 +76,6 @@ public interface EntityDataProvider {
 
     /**
      * Don't use this method unless you know exactly what you are doing.
-     * To place a block, use {@link io.github.plugindustry.wheelcore.interfaces.block.Placeable#onBlockPlace(ItemStack, Block, Block, Player)} instead
      */
     void addEntity(@Nonnull Entity entity, @Nonnull EntityBase instance, @Nullable EntityData data);
 }

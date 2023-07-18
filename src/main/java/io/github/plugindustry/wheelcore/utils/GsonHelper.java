@@ -38,6 +38,7 @@ public class GsonHelper {
         map.putAll(configurationSerializable.serialize());
         map.entrySet().forEach(entry -> {
             if (entry.getValue() instanceof Integer) entry.setValue(new TypedNumber((Integer) entry.getValue()));
+            else if (entry.getValue() instanceof Long) entry.setValue(new TypedNumber((Long) entry.getValue()));
             else if (entry.getValue() instanceof Double) entry.setValue(new TypedNumber((Double) entry.getValue()));
             else if (entry.getValue() instanceof Float) entry.setValue(new TypedNumber((Float) entry.getValue()));
         });
@@ -84,7 +85,7 @@ public class GsonHelper {
     }
 
     public enum NumberType {
-        INTEGER, DOUBLE, FLOAT
+        INTEGER, LONG, DOUBLE, FLOAT
     }
 
     public static class TypedNumber implements ConfigurationSerializable {
@@ -93,6 +94,11 @@ public class GsonHelper {
 
         public TypedNumber(Integer num) {
             type = NumberType.INTEGER;
+            number = num.toString();
+        }
+
+        public TypedNumber(Long num) {
+            type = NumberType.LONG;
             number = num.toString();
         }
 
@@ -114,6 +120,7 @@ public class GsonHelper {
         public Number getNumber() {
             return switch (type) {
                 case INTEGER -> Integer.valueOf(number);
+                case LONG -> Long.valueOf(number);
                 case DOUBLE -> Double.valueOf(number);
                 case FLOAT -> Float.valueOf(number);
             };

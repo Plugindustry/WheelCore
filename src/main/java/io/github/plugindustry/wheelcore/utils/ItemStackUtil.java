@@ -49,9 +49,7 @@ public class ItemStackUtil {
         ItemMeta meta = itemStack.getItemMeta();
         if (meta == null) {
             meta = Bukkit.getItemFactory().getItemMeta(itemStack.getType());
-            if (meta == null) {
-                throw new IllegalStateException("¿");
-            }
+            if (meta == null) throw new IllegalStateException("¿");
         }
 
         if (meta instanceof Damageable) {
