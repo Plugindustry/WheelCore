@@ -85,8 +85,6 @@ public class MainManager {
                 }
             }
 
-        PowerManager.onTick();
-
         while (!postTickTasks.isEmpty()) {
             try {
                 postTickTasks.poll().run();

@@ -2,9 +2,10 @@ package io.github.plugindustry.wheelcore.utils;
 
 import io.github.plugindustry.wheelcore.interfaces.block.BlockBase;
 import io.github.plugindustry.wheelcore.interfaces.block.Destroyable;
-import io.github.plugindustry.wheelcore.interfaces.block.Wire;
 import io.github.plugindustry.wheelcore.interfaces.item.ItemBase;
 import io.github.plugindustry.wheelcore.interfaces.item.Tool;
+import io.github.plugindustry.wheelcore.interfaces.world.packet.Packet;
+import io.github.plugindustry.wheelcore.interfaces.world.packet.PacketConsumer;
 import io.github.plugindustry.wheelcore.internal.shadow.CraftBlock;
 import io.github.plugindustry.wheelcore.internal.shadow.CraftItemStack;
 import io.github.plugindustry.wheelcore.manager.MainManager;
@@ -14,6 +15,7 @@ import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
@@ -22,14 +24,16 @@ public class BlockUtil {
     private static final List<Material> replaceableOreGenList = Arrays.asList(Material.STONE, Material.GRANITE,
             Material.DIORITE, Material.ANDESITE, Material.NETHERRACK, Material.END_STONE);
 
-    public static Stream<Location> findWireAround(@Nonnull Location src) {
+    public static Stream<Location> findAcceptableAround(@Nonnull Location src, @Nullable Packet packet) {
         return Stream.of(src.clone().add(1, 0, 0), src.clone().add(-1, 0, 0), src.clone().add(0, 1, 0),
                         src.clone().add(0, -1, 0), src.clone().add(0, 0, 1), src.clone().add(0, 0, -1))
-                .filter(BlockUtil::isWire);
+                .filter(loc -> isAcceptable(loc, packet));
+
     }
 
-    public static boolean isWire(@Nonnull Location block) {
-        return MainManager.hasBlock(block) && MainManager.getBlockInstance(block) instanceof Wire;
+    public static boolean isAcceptable(@Nonnull Location block, @Nullable Packet packet) {
+        return MainManager.hasBlock(block) && MainManager.getBlockInstance(block) instanceof PacketConsumer pc &&
+               pc.canAccept(packet) && pc.available(block);
     }
 
     public static boolean isReplaceableOreGen(@Nonnull Block block) {

@@ -7,7 +7,7 @@ import org.bukkit.inventory.ItemStack;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public interface Placeable {
+public interface Placeable extends BlockBase {
     /**
      * @param item         The item that is placed (it may be null when player is null)
      * @param block        The block that is placed
