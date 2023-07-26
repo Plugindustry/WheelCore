@@ -141,13 +141,12 @@ public class TextureManager {
                 if (MainManager.getBlockInstance(pos.toLocation(player.getWorld())) instanceof TexturedBlock)
                     Bukkit.getScheduler().runTask(WheelCore.getInstance(),
                             () -> updateTexture(pos.toLocation(player.getWorld()), player));
-                event.setPacket(packet);
+                event.setCancelled(true);
             } else if (packet.getType() == PacketType.Play.Server.MULTI_BLOCK_CHANGE) {
                 Location basePos = packet.getSectionPositions().read(0).toLocation(player.getWorld());
                 basePos.setX(basePos.getBlockX() << 4);
                 basePos.setY(basePos.getBlockY() << 4);
                 basePos.setZ(basePos.getBlockZ() << 4);
-                WrappedBlockData[] blockData = packet.getBlockDataArrays().read(0);
                 short[] blockPos = packet.getShortArrays().read(0);
                 for (short bp : blockPos) {
                     Location pos = basePos.clone().add(bp >>> 8 & 15, bp & 15, bp >>> 4 & 15);
@@ -155,8 +154,7 @@ public class TextureManager {
                     if (MainManager.getBlockInstance(pos) instanceof TexturedBlock)
                         Bukkit.getScheduler().runTask(WheelCore.getInstance(), () -> updateTexture(pos, player));
                 }
-                packet.getBlockDataArrays().write(0, blockData);
-                event.setPacket(packet);
+                event.setCancelled(true);
             } else if (packet.getType() == PacketType.Play.Server.MAP_CHUNK) {
                 int cX = packet.getIntegers().read(0);
                 int cZ = packet.getIntegers().read(1);
