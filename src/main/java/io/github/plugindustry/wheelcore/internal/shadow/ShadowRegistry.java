@@ -32,9 +32,13 @@ public class ShadowRegistry {
         Directory nmsDir = ShadowManager.root.getSubDirectory("nms");
         nmsDir.makeSubDirectory("BlockPosition", MinecraftReflection.getBlockPositionClass().getName());
         nmsDir.makeSubDirectory("EntityPlayer", MinecraftReflection.getEntityPlayerClass().getName());
-        Class<?> PlayerInteractManagerClass = FuzzyUtil.findDeclaredFirstMatch(
-                FuzzyMethodContract.newBuilder().parameterExactType(MinecraftReflection.getEntityPlayerClass())
-                        .requirePublic().build(), MinecraftReflection.getMinecraftServerClass()).getReturnType();
+        Class<?> PlayerInteractManagerClass = FuzzyUtil.findDeclaredMatches(
+                        FuzzyMethodContract.newBuilder().parameterExactType(MinecraftReflection.getEntityPlayerClass())
+                                .requirePublic().build(), MinecraftReflection.getMinecraftServerClass())
+                .filter(method -> !FuzzyUtil.findDeclaredMethodsCalledBy(MinecraftReflection.getMinecraftServerClass(),
+                        method).isEmpty()).findFirst().orElseThrow(() -> new IllegalArgumentException(
+                        "Can't find method matches in " + MinecraftReflection.getMinecraftServerClass().getName()))
+                .getReturnType();
         nmsDir.makeSubDirectory("PlayerInteractManager", PlayerInteractManagerClass.getName());
         nmsDir.makeSubDirectory("EntityPlayer.interactManager", FuzzyUtil.findDeclaredFirstMatch(
                 FuzzyFieldContract.newBuilder().typeExact(PlayerInteractManagerClass).requirePublic().build(),

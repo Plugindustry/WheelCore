@@ -22,7 +22,9 @@ public class TagBasedProvider implements EntityDataProvider {
     public static final JsonSerializer<EntityDescription> ENTITY_DESC_SERIALIZER = (obj, type, jsonSerializationContext) -> {
         JsonObject result = new JsonObject();
         result.add("id", jsonSerializationContext.serialize(obj.id));
-        result.add("data", jsonSerializationContext.serialize(obj.data));
+        result.add("data",
+                jsonSerializationContext.serialize(obj.data, new TypeToken<Map<NamespacedKey, EntityData>>() {
+                }.getType()));
         return result;
     };
     public static final JsonDeserializer<EntityDescription> ENTITY_DESC_DESERIALIZER = (jsonElement, type, jsonDeserializationContext) -> {

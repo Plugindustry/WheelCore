@@ -4,6 +4,7 @@ import com.comphenix.protocol.reflect.MethodInfo;
 import com.comphenix.protocol.reflect.fuzzy.FuzzyFieldContract;
 import com.comphenix.protocol.reflect.fuzzy.FuzzyMethodContract;
 import javassist.*;
+import javassist.expr.ConstructorCall;
 import javassist.expr.ExprEditor;
 import javassist.expr.FieldAccess;
 import javassist.expr.MethodCall;
@@ -16,18 +17,29 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 public class FuzzyUtil {
     @Nonnull
-    public static Method findDeclaredFirstMatch(@Nonnull FuzzyMethodContract contract, @Nonnull Class<?> clazz) {
+    public static Stream<Method> findDeclaredMatches(@Nonnull FuzzyMethodContract contract, @Nonnull Class<?> clazz) {
         return Arrays.stream(clazz.getDeclaredMethods())
-                .filter(method -> contract.isMatch(MethodInfo.fromMethod(method), null)).findFirst()
+                .filter(method -> contract.isMatch(MethodInfo.fromMethod(method), null));
+    }
+
+    @Nonnull
+    public static Method findDeclaredFirstMatch(@Nonnull FuzzyMethodContract contract, @Nonnull Class<?> clazz) {
+        return findDeclaredMatches(contract, clazz).findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Can't find method matches in " + clazz.getName()));
     }
 
     @Nonnull
+    public static Stream<Field> findDeclaredMatches(@Nonnull FuzzyFieldContract contract, @Nonnull Class<?> clazz) {
+        return Arrays.stream(clazz.getDeclaredFields()).filter(field -> contract.isMatch(field, null));
+    }
+
+    @Nonnull
     public static Field findDeclaredFirstMatch(@Nonnull FuzzyFieldContract contract, @Nonnull Class<?> clazz) {
-        return Arrays.stream(clazz.getDeclaredFields()).filter(field -> contract.isMatch(field, null)).findFirst()
+        return findDeclaredMatches(contract, clazz).findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Can't find field matches in " + clazz.getName()));
     }
 
@@ -82,6 +94,22 @@ public class FuzzyUtil {
     }
 
     @Nonnull
+    public static Constructor<?> getDeclaredConstructor(@Nonnull CtConstructor ctConstructor) {
+        try {
+            return Class.forName(ctConstructor.getDeclaringClass().getName()).getDeclaredConstructor(
+                    Arrays.stream(ctConstructor.getParameterTypes()).map(CtClass::getName).map((String className) -> {
+                        try {
+                            return Class.forName(className);
+                        } catch (ClassNotFoundException e) {
+                            throw new IllegalArgumentException(e);
+                        }
+                    }).toArray(Class[]::new));
+        } catch (NoSuchMethodException | NotFoundException | ClassNotFoundException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    @Nonnull
     public static List<Method> findDeclaredMethodsCalledBy(@Nonnull Class<?> declarer, @Nonnull Method caller) {
         ArrayList<Method> methods = new ArrayList<>();
         ClassPool cp = new ClassPool();
@@ -107,6 +135,30 @@ public class FuzzyUtil {
             throw new IllegalArgumentException(e);
         }
         return methods;
+    }
+
+    @Nonnull
+    public static List<Constructor<?>> findDeclaredConstructorsCalledBy(@Nonnull Method caller) {
+        ArrayList<Constructor<?>> constructors = new ArrayList<>();
+        ClassPool cp = new ClassPool();
+        Class<?> callerClass = caller.getDeclaringClass();
+        cp.appendClassPath(new LoaderClassPath(callerClass.getClassLoader()));
+        try {
+            CtClass callerCtClass = cp.getCtClass(callerClass.getName());
+            getDeclaredCtMethod(cp, callerCtClass, caller).instrument(new ExprEditor() {
+                @Override
+                public void edit(ConstructorCall m) throws CannotCompileException {
+                    super.edit(m);
+                    try {
+                        constructors.add(getDeclaredConstructor(m.getConstructor()));
+                    } catch (NotFoundException ignored) {
+                    }
+                }
+            });
+        } catch (NotFoundException | CannotCompileException e) {
+            throw new IllegalArgumentException(e);
+        }
+        return constructors;
     }
 
     @Nonnull

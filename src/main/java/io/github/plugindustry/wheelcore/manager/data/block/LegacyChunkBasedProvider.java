@@ -26,7 +26,8 @@ public class LegacyChunkBasedProvider implements BlockDataProvider {
         result.addProperty("y", obj.y);
         result.addProperty("z", obj.z);
         result.add("id", jsonSerializationContext.serialize(obj.id));
-        result.add("data", jsonSerializationContext.serialize(obj.data));
+        result.add("data", jsonSerializationContext.serialize(obj.data, new TypeToken<Map<NamespacedKey, BlockData>>() {
+        }.getType()));
         return result;
     };
     public static final JsonDeserializer<BlockDescription> BLOCK_DESC_DESERIALIZER = (jsonElement, type, jsonDeserializationContext) -> {

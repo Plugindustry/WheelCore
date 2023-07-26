@@ -67,6 +67,7 @@ public abstract class Wire extends DummyBlock implements PacketContainer<EnergyP
 
         EnergyPacket packet = data.packets.get(data.packets.size() - 1);
         data.packets.remove(data.packets.size() - 1);
+        data.stat -= packet.amount;
         Location loc2 = loc.clone();
         MainManager.queuePostTickTask(() -> packet.spread(loc2));
     }
@@ -76,6 +77,7 @@ public abstract class Wire extends DummyBlock implements PacketContainer<EnergyP
         Location loc2 = loc.clone();
         data.packets.forEach(packet -> MainManager.queuePostTickTask(() -> packet.spread(loc2)));
         data.packets.clear();
+        data.stat = 0;
     }
 
     @Override
