@@ -1,10 +1,10 @@
-package io.github.plugindustry.wheelcore.interfaces.power;
+package io.github.plugindustry.wheelcore.interfaces.transport.power;
 
 import io.github.plugindustry.wheelcore.interfaces.Tickable;
 import io.github.plugindustry.wheelcore.interfaces.block.BlockData;
 import io.github.plugindustry.wheelcore.interfaces.block.DummyBlock;
-import io.github.plugindustry.wheelcore.interfaces.world.packet.Packet;
-import io.github.plugindustry.wheelcore.interfaces.world.packet.PacketContainer;
+import io.github.plugindustry.wheelcore.interfaces.transport.packet.Packet;
+import io.github.plugindustry.wheelcore.interfaces.transport.packet.PacketContainer;
 import io.github.plugindustry.wheelcore.manager.MainManager;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -36,15 +36,18 @@ public abstract class Wire extends DummyBlock implements PacketContainer<EnergyP
         return new WireData();
     }
 
+    @Override
     @Nonnull
     public List<EnergyPacket> packets(@Nonnull Location loc) {
         return Collections.unmodifiableList(((WireData) Objects.requireNonNull(MainManager.getBlockData(loc))).packets);
     }
 
+    @Override
     public boolean available(@Nonnull Location loc) {
         return ((WireData) Objects.requireNonNull(MainManager.getBlockData(loc))).stat < getMaxTransmissionEnergy();
     }
 
+    @Override
     public void add(@Nonnull Location loc, @Nonnull EnergyPacket packet) {
         WireData data = (WireData) Objects.requireNonNull(MainManager.getBlockData(loc));
         double ava = getMaxTransmissionEnergy() - data.stat;
@@ -61,6 +64,7 @@ public abstract class Wire extends DummyBlock implements PacketContainer<EnergyP
         }
     }
 
+    @Override
     public void spread(@Nonnull Location loc) {
         WireData data = (WireData) Objects.requireNonNull(MainManager.getBlockData(loc));
         if (data.packets.isEmpty()) return;
@@ -69,13 +73,22 @@ public abstract class Wire extends DummyBlock implements PacketContainer<EnergyP
         data.packets.remove(data.packets.size() - 1);
         data.stat -= packet.amount;
         Location loc2 = loc.clone();
-        MainManager.queuePostTickTask(() -> packet.spread(loc2));
+        if (packet.amount > getEnergyLoss()) {
+            packet.amount -= getEnergyLoss();
+            MainManager.queuePostTickTask(() -> packet.spread(loc2));
+        }
     }
 
+    @Override
     public void spreadAll(@Nonnull Location loc) {
         WireData data = (WireData) Objects.requireNonNull(MainManager.getBlockData(loc));
         Location loc2 = loc.clone();
-        data.packets.forEach(packet -> MainManager.queuePostTickTask(() -> packet.spread(loc2)));
+        data.packets.forEach(packet -> {
+            if (packet.amount > getEnergyLoss()) {
+                packet.amount -= getEnergyLoss();
+                MainManager.queuePostTickTask(() -> packet.spread(loc2));
+            }
+        });
         data.packets.clear();
         data.stat = 0;
     }

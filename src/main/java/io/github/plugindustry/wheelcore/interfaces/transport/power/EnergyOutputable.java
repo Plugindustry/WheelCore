@@ -1,4 +1,4 @@
-package io.github.plugindustry.wheelcore.interfaces.power;
+package io.github.plugindustry.wheelcore.interfaces.transport.power;
 
 import io.github.plugindustry.wheelcore.interfaces.block.BlockBase;
 import org.bukkit.Location;

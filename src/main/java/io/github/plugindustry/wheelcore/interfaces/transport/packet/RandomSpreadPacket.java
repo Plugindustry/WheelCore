@@ -1,7 +1,5 @@
-package io.github.plugindustry.wheelcore.interfaces.power;
+package io.github.plugindustry.wheelcore.interfaces.transport.packet;
 
-import io.github.plugindustry.wheelcore.interfaces.world.packet.Packet;
-import io.github.plugindustry.wheelcore.interfaces.world.packet.PacketConsumer;
 import io.github.plugindustry.wheelcore.manager.MainManager;
 import io.github.plugindustry.wheelcore.utils.BlockUtil;
 import org.bukkit.Location;
@@ -13,25 +11,22 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class EnergyPacket implements Packet {
+public class RandomSpreadPacket implements Packet {
     public Location src;
     public Location from;
-    public double amount;
 
-    public EnergyPacket() {}
+    public RandomSpreadPacket() {}
 
-    public EnergyPacket(Location src, double amount) {
-        this.src = src;
-        this.from = src;
-        this.amount = amount;
+    public RandomSpreadPacket(Location src) {
+        this.src = src.clone();
+        this.from = src.clone();
     }
 
-    public EnergyPacket clone() {
+    public RandomSpreadPacket clone() {
         try {
-            EnergyPacket clone = (EnergyPacket) super.clone();
+            RandomSpreadPacket clone = (RandomSpreadPacket) super.clone();
             clone.src = src.clone();
             clone.from = from.clone();
-            clone.amount = amount;
             return clone;
         } catch (CloneNotSupportedException e) {
             throw new AssertionError(e);

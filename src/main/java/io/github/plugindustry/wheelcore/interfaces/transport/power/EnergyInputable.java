@@ -1,8 +1,8 @@
-package io.github.plugindustry.wheelcore.interfaces.power;
+package io.github.plugindustry.wheelcore.interfaces.transport.power;
 
 import io.github.plugindustry.wheelcore.interfaces.block.BlockBase;
-import io.github.plugindustry.wheelcore.interfaces.world.packet.Packet;
-import io.github.plugindustry.wheelcore.interfaces.world.packet.PacketConsumer;
+import io.github.plugindustry.wheelcore.interfaces.transport.packet.Packet;
+import io.github.plugindustry.wheelcore.interfaces.transport.packet.PacketConsumer;
 import io.github.plugindustry.wheelcore.manager.MainManager;
 import org.bukkit.Location;
 

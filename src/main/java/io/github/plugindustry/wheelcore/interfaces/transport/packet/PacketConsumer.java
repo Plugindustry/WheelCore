@@ -1,4 +1,4 @@
-package io.github.plugindustry.wheelcore.interfaces.world.packet;
+package io.github.plugindustry.wheelcore.interfaces.transport.packet;
 
 import io.github.plugindustry.wheelcore.interfaces.block.BlockBase;
 import org.bukkit.Location;
