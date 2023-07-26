@@ -26,7 +26,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import javax.annotation.Nonnull;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public class PlayerDigHandler {
@@ -169,11 +168,7 @@ public class PlayerDigHandler {
                         WrappedBlockData.createData(pos.toLocation(player.getWorld()).getBlock().getBlockData()));
                 ack.getPlayerDigTypes().write(0, packet.getPlayerDigTypes().read(0));
                 ack.getBooleans().write(0, true);
-                try {
-                    WheelCore.getProtocolManager().sendServerPacket(player, ack);
-                } catch (InvocationTargetException e) {
-                    e.printStackTrace();
-                }
+                WheelCore.getProtocolManager().sendServerPacket(player, ack);
             }
         }
 

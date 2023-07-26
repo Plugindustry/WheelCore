@@ -28,7 +28,6 @@ import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.util.Arrays;
 import java.util.logging.Level;
@@ -111,11 +110,7 @@ public class TextureManager {
         }
 
         if (blockChange) PlayerUtil.sendBlockChange(player, loc, WrappedBlockData.createData(Material.SPAWNER), false);
-        try {
-            WheelCore.getProtocolManager().sendServerPacket(player, generatePacket(loc, textureItem));
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        }
+        WheelCore.getProtocolManager().sendServerPacket(player, generatePacket(loc, textureItem));
     }
 
     public static void updateTexture(Location loc, Player player) {

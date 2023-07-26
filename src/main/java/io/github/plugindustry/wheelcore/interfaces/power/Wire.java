@@ -90,6 +90,6 @@ public abstract class Wire extends DummyBlock implements PacketContainer<EnergyP
 
     public static class WireData extends BlockData {
         public transient double stat = 0.0D;
-        public transient ArrayList<EnergyPacket> packets = new ArrayList<>();
+        public final transient ArrayList<EnergyPacket> packets = new ArrayList<>();
     }
 }
