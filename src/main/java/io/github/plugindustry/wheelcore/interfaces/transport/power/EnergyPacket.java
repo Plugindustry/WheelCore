@@ -4,8 +4,6 @@ import io.github.plugindustry.wheelcore.interfaces.transport.packet.RandomSpread
 import org.bukkit.Location;
 
 public class EnergyPacket extends RandomSpreadPacket {
-    public Location src;
-    public Location from;
     public double orgAmount;
     public double amount;
 
