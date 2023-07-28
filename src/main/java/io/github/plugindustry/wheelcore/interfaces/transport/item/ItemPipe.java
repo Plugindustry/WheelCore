@@ -13,13 +13,15 @@ import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
 public abstract class ItemPipe extends DummyBlock implements PacketContainer<ItemPacket>, Tickable {
     public abstract int getThreshold();
+
+    public abstract int getSpeed();
 
     @Nullable
     @Override
@@ -61,18 +63,23 @@ public abstract class ItemPipe extends DummyBlock implements PacketContainer<Ite
         PipeData data = (PipeData) Objects.requireNonNull(MainManager.getBlockData(loc));
         if (data.packets.isEmpty()) return;
 
-        ItemPacket packet = data.packets.get(data.packets.size() - 1);
-        data.packets.remove(data.packets.size() - 1);
+        ItemPacket packet = data.packets.poll();
         data.stat -= packet.item.getAmount();
         Location loc2 = loc.clone();
-        MainManager.queuePostTickTask(() -> packet.spread(loc2));
+        MainManager.queuePostTickTask(() -> {
+            packet.spread(loc2);
+            if (packet.item.getAmount() != 0) Objects.requireNonNull(loc2.getWorld()).dropItem(loc2, packet.item);
+        });
     }
 
     @Override
     public void spreadAll(@Nonnull Location loc) {
         PipeData data = (PipeData) Objects.requireNonNull(MainManager.getBlockData(loc));
         Location loc2 = loc.clone();
-        data.packets.forEach(packet -> MainManager.queuePostTickTask(() -> packet.spread(loc2)));
+        data.packets.forEach(packet -> MainManager.queuePostTickTask(() -> {
+            packet.spread(loc2);
+            if (packet.item.getAmount() != 0) Objects.requireNonNull(loc2.getWorld()).dropItem(loc2, packet.item);
+        }));
         data.packets.clear();
         data.stat = 0;
     }
@@ -84,11 +91,18 @@ public abstract class ItemPipe extends DummyBlock implements PacketContainer<Ite
 
     @Override
     public void onTick() {
-        MainManager.blockDataProvider.blocksOf(this).forEach(this::spreadAll);
+        MainManager.blockDataProvider.blocksOf(this).forEach(block -> {
+            if (MainManager.getBlockData(block) instanceof PipeData data) if (data.tickCount >= getSpeed()) {
+                data.tickCount = 0;
+                spread(block);
+            } else ++data.tickCount;
+        });
     }
 
     public static class PipeData extends BlockData {
-        public final ArrayList<ItemPacket> packets = new ArrayList<>();
+        public final LinkedList<ItemPacket> packets = new LinkedList<>();
         public int stat = 0;
+
+        public transient int tickCount = 0;
     }
 }
