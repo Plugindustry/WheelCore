@@ -8,11 +8,11 @@ import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.Objects;
 
-public class FluidStack implements ConfigurationSerializable {
+public class FluidStack implements ConfigurationSerializable, Cloneable {
     private FluidBase type;
-    private long amount;
+    private int amount;
 
-    public FluidStack(@Nonnull FluidBase type, long amount) {
+    public FluidStack(@Nonnull FluidBase type, int amount) {
         this.type = Objects.requireNonNull(type);
         this.amount = amount;
     }
@@ -23,7 +23,7 @@ public class FluidStack implements ConfigurationSerializable {
 
     public FluidStack(Map<String, Object> map) {
         this.type = MainManager.getFluidInstanceFromId(StringUtil.str2Key((String) map.get("type")));
-        this.amount = (long) map.get("amount");
+        this.amount = (int) map.get("amount");
     }
 
     @Nonnull
@@ -35,11 +35,11 @@ public class FluidStack implements ConfigurationSerializable {
         this.type = Objects.requireNonNull(type);
     }
 
-    public long getAmount() {
+    public int getAmount() {
         return amount;
     }
 
-    public void setAmount(long amount) {
+    public void setAmount(int amount) {
         this.amount = amount;
     }
 
@@ -48,5 +48,14 @@ public class FluidStack implements ConfigurationSerializable {
     public Map<String, Object> serialize() {
         return Map.of("type", StringUtil.key2Str(Objects.requireNonNull(MainManager.getIdFromInstance(type))), "amount",
                 amount);
+    }
+
+    @Override
+    public FluidStack clone() {
+        try {
+            return (FluidStack) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new AssertionError();
+        }
     }
 }

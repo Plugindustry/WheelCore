@@ -16,9 +16,6 @@ public class EnergyPacket extends RandomSpreadPacket {
     }
 
     public EnergyPacket clone() {
-        EnergyPacket clone = (EnergyPacket) super.clone();
-        clone.orgAmount = orgAmount;
-        clone.amount = amount;
-        return clone;
+        return (EnergyPacket) super.clone();
     }
 }
