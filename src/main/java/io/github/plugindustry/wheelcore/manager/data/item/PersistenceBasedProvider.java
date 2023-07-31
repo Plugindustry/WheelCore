@@ -10,7 +10,6 @@ import io.github.plugindustry.wheelcore.manager.ItemMapping;
 import io.github.plugindustry.wheelcore.manager.MainManager;
 import io.github.plugindustry.wheelcore.utils.GsonHelper;
 import io.github.plugindustry.wheelcore.utils.Pair;
-import io.github.plugindustry.wheelcore.utils.StringUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
@@ -77,9 +76,9 @@ public class PersistenceBasedProvider implements ItemDataProvider {
     @Override
     public ItemBase getInstance(@Nullable ItemStack itemStack) {
         if (itemStack == null || !itemStack.hasItemMeta()) return null;
-        return MainManager.getItemInstanceFromId(StringUtil.str2Key(Objects.requireNonNull(
-                Objects.requireNonNull(itemStack.getItemMeta()).getPersistentDataContainer()
-                        .get(ITEM_TYPE_KEY, PersistentDataType.STRING))));
+        String str = Objects.requireNonNull(Objects.requireNonNull(itemStack.getItemMeta()).getPersistentDataContainer()
+                .get(ITEM_TYPE_KEY, PersistentDataType.STRING));
+        return MainManager.getItemInstanceFromId(NamespacedKey.fromString(str));
     }
 
     @Nullable
@@ -128,8 +127,9 @@ public class PersistenceBasedProvider implements ItemDataProvider {
         } else {
             ItemMeta meta = itemStack.hasItemMeta() ? Objects.requireNonNull(itemStack.getItemMeta()) :
                     Bukkit.getItemFactory().getItemMeta(itemStack.getType());
-            Objects.requireNonNull(meta).getPersistentDataContainer().set(ITEM_TYPE_KEY, PersistentDataType.STRING,
-                    StringUtil.key2Str(Objects.requireNonNull(MainManager.getIdFromInstance(instance))));
+            NamespacedKey key = Objects.requireNonNull(MainManager.getIdFromInstance(instance));
+            Objects.requireNonNull(meta).getPersistentDataContainer()
+                    .set(ITEM_TYPE_KEY, PersistentDataType.STRING, key.toString());
             itemStack.setItemMeta(meta);
         }
     }

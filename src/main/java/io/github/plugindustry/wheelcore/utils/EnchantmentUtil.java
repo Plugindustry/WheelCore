@@ -1,5 +1,6 @@
 package io.github.plugindustry.wheelcore.utils;
 
+import io.github.plugindustry.wheelcore.WheelCore;
 import io.github.plugindustry.wheelcore.i18n.I18n;
 import org.apache.commons.lang3.StringUtils;
 import org.bukkit.ChatColor;
@@ -8,11 +9,11 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.plugin.Plugin;
 
 import javax.annotation.Nonnull;
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class EnchantmentUtil {
@@ -34,9 +35,8 @@ public class EnchantmentUtil {
         lookup.put(1, "I");
     }
 
-    public static CustomEnchantment create(@Nonnull Plugin instance, @Nonnull String name,
-            @Nonnull String localizedNameKey) {
-        return new CustomEnchantment(instance, name, localizedNameKey);
+    public static CustomEnchantment create(@Nonnull NamespacedKey id, @Nonnull NamespacedKey localizedNameKey) {
+        return new CustomEnchantment(id, localizedNameKey);
     }
 
     public static String getLoreOfEnchant(CustomEnchantment enchantment, int level) {
@@ -103,30 +103,31 @@ public class EnchantmentUtil {
     }
 
     public static class CustomEnchantment extends Enchantment {
-        private final String name;
-        private final String localizedNameKey;
+        private final NamespacedKey id;
+        private final NamespacedKey localizedNameKey;
         private int startLevel = 1;
         private int maxLevel = 1;
+        @SuppressWarnings("deprecation")
         private EnchantmentTarget target = EnchantmentTarget.ALL;
         private boolean treasure = false;
         private boolean cursed = false;
         private List<Enchantment> conflictEnchantments = Collections.emptyList();
         private List<ItemStack> otherItems = Collections.emptyList();
 
-        public CustomEnchantment(@Nonnull Plugin instance, @Nonnull String name, @Nonnull String localizedNameKey) {
-            super(new NamespacedKey(instance, "enchantment." + name));
-            this.name = name;
+        public CustomEnchantment(@Nonnull NamespacedKey id, @Nonnull NamespacedKey localizedNameKey) {
+            super(id);
+            this.id = id;
             this.localizedNameKey = localizedNameKey;
         }
 
         @Nonnull
         @Override
         public String getName() {
-            return name;
+            return id.getKey();
         }
 
         @Nonnull
-        public String getLocalizedNameKey() {
+        public NamespacedKey getLocalizedNameKey() {
             return localizedNameKey;
         }
 
@@ -207,7 +208,7 @@ public class EnchantmentUtil {
                 field.setAccessible(true);
                 field.set(Enchantment.class, true);
             } catch (Exception e) {
-                e.printStackTrace();
+                WheelCore.getInstance().getLogger().log(Level.SEVERE, e, () -> "Error registering custom enchantment");
             }
 
             Enchantment.registerEnchantment(this);

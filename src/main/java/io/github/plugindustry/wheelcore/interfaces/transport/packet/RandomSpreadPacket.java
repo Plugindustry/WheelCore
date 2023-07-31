@@ -33,6 +33,7 @@ public class RandomSpreadPacket implements Packet {
         }
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public void spread(@Nonnull Location from) {
         List<Location> list = BlockUtil.findAcceptableAround(from, this).filter(loc -> !loc.equals(this.from))

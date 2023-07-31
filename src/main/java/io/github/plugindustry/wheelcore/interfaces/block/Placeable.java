@@ -15,6 +15,7 @@ public interface Placeable extends BlockBase {
      * @param player       The player who placed the block (null when the block is not placed by players)
      * @return Whether this place should succeed
      */
+    @SuppressWarnings("SameReturnValue")
     boolean onBlockPlace(@Nullable ItemStack item, @Nonnull Block block, @Nullable Block blockAgainst,
             @Nullable Player player);
 }

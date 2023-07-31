@@ -1,7 +1,7 @@
 package io.github.plugindustry.wheelcore.interfaces.fluid;
 
 import io.github.plugindustry.wheelcore.manager.MainManager;
-import io.github.plugindustry.wheelcore.utils.StringUtil;
+import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import javax.annotation.Nonnull;
@@ -22,7 +22,8 @@ public class FluidStack implements ConfigurationSerializable, Cloneable {
     }
 
     public FluidStack(Map<String, Object> map) {
-        this.type = MainManager.getFluidInstanceFromId(StringUtil.str2Key((String) map.get("type")));
+        String str = (String) map.get("type");
+        this.type = MainManager.getFluidInstanceFromId(NamespacedKey.fromString(str));
         this.amount = (int) map.get("amount");
     }
 
@@ -46,8 +47,8 @@ public class FluidStack implements ConfigurationSerializable, Cloneable {
     @Nonnull
     @Override
     public Map<String, Object> serialize() {
-        return Map.of("type", StringUtil.key2Str(Objects.requireNonNull(MainManager.getIdFromInstance(type))), "amount",
-                amount);
+        NamespacedKey key = Objects.requireNonNull(MainManager.getIdFromInstance(type));
+        return Map.of("type", key.toString(), "amount", amount);
     }
 
     @Override

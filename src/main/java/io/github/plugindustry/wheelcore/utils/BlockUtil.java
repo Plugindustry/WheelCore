@@ -31,6 +31,7 @@ public class BlockUtil {
 
     }
 
+    @SuppressWarnings("rawtypes")
     public static boolean isAcceptable(@Nonnull Location block, @Nullable Packet packet) {
         return MainManager.hasBlock(block) && MainManager.getBlockInstance(block) instanceof PacketConsumer pc &&
                pc.canAccept(packet) && pc.available(block);

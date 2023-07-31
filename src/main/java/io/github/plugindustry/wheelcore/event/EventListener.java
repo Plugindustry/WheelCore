@@ -426,6 +426,7 @@ public class EventListener implements Listener {
                                                            event.getRightClicked())));
     }
 
+    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onEntitySpawn(EntitySpawnEvent event) {
         if (event instanceof CreatureSpawnEvent &&

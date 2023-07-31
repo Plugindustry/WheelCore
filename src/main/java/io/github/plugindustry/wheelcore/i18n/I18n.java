@@ -15,6 +15,7 @@ import io.github.plugindustry.wheelcore.manager.MainManager;
 import io.github.plugindustry.wheelcore.utils.Pair;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -22,6 +23,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.plugin.Plugin;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -33,7 +35,7 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class I18n {
-    private static final HashMap<Locale, Map<String, String>> locales = new HashMap<>();
+    private static final HashMap<Locale, Map<NamespacedKey, String>> locales = new HashMap<>();
     private static final Pattern pattern = Pattern.compile("\\{\\{(\\S*?)}}");
     private static final Pattern patternList = Pattern.compile("\\{\\{(\\S*?)\\[]}}");
     private static final JsonParser parser = new JsonParser();
@@ -44,9 +46,9 @@ public class I18n {
     /**
      * @param reader Lang reader to load
      */
-    public static void load(@Nonnull Locale locale, @Nonnull Reader reader) {
+    public static void load(@Nonnull Locale locale, @Nonnull Plugin plugin, @Nonnull Reader reader) {
         try {
-            Map<String, String> kvMap;
+            Map<NamespacedKey, String> kvMap;
             if (locales.containsKey(locale)) kvMap = locales.get(locale);
             else {
                 kvMap = new HashMap<>();
@@ -54,10 +56,9 @@ public class I18n {
             }
             ResourceBundle bundle = new PropertyResourceBundle(reader);
             for (String key : bundle.keySet())
-                kvMap.put(key, bundle.getString(key));
+                kvMap.put(new NamespacedKey(plugin, key), bundle.getString(key));
         } catch (IOException e) {
-            e.printStackTrace();
-            WheelCore.getInstance().getLogger().log(Level.SEVERE, "Error loading lang file");
+            WheelCore.getInstance().getLogger().log(Level.SEVERE, e, () -> "Error loading lang file");
         }
     }
 
@@ -66,11 +67,11 @@ public class I18n {
      * @return The local string with the given key
      */
     @Nonnull
-    public static String getLocaleString(@Nonnull Locale locale, @Nonnull String key) {
-        Map<String, String> kvMap = locales.getOrDefault(locale, Collections.emptyMap());
-        if (kvMap.containsKey(key)) return kvMap.getOrDefault(key, key);
+    public static String getLocaleString(@Nonnull Locale locale, @Nonnull NamespacedKey key) {
+        Map<NamespacedKey, String> kvMap = locales.getOrDefault(locale, Collections.emptyMap());
+        if (kvMap.containsKey(key)) return kvMap.getOrDefault(key, key.toString());
         else if (!ConfigManager.fallbackLang.equals(locale)) return getLocaleString(ConfigManager.fallbackLang, key);
-        else return key;
+        else return key.toString();
     }
 
     /**
@@ -78,7 +79,7 @@ public class I18n {
      * @return The locale placeholder with the given key
      */
     @Nonnull
-    public static String getLocalePlaceholder(@Nonnull String key) {
+    public static String getLocalePlaceholder(@Nonnull NamespacedKey key) {
         return "{{" + key + "}}";
     }
 
@@ -86,21 +87,23 @@ public class I18n {
      * @param key The key of the local string list needed
      * @return The local string list with the given key
      * If this key represents an array, this array should be described in lang files like this:
-     * listName[0]=xxx
-     * listName[1]=xxx
+     * listName-0=xxx
+     * listName-1=xxx
      * ...
-     * listName[n]=xxx
+     * listName-n=xxx
      * and the returned value consists of all these values.
      * <p>
-     * Otherwise, this call equals to Collections.singletonList({@link I18n#getLocaleString(Locale, String)}).
+     * Otherwise, this call equals to Collections.singletonList({@link I18n#getLocaleString(Locale, NamespacedKey)}).
      */
+    @SuppressWarnings("deprecation")
     @Nonnull
-    public static List<String> getLocaleStringList(@Nonnull Locale locale, @Nonnull String key) {
-        Map<String, String> kvMap = locales.getOrDefault(locale, Collections.emptyMap());
-        if (kvMap.containsKey(key + "[0]")) {
+    public static List<String> getLocaleStringList(@Nonnull Locale locale, @Nonnull NamespacedKey key) {
+        Map<NamespacedKey, String> kvMap = locales.getOrDefault(locale, Collections.emptyMap());
+        if (kvMap.containsKey(new NamespacedKey(key.getNamespace(), key.getKey() + "-0"))) {
             List<String> list = new LinkedList<>();
-            for (int index = 0; kvMap.containsKey(key + "[" + index + "]"); ++index)
-                list.add(kvMap.get(key + "[" + index + "]"));
+            for (int index = 0; kvMap.containsKey(new NamespacedKey(key.getNamespace(), key.getKey() + '-' + index));
+                    ++index)
+                list.add(kvMap.get(new NamespacedKey(key.getNamespace(), key.getKey() + '-' + index)));
             return list;
         } else if (!ConfigManager.fallbackLang.equals(locale))
             return getLocaleStringList(ConfigManager.fallbackLang, key);
@@ -124,13 +127,15 @@ public class I18n {
     @Nonnull
     public static String replaceAll(@Nonnull Locale locale, @Nonnull String str) {
         Matcher matcher = pattern.matcher(str);
-        return matcher.replaceAll(matchResult -> getLocaleString(locale, matchResult.group(1)));
+        return matcher.replaceAll(matchResult -> getLocaleString(locale,
+                Objects.requireNonNull(NamespacedKey.fromString(matchResult.group(1)))));
     }
 
     @Nonnull
     public static List<String> replaceAllList(@Nonnull Locale locale, @Nonnull String str) {
         Matcher matcher = patternList.matcher(str);
-        if (matcher.matches()) return getLocaleStringList(locale, matcher.group(1));
+        if (matcher.matches())
+            return getLocaleStringList(locale, Objects.requireNonNull(NamespacedKey.fromString(matcher.group(1))));
         else return Collections.singletonList(replaceAll(locale, str));
     }
 

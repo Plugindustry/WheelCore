@@ -42,6 +42,7 @@ public class PlayerUtil {
         WheelCore.getProtocolManager().broadcastServerPacket(packet);
     }
 
+    @SuppressWarnings("deprecation")
     public static void sendPotionEffect(@Nonnull Player player, @Nonnull PotionEffectType type, byte amplifier,
             int duration, byte flag) {
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.ENTITY_EFFECT);
@@ -92,6 +93,7 @@ public class PlayerUtil {
         WheelCore.getProtocolManager().broadcastServerPacket(packet);
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public static boolean breakBlock(@Nonnull Player player, @Nonnull Block block) {
         sendBlockBreak(player, block);
         return new CraftPlayer(player).getHandle().getInteractManager().breakBlock(

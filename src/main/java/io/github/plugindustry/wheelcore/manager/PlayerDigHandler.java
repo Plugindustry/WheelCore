@@ -159,6 +159,7 @@ public class PlayerDigHandler {
                     .listenerPriority(ListenerPriority.LOW).types(PacketType.Play.Client.BLOCK_DIG));
         }
 
+        @SuppressWarnings("deprecation")
         private static void ackDigAction(Player player, PacketContainer packet) {
             if (PacketType.Play.Server.BLOCK_BREAK.isSupported()) {
                 PacketContainer ack = new PacketContainer(PacketType.Play.Server.BLOCK_BREAK);

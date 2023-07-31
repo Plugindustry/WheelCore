@@ -10,7 +10,6 @@ import io.github.plugindustry.wheelcore.internal.shadow.CraftItemStack;
 import io.github.plugindustry.wheelcore.manager.ItemMapping;
 import io.github.plugindustry.wheelcore.manager.MainManager;
 import io.github.plugindustry.wheelcore.utils.GsonHelper;
-import io.github.plugindustry.wheelcore.utils.StringUtil;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 
@@ -44,7 +43,8 @@ public class NBTBasedProvider implements ItemDataProvider {
         NbtCompound compound = NbtFactory.asCompound(nbtWrapper);
         if (!compound.containsKey("wheel_core_item_type")) return null;
         Object type = compound.getObject("wheel_core_item_type");
-        return type instanceof String ? MainManager.getItemInstanceFromId(StringUtil.str2Key((String) type)) : null;
+        return type instanceof String ? MainManager.getItemInstanceFromId(NamespacedKey.fromString((String) type)) :
+                null;
     }
 
     @Nullable
@@ -74,7 +74,7 @@ public class NBTBasedProvider implements ItemDataProvider {
         NbtCompound compound = NbtFactory.asCompound(nbtWrapper);
         if (!compound.containsKey("wheel_core_item_additional_data")) return null;
         NbtCompound additional = compound.getCompound("wheel_core_item_additional_data");
-        String keyStr = StringUtil.key2Str(key);
+        String keyStr = key.toString();
         if (!additional.containsKey(keyStr)) return null;
         Object data = additional.getObject(keyStr);
         return data instanceof String ? gson.fromJson((String) data, ItemData.class) : null;
@@ -108,8 +108,10 @@ public class NBTBasedProvider implements ItemDataProvider {
         NbtCompound compound = nbtWrapper.getType() == NbtType.TAG_COMPOUND ? NbtFactory.asCompound(nbtWrapper) :
                 NbtFactory.ofCompound("tag");
         if (instance == null) compound.remove("wheel_core_item_type");
-        else compound.put("wheel_core_item_type",
-                StringUtil.key2Str(Objects.requireNonNull(MainManager.getIdFromInstance(instance))));
+        else {
+            NamespacedKey key = Objects.requireNonNull(MainManager.getIdFromInstance(instance));
+            compound.put("wheel_core_item_type", key.toString());
+        }
         NbtFactory.setItemTag(newItemStack, compound);
         itemStack.setItemMeta(newItemStack.getItemMeta());
     }
@@ -136,7 +138,7 @@ public class NBTBasedProvider implements ItemDataProvider {
         if (compound.containsKey("wheel_core_item_additional_data"))
             additional = compound.getCompound("wheel_core_item_additional_data");
         else additional = NbtFactory.ofCompound("tag");
-        String keyStr = StringUtil.key2Str(key);
+        String keyStr = key.toString();
         if (data == null) additional.remove(keyStr);
         else additional.put(keyStr, gson.toJson(data, ItemData.class));
         if (additional.getKeys().isEmpty()) compound.remove("wheel_core_item_additional_data");

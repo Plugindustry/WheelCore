@@ -4,6 +4,7 @@ import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import io.github.plugindustry.wheelcore.WheelCore;
 import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
@@ -12,6 +13,7 @@ import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 public class GsonHelper {
     public static final JsonSerializer<?> POLYMORPHISM_SERIALIZER = (obj, type, jsonSerializationContext) -> {
@@ -22,11 +24,12 @@ public class GsonHelper {
     };
     public static final JsonDeserializer<?> POLYMORPHISM_DESERIALIZER = (jsonElement, type, jsonDeserializationContext) -> {
         JsonObject jsonObject = jsonElement.getAsJsonObject();
+        String clazz = jsonObject.get("type").getAsString();
         try {
-            return jsonDeserializationContext.deserialize(jsonObject.get("data"),
-                    Class.forName(jsonObject.get("type").getAsString()));
+            return jsonDeserializationContext.deserialize(jsonObject.get("data"), Class.forName(clazz));
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            WheelCore.getInstance().getLogger()
+                    .log(Level.SEVERE, e, () -> "Error deserializing object of class %s".formatted(clazz));
             return null;
         }
     };
@@ -51,13 +54,13 @@ public class GsonHelper {
     private static final TypeAdapter<NamespacedKey> NAMESPACED_KEY_TYPE_ADAPTER = new TypeAdapter<>() {
         @Override
         public void write(JsonWriter jsonWriter, NamespacedKey namespacedKey) throws IOException {
-            jsonWriter.value(StringUtil.key2Str(namespacedKey));
+            jsonWriter.value(namespacedKey.toString());
         }
 
         @Override
         public NamespacedKey read(JsonReader jsonReader) throws IOException {
             String s = jsonReader.nextString();
-            return StringUtil.str2Key(s);
+            return NamespacedKey.fromString(s);
         }
     };
 

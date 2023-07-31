@@ -20,6 +20,7 @@ public interface Interactive {
      * @param entity The entity the player interacting with
      * @return Whether this operation shouldn't be cancelled
      */
+    @SuppressWarnings("SameReturnValue")
     boolean onInteract(@Nonnull Player player, @Nonnull Action action, @Nullable EquipmentSlot hand,
             @Nullable ItemStack tool, @Nullable Block block, @Nullable Entity entity);
 }

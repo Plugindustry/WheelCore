@@ -123,6 +123,7 @@ public class TextureManager {
     }
 
     public static class PacketListener extends PacketAdapter {
+        @SuppressWarnings("deprecation")
         public PacketListener() {
             super(PacketAdapter.params().serverSide().plugin(WheelCore.getInstance())
                     .listenerPriority(ListenerPriority.LOW)
@@ -130,6 +131,7 @@ public class TextureManager {
                             PacketType.Play.Server.MULTI_BLOCK_CHANGE, PacketType.Play.Server.MAP_CHUNK));
         }
 
+        @SuppressWarnings("deprecation")
         @Override
         public void onPacketSending(PacketEvent event) {
             PacketContainer packet = event.getPacket();

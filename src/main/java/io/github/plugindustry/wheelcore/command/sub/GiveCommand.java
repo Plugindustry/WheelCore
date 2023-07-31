@@ -2,7 +2,6 @@ package io.github.plugindustry.wheelcore.command.sub;
 
 import io.github.plugindustry.wheelcore.command.selector.EntitySelector;
 import io.github.plugindustry.wheelcore.manager.ItemMapping;
-import io.github.plugindustry.wheelcore.utils.StringUtil;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
@@ -37,7 +36,7 @@ public class GiveCommand extends SubCommandBase {
 
         EntitySelector selector = new EntitySelector(commandSender, args[0]);
         String itemName = args[1];
-        NamespacedKey itemId = StringUtil.str2Key(itemName);
+        NamespacedKey itemId = NamespacedKey.fromString(itemName);
 
         if (itemId == null) {
             commandSender.sendMessage("Illegal name.");
