@@ -120,7 +120,7 @@ public class I18n {
      * listName[n]=xxx
      */
     @Nonnull
-    public static String getLocaleListPlaceholder(@Nonnull String key) {
+    public static String getLocaleListPlaceholder(@Nonnull NamespacedKey key) {
         return "{{" + key + "[]}}";
     }
 
