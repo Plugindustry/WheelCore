@@ -79,6 +79,7 @@ public class GsonHelper {
 
     public static GsonBuilder bukkitCompat() {
         GsonBuilder builder = new GsonBuilder();
+        builder.serializeSpecialFloatingPointValues();
         builder.registerTypeHierarchyAdapter(ConfigurationSerializable.class, CONFIGURATION_SERIALIZABLE_SERIALIZER);
         builder.registerTypeHierarchyAdapter(ConfigurationSerializable.class, CONFIGURATION_SERIALIZABLE_DESERIALIZER);
         builder.registerTypeAdapter(NamespacedKey.class, NAMESPACED_KEY_TYPE_ADAPTER);

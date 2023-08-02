@@ -49,6 +49,7 @@ public abstract class Wire extends DummyBlock implements PacketContainer<EnergyP
 
     @Override
     public void add(@Nonnull Location loc, @Nonnull EnergyPacket packet) {
+        if (packet.amount <= 0) return;
         WireData data = (WireData) Objects.requireNonNull(MainManager.getBlockData(loc));
         double ava = getMaxTransmissionEnergy() - data.stat;
         if (ava > 0) {

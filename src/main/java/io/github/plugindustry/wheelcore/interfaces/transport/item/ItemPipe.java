@@ -43,6 +43,7 @@ public abstract class ItemPipe extends DummyBlock implements PacketContainer<Ite
 
     @Override
     public void add(@Nonnull Location loc, @Nonnull ItemPacket packet) {
+        if (packet.item.getAmount() <= 0) return;
         PipeData data = (PipeData) Objects.requireNonNull(MainManager.getBlockData(loc));
         int ava = getThreshold() - data.stat;
         if (ava > 0) {

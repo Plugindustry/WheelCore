@@ -43,6 +43,7 @@ public abstract class FluidPipe extends DummyBlock implements PacketContainer<Fl
 
     @Override
     public void add(@Nonnull Location loc, @Nonnull FluidPacket packet) {
+        if (packet.fluid.getAmount() <= 0) return;
         PipeData data = (PipeData) Objects.requireNonNull(MainManager.getBlockData(loc));
         int ava = getThreshold() - data.stat;
         if (ava > 0) {

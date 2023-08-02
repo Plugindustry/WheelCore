@@ -17,7 +17,7 @@ public interface EnergyInputable extends BlockBase, PacketConsumer<EnergyPacket>
     default void accept(@Nonnull Location loc, @Nonnull EnergyPacket packet) {
         if (MainManager.getBlockInstance(packet.src) instanceof EnergyOutputable out) {
             double fin = Math.min(packet.amount, demand(loc));
-            double orgFin = packet.orgAmount / packet.amount * fin;
+            double orgFin = packet.amount == 0 ? packet.orgAmount : packet.orgAmount / packet.amount * fin;
             if (out.output(packet.src, orgFin)) {
                 packet.amount -= fin;
                 packet.orgAmount -= orgFin;
