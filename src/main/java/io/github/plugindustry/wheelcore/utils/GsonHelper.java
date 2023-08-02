@@ -60,7 +60,7 @@ public class GsonHelper {
         @Override
         public NamespacedKey read(JsonReader jsonReader) throws IOException {
             String s = jsonReader.nextString();
-            return NamespacedKey.fromString(s);
+            return "null".equals(s) ? null : NamespacedKey.fromString(s);
         }
     };
 
