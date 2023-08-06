@@ -178,40 +178,43 @@ public class PlayerDigHandler {
             EnumWrappers.PlayerDigType type = packet.getPlayerDigTypes().read(0);
             Player player = event.getPlayer();
             if (player.getGameMode() != GameMode.SURVIVAL && player.getGameMode() != GameMode.ADVENTURE) return;
-            event.setCancelled(true);
-            Bukkit.getScheduler().runTask(WheelCore.getInstance(), () -> {
-                if (type == EnumWrappers.PlayerDigType.START_DESTROY_BLOCK) {
-                    byte flags = 0;
-                    if (player.hasPotionEffect(PotionEffectType.SLOW_DIGGING)) {
-                        PotionEffect effect = player.getActivePotionEffects().stream()
-                                .filter(eff -> eff.getType().equals(PotionEffectType.SLOW_DIGGING)).findFirst()
-                                .orElseThrow(() -> new IllegalStateException("Impossible null"));
-                        flags = (byte) ((effect.isAmbient() ? 1 : 0) | (effect.hasParticles() ? 2 : 0) |
-                                        (effect.hasIcon() ? 4 : 0));
-                        PlayerUtil.sendRemovePotionEffect(player, PotionEffectType.SLOW_DIGGING);
-                    }
-                    PlayerUtil.sendPotionEffect(player, PotionEffectType.SLOW_DIGGING, (byte) -1, Integer.MAX_VALUE,
-                            flags);
+            if (type == EnumWrappers.PlayerDigType.START_DESTROY_BLOCK ||
+                type == EnumWrappers.PlayerDigType.ABORT_DESTROY_BLOCK ||
+                type == EnumWrappers.PlayerDigType.STOP_DESTROY_BLOCK) {
+                event.setCancelled(true);
+                Bukkit.getScheduler().runTask(WheelCore.getInstance(), () -> {
+                    if (type == EnumWrappers.PlayerDigType.START_DESTROY_BLOCK) {
+                        byte flags = 0;
+                        if (player.hasPotionEffect(PotionEffectType.SLOW_DIGGING)) {
+                            PotionEffect effect = player.getActivePotionEffects().stream()
+                                    .filter(eff -> eff.getType().equals(PotionEffectType.SLOW_DIGGING)).findFirst()
+                                    .orElseThrow(() -> new IllegalStateException("Impossible null"));
+                            flags = (byte) ((effect.isAmbient() ? 1 : 0) | (effect.hasParticles() ? 2 : 0) |
+                                            (effect.hasIcon() ? 4 : 0));
+                            PlayerUtil.sendRemovePotionEffect(player, PotionEffectType.SLOW_DIGGING);
+                        }
+                        PlayerUtil.sendPotionEffect(player, PotionEffectType.SLOW_DIGGING, (byte) -1, Integer.MAX_VALUE,
+                                flags);
 
-                    startDig(player, packet.getBlockPositionModifier().read(0).toLocation(player.getWorld()));
-                    ackDigAction(player, packet);
-                } else if (type == EnumWrappers.PlayerDigType.ABORT_DESTROY_BLOCK ||
-                           type == EnumWrappers.PlayerDigType.STOP_DESTROY_BLOCK) {
-                    if (player.hasPotionEffect(PotionEffectType.SLOW_DIGGING)) {
-                        PlayerUtil.sendRemovePotionEffect(player, PotionEffectType.SLOW_DIGGING);
-                        PotionEffect effect = player.getActivePotionEffects().stream()
-                                .filter(eff -> eff.getType().equals(PotionEffectType.SLOW_DIGGING)).findFirst()
-                                .orElseThrow(() -> new IllegalStateException("Impossible null"));
-                        PlayerUtil.sendPotionEffect(player, PotionEffectType.SLOW_DIGGING, (byte) effect.getAmplifier(),
-                                effect.getDuration(),
-                                (byte) ((effect.isAmbient() ? 1 : 0) | (effect.hasParticles() ? 2 : 0) |
-                                        (effect.hasIcon() ? 4 : 0)));
-                    }
+                        startDig(player, packet.getBlockPositionModifier().read(0).toLocation(player.getWorld()));
+                        ackDigAction(player, packet);
+                    } else {
+                        if (player.hasPotionEffect(PotionEffectType.SLOW_DIGGING)) {
+                            PlayerUtil.sendRemovePotionEffect(player, PotionEffectType.SLOW_DIGGING);
+                            PotionEffect effect = player.getActivePotionEffects().stream()
+                                    .filter(eff -> eff.getType().equals(PotionEffectType.SLOW_DIGGING)).findFirst()
+                                    .orElseThrow(() -> new IllegalStateException("Impossible null"));
+                            PlayerUtil.sendPotionEffect(player, PotionEffectType.SLOW_DIGGING,
+                                    (byte) effect.getAmplifier(), effect.getDuration(),
+                                    (byte) ((effect.isAmbient() ? 1 : 0) | (effect.hasParticles() ? 2 : 0) |
+                                            (effect.hasIcon() ? 4 : 0)));
+                        }
 
-                    abortDig(player);
-                    ackDigAction(player, packet);
-                }
-            });
+                        abortDig(player);
+                        ackDigAction(player, packet);
+                    }
+                });
+            }
         }
     }
 }
