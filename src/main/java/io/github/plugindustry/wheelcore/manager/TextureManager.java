@@ -140,10 +140,11 @@ public class TextureManager {
                 packet.getType() == PacketType.Play.Server.BLOCK_BREAK) {
                 BlockPosition pos = packet.getBlockPositionModifier().read(0);
                 // Assume no chunk loading will happen.
-                if (MainManager.getBlockInstance(pos.toLocation(player.getWorld())) instanceof TexturedBlock)
+                if (MainManager.getBlockInstance(pos.toLocation(player.getWorld())) instanceof TexturedBlock) {
                     Bukkit.getScheduler().runTask(WheelCore.getInstance(),
                             () -> updateTexture(pos.toLocation(player.getWorld()), player));
-                event.setCancelled(true);
+                    event.setCancelled(true);
+                }
             } else if (packet.getType() == PacketType.Play.Server.MULTI_BLOCK_CHANGE) {
                 Location basePos = packet.getSectionPositions().read(0).toLocation(player.getWorld());
                 basePos.setX(basePos.getBlockX() << 4);
@@ -156,7 +157,6 @@ public class TextureManager {
                     if (MainManager.getBlockInstance(pos) instanceof TexturedBlock)
                         Bukkit.getScheduler().runTask(WheelCore.getInstance(), () -> updateTexture(pos, player));
                 }
-                event.setCancelled(true);
             } else if (packet.getType() == PacketType.Play.Server.MAP_CHUNK) {
                 int cX = packet.getIntegers().read(0);
                 int cZ = packet.getIntegers().read(1);
