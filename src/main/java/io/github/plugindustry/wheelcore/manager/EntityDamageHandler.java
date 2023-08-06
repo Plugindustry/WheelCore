@@ -18,10 +18,9 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 public class EntityDamageHandler {
-    public static final List<Function<DamageInfo, Boolean>> infoModifiers = new ArrayList<>();
+    public static final List<DamageInfoModifier> infoModifiers = new ArrayList<>();
     public static final List<DoubleModifier> baseDamageModifiers = new ArrayList<>();
     public static final List<DoubleModifier> hardHatModifiers = new ArrayList<>();
     public static final List<DoubleModifier> blockingModifiers = new ArrayList<>();
@@ -51,7 +50,8 @@ public class EntityDamageHandler {
     @Nonnull
     public static ModifyResult calculateModify(@Nonnull EntityDamageEvent.DamageCause cause, @Nonnull DamageInfo info,
             boolean canBlock, @Nullable Entity damager, @Nonnull Entity damagee) {
-        for (Function<DamageInfo, Boolean> modifier : infoModifiers) if (!modifier.apply(info)) break;
+        for (DamageInfoModifier modifier : infoModifiers)
+            if (!modifier.modify(cause, info, canBlock, damager, damagee)) break;
 
         ModifyResult result = new ModifyResult();
         result.baseDamage = info.damage;
@@ -188,6 +188,11 @@ public class EntityDamageHandler {
         if (cause == EntityDamageEvent.DamageCause.FALL)
             result += item.getEnchantmentLevel(Enchantment.PROTECTION_FALL) * 3;
         return result;
+    }
+
+    public static abstract class DamageInfoModifier {
+        public abstract boolean modify(@Nonnull EntityDamageEvent.DamageCause cause, @Nonnull DamageInfo info,
+                boolean canBlock, @Nullable Entity damager, @Nonnull Entity damagee);
     }
 
     public static abstract class DoubleModifier {
