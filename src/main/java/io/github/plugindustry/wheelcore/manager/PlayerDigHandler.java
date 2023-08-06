@@ -46,13 +46,11 @@ public class PlayerDigHandler {
             int level = tool.getEnchantments().getOrDefault(Enchantment.DIG_SPEED, 0);
             speed += level * level + 1;
         }
-        for (PotionEffect potionEffect : player.getActivePotionEffects()) {
-            if (potionEffect.getType() == PotionEffectType.FAST_DIGGING) {
-                speed *= potionEffect.getAmplifier() * 0.2 + 1.2;
-            } else if (potionEffect.getType() == PotionEffectType.SLOW_DIGGING) {
-                speed *= Math.pow(0.3, potionEffect.getAmplifier() + 1);
-            }
-        }
+        for (PotionEffect potionEffect : player.getActivePotionEffects())
+            if (potionEffect.getType() == PotionEffectType.FAST_DIGGING)
+                speed *= (float) (potionEffect.getAmplifier() * 0.2 + 1.2);
+            else if (potionEffect.getType() == PotionEffectType.SLOW_DIGGING)
+                speed *= (float) Math.pow(0.3, potionEffect.getAmplifier() + 1);
         if (!((Entity) player).isOnGround()) speed /= 5;
         if (PlayerUtil.isInWater(player)) {
             ItemStack helmet = player.getInventory().getHelmet();
@@ -150,6 +148,7 @@ public class PlayerDigHandler {
     }
 
     public static abstract class DestroySpeedModifier {
+        @Nonnull
         public abstract Pair<Boolean, Float> modify(@Nonnull Block block, @Nonnull Player player, float current);
     }
 

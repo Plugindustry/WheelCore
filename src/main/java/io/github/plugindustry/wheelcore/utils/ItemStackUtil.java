@@ -9,11 +9,16 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import javax.annotation.Nullable;
 import java.util.*;
 
 public class ItemStackUtil {
     public static ItemStackFactory create(Material material) {
         return new ItemStackFactory(material);
+    }
+
+    public static boolean isValid(@Nullable ItemStack item) {
+        return item != null && item.getType() != Material.AIR && item.getAmount() > 0;
     }
 
     public static boolean isSimilar(ItemStack a, ItemStack b) {

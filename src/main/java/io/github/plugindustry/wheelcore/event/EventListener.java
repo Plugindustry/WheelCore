@@ -6,6 +6,7 @@ import io.github.plugindustry.wheelcore.interfaces.block.*;
 import io.github.plugindustry.wheelcore.interfaces.entity.EntityBase;
 import io.github.plugindustry.wheelcore.interfaces.item.Placeable;
 import io.github.plugindustry.wheelcore.interfaces.item.*;
+import io.github.plugindustry.wheelcore.manager.EntityDamageHandler;
 import io.github.plugindustry.wheelcore.manager.MainManager;
 import io.github.plugindustry.wheelcore.manager.RecipeRegistry;
 import io.github.plugindustry.wheelcore.manager.recipe.RecipeBase;
@@ -16,15 +17,15 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Wolf;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
-import org.bukkit.event.entity.CreatureSpawnEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.entity.EntitySpawnEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.FurnaceSmeltEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
@@ -35,6 +36,7 @@ import org.bukkit.event.world.ChunkLoadEvent;
 import org.bukkit.event.world.ChunkUnloadEvent;
 import org.bukkit.event.world.WorldInitEvent;
 import org.bukkit.inventory.CraftingInventory;
+import org.bukkit.inventory.EntityEquipment;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -452,5 +454,90 @@ public class EventListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     public void onPlayerLocaleChange(PlayerLocaleChangeEvent event) {
         Bukkit.getScheduler().runTask(WheelCore.getInstance(), () -> event.getPlayer().updateInventory());
+    }
+
+    private final static EnumSet<EntityDamageEvent.DamageCause> ARMOR_IGNORE_CAUSES = EnumSet.of(
+            EntityDamageEvent.DamageCause.VOID, EntityDamageEvent.DamageCause.SUICIDE,
+            EntityDamageEvent.DamageCause.STARVATION, EntityDamageEvent.DamageCause.FALL,
+            EntityDamageEvent.DamageCause.FIRE_TICK, EntityDamageEvent.DamageCause.DROWNING,
+            EntityDamageEvent.DamageCause.SUFFOCATION, EntityDamageEvent.DamageCause.MAGIC,
+            EntityDamageEvent.DamageCause.POISON, EntityDamageEvent.DamageCause.WITHER,
+            EntityDamageEvent.DamageCause.THORNS, EntityDamageEvent.DamageCause.FLY_INTO_WALL,
+            EntityDamageEvent.DamageCause.LIGHTNING);
+    private final static EnumSet<EntityDamageEvent.DamageCause> RESISTANCE_IGNORE_CAUSES = EnumSet.of(
+            EntityDamageEvent.DamageCause.VOID, EntityDamageEvent.DamageCause.SUICIDE,
+            EntityDamageEvent.DamageCause.STARVATION);
+
+    @SuppressWarnings("deprecation")
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onEntityDamage(EntityDamageEvent event) {
+        EntityDamageHandler.DamageInfo info = new EntityDamageHandler.DamageInfo();
+        info.damage = event.getDamage();
+        boolean canBlock = false;
+        if (event.isApplicable(EntityDamageEvent.DamageModifier.HARD_HAT)) {
+            info.applyHardHat = true;
+            event.setDamage(EntityDamageEvent.DamageModifier.HARD_HAT, 0);
+        }
+        if (event.isApplicable(EntityDamageEvent.DamageModifier.BLOCKING)) {
+            info.applyBlocking = true;
+            canBlock = event.getDamage(EntityDamageEvent.DamageModifier.BLOCKING) > 0;
+            event.setDamage(EntityDamageEvent.DamageModifier.BLOCKING, 0);
+        }
+        if (event.isApplicable(EntityDamageEvent.DamageModifier.ARMOR)) {
+            if (!ARMOR_IGNORE_CAUSES.contains(event.getCause())) info.applyArmor = true;
+            event.setDamage(EntityDamageEvent.DamageModifier.ARMOR, 0);
+        }
+        if (event.isApplicable(EntityDamageEvent.DamageModifier.RESISTANCE)) {
+            if (!RESISTANCE_IGNORE_CAUSES.contains(event.getCause())) info.applyResistance = true;
+            event.setDamage(EntityDamageEvent.DamageModifier.RESISTANCE, 0);
+        }
+        if (event.isApplicable(EntityDamageEvent.DamageModifier.MAGIC)) {
+            info.applyMagic = true;
+            event.setDamage(EntityDamageEvent.DamageModifier.MAGIC, 0);
+        }
+        if (event.isApplicable(EntityDamageEvent.DamageModifier.ABSORPTION)) {
+            info.applyAbsorption = true;
+            event.setDamage(EntityDamageEvent.DamageModifier.ABSORPTION, 0);
+        }
+
+        switch (event.getCause()) {
+            case ENTITY_ATTACK, ENTITY_SWEEP_ATTACK -> {
+                EntityDamageByEntityEvent event1 = (EntityDamageByEntityEvent) event;
+                if (event1.getDamager() instanceof LivingEntity living) {
+                    EntityEquipment equip = living.getEquipment();
+                    if (equip == null) break;
+                    ItemStack weapon = equip.getItemInMainHand();
+                    if (MainManager.getItemInstance(weapon) instanceof Weapon instance) {
+                        Optional<EntityDamageHandler.DamageInfo> tmp = instance.getDamage(living, weapon,
+                                event.getEntity(), event.getCause());
+                        if (tmp.isPresent()) {
+                            info = tmp.get();
+
+                            if (event.getEntity() instanceof Wolf && !(living instanceof Player))
+                                info.damage = (info.damage + 1) / 2; // Wolf damage reduction
+
+                            // The damage reduction of ender dragon (non-head part) is currently impossible due to the limitation of bukkit API.
+                        } else {
+                            event.setCancelled(true);
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+        Entity damager;
+        if (event instanceof EntityDamageByEntityEvent event1) damager = event1.getDamager();
+        else damager = null;
+        EntityDamageHandler.ModifyResult result = EntityDamageHandler.calculateModify(event.getCause(), info, canBlock,
+                damager, event.getEntity());
+
+        event.setDamage(EntityDamageEvent.DamageModifier.BASE, result.baseDamage);
+        if (info.applyHardHat) event.setDamage(EntityDamageEvent.DamageModifier.HARD_HAT, result.hardHat);
+        if (info.applyBlocking) event.setDamage(EntityDamageEvent.DamageModifier.BLOCKING, result.blocking);
+        if (info.applyArmor) event.setDamage(EntityDamageEvent.DamageModifier.ARMOR, result.armor);
+        if (info.applyResistance) event.setDamage(EntityDamageEvent.DamageModifier.RESISTANCE, result.resistance);
+        if (info.applyMagic) event.setDamage(EntityDamageEvent.DamageModifier.MAGIC, result.magic);
+        if (info.applyAbsorption) event.setDamage(EntityDamageEvent.DamageModifier.ABSORPTION, result.absorption);
     }
 }
