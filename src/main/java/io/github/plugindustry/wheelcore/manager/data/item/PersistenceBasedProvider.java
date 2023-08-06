@@ -76,9 +76,9 @@ public class PersistenceBasedProvider implements ItemDataProvider {
     @Override
     public ItemBase getInstance(@Nullable ItemStack itemStack) {
         if (itemStack == null || !itemStack.hasItemMeta()) return null;
-        String str = Objects.requireNonNull(Objects.requireNonNull(itemStack.getItemMeta()).getPersistentDataContainer()
-                .get(ITEM_TYPE_KEY, PersistentDataType.STRING));
-        return MainManager.getItemInstanceFromId(NamespacedKey.fromString(str));
+        String str = Objects.requireNonNull(itemStack.getItemMeta()).getPersistentDataContainer()
+                .get(ITEM_TYPE_KEY, PersistentDataType.STRING);
+        return str == null ? null : MainManager.getItemInstanceFromId(NamespacedKey.fromString(str));
     }
 
     @Nullable
