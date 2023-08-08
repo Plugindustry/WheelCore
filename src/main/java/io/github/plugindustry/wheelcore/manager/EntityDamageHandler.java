@@ -5,6 +5,7 @@ import io.github.plugindustry.wheelcore.utils.Pair;
 import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -36,8 +37,8 @@ public class EntityDamageHandler {
             @Nonnull
             @Override
             public Pair<Boolean, Double> modify(double cur, @Nonnull EntityDamageEvent.DamageCause cause,
-                    @Nonnull DamageInfo info, @Nonnull ModifyResult result, @Nullable Entity damager,
-                    @Nonnull Entity damagee) {
+                    @Nonnull DamageInfo info, @Nonnull ModifyResult result, @Nullable Entity damagerEntity,
+                    @Nullable Block damagerBlock, @Nonnull Entity damagee) {
                 if (damagee instanceof Witch &&
                     (cause == EntityDamageEvent.DamageCause.MAGIC || cause == EntityDamageEvent.DamageCause.POISON ||
                      cause == EntityDamageEvent.DamageCause.WITHER || cause == EntityDamageEvent.DamageCause.THORNS))
@@ -49,14 +50,15 @@ public class EntityDamageHandler {
 
     @Nonnull
     public static ModifyResult calculateModify(@Nonnull EntityDamageEvent.DamageCause cause, @Nonnull DamageInfo info,
-            boolean canBlock, @Nullable Entity damager, @Nonnull Entity damagee) {
+            boolean canBlock, @Nullable Entity damagerEntity, @Nullable Block damagerBlock, @Nonnull Entity damagee) {
         for (DamageInfoModifier modifier : infoModifiers)
-            if (!modifier.modify(cause, info, canBlock, damager, damagee)) break;
+            if (!modifier.modify(cause, info, canBlock, damagerEntity, damagerBlock, damagee)) break;
 
         ModifyResult result = new ModifyResult();
         result.baseDamage = info.damage;
         for (DoubleModifier modifier : baseDamageModifiers) {
-            Pair<Boolean, Double> res = modifier.modify(result.baseDamage, cause, info, result, damager, damagee);
+            Pair<Boolean, Double> res = modifier.modify(result.baseDamage, cause, info, result, damagerEntity,
+                    damagerBlock, damagee);
             result.baseDamage = res.second;
             if (!res.first) break;
         }
@@ -67,7 +69,8 @@ public class EntityDamageHandler {
             if (damagee instanceof LivingEntity living && living.getEquipment() != null &&
                 ItemStackUtil.isValid(living.getEquipment().getHelmet())) result.hardHat = -current * 0.25;
             for (DoubleModifier modifier : hardHatModifiers) {
-                Pair<Boolean, Double> res = modifier.modify(result.hardHat, cause, info, result, damager, damagee);
+                Pair<Boolean, Double> res = modifier.modify(result.hardHat, cause, info, result, damagerEntity,
+                        damagerBlock, damagee);
                 result.hardHat = res.second;
                 if (!res.first) break;
             }
@@ -79,7 +82,8 @@ public class EntityDamageHandler {
         if (info.applyBlocking) {
             if (canBlock) result.blocking = -current;
             for (DoubleModifier modifier : blockingModifiers) {
-                Pair<Boolean, Double> res = modifier.modify(result.blocking, cause, info, result, damager, damagee);
+                Pair<Boolean, Double> res = modifier.modify(result.blocking, cause, info, result, damagerEntity,
+                        damagerBlock, damagee);
                 result.blocking = res.second;
                 if (!res.first) break;
             }
@@ -100,12 +104,14 @@ public class EntityDamageHandler {
             }
 
             for (DoubleModifier modifier : armorValueModifiers) {
-                Pair<Boolean, Double> res = modifier.modify(armor, cause, info, result, damager, damagee);
+                Pair<Boolean, Double> res = modifier.modify(armor, cause, info, result, damagerEntity, damagerBlock,
+                        damagee);
                 armor = res.second;
                 if (!res.first) break;
             }
             for (DoubleModifier modifier : armorToughnessModifiers) {
-                Pair<Boolean, Double> res = modifier.modify(toughness, cause, info, result, damager, damagee);
+                Pair<Boolean, Double> res = modifier.modify(toughness, cause, info, result, damagerEntity, damagerBlock,
+                        damagee);
                 toughness = res.second;
                 if (!res.first) break;
             }
@@ -113,7 +119,8 @@ public class EntityDamageHandler {
             result.armor =
                     -current * (Math.min(20.0, Math.max(armor * 0.2, armor - current / (toughness * 0.25 + 2))) / 25);
             for (DoubleModifier modifier : armorModifiers) {
-                Pair<Boolean, Double> res = modifier.modify(result.armor, cause, info, result, damager, damagee);
+                Pair<Boolean, Double> res = modifier.modify(result.armor, cause, info, result, damagerEntity,
+                        damagerBlock, damagee);
                 result.armor = res.second;
                 if (!res.first) break;
             }
@@ -127,15 +134,16 @@ public class EntityDamageHandler {
             if (damagee instanceof LivingEntity living) {
                 EntityEquipment equipment = living.getEquipment();
                 if (equipment != null) {
-                    epf += calculateVanillaEPF(cause, damager, equipment.getHelmet());
-                    epf += calculateVanillaEPF(cause, damager, equipment.getChestplate());
-                    epf += calculateVanillaEPF(cause, damager, equipment.getLeggings());
-                    epf += calculateVanillaEPF(cause, damager, equipment.getBoots());
+                    epf += calculateVanillaEPF(cause, damagerEntity, equipment.getHelmet());
+                    epf += calculateVanillaEPF(cause, damagerEntity, equipment.getChestplate());
+                    epf += calculateVanillaEPF(cause, damagerEntity, equipment.getLeggings());
+                    epf += calculateVanillaEPF(cause, damagerEntity, equipment.getBoots());
                 }
             }
 
             for (DoubleModifier modifier : epfModifiers) {
-                Pair<Boolean, Double> res = modifier.modify(epf, cause, info, result, damager, damagee);
+                Pair<Boolean, Double> res = modifier.modify(epf, cause, info, result, damagerEntity, damagerBlock,
+                        damagee);
                 epf = res.second;
                 if (!res.first) break;
             }
@@ -143,7 +151,8 @@ public class EntityDamageHandler {
             epf = Math.min(20, Math.max(0, epf));
             result.magic = -current * (epf / 25);
             for (DoubleModifier modifier : magicModifiers) {
-                Pair<Boolean, Double> res = modifier.modify(result.magic, cause, info, result, damager, damagee);
+                Pair<Boolean, Double> res = modifier.modify(result.magic, cause, info, result, damagerEntity,
+                        damagerBlock, damagee);
                 result.magic = res.second;
                 if (!res.first) break;
             }
@@ -158,7 +167,8 @@ public class EntityDamageHandler {
                 result.absorption = -Math.min(current, limit = living.getAbsorptionAmount());
             limit = -limit;
             for (DoubleModifier modifier : absorptionModifiers) {
-                Pair<Boolean, Double> res = modifier.modify(result.absorption, cause, info, result, damager, damagee);
+                Pair<Boolean, Double> res = modifier.modify(result.absorption, cause, info, result, damagerEntity,
+                        damagerBlock, damagee);
                 result.absorption = res.second;
                 if (!res.first) break;
             }
@@ -193,14 +203,15 @@ public class EntityDamageHandler {
 
     public static abstract class DamageInfoModifier {
         public abstract boolean modify(@Nonnull EntityDamageEvent.DamageCause cause, @Nonnull DamageInfo info,
-                boolean canBlock, @Nullable Entity damager, @Nonnull Entity damagee);
+                boolean canBlock, @Nullable Entity damagerEntity, @Nullable Block damagerBlock,
+                @Nonnull Entity damagee);
     }
 
     public static abstract class DoubleModifier {
         @Nonnull
         public abstract Pair<Boolean, Double> modify(double cur, @Nonnull EntityDamageEvent.DamageCause cause,
-                @Nonnull DamageInfo info, @Nonnull ModifyResult result, @Nullable Entity damager,
-                @Nonnull Entity damagee);
+                @Nonnull DamageInfo info, @Nonnull ModifyResult result, @Nullable Entity damagerEntity,
+                @Nullable Block damagerBlock, @Nonnull Entity damagee);
     }
 
     public static class ModifyResult {

@@ -548,11 +548,14 @@ public class EventListener implements Listener {
             }
         }
 
-        Entity damager;
-        if (event instanceof EntityDamageByEntityEvent event1) damager = event1.getDamager();
-        else damager = null;
+        Entity damagerEntity;
+        if (event instanceof EntityDamageByEntityEvent event1) damagerEntity = event1.getDamager();
+        else damagerEntity = null;
+        Block damagerBlock;
+        if (event instanceof EntityDamageByBlockEvent event1) damagerBlock = event1.getDamager();
+        else damagerBlock = null;
         EntityDamageHandler.ModifyResult result = EntityDamageHandler.calculateModify(event.getCause(), info, canBlock,
-                damager, event.getEntity());
+                damagerEntity, damagerBlock, event.getEntity());
 
         event.setDamage(EntityDamageEvent.DamageModifier.BASE, result.baseDamage);
         if (info.applyHardHat) event.setDamage(EntityDamageEvent.DamageModifier.HARD_HAT, result.hardHat);
@@ -563,7 +566,7 @@ public class EventListener implements Listener {
                              event.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK ||
                              event.getCause() == EntityDamageEvent.DamageCause.LAVA ||
                              event.getCause() == EntityDamageEvent.DamageCause.HOT_FLOOR ||
-                             (damager != null && damager.getType() == EntityType.SMALL_FIREBALL);
+                             (damagerEntity != null && damagerEntity.getType() == EntityType.SMALL_FIREBALL);
             if (ignoreArmor && event.getEntity() instanceof HumanEntity)
                 new CraftHumanEntity(event.getEntity()).getHandle().getInventory()
                         .costDurability(isFire ? DamageSource.LAVA_SOURCE : DamageSource.GENERIC_SOURCE,
