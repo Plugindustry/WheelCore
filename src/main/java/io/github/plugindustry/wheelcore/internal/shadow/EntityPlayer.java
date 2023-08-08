@@ -5,7 +5,7 @@ import io.github.czm23333.transparentreflect.annotations.ShadowGetter;
 
 @Shadow("nms/EntityPlayer")
 @SuppressWarnings("all")
-public class EntityPlayer extends NMSEntity {
+public class EntityPlayer extends EntityHuman {
     public EntityPlayer(Object o) {
         super(o);
     }

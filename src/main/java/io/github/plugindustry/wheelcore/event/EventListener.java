@@ -4,8 +4,12 @@ import io.github.plugindustry.wheelcore.WheelCore;
 import io.github.plugindustry.wheelcore.interfaces.Interactive;
 import io.github.plugindustry.wheelcore.interfaces.block.*;
 import io.github.plugindustry.wheelcore.interfaces.entity.EntityBase;
+import io.github.plugindustry.wheelcore.interfaces.item.Damageable;
 import io.github.plugindustry.wheelcore.interfaces.item.Placeable;
 import io.github.plugindustry.wheelcore.interfaces.item.*;
+import io.github.plugindustry.wheelcore.internal.shadow.CraftHumanEntity;
+import io.github.plugindustry.wheelcore.internal.shadow.DamageSource;
+import io.github.plugindustry.wheelcore.internal.shadow.PlayerInventory;
 import io.github.plugindustry.wheelcore.manager.EntityDamageHandler;
 import io.github.plugindustry.wheelcore.manager.MainManager;
 import io.github.plugindustry.wheelcore.manager.RecipeRegistry;
@@ -16,10 +20,7 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Wolf;
+import org.bukkit.entity.*;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -459,11 +460,31 @@ public class EventListener implements Listener {
     private final static EnumSet<EntityDamageEvent.DamageCause> ARMOR_IGNORE_CAUSES = EnumSet.of(
             EntityDamageEvent.DamageCause.VOID, EntityDamageEvent.DamageCause.SUICIDE,
             EntityDamageEvent.DamageCause.STARVATION, EntityDamageEvent.DamageCause.FALL,
-            EntityDamageEvent.DamageCause.FIRE_TICK, EntityDamageEvent.DamageCause.DROWNING,
+            EntityDamageEvent.DamageCause.FIRE_TICK, EntityDamageEvent.DamageCause.FIRE,
+            EntityDamageEvent.DamageCause.CRAMMING, EntityDamageEvent.DamageCause.CUSTOM,
+            EntityDamageEvent.DamageCause.DRAGON_BREATH, EntityDamageEvent.DamageCause.DROWNING,
             EntityDamageEvent.DamageCause.SUFFOCATION, EntityDamageEvent.DamageCause.MAGIC,
             EntityDamageEvent.DamageCause.POISON, EntityDamageEvent.DamageCause.WITHER,
             EntityDamageEvent.DamageCause.THORNS, EntityDamageEvent.DamageCause.FLY_INTO_WALL,
             EntityDamageEvent.DamageCause.LIGHTNING);
+
+    static {
+        if (Arrays.stream(EntityDamageEvent.DamageCause.values()).anyMatch(cause -> cause.name().equals("FREEZE")))
+            ARMOR_IGNORE_CAUSES.add(EntityDamageEvent.DamageCause.FREEZE);
+    }
+
+    private static boolean isIgnoreArmor(EntityDamageEvent event) {
+        if (ARMOR_IGNORE_CAUSES.contains(event.getCause())) return true;
+        if (event.getCause() == EntityDamageEvent.DamageCause.CONTACT && event instanceof EntityDamageByBlockEvent be) {
+            Block damager = be.getDamager();
+            return damager != null && damager.getType().name().equals("POINTED_DRIPSTONE");
+        }
+        if (event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK &&
+            event instanceof EntityDamageByEntityEvent ee)
+            return ee.getDamager().getType() == EntityType.AREA_EFFECT_CLOUD;
+        return false;
+    }
+
     private final static EnumSet<EntityDamageEvent.DamageCause> RESISTANCE_IGNORE_CAUSES = EnumSet.of(
             EntityDamageEvent.DamageCause.VOID, EntityDamageEvent.DamageCause.SUICIDE,
             EntityDamageEvent.DamageCause.STARVATION);
@@ -474,6 +495,7 @@ public class EventListener implements Listener {
         EntityDamageHandler.DamageInfo info = new EntityDamageHandler.DamageInfo();
         info.damage = event.getDamage();
         boolean canBlock = false;
+        boolean ignoreArmor = isIgnoreArmor(event);
         if (event.isApplicable(EntityDamageEvent.DamageModifier.HARD_HAT)) {
             info.applyHardHat = true;
             event.setDamage(EntityDamageEvent.DamageModifier.HARD_HAT, 0);
@@ -484,7 +506,7 @@ public class EventListener implements Listener {
             event.setDamage(EntityDamageEvent.DamageModifier.BLOCKING, 0);
         }
         if (event.isApplicable(EntityDamageEvent.DamageModifier.ARMOR)) {
-            if (!ARMOR_IGNORE_CAUSES.contains(event.getCause())) info.applyArmor = true;
+            if (!ignoreArmor) info.applyArmor = true;
             event.setDamage(EntityDamageEvent.DamageModifier.ARMOR, 0);
         }
         if (event.isApplicable(EntityDamageEvent.DamageModifier.RESISTANCE)) {
@@ -535,7 +557,21 @@ public class EventListener implements Listener {
         event.setDamage(EntityDamageEvent.DamageModifier.BASE, result.baseDamage);
         if (info.applyHardHat) event.setDamage(EntityDamageEvent.DamageModifier.HARD_HAT, result.hardHat);
         if (info.applyBlocking) event.setDamage(EntityDamageEvent.DamageModifier.BLOCKING, result.blocking);
-        if (info.applyArmor) event.setDamage(EntityDamageEvent.DamageModifier.ARMOR, result.armor);
+        if (info.applyArmor) {
+            event.setDamage(EntityDamageEvent.DamageModifier.ARMOR, result.armor);
+            boolean isFire = event.getCause() == EntityDamageEvent.DamageCause.FIRE ||
+                             event.getCause() == EntityDamageEvent.DamageCause.FIRE_TICK ||
+                             event.getCause() == EntityDamageEvent.DamageCause.LAVA ||
+                             event.getCause() == EntityDamageEvent.DamageCause.HOT_FLOOR ||
+                             (damager != null && damager.getType() == EntityType.SMALL_FIREBALL);
+            if (ignoreArmor && event.getEntity() instanceof HumanEntity)
+                new CraftHumanEntity(event.getEntity()).getHandle().getInventory()
+                        .costDurability(isFire ? DamageSource.LAVA_SOURCE : DamageSource.GENERIC_SOURCE,
+                                (float) (event.getDamage() +
+                                         event.getDamage(EntityDamageEvent.DamageModifier.BLOCKING) +
+                                         event.getDamage(EntityDamageEvent.DamageModifier.HARD_HAT)),
+                                PlayerInventory.EQUIPMENT_SLOTS);
+        }
         if (info.applyResistance) event.setDamage(EntityDamageEvent.DamageModifier.RESISTANCE, result.resistance);
         if (info.applyMagic) event.setDamage(EntityDamageEvent.DamageModifier.MAGIC, result.magic);
         if (info.applyAbsorption) event.setDamage(EntityDamageEvent.DamageModifier.ABSORPTION, result.absorption);

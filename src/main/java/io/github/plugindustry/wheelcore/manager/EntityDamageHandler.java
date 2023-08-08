@@ -7,8 +7,8 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.SmallFireball;
 import org.bukkit.entity.Witch;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.inventory.EntityEquipment;
@@ -179,7 +179,8 @@ public class EntityDamageHandler {
             result += item.getEnchantmentLevel(Enchantment.PROTECTION_ENVIRONMENTAL);
         if (cause == EntityDamageEvent.DamageCause.FIRE || cause == EntityDamageEvent.DamageCause.FIRE_TICK ||
             cause == EntityDamageEvent.DamageCause.LAVA || cause == EntityDamageEvent.DamageCause.HOT_FLOOR ||
-            damager instanceof SmallFireball) result += item.getEnchantmentLevel(Enchantment.PROTECTION_FIRE) * 2;
+            (damager != null && damager.getType() == EntityType.SMALL_FIREBALL))
+            result += item.getEnchantmentLevel(Enchantment.PROTECTION_FIRE) * 2;
         if (cause == EntityDamageEvent.DamageCause.ENTITY_EXPLOSION ||
             cause == EntityDamageEvent.DamageCause.BLOCK_EXPLOSION)
             result += item.getEnchantmentLevel(Enchantment.PROTECTION_EXPLOSIONS) * 2;

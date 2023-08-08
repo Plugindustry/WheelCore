@@ -199,6 +199,30 @@ public class FuzzyUtil {
     }
 
     @Nonnull
+    public static List<Field> findDeclaredFieldsReferredBy(@Nonnull Method caller) {
+        ArrayList<Field> fields = new ArrayList<>();
+        ClassPool cp = new ClassPool();
+        Class<?> callerClass = caller.getDeclaringClass();
+        cp.appendClassPath(new LoaderClassPath(callerClass.getClassLoader()));
+        try {
+            CtClass callerCtClass = cp.getCtClass(callerClass.getName());
+            getDeclaredCtMethod(cp, callerCtClass, caller).instrument(new ExprEditor() {
+                @Override
+                public void edit(FieldAccess m) throws CannotCompileException {
+                    super.edit(m);
+                    try {
+                        fields.add(getDeclaredField(m.getField()));
+                    } catch (NotFoundException ignored) {
+                    }
+                }
+            });
+        } catch (NotFoundException | CannotCompileException e) {
+            throw new IllegalArgumentException(e);
+        }
+        return fields;
+    }
+
+    @Nonnull
     public static List<Field> findDeclaredFieldsReferredBy(@Nonnull Class<?> declarer, @Nonnull Constructor<?> caller) {
         ArrayList<Field> fields = new ArrayList<>();
         ClassPool cp = new ClassPool();

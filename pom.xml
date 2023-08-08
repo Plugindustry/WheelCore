@@ -71,7 +71,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.16.5-R0.1-SNAPSHOT</version>
+            <version>1.18.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -99,7 +99,7 @@
         <dependency>
             <groupId>com.github.czm23333</groupId>
             <artifactId>TransparentReflect</artifactId>
-            <version>v1.0.1</version>
+            <version>v1.1</version>
         </dependency>
         <dependency>
             <groupId>de.themoep</groupId>

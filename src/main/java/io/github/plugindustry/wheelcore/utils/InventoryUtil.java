@@ -1,5 +1,7 @@
 package io.github.plugindustry.wheelcore.utils;
 
+import io.github.plugindustry.wheelcore.interfaces.item.ItemBase;
+import io.github.plugindustry.wheelcore.manager.MainManager;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.HumanEntity;
@@ -9,6 +11,7 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
@@ -20,6 +23,15 @@ public class InventoryUtil {
         else if (5 <= nmsSlot && nmsSlot <= 8) return 44 - nmsSlot;
         else if (nmsSlot == 45) return 40;
         else return 0;
+    }
+
+    public static boolean contains(@Nonnull Inventory inv, @Nonnull ItemBase type) {
+        return Arrays.stream(inv.getStorageContents()).anyMatch(item -> MainManager.getItemInstance(item) == type);
+    }
+
+    public static boolean contains(@Nonnull Inventory inv, @Nonnull ItemBase type, int amount) {
+        return Arrays.stream(inv.getStorageContents()).filter(item -> MainManager.getItemInstance(item) == type)
+                       .reduce(0, (cur, item) -> cur + item.getAmount(), Integer::sum) >= amount;
     }
 
     public record SimulateInventory(ItemStack[] storage) implements Inventory {

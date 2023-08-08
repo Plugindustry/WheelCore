@@ -9,18 +9,23 @@ import io.github.plugindustry.wheelcore.utils.FuzzyUtil;
 import javassist.CannotCompileException;
 import javassist.NotFoundException;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.reflections.Reflections;
 import org.reflections.util.ConfigurationBuilder;
 import org.reflections.util.FilterBuilder;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.function.Predicate;
 
 public class ShadowRegistry {
-    static Class<?> BlockData;
     static Class<?> TagClass;
-    static Class<?> CraftBlockClass;
+    static Class<?> CraftLivingEntityClass;
+    static Class<?> DamageSourceClass;
+    static Field GenericDamageSourceField;
 
     public static void init() {
         Reflections reflections = new Reflections(
@@ -28,9 +33,38 @@ public class ShadowRegistry {
                                 new FilterBuilder().includePackage(MinecraftReflection.getCraftBukkitPackage()))
                         .setExpandSuperTypes(false));
 
+        Class<?> CraftInventoryPlayerClass = reflections.getSubTypesOf(PlayerInventory.class).stream().findFirst()
+                .orElseThrow(() -> new IllegalStateException("Can't find CraftInventoryPlayer"));
+        CraftLivingEntityClass = reflections.getSubTypesOf(LivingEntity.class).stream().findFirst()
+                .orElseThrow(() -> new IllegalStateException("Can't find CraftLivingEntity"));
+
         ShadowManager.root.makeSubDirectory("nms", "");
         Directory nmsDir = ShadowManager.root.getSubDirectory("nms");
         nmsDir.makeSubDirectory("BlockPosition", MinecraftReflection.getBlockPositionClass().getName());
+        try {
+            GenericDamageSourceField = FuzzyUtil.findDeclaredFieldsReferredBy(
+                            CraftLivingEntityClass.getDeclaredMethod("damage", double.class, Entity.class)).stream()
+                    .filter(f -> Modifier.isStatic(f.getModifiers())).findFirst()
+                    .orElseThrow(() -> new IllegalStateException("Can't find DamageSource"));
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+        DamageSourceClass = GenericDamageSourceField.getDeclaringClass();
+        nmsDir.makeSubDirectory("DamageSource", DamageSourceClass.getName());
+        nmsDir.makeSubDirectory("DamageSource.getId", FuzzyUtil.findDeclaredMatches(
+                        FuzzyMethodContract.newBuilder().requirePublic().parameterCount(0).returnTypeExact(String.class)
+                                .build(), DamageSourceClass).filter(method -> !"toString".equals(method.getName())).findFirst()
+                .orElseThrow(() -> new IllegalStateException("Can't find DamageSource.getId")).getName());
+        Class<?> PlayerInventoryClass = CraftInventoryPlayerClass.getDeclaredConstructors()[0].getParameterTypes()[0];
+        nmsDir.makeSubDirectory("PlayerInventory", PlayerInventoryClass.getName());
+        nmsDir.makeSubDirectory("PlayerInventory.costDurability", FuzzyUtil.findDeclaredFirstMatch(
+                        FuzzyMethodContract.newBuilder().returnTypeVoid()
+                                .parameterExactArray(DamageSourceClass, float.class, int[].class).build(), PlayerInventoryClass)
+                .getName());
+        nmsDir.makeSubDirectory("EntityHuman", MinecraftReflection.getEntityHumanClass().getName());
+        nmsDir.makeSubDirectory("EntityHuman.getInventory", FuzzyUtil.findDeclaredFirstMatch(
+                FuzzyMethodContract.newBuilder().requirePublic().returnTypeExact(PlayerInventoryClass).parameterCount(0)
+                        .build(), MinecraftReflection.getEntityHumanClass()).getName());
         nmsDir.makeSubDirectory("EntityPlayer", MinecraftReflection.getEntityPlayerClass().getName());
         Class<?> PlayerInteractManagerClass = FuzzyUtil.findDeclaredMatches(
                         FuzzyMethodContract.newBuilder().parameterExactType(MinecraftReflection.getEntityPlayerClass())
@@ -47,20 +81,21 @@ public class ShadowRegistry {
                 FuzzyMethodContract.newBuilder().returnTypeExact(boolean.class)
                         .parameterExactType(MinecraftReflection.getBlockPositionClass()).requirePublic().build(),
                 PlayerInteractManagerClass).getName());
-        BlockData = MinecraftReflection.getIBlockDataClass().getSuperclass();
+        Class<?> BlockDataClass = MinecraftReflection.getIBlockDataClass().getSuperclass();
         TagClass = FuzzyUtil.findDeclaredFirstMatch(
                         FuzzyMethodContract.newBuilder().returnTypeExact(boolean.class).parameterCount(2)
-                                .parameterExactType(Predicate.class, 1).requirePublic().build(), BlockData)
+                                .parameterExactType(Predicate.class, 1).requirePublic().build(), BlockDataClass)
                 .getParameterTypes()[0];
         nmsDir.makeSubDirectory("Tag", TagClass.getName());
         nmsDir.makeSubDirectory("IBlockData", MinecraftReflection.getIBlockDataClass().getName());
-        nmsDir.makeSubDirectory("IBlockData.needCorrectTool", FuzzyUtil.findDeclaredMethodsCalledBy(BlockData,
+        nmsDir.makeSubDirectory("IBlockData.needCorrectTool", FuzzyUtil.findDeclaredMethodsCalledBy(BlockDataClass,
                 FuzzyUtil.findDeclaredFirstMatch(FuzzyMethodContract.newBuilder().returnTypeExact(boolean.class)
                                 .parameterExactType(MinecraftReflection.getIBlockDataClass()).requirePublic().build(),
                         MinecraftReflection.getEntityPlayerClass().getSuperclass())).get(0).getName());
-        nmsDir.makeSubDirectory("BlockData", BlockData.getName());
+        nmsDir.makeSubDirectory("BlockData", BlockDataClass.getName());
         nmsDir.makeSubDirectory("BlockData.hardness", FuzzyUtil.findDeclaredFirstMatch(
-                FuzzyFieldContract.newBuilder().requirePublic().typeExact(float.class).build(), BlockData).getName());
+                        FuzzyFieldContract.newBuilder().requirePublic().typeExact(float.class).build(), BlockDataClass)
+                .getName());
         nmsDir.makeSubDirectory("Entity", MinecraftReflection.getEntityClass().getName());
         nmsDir.makeSubDirectory("Entity.isInFluid", FuzzyUtil.findDeclaredFirstMatch(
                 FuzzyMethodContract.newBuilder().returnTypeExact(boolean.class).parameterExactType(TagClass)
@@ -90,12 +125,17 @@ public class ShadowRegistry {
 
         ShadowManager.root.makeSubDirectory("cb", "");
         Directory cbDir = ShadowManager.root.getSubDirectory("cb");
+        Class<?> CraftHumanEntityClass = MinecraftReflection.getCraftPlayerClass().getSuperclass();
+        cbDir.makeSubDirectory("CraftHumanEntity", CraftHumanEntityClass.getName());
+        cbDir.makeSubDirectory("CraftHumanEntity.getHandle", FuzzyUtil.findDeclaredFirstMatch(
+                FuzzyMethodContract.newBuilder().returnTypeExact(MinecraftReflection.getEntityHumanClass())
+                        .requirePublic().parameterCount(0).build(), CraftHumanEntityClass).getName());
         cbDir.makeSubDirectory("CraftPlayer", MinecraftReflection.getCraftPlayerClass().getName());
         cbDir.makeSubDirectory("CraftPlayer.getHandle", FuzzyUtil.findDeclaredFirstMatch(
                         FuzzyMethodContract.newBuilder().returnTypeExact(MinecraftReflection.getEntityPlayerClass())
                                 .requirePublic().parameterCount(0).build(), MinecraftReflection.getCraftPlayerClass())
                 .getName());
-        CraftBlockClass = reflections.getSubTypesOf(Block.class).stream().findFirst()
+        Class<?> CraftBlockClass = reflections.getSubTypesOf(Block.class).stream().findFirst()
                 .orElseThrow(() -> new IllegalStateException("Can't find CraftBlock"));
         cbDir.makeSubDirectory("CraftBlock", CraftBlockClass.getName());
         cbDir.makeSubDirectory("CraftBlock.getHandle", FuzzyUtil.findDeclaredFirstMatch(

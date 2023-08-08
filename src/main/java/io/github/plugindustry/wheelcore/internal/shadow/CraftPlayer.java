@@ -4,8 +4,9 @@ import io.github.czm23333.transparentreflect.annotations.Shadow;
 
 @Shadow("cb/CraftPlayer")
 @SuppressWarnings("all")
-public class CraftPlayer {
+public class CraftPlayer extends CraftHumanEntity {
     public CraftPlayer(Object o) {
+        super(o);
     }
 
     @Shadow("cb/CraftPlayer.getHandle")
