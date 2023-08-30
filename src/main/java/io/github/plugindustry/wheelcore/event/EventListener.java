@@ -250,6 +250,25 @@ public class EventListener implements Listener {
         }
     }
 
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onEntityExplode(EntityExplodeEvent event) {
+        for (Iterator<Block> iterator = event.blockList().iterator(); iterator.hasNext(); ) {
+            Block block = iterator.next();
+            if (MainManager.hasBlock(block.getLocation())) {
+                iterator.remove();
+                BlockBase blockBase = MainManager.getBlockInstance(block.getLocation());
+                try {
+                    if (blockBase instanceof Destroyable &&
+                        ((Destroyable) blockBase).onBlockDestroy(block, Destroyable.DestroyMethod.EXPLOSION, null,
+                                null)) block.setType(Material.AIR);
+                } catch (Throwable t) {
+                    WheelCore.getInstance().getLogger()
+                            .log(Level.SEVERE, t, () -> "Error while processing entity explode event");
+                }
+            }
+        }
+    }
+
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPrepareAnvil(PrepareAnvilEvent event) {
         ItemStack srcItem = event.getInventory().getItem(0);
