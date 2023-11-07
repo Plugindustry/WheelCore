@@ -38,7 +38,6 @@ public class I18n {
     private static final HashMap<Locale, Map<NamespacedKey, String>> locales = new HashMap<>();
     private static final Pattern pattern = Pattern.compile("\\{\\{(\\S*?)}}");
     private static final Pattern patternList = Pattern.compile("\\{\\{(\\S*?)\\[]}}");
-    private static final JsonParser parser = new JsonParser();
     private static final Gson gson = new Gson();
     private static final HashMap<UUID, Pair<Map<UUID, ItemStack>, Queue<UUID>>> orgItemMapping = new HashMap<>();
     private static final int ITEM_LIMIT = 512;
@@ -86,11 +85,17 @@ public class I18n {
     /**
      * @param key The key of the local string list needed
      * @return The local string list with the given key
+     * <p>
      * If this key represents an array, this array should be described in lang files like this:
+     * <p>
      * listName-0=xxx
+     * <p>
      * listName-1=xxx
+     * <p>
      * ...
+     * <p>
      * listName-n=xxx
+     * <p>
      * and the returned value consists of all these values.
      * <p>
      * Otherwise, this call equals to Collections.singletonList({@link I18n#getLocaleString(Locale, NamespacedKey)}).
@@ -113,10 +118,15 @@ public class I18n {
     /**
      * @param key The key of the locale placeholder list needed
      * @return The locale placeholder list with the given key
+     * <p>
      * This list should be described in lang files like this:
+     * <p>
      * listName[0]=xxx
+     * <p>
      * listName[1]=xxx
+     * <p>
      * ...
+     * <p>
      * listName[n]=xxx
      */
     @Nonnull
@@ -238,14 +248,16 @@ public class I18n {
             StructureModifier<WrappedChatComponent> chatComponents = packet.getChatComponents();
             for (int i = 0; i < chatComponents.size(); ++i)
                 chatComponents.modify(i, chatComponent -> {
-                    chatComponent.setJson(gson.toJson(replaceAll(locale, parser.parse(chatComponent.getJson()))));
+                    chatComponent.setJson(
+                            gson.toJson(replaceAll(locale, JsonParser.parseString(chatComponent.getJson()))));
                     return chatComponent;
                 });
             StructureModifier<WrappedChatComponent[]> chatComponentArrays = packet.getChatComponentArrays();
             for (int i = 0; i < chatComponentArrays.size(); ++i)
                 chatComponentArrays.modify(i, chatComponentArr -> {
                     for (WrappedChatComponent chatComponent : chatComponentArr)
-                        chatComponent.setJson(gson.toJson(replaceAll(locale, parser.parse(chatComponent.getJson()))));
+                        chatComponent.setJson(
+                                gson.toJson(replaceAll(locale, JsonParser.parseString(chatComponent.getJson()))));
                     return chatComponentArr;
                 });
 

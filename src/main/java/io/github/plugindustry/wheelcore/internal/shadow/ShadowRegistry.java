@@ -5,6 +5,7 @@ import com.comphenix.protocol.reflect.fuzzy.FuzzyMethodContract;
 import com.comphenix.protocol.utility.MinecraftReflection;
 import io.github.czm23333.transparentreflect.Directory;
 import io.github.czm23333.transparentreflect.ShadowManager;
+import io.github.plugindustry.wheelcore.internal.overwrite.OverwriteRegistry;
 import io.github.plugindustry.wheelcore.utils.FuzzyUtil;
 import javassist.CannotCompileException;
 import javassist.NotFoundException;
@@ -24,7 +25,7 @@ import java.util.function.Predicate;
 public class ShadowRegistry {
     static Class<?> TagClass;
     static Class<?> CraftLivingEntityClass;
-    static Class<?> DamageSourceClass;
+    public static Class<?> DamageSourceClass;
     static Field GenericDamageSourceField;
 
     public static void init() {
@@ -96,6 +97,9 @@ public class ShadowRegistry {
         nmsDir.makeSubDirectory("BlockData.hardness", FuzzyUtil.findDeclaredFirstMatch(
                         FuzzyFieldContract.newBuilder().requirePublic().typeExact(float.class).build(), BlockDataClass)
                 .getName());
+        nmsDir.makeSubDirectory("BlockData.getBlock", FuzzyUtil.findDeclaredFirstMatch(
+                FuzzyMethodContract.newBuilder().parameterCount(0).returnTypeExact(MinecraftReflection.getBlockClass())
+                        .requirePublic().build(), BlockDataClass).getName());
         nmsDir.makeSubDirectory("Entity", MinecraftReflection.getEntityClass().getName());
         nmsDir.makeSubDirectory("Entity.isInFluid", FuzzyUtil.findDeclaredFirstMatch(
                 FuzzyMethodContract.newBuilder().returnTypeExact(boolean.class).parameterExactType(TagClass)
@@ -122,6 +126,12 @@ public class ShadowRegistry {
         nmsDir.makeSubDirectory("Block.getBlockData", FuzzyUtil.findDeclaredFirstMatch(
                 FuzzyMethodContract.newBuilder().returnTypeExact(MinecraftReflection.getIBlockDataClass())
                         .parameterCount(0).requirePublic().build(), MinecraftReflection.getBlockClass()).getName());
+        nmsDir.makeSubDirectory("Block.getBlastResistance",
+                FuzzyUtil.findDeclaredMethodsCalledBy(MinecraftReflection.getBlockClass(),
+                                OverwriteRegistry.ExplosionDamageCalculatorMethod).stream()
+                        .filter(method -> method.getReturnType() == float.class && method.getParameterCount() == 0)
+                        .findFirst().orElseThrow(() -> new RuntimeException("Error finding Block.getBlastResistance"))
+                        .getName());
 
         ShadowManager.root.makeSubDirectory("cb", "");
         Directory cbDir = ShadowManager.root.getSubDirectory("cb");

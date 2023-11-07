@@ -18,6 +18,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class BlockUtil {
@@ -86,5 +87,12 @@ public class BlockUtil {
         if (instance == null) return vanillaNeedCorrectTool(block);
         if (!(instance instanceof Destroyable)) return true;
         return ((Destroyable) instance).needCorrectTool(block);
+    }
+
+    public static Optional<Float> getOverwrittenBlastResistance(@Nonnull Block block) {
+        BlockBase instance = MainManager.getBlockInstance(block.getLocation());
+        if (instance == null) return Optional.empty();
+        if (!(instance instanceof Destroyable)) return Optional.empty();
+        return ((Destroyable) instance).getBlastResistance(block);
     }
 }

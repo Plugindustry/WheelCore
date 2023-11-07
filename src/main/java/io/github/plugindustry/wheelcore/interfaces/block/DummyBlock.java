@@ -16,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Objects;
+import java.util.Optional;
 
 public class DummyBlock implements BlockBase, Placeable, Destroyable, Interactive {
     @Override
@@ -60,6 +61,11 @@ public class DummyBlock implements BlockBase, Placeable, Destroyable, Interactiv
     @Override
     public boolean needCorrectTool(@Nonnull Block block) {
         return BlockUtil.vanillaNeedCorrectTool(block);
+    }
+
+    @Override
+    public Optional<Float> getBlastResistance(@Nonnull Block block) {
+        return Optional.empty();
     }
 
     @Nonnull

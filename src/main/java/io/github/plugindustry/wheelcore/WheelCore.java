@@ -5,6 +5,7 @@ import com.comphenix.protocol.ProtocolManager;
 import io.github.plugindustry.wheelcore.command.WheelCoreCommand;
 import io.github.plugindustry.wheelcore.event.EventListener;
 import io.github.plugindustry.wheelcore.i18n.I18n;
+import io.github.plugindustry.wheelcore.internal.overwrite.OverwriteRegistry;
 import io.github.plugindustry.wheelcore.internal.shadow.ShadowRegistry;
 import io.github.plugindustry.wheelcore.manager.ConfigManager;
 import io.github.plugindustry.wheelcore.manager.MainManager;
@@ -54,7 +55,9 @@ public final class WheelCore extends JavaPlugin {
 
         // Preheat
         protocolManager = ProtocolLibrary.getProtocolManager();
+        OverwriteRegistry.init();
         ShadowRegistry.init();
+        OverwriteRegistry.postInit();
 
         // Register command, EventListener
         Objects.requireNonNull(this.getCommand("wheelcore")).setExecutor(new WheelCoreCommand());
