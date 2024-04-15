@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.Map;
 import java.util.Set;
 
 public interface BlockDataProvider {
@@ -92,6 +93,13 @@ public interface BlockDataProvider {
     /**
      * This method will load the chunk where the given block is if it has not been loaded yet.
      *
+     * @return A readonly map containing all the data at the given location backed with the internal map in provider, where the null key is mapped to the main block data.
+     */
+    Map<NamespacedKey, BlockData> allDataAt(@Nonnull Location loc);
+
+    /**
+     * This method will load the chunk where the given block is if it has not been loaded yet.
+     *
      * @return The corresponding BlockBase instance at the given location, or null if there is no custom block
      */
     @Nullable
@@ -112,6 +120,15 @@ public interface BlockDataProvider {
      * To place a block, use {@link io.github.plugindustry.wheelcore.interfaces.block.Placeable#onBlockPlace(ItemStack, Block, Block, Player)} instead
      */
     void addBlock(@Nonnull Location block, @Nonnull BlockBase instance, @Nullable BlockData data);
+
+    /**
+     * This method will load the chunk where the given block is if it has not been loaded yet.
+     * <br>
+     * Don't use this method unless you know exactly what you are doing.
+     * <br>
+     * To place a block, use {@link io.github.plugindustry.wheelcore.interfaces.block.Placeable#onBlockPlace(ItemStack, Block, Block, Player)} instead
+     */
+    void addBlock(@Nonnull Location block, @Nonnull BlockBase instance, @Nonnull Map<NamespacedKey, BlockData> allData);
 
     /**
      * This method will load the chunk where the given block is if it has not been loaded yet.

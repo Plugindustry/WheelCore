@@ -70,9 +70,10 @@ public class EventListener implements Listener {
                 .sorted(getSuitableComparator(direction)).forEachOrdered(block -> {
                     Location loc = block.getLocation();
                     BlockBase instance = MainManager.getBlockInstance(loc);
-                    BlockData data = MainManager.getBlockData(loc);
+                    Map<NamespacedKey, BlockData> data = new HashMap<>(MainManager.blockDataProvider.allDataAt(loc));
                     MainManager.removeBlock(loc);
-                    MainManager.addBlock(block.getRelative(direction).getLocation(), instance, data);
+                    MainManager.blockDataProvider.addBlock(block.getRelative(direction).getLocation(),
+                            Objects.requireNonNull(instance), data);
                 });
     }
 

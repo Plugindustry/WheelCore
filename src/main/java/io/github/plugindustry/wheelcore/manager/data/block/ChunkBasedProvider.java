@@ -132,6 +132,18 @@ public class ChunkBasedProvider implements BlockDataProvider {
     }
 
     @Override
+    public Map<NamespacedKey, BlockData> allDataAt(@Nonnull Location loc) {
+        loc = loc.clone();
+        loc.setPitch(0);
+        loc.setYaw(0);
+
+        ensureLoaded(loc);
+        if (!blocks.containsKey(loc)) return null;
+
+        return Collections.unmodifiableMap(blocks.get(loc).second);
+    }
+
+    @Override
     @Nullable
     public BlockBase instanceAt(@Nonnull Location loc) {
         loc = loc.clone();
@@ -153,6 +165,12 @@ public class ChunkBasedProvider implements BlockDataProvider {
 
     @Override
     public void addBlock(@Nonnull Location block, @Nonnull BlockBase instance, @Nullable BlockData data) {
+        addBlock(block, instance, Collections.singletonMap(null, data));
+    }
+
+    @Override
+    public void addBlock(@Nonnull Location block, @Nonnull BlockBase instance,
+            @Nonnull Map<NamespacedKey, BlockData> allData) {
         block = block.clone();
         block.setPitch(0);
         block.setYaw(0);
@@ -160,9 +178,7 @@ public class ChunkBasedProvider implements BlockDataProvider {
         ensureLoaded(block);
         if (!baseBlocks.containsKey(instance)) baseBlocks.put(instance, new HashSet<>());
         baseBlocks.get(instance).add(block);
-        Map<NamespacedKey, BlockData> map = blocks.containsKey(block) ? blocks.get(block).second : new HashMap<>();
-        if (!(data == null)) map.put(null, data);
-        blocks.put(block, Pair.of(instance, map));
+        blocks.put(block, Pair.of(instance, new HashMap<>(allData)));
         World world = Objects.requireNonNull(block.getWorld());
         HashMap<Long, HashSet<Location>> worldMap;
         if (!blockInChunks.containsKey(world)) blockInChunks.put(world, worldMap = new HashMap<>());
