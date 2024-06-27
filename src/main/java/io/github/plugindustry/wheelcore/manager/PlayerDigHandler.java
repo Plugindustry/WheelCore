@@ -13,17 +13,18 @@ import io.github.plugindustry.wheelcore.interfaces.block.BlockBase;
 import io.github.plugindustry.wheelcore.utils.BlockUtil;
 import io.github.plugindustry.wheelcore.utils.Pair;
 import io.github.plugindustry.wheelcore.utils.PlayerUtil;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.RayTraceResult;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -70,6 +71,20 @@ public class PlayerDigHandler {
     }
 
     public static void startDig(Player player, Location block) {
+        RayTraceResult result = player.getWorld()
+                .rayTrace(player.getEyeLocation(), player.getLocation().getDirection(), 6, FluidCollisionMode.NEVER,
+                        false, 0, e -> false);
+        boolean flag = false;
+        Block hitBlock = null;
+        if (result != null) {
+            hitBlock = result.getHitBlock();
+            if (hitBlock != null && hitBlock.getLocation().equals(block)) flag = true;
+        }
+        PlayerInteractEvent event = new PlayerInteractEvent(player,
+                flag ? Action.LEFT_CLICK_BLOCK : Action.LEFT_CLICK_AIR, player.getInventory().getItemInMainHand(),
+                hitBlock, flag ? result.getHitBlockFace() : BlockFace.SELF);
+        Bukkit.getPluginManager().callEvent(event);
+        if (event.isCancelled()) return;
         if (isDigIllegal(player, block)) return;
 
         if (getDestroyProgress(block.getBlock(), player) >= 1) PlayerUtil.breakBlock(player, block.getBlock());
