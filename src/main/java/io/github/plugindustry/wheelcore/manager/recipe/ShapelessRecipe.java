@@ -39,9 +39,8 @@ public class ShapelessRecipe implements CraftingRecipe {
     @Override
     public boolean matches(@Nullable Player player, @Nonnull List<List<ItemStack>> matrix,
             @Nullable Map<Integer, ItemStack> damage) {
-        List<ItemStack> shapeless = new ArrayList<>();
-        matrix.forEach(shapeless::addAll);
-
+        List<ItemStack> shapeless = matrix.stream().flatMap(Collection::stream).filter(Objects::nonNull)
+                .collect(Collectors.toCollection(ArrayList::new));
         if (shapeless.size() != recipe.size()) return false;
 
         int size = recipe.size();
