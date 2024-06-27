@@ -66,8 +66,8 @@ public class RegisterTask {
             if (name.endsWith("_BED")) dict.add("bed");
             if (name.endsWith("_PLANKS")) dict.add("planks");
             if (name.endsWith("_LOG")) dict.add("log");
-
-            if (food.contains(type)) dict.add("food");
+            if (name.endsWith("_LOG")) dict.add("log");
+            if (name.startsWith("STRIPPED_") && name.endsWith("_LOG")) dict.add("stripped_log");
 
             ItemMapping.registerVanillaOreDict(type, dict);
         }
