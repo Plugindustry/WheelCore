@@ -100,7 +100,7 @@ public class BipartiteGraph {
 
         int cnt = 0;
         for (List<Edge> out : outs) for (Edge edge : out) if (edge.match) ++cnt;
-        return cnt;
+        return cnt / 2;
     }
 
     public static class Edge {
