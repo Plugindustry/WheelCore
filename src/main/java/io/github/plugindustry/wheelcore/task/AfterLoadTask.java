@@ -3,6 +3,7 @@ package io.github.plugindustry.wheelcore.task;
 import io.github.plugindustry.wheelcore.WheelCore;
 import io.github.plugindustry.wheelcore.manager.ConfigManager;
 import io.github.plugindustry.wheelcore.manager.MainManager;
+import io.github.plugindustry.wheelcore.manager.RecipeRegistry;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 
@@ -20,5 +21,8 @@ public class AfterLoadTask implements Runnable {
                     .runTaskTimer(WheelCore.getInstance(), MainManager::save, ConfigManager.autoSaveDelay * 20L,
                             ConfigManager.autoSaveDelay * 20L);
         }
+
+        // Add recipe placeholders
+        RecipeRegistry.updatePlaceholders();
     }
 }
